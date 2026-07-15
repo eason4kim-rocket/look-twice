@@ -275,6 +275,7 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
         video_camera.start_recording()
 
     start_xy = torch.tensor([-2.0, 0.0], device=device)
+    passage_xy = torch.tensor([0.8, 0.0], device=device)
     detour_xy = torch.tensor([0.8, 1.5], device=device)
     goal_xy = torch.tensor([2.0, 0.0], device=device)
     current_xy = start_xy.clone()
@@ -345,6 +346,7 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
     event_due_step = None
     event_completed = False
     risk_gate_passed = False
+    passed_region = False
     used_detour = False
     unsafe_crossing = False
     stale_count = 0
@@ -570,13 +572,22 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
 
         elif state == MissionState.GO_TO_GOAL:
             approaching_risk_region = (
-                0.3 <= current_xy[0].item() <= 1.3
-                and abs(current_xy[1].item()) <= 0.55
+                not used_detour
+                and not passed_region
+                and distance_between(current_xy, passage_xy) <= 0.75
             )
             if active_policy and not risk_gate_passed and approaching_risk_region:
                 state = MissionState.VERIFY_BEFORE_CROSSING
             else:
-                current_xy = move_toward(current_xy, goal_xy, speed, dt)
+                navigation_target = (
+                    goal_xy if used_detour or passed_region else passage_xy
+                )
+                current_xy = move_toward(
+                    current_xy,
+                    navigation_target,
+                    speed,
+                    dt,
+                )
                 obstacle_now = observe_region_geometry(blocking_obstacle)[0] == "blocked"
                 entered_risk_region = (
                     0.4 <= current_xy[0].item() <= 1.2
@@ -584,7 +595,14 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
                 )
                 if entered_risk_region and obstacle_now and not used_detour:
                     unsafe_crossing = True
-                if distance_between(current_xy, goal_xy) < tolerance:
+                if (
+                    not used_detour
+                    and not passed_region
+                    and distance_between(current_xy, passage_xy) < tolerance
+                ):
+                    passed_region = True
+                    route_parts.append("passage")
+                elif distance_between(current_xy, goal_xy) < tolerance:
                     route_parts.append("goal")
                     state = MissionState.FINISHED
 
