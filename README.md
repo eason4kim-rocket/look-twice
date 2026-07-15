@@ -252,12 +252,14 @@ Genesis: 1.1.2
 Python: 3.12 (/opt/venv/bin/python)
 ```
 
-V4 is designed to use that GPU for Genesis physics, RGB-D/entity-segmentation
-rendering, ROCm tensor corruption/evidence processing, batched candidate
-evaluation, and experiment throughput. The Go admission core intentionally
-runs on CPU as a low-latency governance layer. V4 W7900D measurements remain
-pending and will report simulation, rendering, tensor kernels, transfer, gate,
-and end-to-end time separately.
+V4 uses that GPU for Genesis physics, RGB-D/entity-segmentation rendering,
+ROCm tensor corruption/evidence processing, and experiment throughput. The Go
+admission core intentionally runs on CPU as a low-latency governance layer.
+**Archived W7900D work** (see [`results/v4-gpu/STATUS.md`](results/v4-gpu/STATUS.md)):
+smoke matrix 96, partial calibration, ROCm evidence benchmark, and a growing
+formal closed-loop subset. Formal **960** is still running on the live instance.
+Timing reports separate simulation, rendering, tensor kernels, transfer, gate,
+and end-to-end stages where measured (`results/v4-gpu/bench/`).
 
 ## Known limitations
 
@@ -267,15 +269,16 @@ and end-to-end time separately.
 - The fast `kinematic` Genesis backend still applies integrated poses with
   `set_pos()` and is intended for batch experiments, not the physical-motion
   claim.
-- The skid-steer URDF and controller are implemented but not yet accepted over
-  the required W7900D seed set.
+- The skid-steer URDF and controller failed the 10×4 W7900D acceptance gate;
+  formal matrices use the kinematic backend (see STATUS).
 - The calibration guarantee applies only to the declared simulated
   in-distribution population; OOD configurations fail closed and receive no
-  coverage claim.
+  coverage claim. The archived calibration split is **partial** (336/350).
 - The Purify reference core is a contest slice, not the complete Purify product
   or a certified robot-safety system.
-- No v4 960-episode, skid-steer, GPU benchmark, video, or upstream-PR result is
-  claimed until its artifacts are archived.
+- Claimed when archived: smoke **96**, GPU evidence **benchmark**, partial
+  formal subset under `results/v4-gpu/formal-genesis/`. **Not** claimed complete:
+  formal **960**, skid-steer physical **60**, contest video, upstream Genesis PR.
 
 See [environment notes](docs/ENVIRONMENT.md), [architecture](docs/ARCHITECTURE.md),
 and the [submission checklist](docs/SUBMISSION_CHECKLIST.md).
