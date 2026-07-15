@@ -1,3 +1,4 @@
+import argparse
 import math
 import time
 from enum import Enum, auto
@@ -7,9 +8,10 @@ import torch
 
 
 class MissionState(Enum):
-    # 当前 Look Twice v0 的四个任务阶段。
+    # Look Twice 的任务阶段。
     GO_TO_INSPECTION = auto()
     INSPECT = auto()
+    GO_TO_DETOUR = auto()
     GO_TO_GOAL = auto()
     FINISHED = auto()
 
@@ -44,6 +46,16 @@ def distance_between(a: torch.Tensor, b: torch.Tensor) -> float:
 
 
 def main() -> None:
+    # 用命令行参数模拟观察结果，方便重复验证 clear 和 blocked 两种场景。
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--observation",
+        choices=("clear", "blocked"),
+        default="clear",
+        help="模拟机器人在观察点获得的结果",
+    )
+    args = parser.parse_args()
+
     # 1. 初始化 Genesis：使用 AMD GPU 运行仿真。
     gs.init(
         backend=gs.amdgpu,
@@ -90,6 +102,7 @@ def main() -> None:
     # 5. 定义三个关键导航点：起点、观察点和最终目标点。
     start_xy = torch.tensor([-2.0, 0.0], device=device)
     inspection_xy = torch.tensor([-0.6, 1.2], device=device)
+    detour_xy = torch.tensor([0.8, 1.5], device=device)
     goal_xy = torch.tensor([2.0, 0.0], device=device)
 
     current_xy = start_xy.clone()
@@ -102,6 +115,9 @@ def main() -> None:
     dt = 0.02
     tolerance = 0.05
     inspection_steps_required = 40
+
+    # 暂时用命令行输入模拟观察证据；之后再替换为真实场景判断。
+    simulated_observation = args.observation
 
     # 7. 初始化任务状态。
     # region_status 表示机器人对前方区域的认知，初始为 unknown。
@@ -137,17 +153,36 @@ def main() -> None:
                 )
 
             if inspection_steps >= inspection_steps_required:
-                # 当前 v0 的关键限制：观察结果尚未来自场景，而是直接写死为 clear。
-                region_status = "clear"
-                state = MissionState.GO_TO_GOAL
+                # 把新观察结果写入区域状态，再据此选择下一步行动。
+                region_status = simulated_observation
+
+                if region_status == "clear":
+                    state = MissionState.GO_TO_GOAL
+                elif region_status == "blocked":
+                    state = MissionState.GO_TO_DETOUR
 
                 print(
                     f"[step={step}] Region revised: "
                     f"unknown -> {region_status}"
                 )
 
+        elif state == MissionState.GO_TO_DETOUR:
+            # 阶段三（blocked 路线）：先前往绕行点。
+            target_xy = detour_xy
+
+            current_xy = move_toward(
+                current_xy,
+                target_xy,
+                speed,
+                dt,
+            )
+
+            if distance_between(current_xy, detour_xy) < tolerance:
+                state = MissionState.GO_TO_GOAL
+                print(f"[step={step}] Detour waypoint reached")
+
         elif state == MissionState.GO_TO_GOAL:
-            # 阶段三：区域被判断为 clear 后，直接前往最终目标。
+            # 阶段四：clear 时直接来这里；blocked 时经过绕行点后再来这里。
             target_xy = goal_xy
 
             current_xy = move_toward(
@@ -163,7 +198,7 @@ def main() -> None:
                 break
 
         elif state == MissionState.FINISHED:
-            # 阶段四：任务结束，不再推进导航逻辑。
+            # 阶段五：任务结束，不再推进导航逻辑。
             break
 
         # 8. 将二维导航位置转换为三维位置；z 固定为机器人半高 0.1。
