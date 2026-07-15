@@ -1,0 +1,43 @@
+name: cpu-contract-tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install CPU test dependencies
+        run: python -m pip install --upgrade numpy pillow
+      - name: Run standard-library tests
+        run: python -m unittest discover -s tests -v
+
+  purify-reference-core:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: purify_robotics
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.x"
+      - name: Test reference core
+        run: go test ./...
+      - name: Build Linux AMD64 binary
+        env:
+          GOOS: linux
+          GOARCH: amd64
+          CGO_ENABLED: "0"
+        run: go build -trimpath -ldflags="-s -w" -o ../purify-robotics-core-linux-amd64 ./cmd/purify-robotics-core
+      - name: Record checksum
+        working-directory: .
+        run: sha256sum purify-robotics-core-linux-amd64

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://look-twice.dev/schemas/calibration_artifact_v1.schema.json",
+  "title": "Purify Robotics Calibration Artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "artifact_id", "alpha", "class_quantiles",
+    "applicable_profiles", "min_noise_intensity", "max_noise_intensity",
+    "sensor_versions", "git_commit", "dataset_sha256", "seed_ranges"
+  ],
+  "properties": {
+    "schema_version": {"const": "purify.robotics.calibration.v1"},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "alpha": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+    "class_quantiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clear", "blocked"],
+      "properties": {
+        "clear": {"type": "number", "minimum": 0, "maximum": 1},
+        "blocked": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "applicable_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "min_noise_intensity": {"type": "number"},
+    "max_noise_intensity": {"type": "number"},
+    "sensor_versions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "git_commit": {"type": "string", "minLength": 1},
+    "dataset_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "seed_ranges": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["start", "end"],
+        "properties": {
+          "start": {"type": "integer", "minimum": 0},
+          "end": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://look-twice.dev/schemas/purify_response_v1.schema.json",
+  "title": "Purify Robotics NDJSON Response v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "ok", "result", "error"],
+  "properties": {
+    "schema_version": {"const": "purify.robotics.response.v1"},
+    "request_id": {"type": "string"},
+    "ok": {"type": "boolean"},
+    "result": true,
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message"],
+          "properties": {
+            "code": {"enum": ["invalid_json", "invalid_request", "internal_error"]},
+            "message": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    }
+  }
+}

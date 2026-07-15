@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://look-twice.dev/schemas/plan_invalidation_receipt_v1.schema.json",
+  "title": "Purify Robotics Plan Invalidation Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_id", "previous_receipt_sha256", "current_step",
+    "invalidated", "reasons", "triggering_claim_ids", "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "purify.robotics.plan-invalidation-receipt/v1"},
+    "receipt_id": {"type": "string", "pattern": "^invalidation:[0-9a-f]{16}$"},
+    "previous_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "current_step": {"type": "integer", "minimum": 0},
+    "invalidated": {"type": "boolean"},
+    "reasons": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["expired", "new_contradicting_claim", "previous_action_not_admitted"]}
+    },
+    "triggering_claim_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

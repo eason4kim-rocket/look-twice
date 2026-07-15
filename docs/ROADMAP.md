@@ -1,348 +1,216 @@
-# Look Twice 参赛路线图
+# Look Twice competition roadmap
 
-## V3 实施状态 — 2026-07-15
+## Final scope freeze
 
-- [x] 连续场景随机化与 clear/blocked 分层 seed
-- [x] ROCm Tensor 上的视角相关 RGB-D/segmentation 退化
-- [x] 概率 belief、entropy、TTL 与 Action Gate
-- [x] Fixed、Random、Information-Gain NBV
-- [x] Learned NBV 数据、训练、测试与自动晋级门槛
-- [x] CPU/ROCm 预热吞吐基准
-- [x] 50 回合 GPU 冒烟矩阵
-- [x] 500 回合正式配对实验
-- [x] 200/50/100 场景 Learned NBV 正式训练与 100 回合闭环评估
-- [x] v3 组合演示视频、证据面板、轨迹图与最终结果包
+**Look Twice v4 — Active Evidence Assurance** is the final feature direction
+for this hackathon. From August onward, only integration fixes, experiments,
+visualisation, reproduction, and submission work are allowed.
 
-V3 在独立 `v3-noisy-active-perception` 分支开发，v2 标签与正式结果保持不变。
+Positioning:
 
-## V2 完成状态 — 2026-07-15
+> A Purify-powered, lineage-aware action qualification and active evidence
+> repair system for Physical AI on AMD GPU.
 
-- [x] Genesis RGB-D 与 entity segmentation
-- [x] AMD ROCm PyTorch `cuda:0` 证据计算
-- [x] 四候选点 Next-Best-View 规划器
-- [x] `stale` belief 与全新证据 epoch
-- [x] 动态障碍出现、消失和偏移遮挡
-- [x] 20 回合冒烟矩阵
-- [x] 120 回合正式对照实验
-- [x] 动态主动感知演示视频
+中文定位：机器人不仅判断世界状态，还验证证据是否新鲜、独立、校准有效；动作
+合同不满足时，机器人主动执行能够修复证据缺口的观察。
 
-V2 正式实验源码提交为
-`f7a4e32467b984ef236eadbd767a99001c64113e`。
+## V4 status — 2026-07-15
 
-## 1. 项目定位
+Legend:
 
-**Look Twice: Evidence-gated active perception for safe navigation.**
+- **Implemented**: code and interfaces exist;
+- **Local verified**: CPU/unit or synthetic CI checks passed;
+- **Pending W7900D**: no v4 GPU/formal result is claimed yet.
 
-中文定位：
+| Workstream | Implemented | Local verified | Remaining acceptance |
+| --- | :---: | :---: | --- |
+| Public Robot Claim and receipt Schemas | Yes | Yes | Include in clean-clone CI |
+| Standalone Go reference core | Yes | Yes | Linux binary/checksum in release |
+| Persistent Python/Go NDJSON bridge | Yes | Yes | Verify inside cloud image |
+| Root-aware fusion and Action Contract | Yes | Yes | Genesis episode integration |
+| Split-conformal artifact builder | Yes | Yes | Collect 350 W7900D calibration records |
+| Six policy baselines | Yes | Yes | Run paired matrices |
+| Eight stress profiles and oracle boundary | Yes | Yes | Render representative failures |
+| BeliefGap repair planner | Yes | Yes | W7900D closed-loop validation |
+| Kinematic controller/backend | Yes | Yes | Genesis batch acceptance |
+| Skid-steer URDF/wheel controller | Yes | Unit only | 10-seed waypoint and 60-episode tests |
+| V4 Genesis RGB-D runtime | Yes | Static/local only | Execute on Genesis 1.1.2/W7900D |
+| Atomic metrics/calibration tooling | Yes | Yes | Formal data ingestion |
+| `n_envs=8` feasibility | No | No | One-day go/no-go test |
+| 96 smoke / 960 formal / 60 physical runs | No | No | Pending |
+| V4 demo, report, upstream PR | No | No | Pending; no PR claimed |
 
-> 一个通过证据结算与行动准入，实现安全导航的主动感知系统。
+Synthetic v4 smoke episodes validate orchestration only and carry
+`formal_result_eligible=false`. They cannot satisfy a W7900D milestone.
 
-机器人面对无法确认的区域时，不盲目前进，也不永久停止。它会主动移动到更好的观察位置，累积证据，在证据足够可靠时才允许执行高风险动作。
+## Milestones
 
-## 2. 核心问题
+### M1 — Public evidence contract and independent modalities
 
-普通单次观察系统可能会执行：
+Status: **implemented and locally verified**.
 
-```text
-一次观察为 clear
-→ 立即通过
-```
+- immutable Depth, Semantic, and Static Map Claims;
+- capture/device/artifact/parent lineage;
+- explicit Depth ROI independent of segmentation;
+- clean simulator truth excluded from online Claims;
+- JSON Schemas and deterministic IDs/hashes.
 
-Look Twice + Purify 的目标是：
+Cloud acceptance:
 
-```text
-观察证据
-→ 证据累积与冲突检查
-→ 状态结算
-→ 行动准入
-→ 直行、绕行或主动再观察
-```
+- capture Genesis RGB-D/entity segmentation;
+- confirm Depth and Semantic Claims can disagree without oracle leakage;
+- archive raw/corrupted evidence and hashes.
 
-## 3. 系统边界
+### M2 — Purify Robotics Reference Core
 
-参赛版本优先完成小而完整的闭环，暂不引入：
+Status: **implemented and locally verified**.
 
-- 强化学习；
-- VLA 或大模型控制；
-- ROS；
-- 真实轮式动力学；
-- 数据库和完整证据平台；
-- 复杂视觉模型。
+- Go 1.23 standard-library module, independent of private Purify;
+- `evaluate_action` and `invalidate_plan`;
+- conservative lineage collapse and root-aware fusion;
+- Action Contract clauses, BeliefGaps, GateReceipt and
+  PlanInvalidationReceipt;
+- persistent fail-closed NDJSON bridge.
 
-参赛版本应该优先保证：
+Cloud acceptance: build/run the static binary in the competition image and
+verify an admitted receipt followed by a real invalidation.
 
-- 逻辑可解释；
-- 实验可复现；
-- 两条路线稳定演示；
-- 证据真实改变机器人行为；
-- AMD GPU 使用有明确证据。
+### M3 — Calibration and action qualification
 
-## 4. 系统数据链
+Status: **logic/tooling implemented; formal artifact pending**.
 
-```text
-场景真值
-→ 观察模型
-→ Observation 证据
-→ RegionBelief 结算
-→ Action Gate 行动准入
-→ 机器人运动
-→ 运行指标
-```
+- class-conditional split conformal, `alpha=0.05`;
+- applicability by profile, intensity, and sensor version;
+- strict builder for 7 ID profiles × seeds `30000–30049`;
+- OOD and version mismatch fail closed.
 
-三个概念必须分开：
+Acceptance:
 
-- `scenario`：世界实际上是什么；
-- `observation`：机器人某次观察看到了什么；
-- `belief`：Purify 根据多条证据最终相信什么。
+- collect the frozen 350-record calibration split on W7900D;
+- freeze artifact ID, SHA256, source commit, and sensor version;
+- do not tune from validation or locked test results;
+- report empirical coverage, miscoverage, Wilson 95% CI, Brier and ECE.
 
-## 5. 开发原则
+### M4 — Active contract repair
 
-本文档提供完整路线，但实际开发必须小步执行：
+Status: **implemented and locally verified; GPU closed loop pending**.
 
-1. 每次只实现一个可观察行为；
-2. 改动前明确目的、输入、输出和验收标准；
-3. 只运行相关脚本；
-4. 验收通过后再提交 Git；
-5. 每个实验使用固定参数和随机种子；
-6. 不在一次改动中同时开发感知、决策和可视化。
+- seven finite BeliefGap reasons;
+- same-view recapture, wait, and four side-view actions;
+- fixed utility and no oracle/future/noise-realisation inputs;
+- four-observation/two-replan budget;
+- explicit safe fallback after unresolved evidence.
 
-## 6. 里程碑
+Acceptance: videos and JSON must demonstrate
+`shared root/conflict → denied → physical observation → new root → revised
+receipt → action`.
 
-### M0：双路线状态机（已完成）
+### M5 — Motion and Genesis integration
 
-输入：
+Status: **two backends implemented; W7900D acceptance pending**.
 
-```text
---observation clear
---observation blocked
-```
+- fast kinematic backend integrates bounded linear/angular commands and applies
+  poses with `set_pos()` inside Genesis;
+- skid-steer backend commands four wheel DOFs and records contacts;
+- sensor camera pose is derived from the chassis at every capture.
 
-输出：
+Go/no-go rule: allow at most two development days for skid-steer acceptance.
+If unstable, retain the explicitly labelled velocity-controlled dynamic-rigid-
+body fallback; do not weaken evidence correctness or mislabel kinematic output
+as wheel physics.
 
-```text
-clear   → inspection → goal
-blocked → inspection → detour → goal
-```
+Skid-steer acceptance:
 
-已完成：
+- four viewpoints reached over 10 consecutive seeds within 0.10 m;
+- clear route has no collision;
+- blocked route reaches the detour;
+- controls, contacts, chassis-mounted camera pose, and trajectory appear in JSON.
 
-- `GO_TO_DETOUR` 状态；
-- clear/blocked 分支；
-- 绕行点；
-- 路线摘要；
-- 最终实体位置一致性修复。
+### M6 — Formal experiments
 
-### M1：场景驱动的观察（已完成）
+Status: **protocol/tooling frozen; runs pending**.
 
-目的：
+1. 96-episode smoke matrix;
+2. 960-episode paired closed-loop matrix;
+3. 60 skid-steer physical-backend episodes;
+4. CPU/ROCm benchmark at batches 1, 8, 32, 128 after 20 warm-ups and 100 timed
+   iterations;
+5. all results atomically written, immediately copied from cloud, hashed, and
+   summarised.
 
-> 不再直接告诉机器人观察结论。
+Promotion gates:
 
-输入：
+- unresolved/stale/conflict/OOD direct entries: zero;
+- evidence echo adds no false independent root;
+- ID miscoverage ≤ `alpha + 0.03`, with Wilson 95% CI reported;
+- unsafe crossing no worse than v3 baseline on paired seeds;
+- active safe-task success no worse than passive Purify;
+- contract-repair success ≥ 80%;
+- every conclusion traceable to Claims, receipts, artifacts, and raw JSON.
 
-```text
---scenario clear
---scenario blocked
-```
+Failure cases remain in `runs.csv` and receive a written explanation; no 100%
+versus 0% result is manufactured.
 
-行为：
+### M7 — Presentation and submission
 
-- clear 场景不在受检区域放置障碍；
-- blocked 场景在受检区域放置障碍；
-- 机器人只在到达观察点后读取场景证据；
-- 观察函数输出 `clear` 或 `blocked`。
+Status: **pending**.
 
-验收：
+- 3–5 minute English video;
+- raw/corrupted RGB-D/semantic evidence, root graph, contract clauses,
+  BeliefGap, repair motion, revised receipt, and AMD results on screen;
+- technical report, architecture, result tables, failure cases, reproduction;
+- fresh-clone CPU and W7900D reproduction;
+- optional genuine Genesis AMD example/documentation PR after reproduction;
+- official Track 3 PR and `v4.0-hackathon-final` tag.
 
-- 命令行不再接受最终观察结论；
-- 场景配置与观察结果一致；
-- 两条路线都到达目标；
-- 相同命令重复运行结果一致。
+No upstream contribution is claimed until a public PR URL exists.
 
-### M2：最小证据记录（已完成）
+## Frozen experiment splits
 
-新增最小数据结构：
+| Split | Profiles | Seeds | Episodes/scenes | Use |
+| --- | ---: | --- | ---: | --- |
+| Calibration | 7 ID | `30000–30049` | 350 | Fit quantiles only |
+| Validation | 7 ID | `40000–40019` | 140 | Integration/threshold checks |
+| Locked test pool | 8 | `50000–50099` | 800 | Held-out evaluation |
+| Formal closed loop | 6 policies × 8 | first 20 locked seeds | 960 | Main comparison |
+| Physical backend | 3 policies × 4 | 5 locked seeds | 60 | Motion validation |
 
-```python
-Observation(
-    viewpoint: str,
-    result: str,
-    confidence: float,
-    step: int,
-)
-```
+`ood-severity` is excluded from calibration and included only for fail-closed
+evaluation.
 
-要求：
+## Schedule
 
-- 每次观察产生一条证据；
-- 日志能回答“机器人为什么做出这个决定”；
-- 本阶段只保存内存列表，不引入数据库。
-
-验收：
-
-- 运行结束后打印完整证据摘要；
-- 每条证据包含观察点、结果、置信度和步数。
-
-### M3：Purify 状态结算和行动准入（已完成）
-
-最小状态集：
-
-```text
-unknown
-provisional_clear
-provisional_blocked
-uncertain
-confirmed_clear
-confirmed_blocked
-```
-
-最小规则：
-
-```text
-第一次观察
-→ provisional
-
-两次同向观察
-→ confirmed
-
-两次观察冲突
-→ uncertain
-
-confirmed_clear
-→ 允许直行
-
-confirmed_blocked
-→ 必须绕行
-```
-
-最小接口：
-
-```python
-add_observation()
-resolve_state()
-is_action_allowed()
-```
-
-验收：
-
-- 单次 clear 不能直接获得高风险通行权；
-- 证据不足时机器人不进入目标区域；
-- 决策日志显示当前 belief 和准入结果。
-
-### M4：冲突触发第二观察点（已完成）
-
-新增：
-
-- `inspection_left_xy`；
-- `inspection_right_xy`；
-- `GO_TO_SECOND_INSPECTION`。
-
-行为：
-
-```text
-证据一致
-→ 允许决策
-
-证据不足或冲突
-→ 前往另一观察点
-→ 获取新证据
-→ 重新结算
-```
-
-验收：
-
-- 无冲突时不增加额外路程；
-- 冲突时实际移动到第二观察点；
-- 第二次观察真实改变后续行动。
-
-### M5：噪声模型与对照实验（已完成）
-
-观察模型加入可控噪声：
-
-- 误检；
-- 漏检；
-- 遮挡；
-- 置信度波动。
-
-对照系统：
-
-| 系统 | 决策方式 |
+| Date | Deliverable |
 | --- | --- |
-| Single Shot | 相信一次观察 |
-| Majority Vote | 固定观察三次后多数投票 |
-| Look Twice + Purify | 根据证据质量和冲突决定是否继续观察 |
+| July 16–20 | M1–M2 integration; skid-steer two-day gate |
+| July 21–24 | Formal calibration artifact and Action Contract acceptance |
+| July 25–28 | Stress profiles, active repair, AMD benchmark |
+| July 29–31 | 96/960/60 runs, immediate backup and summaries |
+| August 1–3 | Ablations, failure cases, figures, video, English report |
+| August 4 | Fresh-clone reproduction and official submission |
+| August 5–6 | Buffer only; no new features |
 
-指标：
+## Purify/IP boundary
 
-- 不安全穿越率；
-- 成功到达率；
-- 错误绕行率；
-- 平均观察次数；
-- 平均路径长度；
-- 任务完成时间。
+The contest entry includes only the standalone public reference core, robotics
+contracts, adapter, benchmark, and reproduction artifacts. It excludes the
+private Purify repository, unfinished product engine, product history,
+production connectors, databases, commercial code, and internal APIs. Review
+the governing competition rules again before final submission.
 
-所有实验必须记录：
+## Explicitly out of scope
 
-- 随机种子；
-- 场景参数；
-- 噪声参数；
-- 硬件与软件版本；
-- 原始结果和汇总结果。
+- complete Purify product integration;
+- VLA, reinforcement learning, ROS, or a large visual model;
+- learned NBV optimisation;
+- multi-robot scout;
+- open-ended causal/fault discovery or complex POMDP planning;
+- real-robot or sim-to-real claim;
+- universal formal-safety or certification claim.
 
-### M6：可视化与演示（已完成）
+## Preserved baselines
 
-演示必须直接显示：
-
-- 机器人位置和历史轨迹；
-- 当前任务状态；
-- 当前 region belief；
-- 观察证据和置信度；
-- Action Gate 允许或拒绝的动作；
-- clear 与 blocked 的不同路线。
-
-主演示视频目标时长：60–90 秒。
-
-### M7：提交和冻结
-
-最终产物：
-
-- 中英文 README；
-- 系统架构图；
-- 主演示视频；
-- 对照实验表格和图表；
-- AMD GPU 环境和性能数据；
-- 可复现命令；
-- 已知局限；
-- GitHub 开源仓库；
-- `v1.0-hackathon` Git tag。
-
-## 7. 时间表
-
-最终提交截止：**2026-08-06 23:59**。
-
-| 日期 | 目标 |
-| --- | --- |
-| 7 月 15–18 日 | 稳定双路线基线（已完成） |
-| 7 月 19–21 日 | M1 场景驱动观察 |
-| 7 月 22–24 日 | M2 证据记录 |
-| 7 月 25–27 日 | M3 状态结算与行动准入 |
-| 7 月 28–30 日 | M4 冲突驱动的主动再观察 |
-| 7 月 31 日–8 月 2 日 | M5 对照实验 |
-| 8 月 3–4 日 | M6 可视化和视频 |
-| 8 月 5 日 | 文档、复现检查、提交和冻结 |
-| 8 月 6 日 | 缓冲，不安排主要开发 |
-
-## 8. 获奖判断标准
-
-项目是否具有竞争力，不由代码量决定，而由以下问题决定：
-
-1. 证据是否真实改变了机器人行为？
-2. 证据不足时，系统是否真的拒绝高风险动作？
-3. 证据冲突时，机器人是否会主动换位置获取新证据？
-4. 是否用对照实验证明安全性改善？
-5. 是否能在 60 秒内让评委看懂问题、方法和结果？
-6. AMD GPU 是否承担了可验证的仿真或批量评估工作？
-
-## 9. 当前下一步
-
-核对官方提交页字段和视频要求，完成最终剪辑后创建 `v1.0-hackathon` 标签。
+V3 remains frozen at `v3.0-noisy-active-perception`; its 500 core episodes,
+Learned NBV data, 100-episode learned evaluation, demo, and reported limitations
+remain unchanged. V2 remains frozen at `v2.0-active-perception`. V4 may compare
+against them but must not overwrite or reinterpret their published artifacts.

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://look-twice.dev/schemas/belief_gap_v1.schema.json",
+  "title": "Purify Robotics Belief Gap v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "reason", "claim_ids", "detail"],
+  "properties": {
+    "schema_version": {"const": "purify.robotics.belief-gap/v1"},
+    "reason": {
+      "enum": [
+        "stale", "shared_root", "insufficient_roots", "modality_conflict",
+        "time_skew", "low_coverage", "calibration_not_applicable"
+      ]
+    },
+    "claim_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "detail": {"type": "string", "minLength": 1}
+  }
+}

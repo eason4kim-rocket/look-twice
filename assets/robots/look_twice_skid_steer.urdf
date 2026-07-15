@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<robot name="look_twice_skid_steer">
+  <material name="look_twice_blue">
+    <color rgba="0.10 0.45 0.95 1.0"/>
+  </material>
+  <material name="wheel_dark">
+    <color rgba="0.08 0.08 0.10 1.0"/>
+  </material>
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="8.0"/>
+      <inertia ixx="0.075" ixy="0" ixz="0" iyy="0.120" iyz="0" izz="0.155"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.40 0.30 0.14"/></geometry>
+      <material name="look_twice_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.40 0.30 0.14"/></geometry>
+    </collision>
+  </link>
+
+  <link name="sensor_mast">
+    <inertial>
+      <origin xyz="0 0 0.13"/>
+      <mass value="0.4"/>
+      <inertia ixx="0.003" ixy="0" ixz="0" iyy="0.003" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.13"/>
+      <geometry><box size="0.04 0.04 0.26"/></geometry>
+      <material name="look_twice_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.13"/>
+      <geometry><box size="0.04 0.04 0.26"/></geometry>
+    </collision>
+  </link>
+  <joint name="sensor_mast_fixed" type="fixed">
+    <parent link="base_link"/>
+    <child link="sensor_mast"/>
+    <origin xyz="0.10 0 0.07"/>
+  </joint>
+
+  <link name="left_front_wheel">
+    <inertial><mass value="0.35"/><inertia ixx="0.0009" ixy="0" ixz="0" iyy="0.0009" iyz="0" izz="0.0005"/></inertial>
+    <visual><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry><material name="wheel_dark"/></visual>
+    <collision><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry></collision>
+  </link>
+  <joint name="left_front_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="left_front_wheel"/>
+    <origin xyz="0.12 0.17 -0.04"/><axis xyz="0 1 0"/>
+    <dynamics damping="0.02" friction="0.01"/><limit effort="20" velocity="20"/>
+  </joint>
+
+  <link name="left_rear_wheel">
+    <inertial><mass value="0.35"/><inertia ixx="0.0009" ixy="0" ixz="0" iyy="0.0009" iyz="0" izz="0.0005"/></inertial>
+    <visual><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry><material name="wheel_dark"/></visual>
+    <collision><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry></collision>
+  </link>
+  <joint name="left_rear_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="left_rear_wheel"/>
+    <origin xyz="-0.12 0.17 -0.04"/><axis xyz="0 1 0"/>
+    <dynamics damping="0.02" friction="0.01"/><limit effort="20" velocity="20"/>
+  </joint>
+
+  <link name="right_front_wheel">
+    <inertial><mass value="0.35"/><inertia ixx="0.0009" ixy="0" ixz="0" iyy="0.0009" iyz="0" izz="0.0005"/></inertial>
+    <visual><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry><material name="wheel_dark"/></visual>
+    <collision><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry></collision>
+  </link>
+  <joint name="right_front_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="right_front_wheel"/>
+    <origin xyz="0.12 -0.17 -0.04"/><axis xyz="0 1 0"/>
+    <dynamics damping="0.02" friction="0.01"/><limit effort="20" velocity="20"/>
+  </joint>
+
+  <link name="right_rear_wheel">
+    <inertial><mass value="0.35"/><inertia ixx="0.0009" ixy="0" ixz="0" iyy="0.0009" iyz="0" izz="0.0005"/></inertial>
+    <visual><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry><material name="wheel_dark"/></visual>
+    <collision><origin rpy="1.5707963 0 0"/><geometry><cylinder radius="0.07" length="0.04"/></geometry></collision>
+  </link>
+  <joint name="right_rear_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="right_rear_wheel"/>
+    <origin xyz="-0.12 -0.17 -0.04"/><axis xyz="0 1 0"/>
+    <dynamics damping="0.02" friction="0.01"/><limit effort="20" velocity="20"/>
+  </joint>
+</robot>

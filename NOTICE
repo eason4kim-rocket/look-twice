@@ -1,0 +1,11 @@
+Look Twice v4 — Active Evidence Assurance
+Copyright 2026 Look Twice contributors
+
+The `purify_robotics` directory is a contest-specific, minimal reference core
+created for the Look Twice Physical AI demonstration. It is not the Purify
+product, does not contain or depend on the private Purify product repository,
+and makes no compatibility promise for future Purify product APIs.
+
+Genesis is a third-party open-source robotics simulation platform and is
+licensed by its respective copyright holders. AMD, Radeon, and ROCm are
+trademarks of Advanced Micro Devices, Inc. No endorsement is implied.

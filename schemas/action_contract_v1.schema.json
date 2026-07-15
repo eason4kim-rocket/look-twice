@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://look-twice.dev/schemas/action_contract_v1.schema.json",
+  "title": "Purify Robotics Action Contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "contract_id", "action", "fact_id", "predicate",
+    "scope", "required_prediction_set", "max_evidence_age",
+    "min_distinct_measurement_roots", "max_modality_skew",
+    "max_unresolved_conflicts", "require_calibration_applicable"
+  ],
+  "properties": {
+    "schema_version": {"const": "purify.robotics.action-contract/v1"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "action": {"type": "string", "minLength": 1},
+    "fact_id": {"type": "string", "minLength": 1},
+    "predicate": {"type": "string", "minLength": 1},
+    "scope": {"$ref": "robot_claim_v1.schema.json#/$defs/scope"},
+    "required_prediction_set": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {"enum": ["clear", "blocked"]}
+    },
+    "max_evidence_age": {"type": "integer", "minimum": 0},
+    "min_distinct_measurement_roots": {"type": "integer", "minimum": 1},
+    "max_modality_skew": {"type": "integer", "minimum": 0},
+    "max_unresolved_conflicts": {"type": "integer", "minimum": 0},
+    "require_calibration_applicable": {"type": "boolean"}
+  }
+}
