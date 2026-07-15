@@ -1,0 +1,4 @@
+file,scenario,noise_profile,belief_status,observation_count,path_length,final_distance,simulation_steps,mission_success
+clear-none.json,clear,none,confirmed_clear,2,4.6400014069,0.0467113405,330,true
+blocked-none.json,blocked,none,confirmed_blocked,2,5.1359990854,0.0344871096,361,true
+blocked-first-flip.json,blocked,first-flip,confirmed_blocked,3,8.9600021262,0.0472219847,620,true
