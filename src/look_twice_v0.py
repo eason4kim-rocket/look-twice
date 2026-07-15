@@ -1,21 +1,12 @@
 import argparse
 import math
 import time
-from dataclasses import dataclass
 from enum import Enum, auto
 
 import genesis as gs
 import torch
 
-
-@dataclass
-class Observation:
-    """记录机器人在某个观察点获得的一条证据。"""
-
-    viewpoint: str
-    result: str
-    confidence: float
-    step: int
+from belief import BeliefStatus, Observation, RegionBelief
 
 
 class MissionState(Enum):
@@ -149,18 +140,18 @@ def main() -> None:
     # 6. 运动和观察参数。
     # 每步最多移动 speed * dt = 0.016 米。
     # 到达目标点附近 tolerance 范围内即认为到达。
-    # inspection_steps_required 表示机器人在观察点等待的仿真步数。
+    # 每间隔 20 个仿真步获取一条观察证据。
     speed = 0.8
     dt = 0.02
     tolerance = 0.05
-    inspection_steps_required = 40
+    inspection_interval_steps = 20
 
     # 7. 初始化任务状态。
     # region_status 表示机器人对前方区域的认知，初始为 unknown。
     state = MissionState.GO_TO_INSPECTION
     inspection_steps = 0
-    region_status = "unknown"
-    evidence: list[Observation] = []
+    belief = RegionBelief(confirmation_threshold=0.8)
+    region_status = belief.status.value
 
     start_time = time.perf_counter()
 
@@ -189,7 +180,7 @@ def main() -> None:
                     f"[step={step}] Inspecting occluded region..."
                 )
 
-            if inspection_steps >= inspection_steps_required:
+            if inspection_steps % inspection_interval_steps == 0:
                 # 读取 Genesis 场景中的阻挡物实体，生成新观察。
                 observation = Observation(
                     viewpoint="inspection",
@@ -197,18 +188,28 @@ def main() -> None:
                     confidence=1.0,
                     step=step,
                 )
-                evidence.append(observation)
-                region_status = observation.result
-
-                if region_status == "clear":
-                    state = MissionState.GO_TO_GOAL
-                elif region_status == "blocked":
-                    state = MissionState.GO_TO_DETOUR
+                previous_status = belief.status
+                belief.add_observation(observation)
+                region_status = belief.status.value
 
                 print(
-                    f"[step={step}] Region revised: "
-                    f"unknown -> {region_status}"
+                    f"[step={step}] Evidence added: "
+                    f"result={observation.result} "
+                    f"confidence={observation.confidence:.2f}"
                 )
+                print(
+                    f"[step={step}] Belief revised: "
+                    f"{previous_status.value} -> {region_status}"
+                )
+
+                if belief.is_action_allowed("go_to_goal"):
+                    state = MissionState.GO_TO_GOAL
+                    print(f"[step={step}] Action gate: GO_TO_GOAL allowed")
+                elif belief.is_action_allowed("go_to_detour"):
+                    state = MissionState.GO_TO_DETOUR
+                    print(f"[step={step}] Action gate: GO_TO_DETOUR allowed")
+                else:
+                    print(f"[step={step}] Action gate: high-risk action denied")
 
         elif state == MissionState.GO_TO_DETOUR:
             # 阶段三（blocked 路线）：先前往绕行点。
@@ -276,7 +277,7 @@ def main() -> None:
     print("Final mission state:", state.name)
     print("Final region status:", region_status)
     print("Evidence:")
-    for observation in evidence:
+    for observation in belief.evidence:
         print(
             f"  viewpoint={observation.viewpoint} "
             f"result={observation.result} "
@@ -284,9 +285,9 @@ def main() -> None:
             f"step={observation.step}"
         )
 
-    if region_status == "clear":
+    if region_status == BeliefStatus.CONFIRMED_CLEAR.value:
         route_summary = "start -> inspection -> goal"
-    elif region_status == "blocked":
+    elif region_status == BeliefStatus.CONFIRMED_BLOCKED.value:
         route_summary = "start -> inspection -> detour -> goal"
     else:
         route_summary = "incomplete"
