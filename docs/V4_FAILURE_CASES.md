@@ -46,7 +46,10 @@ test as development data.
 - Entity segmentation is a simulated semantic proxy, not a trained model.
 - The kinematic Genesis batch backend uses `set_pos()`/`set_quat()` after
   integrating bounded velocity commands.
-- Skid-steer W7900D acceptance is pending.
+- Skid-steer W7900D acceptance **failed** (2026-07-15): 10 seeds × 4
+  viewpoints produced 14 failures with position errors above 0.10 m; multi-scene
+  teardown also hit SIGSEGV. Formal matrices demote to the kinematic motion
+  backend per plan. Artifact: `outputs/v4-motion-accept/skid_10x4.json`.
 - No real robot or sim-to-real result exists.
 - Conformal coverage applies only to the declared simulated ID distribution.
 - The public Go core is a contest reference slice, not the private Purify
