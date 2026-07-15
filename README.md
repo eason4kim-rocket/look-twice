@@ -153,6 +153,7 @@ python scripts/summarize_experiments.py \
 - [Formal 480-run experiment](results/2026-07-15_formal-experiment/README.md)
 - [Rendered-camera perception validation](results/2026-07-15_camera-perception/README.md)
 - [Look Twice v2 formal 120-run experiment](results/2026-07-15_v2-formal/README.md)
+- [Look Twice v3 formal 500-run experiment](results/2026-07-15_v3-formal/README.md)
 - [Clear demo](assets/demo/clear.mp4)
 - [Blocked demo](assets/demo/blocked.mp4)
 - [Conflict-driven reinspection demo](assets/demo/conflict.mp4)
