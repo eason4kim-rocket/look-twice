@@ -1,0 +1,35 @@
+step=0000 state=GO_TO_INSPECTION x=-1.988 y=0.010 region=unknown
+step=0050 state=GO_TO_INSPECTION x=-1.380 y=0.531 region=unknown
+step=0100 state=GO_TO_INSPECTION x=-0.773 y=1.052 region=unknown
+[step=112] Reached inspection viewpoint
+[step=113] Inspecting occluded region...
+[step=132] Evidence added: result=clear confidence=1.00
+[step=132] Camera evidence: red_pixels=0 artifact=outputs/camera-formal/clear-none/evidence/observation_00_inspection_left.png
+[step=132] Belief revised: unknown -> provisional_clear
+[step=132] Action gate: high-risk action denied
+step=0150 state=INSPECT          x=-0.627 y=1.177 region=provisional_clear
+[step=152] Evidence added: result=clear confidence=1.00
+[step=152] Camera evidence: red_pixels=0 artifact=outputs/camera-formal/clear-none/evidence/observation_01_inspection_left.png
+[step=152] Belief revised: provisional_clear -> confirmed_clear
+[step=152] Policy decision: GO_TO_GOAL
+step=0200 state=GO_TO_GOAL       x=0.074 y=0.863 region=confirmed_clear
+step=0250 state=GO_TO_GOAL       x=0.804 y=0.536 region=confirmed_clear
+step=0300 state=GO_TO_GOAL       x=1.534 y=0.209 region=confirmed_clear
+[step=329] Goal reached
+
+Final mission state: FINISHED
+Final region status: confirmed_clear
+Scenario: clear
+Policy: purify
+Sensor mode: camera
+Noise profile: none
+Noise rate: 0.0
+Seed: 0
+Evidence:
+  viewpoint=inspection_left result=clear confidence=1.00 step=132
+  viewpoint=inspection_left result=clear confidence=1.00 step=152
+Route taken: start -> inspection_left -> goal
+Final position: tensor([1.9574, 0.0191, 0.1000], device='cuda:0')
+Distance to goal: 0.04671134048110066
+Elapsed: 1.742s
+JSON output: outputs/camera-formal/clear-none/result.json

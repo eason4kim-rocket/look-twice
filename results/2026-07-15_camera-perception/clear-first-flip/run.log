@@ -1,0 +1,45 @@
+step=0000 state=GO_TO_INSPECTION x=-1.988 y=0.010 region=unknown
+step=0050 state=GO_TO_INSPECTION x=-1.380 y=0.531 region=unknown
+step=0100 state=GO_TO_INSPECTION x=-0.773 y=1.052 region=unknown
+[step=112] Reached inspection viewpoint
+[step=113] Inspecting occluded region...
+[step=132] Evidence added: result=blocked confidence=0.60
+[step=132] Camera evidence: red_pixels=0 artifact=outputs/camera-formal/clear-first-flip/evidence/observation_00_inspection_left.png
+[step=132] Belief revised: unknown -> provisional_blocked
+[step=132] Action gate: high-risk action denied
+step=0150 state=INSPECT          x=-0.627 y=1.177 region=provisional_blocked
+[step=152] Evidence added: result=clear confidence=1.00
+[step=152] Camera evidence: red_pixels=0 artifact=outputs/camera-formal/clear-first-flip/evidence/observation_01_inspection_left.png
+[step=152] Belief revised: provisional_blocked -> uncertain
+[step=152] Evidence conflict: moving to second inspection viewpoint
+step=0200 state=GO_TO_SECOND_INSPECTION x=-0.431 y=0.434 region=uncertain
+step=0250 state=GO_TO_SECOND_INSPECTION x=-0.227 y=-0.339 region=uncertain
+step=0300 state=GO_TO_SECOND_INSPECTION x=-0.023 y=-1.113 region=uncertain
+[step=303] Reached second inspection viewpoint
+[step=304] Inspecting occluded region...
+[step=323] Evidence added: result=clear confidence=1.00
+[step=323] Camera evidence: red_pixels=0 artifact=outputs/camera-formal/clear-first-flip/evidence/observation_02_inspection_right.png
+[step=323] Belief revised: uncertain -> confirmed_clear
+[step=323] Policy decision: GO_TO_GOAL
+step=0350 state=GO_TO_GOAL       x=0.364 y=-0.944 region=confirmed_clear
+step=0400 state=GO_TO_GOAL       x=1.057 y=-0.544 region=confirmed_clear
+step=0450 state=GO_TO_GOAL       x=1.750 y=-0.144 region=confirmed_clear
+[step=465] Goal reached
+
+Final mission state: FINISHED
+Final region status: confirmed_clear
+Scenario: clear
+Policy: purify
+Sensor mode: camera
+Noise profile: first-flip
+Noise rate: 0.0
+Seed: 0
+Evidence:
+  viewpoint=inspection_left result=blocked confidence=0.60 step=132
+  viewpoint=inspection_left result=clear confidence=1.00 step=152
+  viewpoint=inspection_right result=clear confidence=1.00 step=323
+Route taken: start -> inspection_left -> inspection_right -> goal
+Final position: tensor([ 1.9575, -0.0245,  0.1000], device='cuda:0')
+Distance to goal: 0.04902299210204401
+Elapsed: 1.891s
+JSON output: outputs/camera-formal/clear-first-flip/result.json

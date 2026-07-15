@@ -114,6 +114,7 @@ python scripts/summarize_experiments.py \
 ## Results and demos
 
 - [Formal 480-run experiment](results/2026-07-15_formal-experiment/README.md)
+- [Rendered-camera perception validation](results/2026-07-15_camera-perception/README.md)
 - [Clear demo](assets/demo/clear.mp4)
 - [Blocked demo](assets/demo/blocked.mp4)
 - [Conflict-driven reinspection demo](assets/demo/conflict.mp4)

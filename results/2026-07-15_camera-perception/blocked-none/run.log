@@ -1,0 +1,37 @@
+step=0000 state=GO_TO_INSPECTION x=-1.988 y=0.010 region=unknown
+step=0050 state=GO_TO_INSPECTION x=-1.380 y=0.531 region=unknown
+step=0100 state=GO_TO_INSPECTION x=-0.773 y=1.052 region=unknown
+[step=112] Reached inspection viewpoint
+[step=113] Inspecting occluded region...
+[step=132] Evidence added: result=blocked confidence=1.00
+[step=132] Camera evidence: red_pixels=1086 artifact=outputs/camera-formal/blocked-none/evidence/observation_00_inspection_left.png
+[step=132] Belief revised: unknown -> provisional_blocked
+[step=132] Action gate: high-risk action denied
+step=0150 state=INSPECT          x=-0.627 y=1.177 region=provisional_blocked
+[step=152] Evidence added: result=blocked confidence=1.00
+[step=152] Camera evidence: red_pixels=1086 artifact=outputs/camera-formal/blocked-none/evidence/observation_01_inspection_left.png
+[step=152] Belief revised: provisional_blocked -> confirmed_blocked
+[step=152] Policy decision: GO_TO_DETOUR
+step=0200 state=GO_TO_DETOUR     x=0.122 y=1.346 region=confirmed_blocked
+[step=241] Detour waypoint reached
+step=0250 state=GO_TO_GOAL       x=0.854 y=1.381 region=confirmed_blocked
+step=0300 state=GO_TO_GOAL       x=1.365 y=0.765 region=confirmed_blocked
+step=0350 state=GO_TO_GOAL       x=1.876 y=0.150 region=confirmed_blocked
+[step=360] Goal reached
+
+Final mission state: FINISHED
+Final region status: confirmed_blocked
+Scenario: blocked
+Policy: purify
+Sensor mode: camera
+Noise profile: none
+Noise rate: 0.0
+Seed: 0
+Evidence:
+  viewpoint=inspection_left result=blocked confidence=1.00 step=132
+  viewpoint=inspection_left result=blocked confidence=1.00 step=152
+Route taken: start -> inspection_left -> detour -> goal
+Final position: tensor([1.9780, 0.0265, 0.1000], device='cuda:0')
+Distance to goal: 0.034487108314825925
+Elapsed: 1.799s
+JSON output: outputs/camera-formal/blocked-none/result.json
