@@ -1,10 +1,21 @@
 import argparse
 import math
 import time
+from dataclasses import dataclass
 from enum import Enum, auto
 
 import genesis as gs
 import torch
+
+
+@dataclass
+class Observation:
+    """记录机器人在某个观察点获得的一条证据。"""
+
+    viewpoint: str
+    result: str
+    confidence: float
+    step: int
 
 
 class MissionState(Enum):
@@ -149,6 +160,7 @@ def main() -> None:
     state = MissionState.GO_TO_INSPECTION
     inspection_steps = 0
     region_status = "unknown"
+    evidence: list[Observation] = []
 
     start_time = time.perf_counter()
 
@@ -179,7 +191,14 @@ def main() -> None:
 
             if inspection_steps >= inspection_steps_required:
                 # 读取 Genesis 场景中的阻挡物实体，生成新观察。
-                region_status = observe_region(blocking_obstacle)
+                observation = Observation(
+                    viewpoint="inspection",
+                    result=observe_region(blocking_obstacle),
+                    confidence=1.0,
+                    step=step,
+                )
+                evidence.append(observation)
+                region_status = observation.result
 
                 if region_status == "clear":
                     state = MissionState.GO_TO_GOAL
@@ -256,6 +275,14 @@ def main() -> None:
     print()
     print("Final mission state:", state.name)
     print("Final region status:", region_status)
+    print("Evidence:")
+    for observation in evidence:
+        print(
+            f"  viewpoint={observation.viewpoint} "
+            f"result={observation.result} "
+            f"confidence={observation.confidence:.2f} "
+            f"step={observation.step}"
+        )
 
     if region_status == "clear":
         route_summary = "start -> inspection -> goal"
