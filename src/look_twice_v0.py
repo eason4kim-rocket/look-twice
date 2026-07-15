@@ -13,6 +13,7 @@ class MissionState(Enum):
     # Look Twice 的任务阶段。
     GO_TO_INSPECTION = auto()
     INSPECT = auto()
+    GO_TO_SECOND_INSPECTION = auto()
     GO_TO_DETOUR = auto()
     GO_TO_GOAL = auto()
     FINISHED = auto()
@@ -63,6 +64,25 @@ def observe_region(blocking_obstacle) -> str:
     return "blocked" if obstacle_in_region else "clear"
 
 
+def apply_observation_noise(
+    true_result: str,
+    noise_profile: str,
+    observation_index: int,
+) -> tuple[str, float]:
+    """使用可复现的噪声配置生成观察结果和置信度。"""
+    should_flip = (
+        noise_profile == "first-flip" and observation_index == 0
+    ) or (
+        noise_profile == "alternating" and observation_index % 2 == 0
+    )
+
+    if not should_flip:
+        return true_result, 1.0
+
+    flipped_result = "blocked" if true_result == "clear" else "clear"
+    return flipped_result, 0.6
+
+
 def main() -> None:
     # 命令行参数选择场景真值，不再直接告诉机器人观察结论。
     parser = argparse.ArgumentParser()
@@ -71,6 +91,18 @@ def main() -> None:
         choices=("clear", "blocked"),
         default="clear",
         help="选择受检区域的场景真值",
+    )
+    parser.add_argument(
+        "--noise-profile",
+        choices=("none", "first-flip", "alternating"),
+        default="none",
+        help="选择可复现的观察噪声",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=0,
+        help="实验随机种子（为后续随机噪声保留）",
     )
     args = parser.parse_args()
 
@@ -129,9 +161,10 @@ def main() -> None:
 
     device = torch.device("cuda:0")
 
-    # 5. 定义三个关键导航点：起点、观察点和最终目标点。
+    # 5. 定义起点、左右观察点、绕行点和最终目标点。
     start_xy = torch.tensor([-2.0, 0.0], device=device)
-    inspection_xy = torch.tensor([-0.6, 1.2], device=device)
+    inspection_left_xy = torch.tensor([-0.6, 1.2], device=device)
+    inspection_right_xy = torch.tensor([-0.6, -1.2], device=device)
     detour_xy = torch.tensor([0.8, 1.5], device=device)
     goal_xy = torch.tensor([2.0, 0.0], device=device)
 
@@ -150,6 +183,9 @@ def main() -> None:
     # region_status 表示机器人对前方区域的认知，初始为 unknown。
     state = MissionState.GO_TO_INSPECTION
     inspection_steps = 0
+    current_viewpoint = "inspection_left"
+    visited_second_inspection = False
+    used_detour = False
     belief = RegionBelief(confirmation_threshold=0.8)
     region_status = belief.status.value
 
@@ -158,7 +194,7 @@ def main() -> None:
     for step in range(2000):
         if state == MissionState.GO_TO_INSPECTION:
             # 阶段一：主动前往更好的观察位置。
-            target_xy = inspection_xy
+            target_xy = inspection_left_xy
 
             current_xy = move_toward(
                 current_xy,
@@ -167,7 +203,7 @@ def main() -> None:
                 dt,
             )
 
-            if distance_between(current_xy, inspection_xy) < tolerance:
+            if distance_between(current_xy, inspection_left_xy) < tolerance:
                 state = MissionState.INSPECT
                 print(f"[step={step}] Reached inspection viewpoint")
 
@@ -182,10 +218,16 @@ def main() -> None:
 
             if inspection_steps % inspection_interval_steps == 0:
                 # 读取 Genesis 场景中的阻挡物实体，生成新观察。
+                true_result = observe_region(blocking_obstacle)
+                observed_result, confidence = apply_observation_noise(
+                    true_result,
+                    args.noise_profile,
+                    len(belief.evidence),
+                )
                 observation = Observation(
-                    viewpoint="inspection",
-                    result=observe_region(blocking_obstacle),
-                    confidence=1.0,
+                    viewpoint=current_viewpoint,
+                    result=observed_result,
+                    confidence=confidence,
                     step=step,
                 )
                 previous_status = belief.status
@@ -207,9 +249,45 @@ def main() -> None:
                     print(f"[step={step}] Action gate: GO_TO_GOAL allowed")
                 elif belief.is_action_allowed("go_to_detour"):
                     state = MissionState.GO_TO_DETOUR
+                    used_detour = True
                     print(f"[step={step}] Action gate: GO_TO_DETOUR allowed")
+                elif (
+                    belief.status == BeliefStatus.UNCERTAIN
+                    and current_viewpoint == "inspection_left"
+                ):
+                    state = MissionState.GO_TO_SECOND_INSPECTION
+                    print(
+                        f"[step={step}] Evidence conflict: "
+                        "moving to second inspection viewpoint"
+                    )
+                elif (
+                    belief.status == BeliefStatus.UNCERTAIN
+                    and current_viewpoint == "inspection_right"
+                ):
+                    state = MissionState.GO_TO_DETOUR
+                    used_detour = True
+                    print(
+                        f"[step={step}] Action gate: direct passage denied; "
+                        "safe detour selected"
+                    )
                 else:
                     print(f"[step={step}] Action gate: high-risk action denied")
+
+        elif state == MissionState.GO_TO_SECOND_INSPECTION:
+            # 证据冲突时，机器人主动移动到右侧观察点。
+            current_xy = move_toward(
+                current_xy,
+                inspection_right_xy,
+                speed,
+                dt,
+            )
+
+            if distance_between(current_xy, inspection_right_xy) < tolerance:
+                current_viewpoint = "inspection_right"
+                visited_second_inspection = True
+                inspection_steps = 0
+                state = MissionState.INSPECT
+                print(f"[step={step}] Reached second inspection viewpoint")
 
         elif state == MissionState.GO_TO_DETOUR:
             # 阶段三（blocked 路线）：先前往绕行点。
@@ -276,6 +354,9 @@ def main() -> None:
     print()
     print("Final mission state:", state.name)
     print("Final region status:", region_status)
+    print("Scenario:", args.scenario)
+    print("Noise profile:", args.noise_profile)
+    print("Seed:", args.seed)
     print("Evidence:")
     for observation in belief.evidence:
         print(
@@ -285,12 +366,13 @@ def main() -> None:
             f"step={observation.step}"
         )
 
-    if region_status == BeliefStatus.CONFIRMED_CLEAR.value:
-        route_summary = "start -> inspection -> goal"
-    elif region_status == BeliefStatus.CONFIRMED_BLOCKED.value:
-        route_summary = "start -> inspection -> detour -> goal"
-    else:
-        route_summary = "incomplete"
+    route_parts = ["start", "inspection_left"]
+    if visited_second_inspection:
+        route_parts.append("inspection_right")
+    if used_detour:
+        route_parts.append("detour")
+    route_parts.append("goal")
+    route_summary = " -> ".join(route_parts)
 
     print("Route taken:", route_summary)
     print("Final position:", final_pos)
