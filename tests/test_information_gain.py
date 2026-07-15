@@ -58,6 +58,21 @@ class InformationGainTests(unittest.TestCase):
         )
         self.assertEqual(planner.rank(**kwargs), planner.rank(**kwargs))
 
+    def test_revisit_can_be_softly_penalized_instead_of_forbidden(self) -> None:
+        planner = InformationGainViewpointPlanner()
+        candidate, _ = planner.choose(
+            current_xy=(-0.6, 1.2),
+            target_region=Rectangle(0.4, 1.2, -0.4, 0.4),
+            occluders=[],
+            visited={"left_near"},
+            unreachable={"left_far", "right_near", "right_far"},
+            p_blocked=0.5,
+            severity=0.1,
+            allow_revisit=True,
+        )
+        self.assertIsNotNone(candidate)
+        self.assertEqual(candidate.name, "left_near")
+
 
 if __name__ == "__main__":
     unittest.main()

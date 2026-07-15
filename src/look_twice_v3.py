@@ -376,7 +376,7 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
             initial_viewpoint_name = selected.name if selected else None
         elif args.policy == "purify-learned":
             for score in ranking:
-                if score.reachable and (allow_revisit or score.name not in visited):
+                if score.reachable:
                     learned_scores[score.name] = learned_scorer.score(
                         feature_vector(
                             p_blocked=belief.p_blocked,
@@ -392,10 +392,11 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
                 current_xy=(current_xy[0].item(), current_xy[1].item()),
                 target_region=target_region,
                 occluders=[occluder_rect],
-                visited=set() if allow_revisit else visited,
+                visited=visited,
                 unreachable=unreachable,
                 p_blocked=belief.p_blocked,
                 severity=severity,
+                allow_revisit=True,
             )
         elif args.policy == "purify-random" and available:
             selected = candidates[policy_rng.choice(available)]

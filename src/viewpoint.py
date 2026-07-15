@@ -278,10 +278,19 @@ class InformationGainViewpointPlanner:
             )
         return sorted(scores, key=lambda item: (-item.utility, item.name))
 
-    def choose(self, **kwargs: object) -> tuple[Optional[ViewpointCandidate], list[InformationGainScore]]:
+    def choose(
+        self,
+        *,
+        allow_revisit: bool = False,
+        **kwargs: object,
+    ) -> tuple[Optional[ViewpointCandidate], list[InformationGainScore]]:
         ranking = self.rank(**kwargs)
         candidates = {item.name: item for item in self.candidates}
         for item in ranking:
-            if item.reachable and item.name not in kwargs["visited"] and math.isfinite(item.utility):
+            if (
+                item.reachable
+                and (allow_revisit or item.name not in kwargs["visited"])
+                and math.isfinite(item.utility)
+            ):
                 return candidates[item.name], ranking
         return None, ranking
