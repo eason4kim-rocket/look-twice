@@ -96,9 +96,21 @@ python scripts/summarize_experiments.py \
 - `scripts/summarize_experiments.py` — aggregate metrics
 - `scripts/plot_trajectory.py` — top-down evidence and route plot
 - `scripts/plot_comparison.py` — safety and observation-cost comparison
+- `scripts/annotate_video.py` — state, belief, and Action Gate video overlays
 - `docs/ARCHITECTURE.md` — system design and state flow
 - `docs/ROADMAP.md` — implementation and submission roadmap
 - `results/` — versioned, reproducible experiment samples
+
+## Results and demos
+
+- [Formal 480-run experiment](results/2026-07-15_formal-experiment/README.md)
+- [Clear demo](assets/demo/clear.mp4)
+- [Blocked demo](assets/demo/blocked.mp4)
+- [Conflict-driven reinspection demo](assets/demo/conflict.mp4)
+
+At observation noise `0.3`, Purify achieved 97.5% safe success with an average
+of 2.4 observations. Majority Vote achieved 95.0% with a fixed cost of 3
+observations, while Single Shot achieved 82.5% with 1 observation.
 
 ## Tested AMD environment
 
