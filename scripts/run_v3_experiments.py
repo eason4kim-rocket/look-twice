@@ -11,13 +11,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 
-POLICIES = (
+CORE_POLICIES = (
     "single-shot",
     "fixed-multiview",
     "purify-fixed",
     "purify-random",
     "purify-information-gain",
 )
+POLICIES = CORE_POLICIES + ("purify-learned",)
 PROFILES = (
     "static-mixed",
     "view-dependent-occlusion",
@@ -35,8 +36,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--entrypoint", default="src/look_twice_v3.py")
-    parser.add_argument("--policies", nargs="+", choices=POLICIES, default=list(POLICIES))
+    parser.add_argument(
+        "--policies", nargs="+", choices=POLICIES, default=list(CORE_POLICIES)
+    )
     parser.add_argument("--profiles", nargs="+", choices=PROFILES, default=list(PROFILES))
+    parser.add_argument("--learned-model", type=Path)
     return parser.parse_args()
 
 
@@ -54,6 +58,8 @@ def main() -> None:
     args = parse_args()
     if args.seed_count < 1 or args.workers < 1:
         raise SystemExit("--seed-count and --workers must be positive")
+    if "purify-learned" in args.policies and args.learned_model is None:
+        raise SystemExit("--policies purify-learned requires --learned-model")
     raw_dir = args.output_dir / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
     jobs: list[tuple[str, list[str]]] = []
@@ -79,6 +85,8 @@ def main() -> None:
                     "--json-output",
                     str(output),
                 ]
+                if policy == "purify-learned":
+                    command.extend(["--learned-model", str(args.learned_model)])
                 jobs.append((name, command))
 
     def run_job(job: tuple[str, list[str]]) -> str:
