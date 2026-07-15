@@ -53,6 +53,20 @@ ABLATIONS = (
 
 
 def git_commit() -> str:
+    import os
+
+    pinned = os.environ.get("LOOK_TWICE_GIT_COMMIT", "").strip()
+    if pinned and len(pinned) == 40 and all(
+        character in "0123456789abcdef" for character in pinned
+    ):
+        return pinned
+    pin_file = Path(__file__).resolve().parents[1] / ".git_commit"
+    if pin_file.is_file():
+        value = pin_file.read_text(encoding="utf-8").strip()
+        if len(value) == 40 and all(
+            character in "0123456789abcdef" for character in value
+        ):
+            return value
     try:
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"],

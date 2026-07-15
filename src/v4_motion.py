@@ -202,6 +202,17 @@ class KinematicMotionController(_CallbackMotionBase):
             pose = self.get_pose()
             command = self._command_or_complete(pose, target_xy)
             if command is None:
+                if not trajectory:
+                    trajectory.append({"step": step, **asdict(pose)})
+                    controls.append(
+                        {
+                            "step": step,
+                            "linear_velocity": 0.0,
+                            "angular_velocity": 0.0,
+                            "left_wheel_velocity": 0.0,
+                            "right_wheel_velocity": 0.0,
+                        }
+                    )
                 return self._finish(
                     reached=True,
                     target_xy=target_xy,
@@ -277,6 +288,17 @@ class SkidSteerMotionController(_CallbackMotionBase):
             command = self._command_or_complete(pose, target_xy)
             if command is None:
                 reached, reason, elapsed = True, "reached", step
+                if not trajectory:
+                    trajectory.append({"step": step, **asdict(pose)})
+                    controls.append(
+                        {
+                            "step": step,
+                            "linear_velocity": 0.0,
+                            "angular_velocity": 0.0,
+                            "left_wheel_velocity": 0.0,
+                            "right_wheel_velocity": 0.0,
+                        }
+                    )
                 break
             if self.obstacle_contact_count() > initial_contacts:
                 reason, elapsed = "obstacle_contact", step
