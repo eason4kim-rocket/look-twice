@@ -34,7 +34,7 @@
 - [x] Blocked detour trajectory image
 - [x] Conflict-driven reinspection trajectory image
 - [x] Three raw Genesis video clips downloaded
-- [ ] Final 60–90 second video exported
+- [x] Final approximately 60-second silent video draft exported
 - [ ] Video claims match the committed experiment data
 
 ## Final submission
