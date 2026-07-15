@@ -108,3 +108,51 @@ status will be marked honestly if unmerged at submission time.
 See `docs/V4_REPRODUCTION.md` and the repository `README.md` for fresh-clone CPU
 tests, Go core build, and pinned W7900D commands. Cloud runs require the contest
 AMD image; do not install Genesis/ROCm on a developer Mac for formal claims.
+
+
+## 11. W7900D results snapshot (2026-07-15)
+
+### Motion
+
+Skid-steer 10×4 acceptance failed (14 failures). Formal matrices use
+`motion_backend=kinematic`. Probe artifact retained on the GPU host.
+
+### Calibration
+
+- Collected Genesis kinematic rows for ID profiles (partial: 336/350 after
+  retries; missing seeds listed via `PARTIAL_SPLIT.txt`).
+- Fitted class-conditional artifact `alpha=0.05` with quantiles recorded in
+  `results/v4-gpu/calibration/calibration_artifact.json`.
+- Partial split is explicitly flagged; standard 350-complete re-collection can
+  resume from existing good rows.
+
+### Smoke matrix (Genesis, fitted calibration, kinematic)
+
+6 policies × 8 profiles × seeds `50000–50001` = **96** completed, 0 runner
+failures. Policy rollups (safe success counts out of 16):
+
+| Policy | unsafe | safe_success | wrong_detour | repair |
+| --- | ---: | ---: | ---: | ---: |
+| naive-majority | 0 | 8 | 8 | n/a |
+| v3-logodds | 0 | 8 | 8 | n/a |
+| conformal-only | 0 | 8 | 8 | n/a |
+| lineage-only | 0 | 8 | 8 | n/a |
+| purify-passive | 0 | 8 | 8 | n/a |
+| purify-active | 0 | 3 | 8 | 11/16 |
+
+Unsafe risk-region crossings in this smoke sample: **0** for all policies.
+`purify-active` repaired 11/16 attempted contracts (below the 80% promotion
+threshold on this small N) and showed lower mission success due to
+conservative detours/unresolved outcomes. **No rule retuning was applied after
+reading these aggregates.**
+
+### Formal matrix
+
+Locked-test formal closed-loop (`6×8×20`) was started on the live W7900D
+instance with resume-safe JSON under `/workspace/look-twice/outputs/v4-formal-genesis`.
+GPU is left running to continue the matrix.
+
+### Benchmark
+
+See `results/v4-gpu/bench/evidence_benchmark.json` when present (CPU vs ROCm
+separated timings, batches 1/8/32/128).

@@ -1,0 +1,204 @@
+{
+  "schema_version": "look-twice.evidence-benchmark/v4",
+  "reportable": true,
+  "environment": {
+    "torch": "2.9.1+rocm7.2.0.git7e1940d4",
+    "rocm": "7.2.26015-fc0010cf6a",
+    "cuda_available": true,
+    "gpu": "AMD Radeon PRO W7900D"
+  },
+  "configuration": {
+    "warmup": 20,
+    "repeat": 100,
+    "batch_sizes": [
+      1,
+      8,
+      32,
+      128
+    ],
+    "devices": [
+      "cpu",
+      "rocm"
+    ],
+    "initialization_included": false,
+    "public_pipeline": "v4_evidence.process_evidence_frame"
+  },
+  "results": [
+    {
+      "status": "completed",
+      "device_class": "cpu",
+      "tensor_device": "cpu",
+      "batch_size": 1,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "cpu_array_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 1.566614955663681,
+      "tensor_or_array_processing_p95_ms": 1.5808939933776855,
+      "transfer_plus_host_postprocess_median_ms": 0.7293745875358582,
+      "transfer_plus_host_postprocess_p95_ms": 0.7406473159790039,
+      "end_to_end_median_ms": 2.2968631237745285,
+      "end_to_end_p95_ms": 2.322334796190262,
+      "observations_per_second": 435.37640081776374
+    },
+    {
+      "status": "completed",
+      "device_class": "cpu",
+      "tensor_device": "cpu",
+      "batch_size": 8,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "cpu_array_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 12.86228746175766,
+      "tensor_or_array_processing_p95_ms": 13.720639050006866,
+      "transfer_plus_host_postprocess_median_ms": 6.082665175199509,
+      "transfer_plus_host_postprocess_p95_ms": 6.61802664399147,
+      "end_to_end_median_ms": 18.950236961245537,
+      "end_to_end_p95_ms": 20.289067178964615,
+      "observations_per_second": 422.1583094902992
+    },
+    {
+      "status": "completed",
+      "device_class": "cpu",
+      "tensor_device": "cpu",
+      "batch_size": 32,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "cpu_array_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 50.502872094511986,
+      "tensor_or_array_processing_p95_ms": 51.62644386291504,
+      "transfer_plus_host_postprocess_median_ms": 23.85004609823227,
+      "transfer_plus_host_postprocess_p95_ms": 24.20154958963394,
+      "end_to_end_median_ms": 74.36718977987766,
+      "end_to_end_p95_ms": 76.355691999197,
+      "observations_per_second": 430.2972869449289
+    },
+    {
+      "status": "completed",
+      "device_class": "cpu",
+      "tensor_device": "cpu",
+      "batch_size": 128,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "cpu_array_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 202.39627547562122,
+      "tensor_or_array_processing_p95_ms": 204.8444263637066,
+      "transfer_plus_host_postprocess_median_ms": 95.44741548597813,
+      "transfer_plus_host_postprocess_p95_ms": 96.90912812948227,
+      "end_to_end_median_ms": 297.95811884105206,
+      "end_to_end_p95_ms": 301.03157088160515,
+      "observations_per_second": 429.59057634634394
+    },
+    {
+      "status": "completed",
+      "device_class": "rocm",
+      "tensor_device": "cuda:0",
+      "batch_size": 1,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "rocm_tensor_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 0.4161055088043213,
+      "tensor_or_array_processing_p95_ms": 77.47210693359375,
+      "transfer_plus_host_postprocess_median_ms": 1.821646362543106,
+      "transfer_plus_host_postprocess_p95_ms": 2.3380918204784393,
+      "end_to_end_median_ms": 2.2314246743917465,
+      "end_to_end_p95_ms": 80.05146309733391,
+      "observations_per_second": 448.14418854294746
+    },
+    {
+      "status": "completed",
+      "device_class": "rocm",
+      "tensor_device": "cuda:0",
+      "batch_size": 8,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "rocm_tensor_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 79.1991236358881,
+      "tensor_or_array_processing_p95_ms": 81.98741608858109,
+      "transfer_plus_host_postprocess_median_ms": 15.165238440036774,
+      "transfer_plus_host_postprocess_p95_ms": 93.53026941418648,
+      "end_to_end_median_ms": 95.53439728915691,
+      "end_to_end_p95_ms": 99.86825659871101,
+      "observations_per_second": 83.73947213783275
+    },
+    {
+      "status": "completed",
+      "device_class": "rocm",
+      "tensor_device": "cuda:0",
+      "batch_size": 32,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "rocm_tensor_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 167.9520063996315,
+      "tensor_or_array_processing_p95_ms": 249.26424971222878,
+      "transfer_plus_host_postprocess_median_ms": 134.53905546665192,
+      "transfer_plus_host_postprocess_p95_ms": 215.3987509906292,
+      "end_to_end_median_ms": 303.2171446830034,
+      "end_to_end_p95_ms": 386.9984708726406,
+      "observations_per_second": 105.53492954184438
+    },
+    {
+      "status": "completed",
+      "device_class": "rocm",
+      "tensor_device": "cuda:0",
+      "batch_size": 128,
+      "execution_mode": "sequential_calls_to_process_evidence_frame",
+      "warmup_iterations_excluded": 20,
+      "timed_iterations": 100,
+      "timing_scope": {
+        "processing": "rocm_tensor_region",
+        "transfer": "residual wall time: transfers plus Python, perception, lineage, hashing, and host post-processing; not a pure transfer metric",
+        "end_to_end": "complete process_evidence_frame microbatch wall time",
+        "initialization_included": false
+      },
+      "tensor_or_array_processing_median_ms": 742.4402919411659,
+      "tensor_or_array_processing_p95_ms": 967.0228762924671,
+      "transfer_plus_host_postprocess_median_ms": 469.0822134464979,
+      "transfer_plus_host_postprocess_p95_ms": 694.6108035445213,
+      "end_to_end_median_ms": 1210.7057068496943,
+      "end_to_end_p95_ms": 1291.7267493903637,
+      "observations_per_second": 105.72346299833775
+    }
+  ]
+}
