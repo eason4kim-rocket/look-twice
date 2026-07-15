@@ -181,14 +181,39 @@ def collect_one(
     try:
         bridge.start()
         start_xy = (runtime.current_pose.x, runtime.current_pose.y)
-        candidate = select_initial_viewpoint(scenario.public_context, start_xy)
-        if candidate is None:
+        # Prefer the planner's initial viewpoint, then fall back through every
+        # publicly reachable candidate so kinematic contact on one side view
+        # does not discard the entire calibration seed.
+        ordered: list[dict[str, Any]] = []
+        preferred = select_initial_viewpoint(scenario.public_context, start_xy)
+        if preferred is not None:
+            ordered.append(dict(preferred))
+        for item in scenario.public_context["candidate_viewpoints"]:
+            if not item.get("reachable"):
+                continue
+            if preferred is not None and item.get("name") == preferred.get("name"):
+                continue
+            ordered.append(dict(item))
+        if not ordered:
             raise RuntimeError("no reachable initial calibration viewpoint")
-        viewpoint_xy = (float(candidate["xy"][0]), float(candidate["xy"][1]))
-        movement = runtime.move_to(viewpoint_xy)
-        if not movement.reached:
+
+        candidate: dict[str, Any] | None = None
+        viewpoint_xy: tuple[float, float] | None = None
+        attempt_errors: list[str] = []
+        for option in ordered:
+            target = (float(option["xy"][0]), float(option["xy"][1]))
+            movement = runtime.move_to(target)
+            if movement.reached:
+                candidate = option
+                viewpoint_xy = target
+                break
+            attempt_errors.append(
+                f"{option.get('name')}:{movement.reason}"
+            )
+        if candidate is None or viewpoint_xy is None:
             raise RuntimeError(
-                f"failed to reach calibration viewpoint: {movement.reason}"
+                "failed to reach any calibration viewpoint: "
+                + "; ".join(attempt_errors)
             )
         runtime.wait_steps(10)
         raw = runtime.capture_raw(
