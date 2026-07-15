@@ -30,6 +30,7 @@ denied and a safe detour is selected.
 ## Current capabilities
 
 - Scene-driven `clear` and `blocked` outcomes in Genesis
+- Optional Genesis RGB camera perception with saved evidence frames
 - Evidence lifecycle: unknown, provisional, uncertain, and confirmed
 - Conflict-driven movement to a second inspection viewpoint
 - Safe fallback when evidence remains unresolved
@@ -66,6 +67,15 @@ The competition cloud image provides the tested environment at
   --noise-profile first-flip \
   --seed 0 \
   --json-output outputs/blocked-first-flip.json
+
+# Use rendered camera pixels instead of reading entity coordinates
+/opt/venv/bin/python src/look_twice_v0.py \
+  --policy purify \
+  --scenario blocked \
+  --sensor-mode camera \
+  --noise-profile first-flip \
+  --evidence-dir outputs/camera-evidence \
+  --json-output outputs/camera-result.json
 ```
 
 Run the standard-library belief tests:
@@ -128,6 +138,7 @@ notes.
 ## Known limitations
 
 - The robot is currently a fixed box moved with `set_pos()`, not a wheel model.
-- Geometry-based observations stand in for a future camera/depth sensor.
+- Camera perception currently uses a deliberately simple red-pixel detector,
+  not a learned semantic or depth model.
 - Noise is controlled and synthetic so policy behavior remains reproducible.
 - Safe navigation is demonstrated in simulation; no real-robot claim is made.

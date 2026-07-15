@@ -11,7 +11,7 @@ from matplotlib.patches import Rectangle
 POINTS = {
     "start": (-2.0, 0.0),
     "inspection_left": (-0.6, 1.2),
-    "inspection_right": (-0.6, -1.2),
+    "inspection_right": (0.0, -1.2),
     "detour": (0.8, 1.5),
     "goal": (2.0, 0.0),
 }

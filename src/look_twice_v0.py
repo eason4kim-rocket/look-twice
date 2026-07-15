@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import json
 import math
@@ -10,6 +12,7 @@ from enum import Enum, auto
 from pathlib import Path
 
 import genesis as gs
+import numpy as np
 import torch
 
 from belief import BeliefStatus, Observation, RegionBelief
@@ -54,10 +57,10 @@ def distance_between(a: torch.Tensor, b: torch.Tensor) -> float:
     return torch.linalg.norm(a - b).item()
 
 
-def observe_region(blocking_obstacle) -> str:
+def observe_region_geometry(blocking_obstacle) -> tuple[str, float]:
     """根据受检区域内是否存在阻挡物返回观察结果。"""
     if blocking_obstacle is None:
-        return "clear"
+        return "clear", 1.0
 
     obstacle_pos = blocking_obstacle.get_pos()
     obstacle_x = obstacle_pos[0].item()
@@ -67,11 +70,61 @@ def observe_region(blocking_obstacle) -> str:
         0.4 <= obstacle_x <= 1.2
         and -0.4 <= obstacle_y <= 0.4
     )
-    return "blocked" if obstacle_in_region else "clear"
+    return ("blocked", 1.0) if obstacle_in_region else ("clear", 1.0)
+
+
+def observe_region_camera(
+    camera,
+    viewpoint: str,
+    evidence_dir: Path | None,
+    observation_index: int,
+) -> tuple[str, float, str | None, int]:
+    """从 Genesis 相机 RGB 图像中的红色障碍像素形成证据。"""
+    camera_positions = {
+        "inspection_left": (-0.6, 1.2, 0.8),
+        # 第二观察点向前错开，绕过中央遮挡体获得互补视野。
+        "inspection_right": (0.0, -1.2, 0.8),
+    }
+    camera.set_pose(
+        pos=camera_positions[viewpoint],
+        lookat=(0.8, 0.0, 0.25),
+        up=(0.0, 0.0, 1.0),
+    )
+    rgb = np.asarray(camera.render(rgb=True, force_render=True)[0])
+
+    # 场景中只有受检障碍使用低绿、低蓝的红色材质。
+    red_mask = (
+        (rgb[..., 0] > 130)
+        & (rgb[..., 1] < 100)
+        & (rgb[..., 2] < 100)
+    )
+    red_pixel_count = int(red_mask.sum())
+    result = "blocked" if red_pixel_count >= 30 else "clear"
+
+    # 30 像素是最低可见证据；像素越多，blocked 置信度越高。
+    # clear 场景没有红色实体，因此零红像素作为强 clear 证据。
+    if result == "blocked":
+        confidence = min(1.0, 0.8 + red_pixel_count / 5000.0)
+    else:
+        confidence = max(0.8, 1.0 - red_pixel_count / 30.0)
+
+    artifact = None
+    if evidence_dir is not None:
+        from PIL import Image
+
+        evidence_dir.mkdir(parents=True, exist_ok=True)
+        image_path = evidence_dir / (
+            f"observation_{observation_index:02d}_{viewpoint}.png"
+        )
+        Image.fromarray(rgb).save(image_path)
+        artifact = str(image_path)
+
+    return result, confidence, artifact, red_pixel_count
 
 
 def apply_observation_noise(
     true_result: str,
+    base_confidence: float,
     noise_profile: str,
     observation_index: int,
     noise_rate: float,
@@ -87,7 +140,7 @@ def apply_observation_noise(
     )
 
     if not should_flip:
-        return true_result, 1.0
+        return true_result, base_confidence
 
     flipped_result = "blocked" if true_result == "clear" else "clear"
     confidence = 0.6 if noise_profile != "random" else 0.9
@@ -108,6 +161,17 @@ def main() -> None:
         choices=("single-shot", "majority-vote", "purify"),
         default="purify",
         help="选择对照决策策略",
+    )
+    parser.add_argument(
+        "--sensor-mode",
+        choices=("geometry", "camera"),
+        default="geometry",
+        help="geometry 读取场景实体；camera 从 Genesis RGB 图像形成证据",
+    )
+    parser.add_argument(
+        "--evidence-dir",
+        type=Path,
+        help="保存每次相机观察的原始 RGB 证据图",
     )
     parser.add_argument(
         "--noise-profile",
@@ -180,7 +244,7 @@ def main() -> None:
     )
 
     # 4. 添加遮挡物：位于起点到终点的主路径附近。
-    # 当前版本尚未用传感器读取它，它主要用于表达“被遮挡区域”的场景概念。
+    # camera 模式会真实渲染它造成的遮挡，而不是读取其坐标。
     scene.add_entity(
         gs.morphs.Box(
             size=(0.5, 1.2, 1.0),
@@ -203,12 +267,23 @@ def main() -> None:
             surface=gs.surfaces.Default(color=(0.85, 0.15, 0.15)),
         )
 
+    sensor_camera = None
+    if args.sensor_mode == "camera":
+        sensor_camera = scene.add_camera(
+            res=(320, 240),
+            pos=(-0.6, 1.2, 0.8),
+            lookat=(0.8, 0.0, 0.25),
+            up=(0.0, 0.0, 1.0),
+            fov=60,
+            GUI=False,
+        )
+
     camera = None
     if args.video_output is not None:
         marker_specs = (
             ((-2.0, 0.0, 0.025), (0.1, 0.45, 0.95)),
             ((-0.6, 1.2, 0.025), (1.0, 0.75, 0.0)),
-            ((-0.6, -1.2, 0.025), (1.0, 0.4, 0.0)),
+            ((0.0, -1.2, 0.025), (1.0, 0.4, 0.0)),
             ((0.8, 1.5, 0.025), (0.55, 0.25, 0.75)),
             ((2.0, 0.0, 0.025), (0.1, 0.7, 0.2)),
         )
@@ -242,7 +317,7 @@ def main() -> None:
     # 5. 定义起点、左右观察点、绕行点和最终目标点。
     start_xy = torch.tensor([-2.0, 0.0], device=device)
     inspection_left_xy = torch.tensor([-0.6, 1.2], device=device)
-    inspection_right_xy = torch.tensor([-0.6, -1.2], device=device)
+    inspection_right_xy = torch.tensor([0.0, -1.2], device=device)
     detour_xy = torch.tensor([0.8, 1.5], device=device)
     goal_xy = torch.tensor([2.0, 0.0], device=device)
 
@@ -307,10 +382,28 @@ def main() -> None:
                 )
 
             if inspection_steps % inspection_interval_steps == 0:
-                # 读取 Genesis 场景中的阻挡物实体，生成新观察。
-                true_result = observe_region(blocking_obstacle)
+                # geometry 用于快速对照；camera 使用真实渲染图像形成证据。
+                artifact = None
+                red_pixel_count = None
+                if args.sensor_mode == "camera":
+                    (
+                        true_result,
+                        base_confidence,
+                        artifact,
+                        red_pixel_count,
+                    ) = observe_region_camera(
+                        sensor_camera,
+                        current_viewpoint,
+                        args.evidence_dir,
+                        len(belief.evidence),
+                    )
+                else:
+                    true_result, base_confidence = observe_region_geometry(
+                        blocking_obstacle
+                    )
                 observed_result, confidence = apply_observation_noise(
                     true_result,
+                    base_confidence,
                     args.noise_profile,
                     len(belief.evidence),
                     args.noise_rate,
@@ -321,6 +414,8 @@ def main() -> None:
                     result=observed_result,
                     confidence=confidence,
                     step=step,
+                    source=args.sensor_mode,
+                    artifact=artifact,
                 )
                 previous_status = belief.status
                 belief.add_observation(observation)
@@ -331,6 +426,11 @@ def main() -> None:
                     f"result={observation.result} "
                     f"confidence={observation.confidence:.2f}"
                 )
+                if red_pixel_count is not None:
+                    print(
+                        f"[step={step}] Camera evidence: "
+                        f"red_pixels={red_pixel_count} artifact={artifact}"
+                    )
                 print(
                     f"[step={step}] Belief revised: "
                     f"{previous_status.value} -> {region_status}"
@@ -514,6 +614,7 @@ def main() -> None:
     print("Final region status:", region_status)
     print("Scenario:", args.scenario)
     print("Policy:", args.policy)
+    print("Sensor mode:", args.sensor_mode)
     print("Noise profile:", args.noise_profile)
     print("Noise rate:", args.noise_rate)
     print("Seed:", args.seed)
@@ -564,6 +665,10 @@ def main() -> None:
                 "seed": args.seed,
                 "noise_profile": args.noise_profile,
                 "noise_rate": args.noise_rate,
+                "sensor_mode": args.sensor_mode,
+                "evidence_dir": (
+                    str(args.evidence_dir) if args.evidence_dir else None
+                ),
             },
             "environment": {
                 "gpu": torch.cuda.get_device_name(0),

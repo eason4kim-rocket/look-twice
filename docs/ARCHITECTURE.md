@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-    S["Genesis scene truth"] --> O["Observation model"]
+    S["Genesis scene"] --> O["Geometry or rendered RGB sensor"]
     O --> E["Observation evidence"]
     E --> B["Purify RegionBelief"]
     B --> G["Action Gate"]
@@ -21,6 +21,13 @@ The implementation deliberately separates:
 - **observation** — what one noisy sensing event reports;
 - **belief** — what can be concluded from recent evidence;
 - **action** — what the reliability gate permits the robot to do.
+
+In `--sensor-mode camera`, the observation comes from a 320×240 Genesis RGB
+camera placed at the robot's current inspection viewpoint. A small,
+deterministic red-pixel detector produces `clear` or `blocked`; visible pixel
+support determines confidence, and the raw frame can be saved as an evidence
+artifact. The controller never reads the obstacle entity position in this
+mode.
 
 ## Belief lifecycle
 

@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -12,6 +13,8 @@ class Observation:
     result: str
     confidence: float
     step: int
+    source: str = "geometry"
+    artifact: Optional[str] = None
 
 
 class BeliefStatus(str, Enum):
