@@ -146,6 +146,8 @@ python scripts/summarize_experiments.py \
 - `docs/ARCHITECTURE.md` — system design and state flow
 - `docs/ROADMAP.md` — implementation and submission roadmap
 - `docs/V3_DESIGN.md` — v3 data isolation, noise, belief, NBV, and reproduction
+- `docs/SUBMISSION_CHECKLIST.md` — verified deadline, judging criteria, and final actions
+- `docs/SUBMISSION_DRAFT.md` — ready-to-adapt English competition description
 - `results/` — versioned, reproducible experiment samples
 
 ## Results and demos
@@ -159,6 +161,8 @@ python scripts/summarize_experiments.py \
 - [Blocked demo](assets/demo/blocked.mp4)
 - [Conflict-driven reinspection demo](assets/demo/conflict.mp4)
 - [Approximately 60-second submission video draft](assets/demo/look-twice-demo.mp4)
+- [V3 dynamic-change Learned NBV demo](assets/demo/v3/look-twice-v3-demo.mp4)
+- [V3 raw/corrupted evidence panels and trajectory](assets/demo/v3/README.md)
 
 At observation noise `0.3`, Purify achieved 97.5% safe success with an average
 of 2.4 observations. Majority Vote achieved 95.0% with a fixed cost of 3
