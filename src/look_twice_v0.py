@@ -195,7 +195,6 @@ def main() -> None:
             if distance_between(current_xy, goal_xy) < tolerance:
                 state = MissionState.FINISHED
                 print(f"[step={step}] Goal reached")
-                break
 
         elif state == MissionState.FINISHED:
             # 阶段五：任务结束，不再推进导航逻辑。
