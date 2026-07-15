@@ -35,6 +35,21 @@ class ViewpointScore:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class InformationGainScore:
+    name: str
+    expected_visibility: float
+    expected_information_gain: float
+    predicted_degradation: float
+    travel_cost: float
+    revisit_penalty: float
+    reachable: bool
+    utility: float
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
 DEFAULT_CANDIDATES = (
     ViewpointCandidate("left_near", (-0.6, 1.2), target_reference_pixels=808),
     ViewpointCandidate("left_far", (-0.2, 1.7), target_reference_pixels=2329),
@@ -166,4 +181,107 @@ class ViewpointPlanner:
                 and item.expected_visibility >= minimum_visibility
             ):
                 return by_name[item.name], ranking
+        return None, ranking
+
+
+def binary_entropy(probability: float) -> float:
+    probability = min(1.0 - 1e-12, max(1e-12, probability))
+    return -probability * math.log2(probability) - (1.0 - probability) * math.log2(
+        1.0 - probability
+    )
+
+
+def expected_information_gain(
+    prior_blocked: float,
+    reliability: float,
+) -> float:
+    """二元对称传感器模型下，一次候选观察的期望熵下降。"""
+    prior = min(1.0 - 1e-9, max(1e-9, prior_blocked))
+    reliability = min(1.0 - 1e-9, max(0.5, reliability))
+    p_observe_blocked = prior * reliability + (1.0 - prior) * (1.0 - reliability)
+    posterior_if_blocked = prior * reliability / p_observe_blocked
+    p_observe_clear = 1.0 - p_observe_blocked
+    posterior_if_clear = prior * (1.0 - reliability) / p_observe_clear
+    expected_posterior_entropy = (
+        p_observe_blocked * binary_entropy(posterior_if_blocked)
+        + p_observe_clear * binary_entropy(posterior_if_clear)
+    )
+    return max(0.0, binary_entropy(prior) - expected_posterior_entropy)
+
+
+class InformationGainViewpointPlanner:
+    """v3 NBV：以预期熵下降、移动成本、重访和传感器退化共同评分。"""
+
+    def __init__(
+        self,
+        candidates: tuple[ViewpointCandidate, ...] = DEFAULT_CANDIDATES,
+        travel_weight: float = 0.25,
+        revisit_weight: float = 0.20,
+        degradation_weight: float = 0.30,
+    ) -> None:
+        self.candidates = candidates
+        self.travel_weight = travel_weight
+        self.revisit_weight = revisit_weight
+        self.degradation_weight = degradation_weight
+
+    def rank(
+        self,
+        *,
+        current_xy: tuple[float, float],
+        target_region: Rectangle,
+        occluders: Iterable[Rectangle],
+        visited: set[str],
+        unreachable: set[str],
+        p_blocked: float,
+        severity: float,
+    ) -> list[InformationGainScore]:
+        from sensor_noise import predict_degradation
+
+        target_xy = (
+            (target_region.min_x + target_region.max_x) / 2.0,
+            (target_region.min_y + target_region.max_y) / 2.0,
+        )
+        scores = []
+        for candidate in self.candidates:
+            visibility = estimate_visibility(candidate.xy, target_region, occluders)
+            target_distance = math.dist(candidate.xy, target_xy)
+            degradation = predict_degradation(
+                severity=severity,
+                distance=target_distance,
+                predicted_visibility=visibility,
+            )
+            reliability = 0.5 + 0.5 * visibility * (1.0 - degradation)
+            information_gain = expected_information_gain(p_blocked, reliability)
+            travel_cost = min(1.0, math.dist(current_xy, candidate.xy) / 4.0)
+            revisit_penalty = 1.0 if candidate.name in visited else 0.0
+            reachable = candidate.name not in unreachable
+            utility = (
+                information_gain
+                - self.travel_weight * travel_cost
+                - self.revisit_weight * revisit_penalty
+                - self.degradation_weight * degradation
+            )
+            if not reachable:
+                # 使用有限哨兵，保证结构化结果符合严格 JSON 标准。
+                utility = -1.0e9
+            scores.append(
+                InformationGainScore(
+                    name=candidate.name,
+                    expected_visibility=visibility,
+                    expected_information_gain=information_gain,
+                    predicted_degradation=degradation,
+                    travel_cost=travel_cost,
+                    revisit_penalty=revisit_penalty,
+                    reachable=reachable,
+                    utility=utility,
+                )
+            )
+        return sorted(scores, key=lambda item: (-item.utility, item.name))
+
+    def choose(self, **kwargs: object) -> tuple[Optional[ViewpointCandidate], list[InformationGainScore]]:
+        ranking = self.rank(**kwargs)
+        candidates = {item.name: item for item in self.candidates}
+        for item in ranking:
+            if item.reachable and item.name not in kwargs["visited"] and math.isfinite(item.utility):
+                return candidates[item.name], ranking
         return None, ranking
