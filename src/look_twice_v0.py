@@ -7,6 +7,7 @@ import torch
 
 
 class MissionState(Enum):
+    # 当前 Look Twice v0 的四个任务阶段。
     GO_TO_INSPECTION = auto()
     INSPECT = auto()
     GO_TO_GOAL = auto()
@@ -19,14 +20,17 @@ def move_toward(
     speed: float,
     dt: float,
 ) -> torch.Tensor:
+    """计算从当前位置朝目标移动一步后得到的新二维位置。"""
     delta = target_xy - current_xy
     distance = torch.linalg.norm(delta)
 
     if distance.item() == 0:
         return current_xy
 
+    # 单个循环允许移动的最大距离。
     max_step = speed * dt
 
+    # 剩余距离不足一步时直接落在目标上，避免越过目标点。
     if distance.item() <= max_step:
         return target_xy.clone()
 
@@ -35,15 +39,18 @@ def move_toward(
 
 
 def distance_between(a: torch.Tensor, b: torch.Tensor) -> float:
+    """返回两个二维位置之间的欧氏距离。"""
     return torch.linalg.norm(a - b).item()
 
 
 def main() -> None:
+    # 1. 初始化 Genesis：使用 AMD GPU 运行仿真。
     gs.init(
         backend=gs.amdgpu,
         logging_level="warning",
     )
 
+    # 2. 创建无重力场景，专注验证二维导航和状态机逻辑。
     scene = gs.Scene(
         show_viewer=False,
         sim_options=gs.options.SimOptions(
@@ -52,8 +59,11 @@ def main() -> None:
         ),
     )
 
+    # 添加地面。
     scene.add_entity(gs.morphs.Plane())
 
+    # 3. 创建简化机器人。
+    # 它是一个固定箱子，通过 set_pos() 直接移动，不是真实轮式模型。
     robot = scene.add_entity(
         gs.morphs.Box(
             size=(0.4, 0.3, 0.2),
@@ -62,7 +72,8 @@ def main() -> None:
         )
     )
 
-    # 遮挡物：位于主路径附近
+    # 4. 添加遮挡物：位于起点到终点的主路径附近。
+    # 当前版本尚未用传感器读取它，它主要用于表达“被遮挡区域”的场景概念。
     scene.add_entity(
         gs.morphs.Box(
             size=(0.5, 1.2, 1.0),
@@ -71,21 +82,29 @@ def main() -> None:
         )
     )
 
+    # 所有实体添加完成后构建场景。
     scene.build()
 
     device = torch.device("cuda:0")
 
+    # 5. 定义三个关键导航点：起点、观察点和最终目标点。
     start_xy = torch.tensor([-2.0, 0.0], device=device)
     inspection_xy = torch.tensor([-0.6, 1.2], device=device)
     goal_xy = torch.tensor([2.0, 0.0], device=device)
 
     current_xy = start_xy.clone()
 
+    # 6. 运动和观察参数。
+    # 每步最多移动 speed * dt = 0.016 米。
+    # 到达目标点附近 tolerance 范围内即认为到达。
+    # inspection_steps_required 表示机器人在观察点等待的仿真步数。
     speed = 0.8
     dt = 0.02
     tolerance = 0.05
     inspection_steps_required = 40
 
+    # 7. 初始化任务状态。
+    # region_status 表示机器人对前方区域的认知，初始为 unknown。
     state = MissionState.GO_TO_INSPECTION
     inspection_steps = 0
     region_status = "unknown"
@@ -94,6 +113,7 @@ def main() -> None:
 
     for step in range(2000):
         if state == MissionState.GO_TO_INSPECTION:
+            # 阶段一：主动前往更好的观察位置。
             target_xy = inspection_xy
 
             current_xy = move_toward(
@@ -108,6 +128,7 @@ def main() -> None:
                 print(f"[step={step}] Reached inspection viewpoint")
 
         elif state == MissionState.INSPECT:
+            # 阶段二：停在观察点，累计模拟观察时间。
             inspection_steps += 1
 
             if inspection_steps == 1:
@@ -116,6 +137,7 @@ def main() -> None:
                 )
 
             if inspection_steps >= inspection_steps_required:
+                # 当前 v0 的关键限制：观察结果尚未来自场景，而是直接写死为 clear。
                 region_status = "clear"
                 state = MissionState.GO_TO_GOAL
 
@@ -125,6 +147,7 @@ def main() -> None:
                 )
 
         elif state == MissionState.GO_TO_GOAL:
+            # 阶段三：区域被判断为 clear 后，直接前往最终目标。
             target_xy = goal_xy
 
             current_xy = move_toward(
@@ -140,8 +163,10 @@ def main() -> None:
                 break
 
         elif state == MissionState.FINISHED:
+            # 阶段四：任务结束，不再推进导航逻辑。
             break
 
+        # 8. 将二维导航位置转换为三维位置；z 固定为机器人半高 0.1。
         pos = torch.tensor(
             [
                 current_xy[0].item(),
@@ -151,9 +176,11 @@ def main() -> None:
             device=device,
         )
 
+        # 将逻辑位置写入 Genesis 机器人实体，并推进一个仿真步。
         robot.set_pos(pos)
         scene.step()
 
+        # 每 50 步打印任务状态、机器人位置和区域认知状态。
         if step % 50 == 0:
             print(
                 f"step={step:04d} "
@@ -163,6 +190,7 @@ def main() -> None:
                 f"region={region_status}"
             )
 
+    # 9. 输出任务结束时的状态、位置、目标距离和运行耗时。
     elapsed = time.perf_counter() - start_time
     final_pos = robot.get_pos()
 
