@@ -191,6 +191,7 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
     belief = ProbabilisticRegionBelief(max_age_steps=args.belief_ttl)
     visited: set[str] = set()
     unreachable = set(sample.unreachable_viewpoints)
+    initial_viewpoint_name: Optional[str] = None
 
     current_xy = torch.tensor([-2.0, 0.0], device=device)
     trajectory: list[dict[str, Any]] = [{"step": 0, "x": -2.0, "y": 0.0}]
@@ -350,6 +351,7 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
         }
 
     def choose_viewpoint(reason: str, allow_revisit: bool = False) -> Optional[ViewpointCandidate]:
+        nonlocal initial_viewpoint_name
         ranking = ranking_for_current_position()
         available = [
             name for name in fixed_order if name not in unreachable and (allow_revisit or name not in visited)
@@ -363,7 +365,16 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
                 for score in ranking
                 if score.reachable
             )
-        if args.policy == "purify-learned":
+        if reason == "initial":
+            # 公平对照：所有策略共享同一个、只使用已知静态遮挡地图的首视角。
+            selected, _ = visibility_planner.choose(
+                current_xy=(current_xy[0].item(), current_xy[1].item()),
+                target_region=target_region,
+                occluders=[occluder_rect],
+                visited=set(unreachable),
+            )
+            initial_viewpoint_name = selected.name if selected else None
+        elif args.policy == "purify-learned":
             for score in ranking:
                 if score.reachable and (allow_revisit or score.name not in visited):
                     learned_scores[score.name] = learned_scorer.score(
@@ -389,7 +400,7 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
         elif args.policy == "purify-random" and available:
             selected = candidates[policy_rng.choice(available)]
         elif args.policy == "purify-fixed":
-            name = next((name for name in fixed_order if name not in unreachable), None)
+            name = initial_viewpoint_name
             selected = candidates[name] if name else None
         elif available:
             selected = candidates[available[0]]
