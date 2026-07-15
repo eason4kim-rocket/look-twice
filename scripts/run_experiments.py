@@ -5,6 +5,7 @@ import csv
 import json
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 
@@ -19,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed-count", type=int, default=20)
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--entrypoint", default="src/look_twice_v0.py")
+    parser.add_argument("--workers", type=int, default=1)
     return parser.parse_args()
 
 
@@ -34,11 +36,13 @@ def is_complete(path: Path) -> bool:
 
 def main() -> None:
     args = parse_args()
+    if args.workers < 1:
+        raise SystemExit("--workers must be at least 1")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     raw_dir = args.output_dir / "raw"
     raw_dir.mkdir(exist_ok=True)
 
-    run_count = 0
+    jobs = []
     skipped_count = 0
     for policy in POLICIES:
         for scenario in SCENARIOS:
@@ -69,13 +73,26 @@ def main() -> None:
                         "--json-output",
                         str(output_path),
                     ]
-                    subprocess.run(
-                        command,
-                        check=True,
-                        stdout=subprocess.DEVNULL,
-                    )
-                    run_count += 1
-                    print(f"completed {filename}", flush=True)
+                    jobs.append((filename, command))
+
+    def run_job(filename: str, command: list[str]) -> str:
+        subprocess.run(
+            command,
+            check=True,
+            stdout=subprocess.DEVNULL,
+        )
+        return filename
+
+    run_count = 0
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        futures = {
+            executor.submit(run_job, filename, command): filename
+            for filename, command in jobs
+        }
+        for future in as_completed(futures):
+            filename = future.result()
+            run_count += 1
+            print(f"completed {filename}", flush=True)
 
     rows = []
     for path in sorted(raw_dir.glob("*.json")):
