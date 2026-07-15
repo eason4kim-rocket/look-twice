@@ -231,6 +231,15 @@ def main() -> None:
     print()
     print("Final mission state:", state.name)
     print("Final region status:", region_status)
+
+    if region_status == "clear":
+        route_summary = "start -> inspection -> goal"
+    elif region_status == "blocked":
+        route_summary = "start -> inspection -> detour -> goal"
+    else:
+        route_summary = "incomplete"
+
+    print("Route taken:", route_summary)
     print("Final position:", final_pos)
     print(
         "Distance to goal:",
