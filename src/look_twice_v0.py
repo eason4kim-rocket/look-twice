@@ -454,17 +454,6 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
                     f"{perception.visible_fraction:.3f} device={perception.device}"
                 )
 
-                if (
-                    args.scenario in {"dynamic-appears", "dynamic-clears"}
-                    and event_due_step is None
-                    and belief.status
-                    in {BeliefStatus.CONFIRMED_CLEAR, BeliefStatus.CONFIRMED_BLOCKED}
-                ):
-                    event_due_step = step + args.event_delay
-                    dynamic_events.append(
-                        {"step": step, "event": "scheduled", "due": event_due_step}
-                    )
-
                 decision_result = None
                 if args.policy == "single-shot":
                     decision_result = (
@@ -486,6 +475,16 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
                         decision_result = "clear"
                     elif belief.is_action_allowed("go_to_detour"):
                         decision_result = "blocked"
+
+                if (
+                    args.scenario in {"dynamic-appears", "dynamic-clears"}
+                    and event_due_step is None
+                    and decision_result in {"clear", "blocked"}
+                ):
+                    event_due_step = step + args.event_delay
+                    dynamic_events.append(
+                        {"step": step, "event": "scheduled", "due": event_due_step}
+                    )
 
                 if decision_result == "clear":
                     state = MissionState.GO_TO_GOAL
