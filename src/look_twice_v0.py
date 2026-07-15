@@ -132,9 +132,22 @@ def main() -> None:
         type=Path,
         help="将结构化运行结果写入指定 JSON 文件",
     )
+    parser.add_argument(
+        "--video-output",
+        type=Path,
+        help="使用 Genesis 顶视相机保存 MP4 演示视频",
+    )
+    parser.add_argument(
+        "--video-stride",
+        type=int,
+        default=5,
+        help="每隔多少个仿真步渲染一帧",
+    )
     args = parser.parse_args()
     if not 0.0 <= args.noise_rate <= 1.0:
         parser.error("--noise-rate must be between 0 and 1")
+    if args.video_stride < 1:
+        parser.error("--video-stride must be at least 1")
     rng = random.Random(args.seed)
 
     # 1. 初始化 Genesis：使用 AMD GPU 运行仿真。
@@ -162,7 +175,8 @@ def main() -> None:
             size=(0.4, 0.3, 0.2),
             pos=(-2.0, 0.0, 0.1),
             fixed=True,
-        )
+        ),
+        surface=gs.surfaces.Default(color=(0.1, 0.45, 0.95)),
     )
 
     # 4. 添加遮挡物：位于起点到终点的主路径附近。
@@ -172,7 +186,8 @@ def main() -> None:
             size=(0.5, 1.2, 1.0),
             pos=(0.0, 0.0, 0.5),
             fixed=True,
-        )
+        ),
+        surface=gs.surfaces.Default(color=(0.45, 0.45, 0.45)),
     )
 
     # blocked 场景会在受检区域内创建一个真实的 Genesis 实体。
@@ -184,11 +199,43 @@ def main() -> None:
                 size=(0.5, 0.5, 0.5),
                 pos=(0.8, 0.0, 0.25),
                 fixed=True,
+            ),
+            surface=gs.surfaces.Default(color=(0.85, 0.15, 0.15)),
+        )
+
+    camera = None
+    if args.video_output is not None:
+        marker_specs = (
+            ((-2.0, 0.0, 0.025), (0.1, 0.45, 0.95)),
+            ((-0.6, 1.2, 0.025), (1.0, 0.75, 0.0)),
+            ((-0.6, -1.2, 0.025), (1.0, 0.4, 0.0)),
+            ((0.8, 1.5, 0.025), (0.55, 0.25, 0.75)),
+            ((2.0, 0.0, 0.025), (0.1, 0.7, 0.2)),
+        )
+        for marker_pos, marker_color in marker_specs:
+            scene.add_entity(
+                gs.morphs.Box(
+                    size=(0.12, 0.12, 0.05),
+                    pos=marker_pos,
+                    fixed=True,
+                    collision=False,
+                ),
+                surface=gs.surfaces.Default(color=marker_color),
             )
+
+        camera = scene.add_camera(
+            res=(640, 480),
+            pos=(0.0, 0.0, 8.0),
+            lookat=(0.0, 0.0, 0.0),
+            up=(0.0, 1.0, 0.0),
+            fov=43,
+            GUI=False,
         )
 
     # 所有实体添加完成后构建场景。
     scene.build()
+    if camera is not None:
+        camera.start_recording()
 
     device = torch.device("cuda:0")
 
@@ -431,6 +478,8 @@ def main() -> None:
         # 将逻辑位置写入 Genesis 机器人实体，并推进一个仿真步。
         robot.set_pos(pos)
         scene.step()
+        if camera is not None and step % args.video_stride == 0:
+            camera.render()
         trajectory.append(
             {
                 "step": step,
@@ -452,6 +501,13 @@ def main() -> None:
     # 9. 输出任务结束时的状态、位置、目标距离和运行耗时。
     elapsed = time.perf_counter() - start_time
     final_pos = robot.get_pos()
+
+    if camera is not None:
+        args.video_output.parent.mkdir(parents=True, exist_ok=True)
+        camera.stop_recording(
+            save_to_filename=str(args.video_output),
+            fps=30,
+        )
 
     print()
     print("Final mission state:", state.name)
