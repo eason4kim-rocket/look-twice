@@ -216,7 +216,10 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
         "shifted-occluder",
         "high-occlusion",
     }
-    obstacle_position = (0.8, 0.0, 0.25) if starts_blocked else (0.8, 3.0, 0.25)
+    inactive_obstacle_position = (0.8, 0.0, -2.0)
+    obstacle_position = (
+        (0.8, 0.0, 0.25) if starts_blocked else inactive_obstacle_position
+    )
     color_rng = random.Random(args.seed + 991)
     obstacle_color = tuple(color_rng.uniform(0.1, 0.9) for _ in range(3))
     blocking_obstacle = scene.add_entity(
@@ -350,7 +353,7 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
                 new_position = torch.tensor([0.8, 0.0, 0.25], device=device)
                 event_name = "obstacle_appeared"
             else:
-                new_position = torch.tensor([0.8, 3.0, 0.25], device=device)
+                new_position = torch.tensor(inactive_obstacle_position, device=device)
                 event_name = "obstacle_cleared"
             blocking_obstacle.set_pos(new_position)
             event_completed = True
