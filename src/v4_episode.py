@@ -152,25 +152,40 @@ class EpisodeConfig:
             raise ValueError("v4 component ablations require policy purify-active")
 
 
+def _viewpoint_utility(
+    candidate: Mapping[str, Any], start_xy: tuple[float, float]
+) -> tuple[float, str]:
+    distance = min(1.0, math.dist(start_xy, candidate["xy"]) / 4.0)
+    value = (
+        0.55 * float(candidate["predicted_coverage"])
+        - 0.25 * distance
+        - 0.30 * float(candidate["predicted_degradation"])
+        - 0.50 * float(candidate["physical_risk"])
+    )
+    return value, str(candidate["name"])
+
+
+def ordered_reachable_viewpoints(
+    public_context: Mapping[str, Any], start_xy: tuple[float, float]
+) -> list[Mapping[str, Any]]:
+    """Return reachable viewpoints sorted by the frozen initial utility."""
+    reachable = [
+        candidate
+        for candidate in public_context["candidate_viewpoints"]
+        if candidate["reachable"]
+    ]
+    return sorted(
+        reachable,
+        key=lambda candidate: _viewpoint_utility(candidate, start_xy),
+        reverse=True,
+    )
+
+
 def select_initial_viewpoint(
     public_context: Mapping[str, Any], start_xy: tuple[float, float]
 ):
-    candidates = public_context["candidate_viewpoints"]
-    reachable = [candidate for candidate in candidates if candidate["reachable"]]
-    if not reachable:
-        return None
-
-    def utility(candidate: Mapping[str, Any]) -> tuple[float, str]:
-        distance = min(1.0, math.dist(start_xy, candidate["xy"]) / 4.0)
-        value = (
-            0.55 * float(candidate["predicted_coverage"])
-            - 0.25 * distance
-            - 0.30 * float(candidate["predicted_degradation"])
-            - 0.50 * float(candidate["physical_risk"])
-        )
-        return value, str(candidate["name"])
-
-    return max(reachable, key=utility)
+    ordered = ordered_reachable_viewpoints(public_context, start_xy)
+    return ordered[0] if ordered else None
 
 
 def _candidate_by_name(public_context: Mapping[str, Any], name: str):
@@ -511,16 +526,25 @@ def run_v4_episode(
                 candidate = _candidate_by_name(public_context, action.name)
             else:
                 candidate = current_viewpoint
-            observe(candidate, action_kind=action.kind)
+            try:
+                observe(candidate, action_kind=action.kind)
+            except RuntimeError as exc:
+                # A blocked side view is a failed repair attempt, not a process crash.
+                return PolicyDecision(
+                    "safe_fallback",
+                    "unresolved",
+                    ("clear", "blocked"),
+                    "repair_viewpoint_unreachable",
+                    {"safe_fallback": True, "viewpoint_error": str(exc)},
+                )
             decision = evaluate_current()
             if decision.action != "observe":
                 repair_success = True
         return decision
 
-    initial = select_initial_viewpoint(
-        public_context, (runtime.current_pose.x, runtime.current_pose.y)
-    )
-    if initial is None:
+    start_xy = (runtime.current_pose.x, runtime.current_pose.y)
+    ordered_initials = ordered_reachable_viewpoints(public_context, start_xy)
+    if not ordered_initials:
         final_decision = PolicyDecision(
             "safe_fallback",
             "unresolved",
@@ -529,18 +553,40 @@ def run_v4_episode(
             {"safe_fallback": True},
         )
     else:
-        observe(initial, action_kind="initial")
-        final_decision = evaluate_current()
-        if descriptor.allows_repair and config.ablation != "no-active-repair":
-            final_decision = repair_until_decisive(final_decision)
-        elif final_decision.action == "observe":
+        # Prefer the planner ranking, then fall back through remaining reachable
+        # viewpoints so a single kinematic contact does not abort the episode.
+        attempt_errors: list[str] = []
+        observed = False
+        for candidate in ordered_initials:
+            try:
+                observe(candidate, action_kind="initial")
+                observed = True
+                break
+            except RuntimeError as exc:
+                attempt_errors.append(str(exc))
+        if not observed:
             final_decision = PolicyDecision(
                 "safe_fallback",
                 "unresolved",
                 ("clear", "blocked"),
-                "active_repair_ablation",
-                {"safe_fallback": True},
+                "no_reachable_viewpoint",
+                {
+                    "safe_fallback": True,
+                    "viewpoint_errors": attempt_errors,
+                },
             )
+        else:
+            final_decision = evaluate_current()
+            if descriptor.allows_repair and config.ablation != "no-active-repair":
+                final_decision = repair_until_decisive(final_decision)
+            elif final_decision.action == "observe":
+                final_decision = PolicyDecision(
+                    "safe_fallback",
+                    "unresolved",
+                    ("clear", "blocked"),
+                    "active_repair_ablation",
+                    {"safe_fallback": True},
+                )
 
     # Move to the route commitment boundary.  An admitted receipt is checked
     # again there; expiry produces a signed invalidation before any crossing.
@@ -775,6 +821,7 @@ __all__ = (
     "EpisodeConfig",
     "cross_region_contract",
     "detour_contract",
+    "ordered_reachable_viewpoints",
     "run_v4_episode",
     "select_initial_viewpoint",
     "smoke_calibration_artifact",

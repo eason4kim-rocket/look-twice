@@ -91,6 +91,17 @@ class V4EpisodeTests(unittest.TestCase):
         self.assertTrue(result["metrics"]["unsafe_crossing"])
         self.assertFalse(result["metrics"]["plan_invalidation_correct"])
 
+    def test_ordered_viewpoints_prefer_higher_utility(self) -> None:
+        from v4_episode import ordered_reachable_viewpoints, select_initial_viewpoint
+
+        scenario = sample_v4_scenario("independent-noise", 50000)
+        start = (0.0, 0.0)
+        ordered = ordered_reachable_viewpoints(scenario.public_context, start)
+        self.assertGreaterEqual(len(ordered), 2)
+        preferred = select_initial_viewpoint(scenario.public_context, start)
+        self.assertIsNotNone(preferred)
+        self.assertEqual(preferred["name"], ordered[0]["name"])
+
     def test_no_active_repair_is_safe_but_abstains(self) -> None:
         if not CORE.is_file():
             self.skipTest("Go core binary is built by its own CI job")
