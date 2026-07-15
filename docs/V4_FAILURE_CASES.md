@@ -112,6 +112,17 @@ so echo copies did not inflate independent measurement roots.
 - The public Go core is a contest reference slice, not the private Purify
   product or a certified controller.
 
+
+### Case D — Process crash on unreachable initial viewpoint (seed 50018)
+
+| Field | Value |
+| --- | --- |
+| Path | `results/v4-gpu/formal-genesis/errors/*__seed-50018.error.json` |
+| Symptom | `RuntimeError: failed to reach evidence viewpoint right_far: obstacle_contact` |
+| Fix (post-error) | `ordered_reachable_viewpoints` multi-try initial capture (commit `5e9b0d9`); re-run formal to fill holes |
+
+Earlier formal rows for seed 50018 remain error JSON until a resume re-run succeeds.
+
 ## Formal matrix honesty (in progress)
 
 | Item | Value |
