@@ -1,8 +1,10 @@
 import argparse
 import json
 import math
+import random
 import subprocess
 import time
+from collections import Counter
 from dataclasses import asdict
 from enum import Enum, auto
 from pathlib import Path
@@ -72,19 +74,24 @@ def apply_observation_noise(
     true_result: str,
     noise_profile: str,
     observation_index: int,
+    noise_rate: float,
+    rng: random.Random,
 ) -> tuple[str, float]:
     """使用可复现的噪声配置生成观察结果和置信度。"""
     should_flip = (
         noise_profile == "first-flip" and observation_index == 0
     ) or (
         noise_profile == "alternating" and observation_index % 2 == 0
+    ) or (
+        noise_profile == "random" and rng.random() < noise_rate
     )
 
     if not should_flip:
         return true_result, 1.0
 
     flipped_result = "blocked" if true_result == "clear" else "clear"
-    return flipped_result, 0.6
+    confidence = 0.6 if noise_profile != "random" else 0.9
+    return flipped_result, confidence
 
 
 def main() -> None:
@@ -97,10 +104,22 @@ def main() -> None:
         help="选择受检区域的场景真值",
     )
     parser.add_argument(
+        "--policy",
+        choices=("single-shot", "majority-vote", "purify"),
+        default="purify",
+        help="选择对照决策策略",
+    )
+    parser.add_argument(
         "--noise-profile",
-        choices=("none", "first-flip", "alternating"),
+        choices=("none", "first-flip", "alternating", "random"),
         default="none",
         help="选择可复现的观察噪声",
+    )
+    parser.add_argument(
+        "--noise-rate",
+        type=float,
+        default=0.0,
+        help="random 噪声配置下单次观察翻转概率",
     )
     parser.add_argument(
         "--seed",
@@ -114,6 +133,9 @@ def main() -> None:
         help="将结构化运行结果写入指定 JSON 文件",
     )
     args = parser.parse_args()
+    if not 0.0 <= args.noise_rate <= 1.0:
+        parser.error("--noise-rate must be between 0 and 1")
+    rng = random.Random(args.seed)
 
     # 1. 初始化 Genesis：使用 AMD GPU 运行仿真。
     gs.init(
@@ -244,6 +266,8 @@ def main() -> None:
                     true_result,
                     args.noise_profile,
                     len(belief.evidence),
+                    args.noise_rate,
+                    rng,
                 )
                 observation = Observation(
                     viewpoint=current_viewpoint,
@@ -269,20 +293,36 @@ def main() -> None:
                         {"step": step, "status": region_status}
                     )
 
-                if belief.is_action_allowed("go_to_goal"):
+                decision_result = None
+                if args.policy == "single-shot":
+                    decision_result = observation.result
+                elif args.policy == "majority-vote":
+                    if len(belief.evidence) >= 3:
+                        result_counts = Counter(
+                            item.result for item in belief.evidence[:3]
+                        )
+                        decision_result = result_counts.most_common(1)[0][0]
+                elif belief.is_action_allowed("go_to_goal"):
+                    decision_result = "clear"
+                elif belief.is_action_allowed("go_to_detour"):
+                    decision_result = "blocked"
+
+                if decision_result == "clear":
                     state = MissionState.GO_TO_GOAL
                     action_decisions.append(
                         {"step": step, "action": "go_to_goal", "allowed": True}
                     )
-                    print(f"[step={step}] Action gate: GO_TO_GOAL allowed")
-                elif belief.is_action_allowed("go_to_detour"):
+                    print(f"[step={step}] Policy decision: GO_TO_GOAL")
+                elif decision_result == "blocked":
                     state = MissionState.GO_TO_DETOUR
                     used_detour = True
                     action_decisions.append(
                         {"step": step, "action": "go_to_detour", "allowed": True}
                     )
-                    print(f"[step={step}] Action gate: GO_TO_DETOUR allowed")
+                    print(f"[step={step}] Policy decision: GO_TO_DETOUR")
                 elif (
+                    args.policy == "purify"
+                    and
                     belief.status == BeliefStatus.UNCERTAIN
                     and current_viewpoint == "inspection_left"
                 ):
@@ -298,6 +338,8 @@ def main() -> None:
                         "moving to second inspection viewpoint"
                     )
                 elif (
+                    args.policy == "purify"
+                    and
                     belief.status == BeliefStatus.UNCERTAIN
                     and current_viewpoint == "inspection_right"
                 ):
@@ -415,7 +457,9 @@ def main() -> None:
     print("Final mission state:", state.name)
     print("Final region status:", region_status)
     print("Scenario:", args.scenario)
+    print("Policy:", args.policy)
     print("Noise profile:", args.noise_profile)
+    print("Noise rate:", args.noise_rate)
     print("Seed:", args.seed)
     print("Evidence:")
     for observation in belief.evidence:
@@ -460,9 +504,10 @@ def main() -> None:
             "git_commit": git_commit,
             "configuration": {
                 "scenario": args.scenario,
-                "policy": "purify",
+                "policy": args.policy,
                 "seed": args.seed,
                 "noise_profile": args.noise_profile,
+                "noise_rate": args.noise_rate,
             },
             "environment": {
                 "gpu": torch.cuda.get_device_name(0),
@@ -480,6 +525,17 @@ def main() -> None:
                 "mission_success": (
                     state == MissionState.FINISHED
                     and distance_between(final_pos[:2], goal_xy) < tolerance
+                ),
+                "unsafe_crossing": (
+                    args.scenario == "blocked" and not used_detour
+                ),
+                "wrong_detour": (
+                    args.scenario == "clear" and used_detour
+                ),
+                "safe_success": (
+                    state == MissionState.FINISHED
+                    and distance_between(final_pos[:2], goal_xy) < tolerance
+                    and not (args.scenario == "blocked" and not used_detour)
                 ),
                 "final_distance": distance_between(final_pos[:2], goal_xy),
                 "path_length": path_length,
