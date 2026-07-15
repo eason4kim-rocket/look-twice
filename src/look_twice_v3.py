@@ -609,6 +609,17 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
             }
         )
     else:
+        detour_confirmed = args.policy not in ACTIVE_POLICIES or belief.is_action_allowed(
+            "go_to_detour", current_step=step
+        )
+        action_decisions.append(
+            {
+                "step": step,
+                "action": "take_detour",
+                "allowed": True,
+                "reason": "confirmed_blocked" if detour_confirmed else "safe_fallback",
+            }
+        )
         move_to((0.8, 1.5), "detour")
     move_to((2.0, 0.0), "goal")
 

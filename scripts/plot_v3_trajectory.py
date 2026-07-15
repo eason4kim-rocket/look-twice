@@ -17,6 +17,20 @@ CANDIDATES = {
     "right_far": (0.4, -1.7),
 }
 
+VIEWPOINT_LABEL_OFFSETS = {
+    "left_near": (-44, -18),
+    "left_far": (8, 8),
+    "right_near": (8, 8),
+    "right_far": (-58, 10),
+}
+
+EVIDENCE_LABEL_OFFSETS = {
+    "left_near": [(-112, 26), (18, -54), (18, 34)],
+    "left_far": [(18, -54), (-108, -54), (18, 28)],
+    "right_near": [(18, 28), (-108, 26), (18, -54)],
+    "right_far": [(18, 24), (-108, 26), (18, -54)],
+}
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -84,14 +98,26 @@ def main() -> None:
             color="#d62728" if name in unreachable else "#ff7f0e",
             s=65,
         )
-        axis.text(x + 0.05, y + 0.06, name, fontsize=8)
+        axis.annotate(
+            name,
+            xy=(x, y),
+            xytext=VIEWPOINT_LABEL_OFFSETS[name],
+            textcoords="offset points",
+            fontsize=8,
+        )
+    viewpoint_occurrences: dict[str, int] = {}
     for index, evidence in enumerate(data["evidence"]):
-        x, y = CANDIDATES[evidence["viewpoint"]]
+        viewpoint = evidence["viewpoint"]
+        x, y = CANDIDATES[viewpoint]
         belief = evidence["belief_after"]
+        occurrence = viewpoint_occurrences.get(viewpoint, 0)
+        offsets = EVIDENCE_LABEL_OFFSETS[viewpoint]
+        label_offset = offsets[min(occurrence, len(offsets) - 1)]
+        viewpoint_occurrences[viewpoint] = occurrence + 1
         axis.annotate(
             f"#{index + 1} {evidence['result']}\np={belief['p_blocked']:.2f}, H={belief['entropy']:.2f}",
             xy=(x, y),
-            xytext=(8, 12 + 26 * (index % 2)),
+            xytext=label_offset,
             textcoords="offset points",
             fontsize=8,
             arrowprops={"arrowstyle": "->", "alpha": 0.5},
