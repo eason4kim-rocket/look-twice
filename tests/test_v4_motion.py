@@ -114,6 +114,27 @@ class MotionControlTests(unittest.TestCase):
         self.assertEqual(state["command"], (0.0,) * 4)
         self.assertGreater(len(result.controls), 10)
 
+    def test_already_at_target_records_non_empty_trace(self) -> None:
+        pose = Pose2D(0.5, -0.25, 0.1)
+
+        def apply_pose(next_pose: Pose2D) -> None:
+            raise AssertionError(f"should not move when already at target: {next_pose}")
+
+        controller = KinematicMotionController(
+            get_pose=lambda: pose,
+            apply_pose=apply_pose,
+            simulation_step=lambda: None,
+            obstacle_contact_count=lambda: 0,
+            maximum_steps=50,
+        )
+        result = controller.move_to((0.5, -0.25))
+        self.assertTrue(result.reached)
+        self.assertEqual(result.reason, "reached")
+        self.assertGreaterEqual(len(result.trajectory), 1)
+        self.assertGreaterEqual(len(result.controls), 1)
+        self.assertEqual(result.trajectory[0]["x"], pose.x)
+        self.assertEqual(result.controls[0]["linear_velocity"], 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()
