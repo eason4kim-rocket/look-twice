@@ -521,8 +521,13 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
         """返回 clear/blocked；无充分证据时只返回安全的 blocked。"""
         observations_this_round: list[Observation] = []
         while len(observations_this_round) < args.max_observations:
-            allow_revisit = args.policy == "purify-fixed" or reason.startswith("stale")
-            candidate = choose_viewpoint(reason, allow_revisit=allow_revisit)
+            observation_reason = reason if not observations_this_round else "uncertain_evidence"
+            allow_revisit = args.policy == "purify-fixed" or observation_reason.startswith(
+                "stale"
+            )
+            candidate = choose_viewpoint(
+                observation_reason, allow_revisit=allow_revisit
+            )
             if candidate is None:
                 break
             observation = observe(candidate)
