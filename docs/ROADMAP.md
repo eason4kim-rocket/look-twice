@@ -1,5 +1,20 @@
 # Look Twice 参赛路线图
 
+## V3 实施状态 — 2026-07-15
+
+- [x] 连续场景随机化与 clear/blocked 分层 seed
+- [x] ROCm Tensor 上的视角相关 RGB-D/segmentation 退化
+- [x] 概率 belief、entropy、TTL 与 Action Gate
+- [x] Fixed、Random、Information-Gain NBV
+- [x] Learned NBV 数据、训练、测试与自动晋级门槛
+- [x] CPU/ROCm 预热吞吐基准
+- [x] 50 回合 GPU 冒烟矩阵
+- [ ] 500 回合正式配对实验
+- [ ] 200/50/100 场景 Learned NBV 正式训练
+- [ ] v3 组合演示视频与最终参赛材料
+
+V3 在独立 `v3-noisy-active-perception` 分支开发，v2 标签与正式结果保持不变。
+
 ## V2 完成状态 — 2026-07-15
 
 - [x] Genesis RGB-D 与 entity segmentation

@@ -1,6 +1,6 @@
 # Look Twice
 
-**Temporal evidence-gated next-best-view navigation on AMD GPU.**
+**Evidence-gated active perception under noisy, dynamic observations on AMD GPU.**
 
 Look Twice is a Physical AI project for the AMD AI DevMaster Hackathon. It
 addresses a simple safety problem: when a robot cannot confirm whether an
@@ -44,6 +44,10 @@ denied and a safe detour is selected.
 - Batch experiment runner with resume support
 - Trajectory and policy-comparison plots
 - AMD GPU simulation through `gs.amdgpu`
+- View-dependent RGB-D/segmentation corruption executed on ROCm tensors
+- Probabilistic `p_blocked`, belief entropy, calibration trace, and TTL decay
+- Information-Gain and optional Learned Next-Best-View policies
+- Continuously randomized, paired scene distributions with balanced truth seeds
 
 ## Quick start
 
@@ -90,6 +94,14 @@ The competition cloud image provides the tested environment at
   --belief-ttl 60 \
   --evidence-dir outputs/v2-evidence \
   --json-output outputs/v2-dynamic.json
+
+# Look Twice v3: noisy evidence + probabilistic belief + information gain
+/opt/venv/bin/python src/look_twice_v3.py \
+  --profile dynamic-change \
+  --policy purify-information-gain \
+  --seed 20000 \
+  --evidence-dir outputs/v3-evidence \
+  --json-output outputs/v3-dynamic.json
 ```
 
 Run the standard-library belief tests:
@@ -114,9 +126,12 @@ python scripts/summarize_experiments.py \
 ## Repository
 
 - `src/look_twice_v0.py` — Genesis scene, mission state machine, policies, and results
+- `src/look_twice_v3.py` — v3 randomized noisy active-perception episode
 - `src/belief.py` — Purify evidence resolution and action gate
 - `src/perception.py` — ROCm RGB-D/segmentation evidence computation
 - `src/viewpoint.py` — deterministic visibility scoring and Next-Best-View
+- `src/sensor_noise.py` — view-dependent PyTorch sensor corruption
+- `src/scenario.py` — reproducible continuous scene distribution
 - `tests/test_belief.py` — deterministic belief unit tests
 - `scripts/run_experiments.py` — resumable comparison matrix
 - `scripts/summarize_experiments.py` — aggregate metrics
@@ -125,8 +140,12 @@ python scripts/summarize_experiments.py \
 - `scripts/run_v2_experiments.py` — resumable 120-episode v2 matrix
 - `scripts/summarize_v2_experiments.py` — v2 aggregate metrics
 - `scripts/annotate_video.py` — state, belief, and Action Gate video overlays
+- `scripts/run_v3_experiments.py` — resumable 500-episode paired matrix
+- `scripts/benchmark_perception.py` — warmed CPU/ROCm batch benchmark
+- `scripts/collect_nbv_dataset.py` and `scripts/train_nbv.py` — optional Learned NBV
 - `docs/ARCHITECTURE.md` — system design and state flow
 - `docs/ROADMAP.md` — implementation and submission roadmap
+- `docs/V3_DESIGN.md` — v3 data isolation, noise, belief, NBV, and reproduction
 - `results/` — versioned, reproducible experiment samples
 
 ## Results and demos
