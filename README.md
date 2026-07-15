@@ -154,6 +154,7 @@ python scripts/summarize_experiments.py \
 - [Rendered-camera perception validation](results/2026-07-15_camera-perception/README.md)
 - [Look Twice v2 formal 120-run experiment](results/2026-07-15_v2-formal/README.md)
 - [Look Twice v3 formal 500-run experiment](results/2026-07-15_v3-formal/README.md)
+- [Look Twice v3 Learned NBV training and 100-run evaluation](results/2026-07-15_v3-learned/README.md)
 - [Clear demo](assets/demo/clear.mp4)
 - [Blocked demo](assets/demo/blocked.mp4)
 - [Conflict-driven reinspection demo](assets/demo/conflict.mp4)
@@ -167,6 +168,13 @@ In the v2 `dynamic-appears` experiment, Single Shot, Majority Vote, and fixed
 Purify all produced a 100% unsafe-crossing rate. Active Purify detected stale
 evidence, moved to a new viewpoint, and achieved 100% safe success across six
 seeds. This safety gain required 4 observations, 1 replan, and a longer path.
+
+In v3, the five-policy core matrix contains 500 paired episodes. Learned NBV
+was trained on 200 randomized scenes and evaluated on disjoint 50-scene
+validation and 100-scene test splits. It reduced held-out oracle regret from
+0.0669 to 0.0421 and retained 100% safe success in a separate 100-episode
+closed-loop evaluation. It did not beat the heuristic on every path-efficiency
+metric; this limitation is reported with the result rather than hidden.
 
 ## Tested AMD environment
 

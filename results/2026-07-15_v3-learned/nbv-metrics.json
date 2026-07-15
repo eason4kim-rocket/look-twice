@@ -1,0 +1,12 @@
+{
+  "validation_mse": 0.02304074540734291,
+  "test_mse": 0.023982616141438484,
+  "decision_count": 398.0,
+  "learned_oracle_regret": 0.04211419320271983,
+  "heuristic_oracle_regret": 0.06687437837945225,
+  "learned_top1_accuracy": 0.7386934673366834,
+  "passed_promotion_gate": true,
+  "dataset_sha256": "1f113e3383c92fe5e1551d6e42403e55a35ce81f9982485055a4fc0acd916370",
+  "device": "cuda:0",
+  "epochs": 200
+}
