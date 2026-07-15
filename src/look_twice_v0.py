@@ -45,14 +45,30 @@ def distance_between(a: torch.Tensor, b: torch.Tensor) -> float:
     return torch.linalg.norm(a - b).item()
 
 
+def observe_region(blocking_obstacle) -> str:
+    """根据受检区域内是否存在阻挡物返回观察结果。"""
+    if blocking_obstacle is None:
+        return "clear"
+
+    obstacle_pos = blocking_obstacle.get_pos()
+    obstacle_x = obstacle_pos[0].item()
+    obstacle_y = obstacle_pos[1].item()
+
+    obstacle_in_region = (
+        0.4 <= obstacle_x <= 1.2
+        and -0.4 <= obstacle_y <= 0.4
+    )
+    return "blocked" if obstacle_in_region else "clear"
+
+
 def main() -> None:
-    # 用命令行参数模拟观察结果，方便重复验证 clear 和 blocked 两种场景。
+    # 命令行参数选择场景真值，不再直接告诉机器人观察结论。
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--observation",
+        "--scenario",
         choices=("clear", "blocked"),
         default="clear",
-        help="模拟机器人在观察点获得的结果",
+        help="选择受检区域的场景真值",
     )
     args = parser.parse_args()
 
@@ -94,6 +110,18 @@ def main() -> None:
         )
     )
 
+    # blocked 场景会在受检区域内创建一个真实的 Genesis 实体。
+    # clear 场景中没有这个阻挡物。
+    blocking_obstacle = None
+    if args.scenario == "blocked":
+        blocking_obstacle = scene.add_entity(
+            gs.morphs.Box(
+                size=(0.5, 0.5, 0.5),
+                pos=(0.8, 0.0, 0.25),
+                fixed=True,
+            )
+        )
+
     # 所有实体添加完成后构建场景。
     scene.build()
 
@@ -115,9 +143,6 @@ def main() -> None:
     dt = 0.02
     tolerance = 0.05
     inspection_steps_required = 40
-
-    # 暂时用命令行输入模拟观察证据；之后再替换为真实场景判断。
-    simulated_observation = args.observation
 
     # 7. 初始化任务状态。
     # region_status 表示机器人对前方区域的认知，初始为 unknown。
@@ -153,8 +178,8 @@ def main() -> None:
                 )
 
             if inspection_steps >= inspection_steps_required:
-                # 把新观察结果写入区域状态，再据此选择下一步行动。
-                region_status = simulated_observation
+                # 读取 Genesis 场景中的阻挡物实体，生成新观察。
+                region_status = observe_region(blocking_obstacle)
 
                 if region_status == "clear":
                     state = MissionState.GO_TO_GOAL
