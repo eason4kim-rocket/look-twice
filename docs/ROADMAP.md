@@ -103,7 +103,7 @@ blocked → inspection → detour → goal
 - 路线摘要；
 - 最终实体位置一致性修复。
 
-### M1：场景驱动的观察
+### M1：场景驱动的观察（已完成）
 
 目的：
 
@@ -130,7 +130,7 @@ blocked → inspection → detour → goal
 - 两条路线都到达目标；
 - 相同命令重复运行结果一致。
 
-### M2：最小证据记录
+### M2：最小证据记录（已完成）
 
 新增最小数据结构：
 
@@ -154,7 +154,7 @@ Observation(
 - 运行结束后打印完整证据摘要；
 - 每条证据包含观察点、结果、置信度和步数。
 
-### M3：Purify 状态结算和行动准入
+### M3：Purify 状态结算和行动准入（已完成）
 
 最小状态集：
 
@@ -200,7 +200,7 @@ is_action_allowed()
 - 证据不足时机器人不进入目标区域；
 - 决策日志显示当前 belief 和准入结果。
 
-### M4：冲突触发第二观察点
+### M4：冲突触发第二观察点（已完成）
 
 新增：
 
@@ -316,8 +316,4 @@ is_action_allowed()
 
 ## 9. 当前下一步
 
-只实施 M1 的第一个小改动：
-
-> 将 `--observation clear/blocked` 替换为 `--scenario clear/blocked`，由场景配置产生观察结果。
-
-本改动不引入噪声、多视角、Purify belief 或新可视化。
+完成结构化 JSON 运行结果，然后实施 Single Shot、Majority Vote 和 Purify 的可复现对照实验。

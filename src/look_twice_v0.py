@@ -1,7 +1,11 @@
 import argparse
+import json
 import math
+import subprocess
 import time
+from dataclasses import asdict
 from enum import Enum, auto
+from pathlib import Path
 
 import genesis as gs
 import torch
@@ -104,6 +108,11 @@ def main() -> None:
         default=0,
         help="实验随机种子（为后续随机噪声保留）",
     )
+    parser.add_argument(
+        "--json-output",
+        type=Path,
+        help="将结构化运行结果写入指定 JSON 文件",
+    )
     args = parser.parse_args()
 
     # 1. 初始化 Genesis：使用 AMD GPU 运行仿真。
@@ -169,6 +178,10 @@ def main() -> None:
     goal_xy = torch.tensor([2.0, 0.0], device=device)
 
     current_xy = start_xy.clone()
+    trajectory = [
+        {"step": -1, "x": start_xy[0].item(), "y": start_xy[1].item()}
+    ]
+    path_length = 0.0
 
     # 6. 运动和观察参数。
     # 每步最多移动 speed * dt = 0.016 米。
@@ -188,10 +201,18 @@ def main() -> None:
     used_detour = False
     belief = RegionBelief(confirmation_threshold=0.8)
     region_status = belief.status.value
+    belief_lifecycle = [{"step": -1, "status": region_status}]
+    action_decisions: list[dict] = []
+    state_transitions = [
+        {"step": -1, "from": None, "to": state.name}
+    ]
 
     start_time = time.perf_counter()
 
     for step in range(2000):
+        state_before = state
+        position_before = current_xy.clone()
+
         if state == MissionState.GO_TO_INSPECTION:
             # 阶段一：主动前往更好的观察位置。
             target_xy = inspection_left_xy
@@ -243,19 +264,35 @@ def main() -> None:
                     f"[step={step}] Belief revised: "
                     f"{previous_status.value} -> {region_status}"
                 )
+                if belief.status != previous_status:
+                    belief_lifecycle.append(
+                        {"step": step, "status": region_status}
+                    )
 
                 if belief.is_action_allowed("go_to_goal"):
                     state = MissionState.GO_TO_GOAL
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_goal", "allowed": True}
+                    )
                     print(f"[step={step}] Action gate: GO_TO_GOAL allowed")
                 elif belief.is_action_allowed("go_to_detour"):
                     state = MissionState.GO_TO_DETOUR
                     used_detour = True
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_detour", "allowed": True}
+                    )
                     print(f"[step={step}] Action gate: GO_TO_DETOUR allowed")
                 elif (
                     belief.status == BeliefStatus.UNCERTAIN
                     and current_viewpoint == "inspection_left"
                 ):
                     state = MissionState.GO_TO_SECOND_INSPECTION
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_goal", "allowed": False}
+                    )
+                    action_decisions.append(
+                        {"step": step, "action": "reinspect", "allowed": True}
+                    )
                     print(
                         f"[step={step}] Evidence conflict: "
                         "moving to second inspection viewpoint"
@@ -266,11 +303,20 @@ def main() -> None:
                 ):
                     state = MissionState.GO_TO_DETOUR
                     used_detour = True
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_goal", "allowed": False}
+                    )
+                    action_decisions.append(
+                        {"step": step, "action": "safe_detour", "allowed": True}
+                    )
                     print(
                         f"[step={step}] Action gate: direct passage denied; "
                         "safe detour selected"
                     )
                 else:
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_goal", "allowed": False}
+                    )
                     print(f"[step={step}] Action gate: high-risk action denied")
 
         elif state == MissionState.GO_TO_SECOND_INSPECTION:
@@ -323,6 +369,13 @@ def main() -> None:
             # 阶段五：任务结束，不再推进导航逻辑。
             break
 
+        if state != state_before:
+            state_transitions.append(
+                {"step": step, "from": state_before.name, "to": state.name}
+            )
+
+        path_length += distance_between(position_before, current_xy)
+
         # 8. 将二维导航位置转换为三维位置；z 固定为机器人半高 0.1。
         pos = torch.tensor(
             [
@@ -336,6 +389,13 @@ def main() -> None:
         # 将逻辑位置写入 Genesis 机器人实体，并推进一个仿真步。
         robot.set_pos(pos)
         scene.step()
+        trajectory.append(
+            {
+                "step": step,
+                "x": current_xy[0].item(),
+                "y": current_xy[1].item(),
+            }
+        )
 
         # 每 50 步打印任务状态、机器人位置和区域认知状态。
         if step % 50 == 0:
@@ -384,6 +444,61 @@ def main() -> None:
         ),
     )
     print(f"Elapsed: {elapsed:.3f}s")
+
+    if args.json_output is not None:
+        try:
+            git_commit = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            git_commit = "unknown"
+
+        result = {
+            "schema_version": 1,
+            "git_commit": git_commit,
+            "configuration": {
+                "scenario": args.scenario,
+                "policy": "purify",
+                "seed": args.seed,
+                "noise_profile": args.noise_profile,
+            },
+            "environment": {
+                "gpu": torch.cuda.get_device_name(0),
+                "rocm": torch.version.hip,
+                "torch": torch.__version__,
+                "genesis": gs.__version__,
+                "backend": "gs.amdgpu",
+            },
+            "evidence": [asdict(item) for item in belief.evidence],
+            "belief_lifecycle": belief_lifecycle,
+            "action_decisions": action_decisions,
+            "state_transitions": state_transitions,
+            "trajectory": trajectory,
+            "metrics": {
+                "mission_success": (
+                    state == MissionState.FINISHED
+                    and distance_between(final_pos[:2], goal_xy) < tolerance
+                ),
+                "final_distance": distance_between(final_pos[:2], goal_xy),
+                "path_length": path_length,
+                "observation_count": len(belief.evidence),
+                "elapsed_seconds": elapsed,
+                "simulation_steps": trajectory[-1]["step"] + 1,
+            },
+            "outcome": {
+                "mission_state": state.name,
+                "belief_status": belief.status.value,
+                "route": route_parts,
+            },
+        }
+        args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        args.json_output.write_text(
+            json.dumps(result, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        print("JSON output:", args.json_output)
 
 
 if __name__ == "__main__":
