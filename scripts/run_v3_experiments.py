@@ -35,6 +35,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--entrypoint", default="src/look_twice_v3.py")
+    parser.add_argument("--policies", nargs="+", choices=POLICIES, default=list(POLICIES))
+    parser.add_argument("--profiles", nargs="+", choices=PROFILES, default=list(PROFILES))
     return parser.parse_args()
 
 
@@ -56,8 +58,8 @@ def main() -> None:
     raw_dir.mkdir(parents=True, exist_ok=True)
     jobs: list[tuple[str, list[str]]] = []
     skipped = 0
-    for policy in POLICIES:
-        for profile in PROFILES:
+    for policy in args.policies:
+        for profile in args.profiles:
             for index in range(args.seed_count):
                 seed = args.seed_offset + index
                 name = f"{policy}__{profile}__seed-{seed}.json"
