@@ -36,31 +36,31 @@ oracle/evaluation channel.
 ## What is implemented now
 
 Status is intentionally split so local CI results cannot be confused with AMD
-GPU evidence.
+GPU evidence. Packaged W7900D artifacts live under
+[`results/v4-gpu/`](results/v4-gpu/STATUS.md).
 
-| Capability | Implemented | Locally verified | W7900D/formal status |
+| Capability | Implemented | Locally verified | W7900D / formal status |
 | --- | :---: | :---: | --- |
 | Immutable Robot Claim v1 and JSON Schemas | Yes | Yes | GPU-independent |
-| Capture/artifact/parent-lineage collapse | Yes | Yes | GPU-independent |
-| Standalone Go 1.23 Purify Robotics Reference Core | Yes | Yes | CPU governance layer |
-| Persistent Python ↔ Go NDJSON bridge | Yes | Yes | Cloud integration pending |
-| Root-aware fusion, Action Contract and hashed receipts | Yes | Yes | Cloud integration pending |
-| Class-conditional split-conformal artifact builder | Yes | Yes | Formal calibration data pending |
-| BeliefGap-driven repair planner | Yes | Yes | Genesis closed-loop validation pending |
-| Six comparison policies and eight stress profiles | Yes | Yes | 96/960 matrices pending |
+| Capture/artifact/parent-lineage collapse | Yes | Yes | Verified on W7900D smoke (echo discounts) |
+| Standalone Go 1.23 Purify Robotics Reference Core | Yes | Yes | Linux amd64 binary on cloud |
+| Persistent Python ↔ Go NDJSON bridge | Yes | Yes | Used in all Genesis episodes |
+| Root-aware fusion, Action Contract and hashed receipts | Yes | Yes | GateReceipts in archived JSON |
+| Class-conditional split-conformal artifact | Yes | Yes | Fitted partial cal in `results/v4-gpu/calibration/` |
+| BeliefGap-driven repair planner | Yes | Yes | Exercised on W7900D smoke |
+| Six comparison policies and eight stress profiles | Yes | Yes | **96 smoke complete**; **960 formal in progress** |
 | Deterministic synthetic runtime | Yes | Yes | **Never a formal GPU result** |
-| Kinematic motion backend | Yes | Unit/synthetic | Genesis validation pending |
-| Four-wheel skid-steer URDF and wheel controller | Yes | Unit tests | W7900D physics validation pending |
-| Genesis RGB-D/entity-segmentation v4 runtime | Yes | Static/local checks | W7900D execution pending |
-| AMD multi-environment `n_envs=8` feasibility | Planned | No | Pending |
-| 60 physical-backend validation episodes | Planned | No | Pending |
-| Upstream Genesis contribution | Planned | No | No PR claimed |
+| Kinematic motion backend | Yes | Yes | **Formal/smoke default after skid demotion** |
+| Four-wheel skid-steer URDF and wheel controller | Yes | Unit tests | **Acceptance failed** → demoted (see STATUS) |
+| Genesis RGB-D/entity-segmentation v4 runtime | Yes | Yes | **W7900D `gs.amdgpu` episodes archived** |
+| AMD multi-environment `n_envs=8` feasibility | Planned | No | Not blocking; single-env used |
+| 60 physical skid-steer validation episodes | No | — | Blocked by skid acceptance failure |
+| Upstream Genesis contribution | Planned | No | No PR claimed yet |
 
-The current local test suite verifies contracts, deterministic receipts,
-lineage collapse, calibration logic, active repair policy boundaries, motion
-control laws, result aggregation, and synthetic closed-loop behavior. Formal v4
-claims will be made only after the pinned W7900D commands have produced archived
-JSON, CSV, evidence artifacts, and hashes.
+**Completed on W7900D (archived):** Genesis smoke matrix 6×8×2=96 with fitted
+calibration; 8-profile single-seed smokes; ROCm evidence benchmark; partial
+calibration artifact; representative figures/DAG. **Incomplete:** locked-test
+formal closed-loop 6×8×20=960 (runner still on GPU; packaged subset only).
 
 ## Purify IP boundary
 
@@ -123,27 +123,46 @@ result.
 
 The competition image uses `/opt/venv/bin/python`. Formal Genesis runs require a
 fitted calibration artifact; `--allow-smoke-calibration` is integration-debug
-only.
+only. After skid-steer acceptance failure, **formal and smoke matrices use
+`--motion-backend kinematic`**.
+
+Cross-compile the Go core on a Go host (or use CI), copy the Linux amd64 binary
+to the instance, pin the Git commit, then:
 
 ```bash
-./scripts/build_purify_robotics.sh
+# On the AMD instance (Genesis + ROCm image)
+export PATH=/opt/venv/bin:$PATH
+export PYTHONPATH=src
+export PYOPENGL_PLATFORM=egl
+# echo <40-hex-commit> > .git_commit
 
+# Single episode (fitted calibration from results/v4-gpu/calibration/)
 /opt/venv/bin/python src/look_twice_v4.py \
   --runtime genesis \
-  --motion-backend skid-steer \
+  --motion-backend kinematic \
   --policy purify-active \
   --profile evidence-echo \
   --seed 50000 \
   --device cuda:0 \
-  --calibration outputs/v4/calibration.json \
+  --calibration results/v4-gpu/calibration/calibration_artifact.json \
   --purify-bin purify_robotics/bin/purify-robotics-core \
-  --evidence-dir outputs/v4/evidence \
   --json-output outputs/v4/episode.json
+
+# Smoke matrix (96) then formal (960, resume-safe)
+/opt/venv/bin/python scripts/run_v4_experiments.py \
+  --mode smoke --runtime genesis --motion kinematic \
+  --calibration results/v4-gpu/calibration/calibration_artifact.json \
+  --device cuda:0 --output-dir outputs/v4-smoke-genesis
+
+/opt/venv/bin/python scripts/run_v4_experiments.py \
+  --mode formal --runtime genesis --motion kinematic \
+  --calibration results/v4-gpu/calibration/calibration_artifact.json \
+  --device cuda:0 --output-dir outputs/v4-formal-genesis
 ```
 
-This command is documented but is still pending v4 W7900D acceptance. See
-[V4 reproduction](docs/V4_REPRODUCTION.md) for the required order and
-formal-result checks.
+Archived smoke results and honest formal partial counts:
+[`results/v4-gpu/STATUS.md`](results/v4-gpu/STATUS.md). Full reproduction order:
+[V4 reproduction](docs/V4_REPRODUCTION.md).
 
 ## V4 experiment design
 
@@ -169,12 +188,16 @@ Frozen data splits and matrices:
 - calibration: 7 in-distribution profiles × seeds `30000–30049` = 350;
 - validation: 7 profiles × seeds `40000–40019` = 140;
 - locked test pool: 8 profiles × seeds `50000–50099` = 800;
-- smoke matrix: 6 policies × 8 profiles × 2 seeds = 96;
-- formal closed loop: 6 × 8 × 20 = 960;
-- skid-steer validation: 3 policies × 4 key profiles × 5 seeds = 60.
+- smoke matrix: 6 policies × 8 profiles × 2 seeds = 96 — **complete on W7900D**
+  (`results/v4-gpu/smoke-genesis/`);
+- formal closed loop: 6 × 8 × 20 = 960 — **in progress** on the live GPU; Mac
+  package holds the current incomplete N under `results/v4-gpu/formal-genesis/`;
+- skid-steer validation: 3 × 4 × 5 = 60 — **not run** (motion acceptance failed;
+  kinematic demotion).
 
-None of the v4 96/960/60 matrices is claimed complete yet. See the
-[experiment protocol](docs/V4_EXPERIMENT_PROTOCOL.md).
+Do not treat synthetic CI episodes as GPU formal results. See the
+[experiment protocol](docs/V4_EXPERIMENT_PROTOCOL.md) and
+[`results/v4-gpu/STATUS.md`](results/v4-gpu/STATUS.md).
 
 ## Repository map
 

@@ -1,0 +1,78 @@
+digraph look_twice_v4 {
+  graph [rankdir=LR, bgcolor="white", fontname="Helvetica", labelloc="t"];
+  label="Look Twice v4 — purify-active__evidence-echo__seed-50000.json";
+  node [fontname="Helvetica", fontsize=9];
+  edge [fontname="Helvetica", fontsize=8];
+  subgraph cluster_online {
+    label="ONLINE EVIDENCE + ACTION QUALIFICATION";
+    color="#4c78a8";
+    claim_44e306365108e15c [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_088406806d405373951968e6\\nsimulated_semantic_sensor: inconclusive (0.268)\\nstep=354"];
+    claim_f5f0b8643844ab74 [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_23470dfb5ffc8b04129131c6\\nsimulated_semantic_sensor: inconclusive (0.268)\\nstep=354"];
+    claim_8f8caf26a3da5d0b [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_53db44e57e5ef9e49a9cbe0a\\nsimulated_semantic_sensor: inconclusive (0.271)\\nstep=364"];
+    claim_772a11ee37271bd7 [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_77985f129695817f2888124b\\nsimulated_semantic_sensor: inconclusive (0.268)\\nstep=354"];
+    claim_ff2efe1661e2af0d [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_7caed0d4c7e384e0dcd51dcd\\ndepth_geometry: blocked (0.715)\\nstep=364"];
+    claim_46273f881d91f68c [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_8a65cdeafa68bbefda33b5d7\\nsimulated_semantic_sensor: inconclusive (0.268)\\nstep=354"];
+    claim_638c558fe436706b [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_94a0b91bd886faf97189420f\\nsimulated_semantic_sensor: inconclusive (0.268)\\nstep=354"];
+    claim_e22433e095ee28da [shape=box, style="rounded,filled", fillcolor="#e8f1fb", label="Claim clm_a2bdb12f4ac86b8f55568a94\\ndepth_geometry: blocked (0.712)\\nstep=354"];
+    claim_a229a40286f400b1 [shape=box, style="rounded,filled", fillcolor="#eeeeee", label="Claim clm_b5eba1d387e4cb2de77a26a7\\nstatic_map: clear (0.650)\\nstep=0"];
+    root_faba0c7804cd0e9a [shape=ellipse, style="filled", fillcolor="#dff2df", label="root\ncapture:world-0a370f4f725b484c:0:left_far"];
+    claim_44e306365108e15c -> root_faba0c7804cd0e9a [label="derived from", color="#4c78a8"];
+    claim_f5f0b8643844ab74 -> claim_44e306365108e15c [label="parent", style=dashed, color="#8c6d31"];
+    claim_f5f0b8643844ab74 -> root_faba0c7804cd0e9a [label="derived from", color="#4c78a8"];
+    root_b3cb550b602b5519 [shape=ellipse, style="filled", fillcolor="#dff2df", label="root\ncapture:world-0a370f4f725b484c:1:left_far"];
+    claim_8f8caf26a3da5d0b -> root_b3cb550b602b5519 [label="derived from", color="#4c78a8"];
+    claim_772a11ee37271bd7 -> root_faba0c7804cd0e9a [label="derived from", color="#4c78a8"];
+    claim_f5f0b8643844ab74 -> claim_772a11ee37271bd7 [label="parent", style=dashed, color="#8c6d31"];
+    claim_ff2efe1661e2af0d -> root_b3cb550b602b5519 [label="derived from", color="#4c78a8"];
+    claim_46273f881d91f68c -> root_faba0c7804cd0e9a [label="derived from", color="#4c78a8"];
+    claim_f5f0b8643844ab74 -> claim_46273f881d91f68c [label="parent", style=dashed, color="#8c6d31"];
+    claim_638c558fe436706b -> root_faba0c7804cd0e9a [label="derived from", color="#4c78a8"];
+    claim_f5f0b8643844ab74 -> claim_638c558fe436706b [label="parent", style=dashed, color="#8c6d31"];
+    claim_e22433e095ee28da -> root_faba0c7804cd0e9a [label="derived from", color="#4c78a8"];
+    root_e6a0e766f60c7c2f [shape=ellipse, style="dashed,filled", fillcolor="#eeeeee", label="root\nmap:map:static-map-v4"];
+    claim_a229a40286f400b1 -> root_e6a0e766f60c7c2f [label="derived from", color="#4c78a8"];
+    gate_4c02538b013eb830 [shape=octagon, style="filled", fillcolor="#f8d7da", label="GateReceipt 1\\ncross_region → denied\\nset=['clear', 'blocked'] roots=1\\nstep=354\\nsha=c39ff5d3626a…"];
+    root_faba0c7804cd0e9a -> gate_4c02538b013eb830 [label="used", penwidth=2, color="#2a6fbb"];
+    claim_44e306365108e15c -> gate_4c02538b013eb830 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_44e306365108e15c [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_772a11ee37271bd7 -> gate_4c02538b013eb830 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_772a11ee37271bd7 [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_46273f881d91f68c -> gate_4c02538b013eb830 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_46273f881d91f68c [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_638c558fe436706b -> gate_4c02538b013eb830 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_638c558fe436706b [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_a229a40286f400b1 -> gate_4c02538b013eb830 [label="stale", style=dotted, color="#b22222"];
+    gate_31683a0136639b6c [shape=octagon, style="filled", fillcolor="#f8d7da", label="GateReceipt 2\\ncross_region → denied\\nset=['blocked'] roots=2\\nstep=364\\nsha=42f07bb84793…"];
+    root_b3cb550b602b5519 -> gate_31683a0136639b6c [label="used", penwidth=2, color="#2a6fbb"];
+    root_faba0c7804cd0e9a -> gate_31683a0136639b6c [label="used", penwidth=2, color="#2a6fbb"];
+    claim_44e306365108e15c -> gate_31683a0136639b6c [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_44e306365108e15c [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_772a11ee37271bd7 -> gate_31683a0136639b6c [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_772a11ee37271bd7 [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_46273f881d91f68c -> gate_31683a0136639b6c [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_46273f881d91f68c [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_638c558fe436706b -> gate_31683a0136639b6c [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_638c558fe436706b [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_a229a40286f400b1 -> gate_31683a0136639b6c [label="stale", style=dotted, color="#b22222"];
+    gate_ec2cc92d20e9e5f6 [shape=octagon, style="filled", fillcolor="#d8f0d2", label="GateReceipt 3\\ntake_detour → admitted\\nset=['blocked'] roots=2\\nstep=364\\nsha=2016452686ed…"];
+    root_b3cb550b602b5519 -> gate_ec2cc92d20e9e5f6 [label="used", penwidth=2, color="#2a6fbb"];
+    root_faba0c7804cd0e9a -> gate_ec2cc92d20e9e5f6 [label="used", penwidth=2, color="#2a6fbb"];
+    claim_44e306365108e15c -> gate_ec2cc92d20e9e5f6 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_44e306365108e15c [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_772a11ee37271bd7 -> gate_ec2cc92d20e9e5f6 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_772a11ee37271bd7 [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_46273f881d91f68c -> gate_ec2cc92d20e9e5f6 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_46273f881d91f68c [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_638c558fe436706b -> gate_ec2cc92d20e9e5f6 [label="artifact_duplicate_of:clm_23470dfb5ffc8b04129131c6", style=dotted, color="#b22222"];
+    claim_f5f0b8643844ab74 -> claim_638c558fe436706b [label="exact artifact echo", style=dashed, color="#b22222"];
+    claim_a229a40286f400b1 -> gate_ec2cc92d20e9e5f6 [label="stale", style=dotted, color="#b22222"];
+    repair_5377c11e4b732839 [shape=diamond, style="filled", fillcolor="#eadcf8", label="BeliefGap Repair 1\\ngaps=['stale', 'shared_root', 'insufficient_roots', 'low_coverage']\\naction=same_view_sync_recapture\\nstep=354"];
+    gate_4c02538b013eb830 -> repair_5377c11e4b732839 [label="BeliefGap", color="#7b3294"];
+  }
+  subgraph cluster_oracle {
+    label="EVALUATOR-ONLY ORACLE (NO OUTGOING EDGE)";
+    color="#777777";
+    style="dashed";
+    oracle_f351a696639358b3 [shape=note, style="dashed,filled", fillcolor="#f5f5f5", label="Oracle evaluation only\\nprofile=evidence-echo seed=50000\\ninitial_blocked=False\\nobservations=2"];
+  }
+}

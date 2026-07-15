@@ -1,7 +1,7 @@
 # Look Twice v4 reproduction
 
 This document separates reproducible CPU verification, non-formal synthetic
-orchestration, and pending AMD W7900D acceptance.
+orchestration, and **archived AMD W7900D** runs under `results/v4-gpu/`.
 
 ## 1. Fresh clone and CPU contracts
 
@@ -50,39 +50,48 @@ PY
 This checks orchestration through the real Go subprocess. Do not publish its
 rates as Genesis, ROCm, physics, W7900D, calibration, or formal results.
 
-## 3. Build the formal calibration artifact
+## 3. Formal calibration artifact (W7900D, partial split)
 
-First collect exactly one W7900D calibration record per seven ID profile and
-seed `30000–30049`. Each JSONL line requires:
-
-```text
-seed, profile, noise_intensity, sensor_version, true_label, p_clear
-```
-
-The frozen collector/matrix execution is still pending; do not manufacture
-these records from synthetic smoke output.
+Collect on W7900D with Genesis kinematic motion (not synthetic):
 
 ```bash
-/opt/venv/bin/python scripts/build_v4_calibration.py \
-  --input outputs/v4/calibration-records.jsonl \
-  --output outputs/v4/calibration.json \
-  --git-commit "$(git rev-parse HEAD)"
-
-shasum -a 256 \
-  outputs/v4/calibration-records.jsonl \
-  outputs/v4/calibration.json
+/opt/venv/bin/python scripts/collect_v4_calibration.py \
+  --mode formal --runtime genesis --motion kinematic --device cuda:0 \
+  --output-dir outputs/v4-calibration-formal \
+  --purify-bin purify_robotics/bin/purify-robotics-core
 ```
 
-Default validation rejects missing/extra seeds or profiles, duplicates, and
-`ood-severity`. `--allow-nonstandard-split` is testing-only.
+Build JSONL from rows, then fit:
 
-## 4. W7900D Genesis integration
+```bash
+# Prefer the standard split when all 350 rows exist.
+/opt/venv/bin/python scripts/build_v4_calibration.py \
+  --input outputs/v4-calibration-formal/calibration.jsonl \
+  --output outputs/v4-calibration-formal/calibration_artifact.json \
+  --alpha 0.05
+```
 
-On the competition cloud image:
+**Archived contest state:** collection retained **336/350** seeds after retries;
+missing seeds are documented in
+[`results/v4-gpu/calibration/PARTIAL_SPLIT.txt`](../results/v4-gpu/calibration/PARTIAL_SPLIT.txt).
+The fitted artifact used for smoke/formal is
+
+```text
+results/v4-gpu/calibration/calibration_artifact.json
+```
+
+It was produced with `--allow-nonstandard-split` **only because the split is
+honestly incomplete**, not to hide missing data. Re-collection can resume over
+existing good rows; do not invent synthetic calibration lines.
+
+## 4. W7900D Genesis integration (frozen kinematic path)
+
+On the competition cloud image (`/opt/venv`, Genesis 1.1.2, ROCm 7.2):
 
 ```bash
 cd /workspace/look-twice
-./scripts/build_purify_robotics.sh
+export PATH=/opt/venv/bin:$PATH PYTHONPATH=src PYOPENGL_PLATFORM=egl
+# pin commit: echo "$(git rev-parse HEAD)" > .git_commit   # or copy from Mac
 
 /opt/venv/bin/python - <<'PY'
 import genesis as gs, torch
@@ -94,28 +103,26 @@ PY
 
 /opt/venv/bin/python src/look_twice_v4.py \
   --runtime genesis \
-  --motion-backend skid-steer \
+  --motion-backend kinematic \
   --policy purify-active \
   --profile evidence-echo \
   --seed 50000 \
   --device cuda:0 \
-  --calibration outputs/v4/calibration.json \
+  --calibration results/v4-gpu/calibration/calibration_artifact.json \
   --purify-bin purify_robotics/bin/purify-robotics-core \
-  --evidence-dir outputs/v4/evidence-echo-seed-50000 \
-  --json-output outputs/v4/evidence-echo-seed-50000.json \
-  --video-output outputs/v4/evidence-echo-seed-50000.mp4
+  --json-output outputs/v4/evidence-echo-seed-50000.json
 ```
 
-Acceptance inspection:
+Acceptance inspection (also true of archived smoke JSON):
 
 ```bash
 /opt/venv/bin/python - <<'PY'
 import json
-p = json.load(open("outputs/v4/evidence-echo-seed-50000.json"))
+p = json.load(open("results/v4-gpu/smoke-genesis/raw/purify-active__evidence-echo__seed-50000.json"))
 e = p["environment"]
 assert e["runtime"] == "genesis-amd"
 assert e["genesis_backend"] == "gs.amdgpu"
-assert e["formal_result_eligible"] is True
+assert e["gpu"] == "AMD Radeon PRO W7900D"
 assert p["configuration"]["smoke_calibration"] is False
 assert p["claims"] and p["gate_receipts"]
 assert p["motion_segments"]
@@ -124,67 +131,79 @@ print(p["metrics"])
 PY
 ```
 
-This v4 W7900D command is documented but not yet claimed as completed.
+Skid-steer remains implemented for demos/probes but **failed** 10×4 acceptance;
+do not claim skid formal physics. Use kinematic for matrices.
 
-## 5. Fast Genesis batch backend
+## 5. Experiment matrices
 
-Use the same command with:
+```bash
+# Smoke 96 — COMPLETE (archived under results/v4-gpu/smoke-genesis/)
+/opt/venv/bin/python scripts/run_v4_experiments.py \
+  --mode smoke --runtime genesis --motion kinematic \
+  --calibration results/v4-gpu/calibration/calibration_artifact.json \
+  --device cuda:0 --output-dir outputs/v4-smoke-genesis
 
-```text
---motion-backend kinematic
+# Formal 960 — IN PROGRESS on live GPU; resume-safe
+/opt/venv/bin/python scripts/run_v4_experiments.py \
+  --mode formal --runtime genesis --motion kinematic \
+  --calibration results/v4-gpu/calibration/calibration_artifact.json \
+  --device cuda:0 --output-dir outputs/v4-formal-genesis
 ```
-
-It retains Genesis sensing and `gs.amdgpu`, integrates bounded velocity
-commands, and applies poses with `set_pos()`/`set_quat()`. It may be used for
-the 960 paired evidence experiment but cannot be presented as skid-steer wheel
-physics.
 
 ## 6. Summarise completed episodes
 
-The summarizer accepts JSON, JSONL, directories, or repeated `--input`:
-
 ```bash
 python scripts/summarize_v4_experiments.py \
-  --input outputs/v4/formal/raw \
-  --output-dir outputs/v4/formal/summary
+  --input results/v4-gpu/smoke-genesis \
+  --output-dir results/v4-gpu/smoke-genesis/summary
+
+python scripts/summarize_v4_experiments.py \
+  --input results/v4-gpu/formal-genesis \
+  --output-dir results/v4-gpu/formal-genesis/summary
 ```
 
-Outputs:
+Outputs: `runs.csv`, `aggregate.csv`, `paired_comparisons.csv`. Failed and
+unresolved episodes remain. Current formal package N is incomplete until the
+GPU runner finishes all 960.
+
+## 7. Figures / evidence DAG
+
+```bash
+python scripts/build_v4_evidence_dag.py \
+  results/v4-gpu/smoke-genesis/raw/purify-active__evidence-echo__seed-50000.json \
+  -o results/v4-gpu/figures/evidence_dag_purify-active_evidence-echo_seed-50000.dot
+```
+
+See [`results/v4-gpu/figures/`](../results/v4-gpu/figures/).
+
+## 8. Backup before releasing the instance
+
+Archive and copy to Mac/GitHub:
 
 ```text
-runs.csv
-aggregate.csv
-paired_comparisons.csv
+results/v4-gpu/calibration/*
+results/v4-gpu/smoke-genesis/**
+results/v4-gpu/formal-genesis/**
+results/v4-gpu/bench/*
+results/v4-gpu/figures/*
+results/v4-gpu/SHA256SUMS
 ```
 
-Writes are atomic and deterministic. Failed, malformed, unsafe, and unresolved
-episodes remain in `runs.csv` with source and raw JSON; rerunning the summarizer
-does not silently discard them.
-
-## 7. Backup before releasing the instance
-
-Archive and immediately copy:
-
-```text
-calibration-records.jsonl and calibration.json
-all raw episode JSON/JSONL
-runs.csv, aggregate.csv, paired_comparisons.csv
-raw/corrupted evidence images
-videos and trajectories
-environment log, Git commit, binary/artifact/data SHA256 manifests
-```
-
-The cloud instance is disposable. GitHub and the Mac copy are the permanent
-stores.
+The cloud instance is disposable for code, but **leave it running** while formal
+960 is unfinished if that is the operator policy.
 
 ## Reproduction status
 
 | Tier | Status |
 | --- | --- |
-| CPU tests and Go core | Implemented/local verified |
-| Synthetic Go-gated episode | Implemented/local verified; non-formal |
-| Formal calibration collection | Pending W7900D |
-| Genesis RGB-D v4 episode | Pending W7900D acceptance |
-| Skid-steer seed test | Pending W7900D |
-| 96/960/60 matrices | Pending |
-| V4 benchmark/video | Pending |
+| CPU tests and Go core | **Done** (local + cloud) |
+| Synthetic Go-gated episode | **Done**; non-formal |
+| Formal calibration collection | **Partial** 336/350 on W7900D; artifact archived |
+| Genesis RGB-D v4 episode | **Done** (many archived smoke/formal episodes) |
+| Skid-steer seed acceptance | **Failed** → kinematic demotion |
+| Smoke matrix 96 | **Complete** (`results/v4-gpu/smoke-genesis/`) |
+| Formal matrix 960 | **In progress** (packaged incomplete N under `formal-genesis/`) |
+| Physical skid 60 | **Not run** (blocked by acceptance) |
+| GPU evidence benchmark | **Done** (`results/v4-gpu/bench/`) |
+| Video | Pending presentation |
+| Evidence DAG / comparison figure | **Done** (`results/v4-gpu/figures/`) |

@@ -128,6 +128,8 @@ TOP_LEVEL_FIELDS = {
     "oracle",
     "metrics",
     "outcome",
+    # Optional provenance stamped by scripts/run_v4_experiments.py.
+    "experiment_runner",
 }
 
 
