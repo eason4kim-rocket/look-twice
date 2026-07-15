@@ -569,12 +569,20 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
                 state = MissionState.GO_TO_GOAL
 
         elif state == MissionState.GO_TO_GOAL:
-            if active_policy and not risk_gate_passed and current_xy[0].item() >= 0.30:
+            approaching_risk_region = (
+                0.3 <= current_xy[0].item() <= 1.3
+                and abs(current_xy[1].item()) <= 0.55
+            )
+            if active_policy and not risk_gate_passed and approaching_risk_region:
                 state = MissionState.VERIFY_BEFORE_CROSSING
             else:
                 current_xy = move_toward(current_xy, goal_xy, speed, dt)
                 obstacle_now = observe_region_geometry(blocking_obstacle)[0] == "blocked"
-                if current_xy[0].item() >= 0.4 and obstacle_now and not used_detour:
+                entered_risk_region = (
+                    0.4 <= current_xy[0].item() <= 1.2
+                    and abs(current_xy[1].item()) <= 0.4
+                )
+                if entered_risk_region and obstacle_now and not used_detour:
                     unsafe_crossing = True
                 if distance_between(current_xy, goal_xy) < tolerance:
                     route_parts.append("goal")
