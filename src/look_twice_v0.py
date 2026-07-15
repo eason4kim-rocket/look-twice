@@ -216,7 +216,7 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
         "shifted-occluder",
         "high-occlusion",
     }
-    inactive_obstacle_position = (0.8, 0.0, -2.0)
+    inactive_obstacle_position = (-10.0, 0.0, 0.25)
     obstacle_position = (
         (0.8, 0.0, 0.25) if starts_blocked else inactive_obstacle_position
     )
@@ -229,6 +229,17 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
             fixed=True,
         ),
         surface=gs.surfaces.Default(color=obstacle_color),
+    )
+    # Genesis 1.1.2 的未命中背景值等于实体数量。若障碍恰好是最后一个
+    # entity，其 idx 会与背景值冲突；末尾 sentinel 让障碍分割 ID 保持唯一。
+    scene.add_entity(
+        gs.morphs.Box(
+            size=(0.1, 0.1, 0.1),
+            pos=(-20.0, 0.0, 0.05),
+            fixed=True,
+            collision=False,
+        ),
+        surface=gs.surfaces.Default(color=(0.2, 0.2, 0.2)),
     )
 
     sensor_camera = scene.add_camera(
