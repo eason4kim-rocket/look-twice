@@ -232,6 +232,17 @@ class ProbabilisticRegionBelief:
             self.history.append(self.status)
             self.epoch_start = len(self.evidence)
             self.log_odds = 0.0
+            self.calibration_trace.append(
+                {
+                    "step": current_step,
+                    "result": "stale",
+                    "confidence": 0.0,
+                    "evidence_weight": 0.0,
+                    "p_blocked": self.p_blocked,
+                    "entropy": self.entropy,
+                    "status": self.status.value,
+                }
+            )
         return self.status
 
     def is_action_allowed(self, action: str, current_step: Optional[int] = None) -> bool:

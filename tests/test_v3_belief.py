@@ -33,6 +33,9 @@ class ProbabilisticBeliefTests(unittest.TestCase):
         self.assertFalse(belief.is_action_allowed("go_to_detour", current_step=8))
         self.assertEqual(belief.status, BeliefStatus.STALE)
         self.assertAlmostEqual(belief.p_blocked, 0.5)
+        self.assertEqual(belief.calibration_trace[-1]["result"], "stale")
+        self.assertEqual(belief.calibration_trace[-1]["step"], 8)
+        self.assertEqual(belief.calibration_trace[-1]["status"], "stale")
 
     def test_inconclusive_cannot_open_gate(self) -> None:
         belief = ProbabilisticRegionBelief()

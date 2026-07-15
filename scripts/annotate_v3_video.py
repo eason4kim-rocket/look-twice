@@ -48,7 +48,7 @@ def main() -> None:
         evidence_count = sum(int(item["step"]) <= step for item in data["evidence"])
 
         overlay = frame.copy()
-        cv2.rectangle(overlay, (0, 0), (width, 160), (0, 0, 0), -1)
+        cv2.rectangle(overlay, (0, 0), (width, 174), (0, 0, 0), -1)
         frame = cv2.addWeighted(overlay, 0.70, frame, 0.30, 0)
         config = data["configuration"]
         p_blocked = float(belief["p_blocked"]) if belief else 0.5
@@ -63,15 +63,16 @@ def main() -> None:
             f"Look Twice v3 | {config['policy']} | {config['profile']}",
             f"step={step}  evidence={evidence_count}  viewpoint={viewpoint_text}",
             f"belief={status}  p(blocked)={p_blocked:.3f}  entropy={entropy:.3f}",
-            f"Action Gate: {action_text}  dynamic event={event_text}",
+            f"Action Gate: {action_text}",
+            f"dynamic event={event_text}",
         )
         for index, line in enumerate(lines):
             cv2.putText(
                 frame,
                 line,
-                (16, 28 + 34 * index),
+                (16, 26 + 30 * index),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.61,
+                0.56,
                 (255, 255, 255),
                 1,
                 cv2.LINE_AA,
