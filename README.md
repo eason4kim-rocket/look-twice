@@ -107,6 +107,7 @@ python scripts/summarize_experiments.py \
 - [Clear demo](assets/demo/clear.mp4)
 - [Blocked demo](assets/demo/blocked.mp4)
 - [Conflict-driven reinspection demo](assets/demo/conflict.mp4)
+- [Approximately 60-second submission video draft](assets/demo/look-twice-demo.mp4)
 
 At observation noise `0.3`, Purify achieved 97.5% safe success with an average
 of 2.4 observations. Majority Vote achieved 95.0% with a fixed cost of 3
