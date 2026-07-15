@@ -44,7 +44,10 @@ def sample_scenario(profile: str, seed: int) -> ScenarioSample:
         raise ValueError(f"Unsupported v3 profile: {profile}")
     rng = random.Random(seed)
 
-    initial_blocked = rng.random() < 0.5
+    # 对 clear/blocked 做 seed 奇偶分层，保证每两个配对 seed 都覆盖两类真值；
+    # 其余几何、事件与噪声仍由连续随机变量生成。
+    rng.random()  # 保持后续随机序列与早期 v3 开发结果可比较。
+    initial_blocked = bool(seed % 2)
     obstacle_xy = (rng.uniform(0.62, 0.98), rng.uniform(-0.22, 0.22))
     obstacle_size = (
         rng.uniform(0.35, 0.62),

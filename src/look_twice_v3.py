@@ -539,7 +539,7 @@ def run_episode(args: argparse.Namespace) -> dict[str, Any]:
                     return "clear"
                 if belief.is_action_allowed("go_to_detour"):
                     return "blocked"
-            if args.policy != "purify-fixed":
+            if args.policy in ACTIVE_POLICIES and args.policy != "purify-fixed":
                 replan_reason = "uncertain_evidence"
                 action_decisions.append(
                     {"step": step, "action": "reinspect", "allowed": True, "reason": replan_reason}

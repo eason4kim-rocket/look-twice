@@ -28,6 +28,10 @@ class ScenarioTests(unittest.TestCase):
             expected = "clears" if sample.initial_blocked else "appears"
             self.assertEqual(sample.dynamic_event, expected)
 
+    def test_truth_is_stratified_by_seed(self) -> None:
+        self.assertFalse(sample_scenario("static-mixed", 20).initial_blocked)
+        self.assertTrue(sample_scenario("static-mixed", 21).initial_blocked)
+
 
 if __name__ == "__main__":
     unittest.main()
