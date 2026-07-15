@@ -49,6 +49,24 @@ class RegionBeliefTests(unittest.TestCase):
         belief.add_observation(observation("clear", 0.7, 2))
         self.assertEqual(belief.status, BeliefStatus.UNCERTAIN)
 
+    def test_inconclusive_never_confirms_clear(self) -> None:
+        belief = RegionBelief()
+        belief.add_observation(observation("inconclusive", 0.5, 1))
+        self.assertEqual(belief.status, BeliefStatus.UNCERTAIN)
+        self.assertFalse(belief.is_action_allowed("go_to_goal"))
+
+    def test_confirmed_evidence_expires(self) -> None:
+        belief = RegionBelief(max_age_steps=60)
+        belief.add_observation(observation("clear", step=10))
+        belief.add_observation(observation("clear", step=20))
+        self.assertTrue(belief.is_action_allowed("go_to_goal", current_step=80))
+        self.assertFalse(belief.is_action_allowed("go_to_goal", current_step=81))
+        self.assertEqual(belief.status, BeliefStatus.STALE)
+        belief.add_observation(observation("blocked", step=82))
+        self.assertEqual(belief.status, BeliefStatus.PROVISIONAL_BLOCKED)
+        belief.add_observation(observation("blocked", step=83))
+        self.assertEqual(belief.status, BeliefStatus.CONFIRMED_BLOCKED)
+
 
 if __name__ == "__main__":
     unittest.main()

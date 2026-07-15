@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 
 @dataclass(frozen=True)
@@ -15,6 +15,7 @@ class Observation:
     step: int
     source: str = "geometry"
     artifact: Optional[str] = None
+    metadata: Optional[dict[str, Any]] = None
 
 
 class BeliefStatus(str, Enum):
@@ -24,19 +25,27 @@ class BeliefStatus(str, Enum):
     UNCERTAIN = "uncertain"
     CONFIRMED_CLEAR = "confirmed_clear"
     CONFIRMED_BLOCKED = "confirmed_blocked"
+    STALE = "stale"
 
 
 class RegionBelief:
     """根据最近观察结算区域状态，并为高风险动作把关。"""
 
-    def __init__(self, confirmation_threshold: float = 0.8) -> None:
+    def __init__(
+        self,
+        confirmation_threshold: float = 0.8,
+        max_age_steps: Optional[int] = None,
+    ) -> None:
         self.confirmation_threshold = confirmation_threshold
+        self.max_age_steps = max_age_steps
         self.evidence: list[Observation] = []
         self.status = BeliefStatus.UNKNOWN
         self.history: list[BeliefStatus] = [self.status]
+        self.confirmed_step: Optional[int] = None
+        self.epoch_start = 0
 
     def add_observation(self, observation: Observation) -> BeliefStatus:
-        if observation.result not in {"clear", "blocked"}:
+        if observation.result not in {"clear", "blocked", "inconclusive"}:
             raise ValueError(f"Unsupported observation result: {observation.result}")
         if not 0.0 <= observation.confidence <= 1.0:
             raise ValueError("Observation confidence must be between 0 and 1")
@@ -46,19 +55,29 @@ class RegionBelief:
         if new_status != self.status:
             self.status = new_status
             self.history.append(new_status)
+        if self.status in {
+            BeliefStatus.CONFIRMED_CLEAR,
+            BeliefStatus.CONFIRMED_BLOCKED,
+        }:
+            self.confirmed_step = observation.step
         return self.status
 
     def resolve_state(self) -> BeliefStatus:
-        if not self.evidence:
+        active_evidence = self.evidence[self.epoch_start :]
+        if not active_evidence:
             return BeliefStatus.UNKNOWN
 
-        latest = self.evidence[-1]
-        if len(self.evidence) == 1:
+        latest = active_evidence[-1]
+        if latest.result == "inconclusive":
+            return BeliefStatus.UNCERTAIN
+        if len(active_evidence) == 1:
             if latest.result == "clear":
                 return BeliefStatus.PROVISIONAL_CLEAR
             return BeliefStatus.PROVISIONAL_BLOCKED
 
-        previous = self.evidence[-2]
+        previous = active_evidence[-2]
+        if previous.result == "inconclusive":
+            return BeliefStatus.UNCERTAIN
         if latest.result != previous.result:
             return BeliefStatus.UNCERTAIN
 
@@ -70,7 +89,26 @@ class RegionBelief:
             return BeliefStatus.CONFIRMED_CLEAR
         return BeliefStatus.CONFIRMED_BLOCKED
 
-    def is_action_allowed(self, action: str) -> bool:
+    def refresh_status(self, current_step: int) -> BeliefStatus:
+        if (
+            self.max_age_steps is not None
+            and self.confirmed_step is not None
+            and self.status
+            in {BeliefStatus.CONFIRMED_CLEAR, BeliefStatus.CONFIRMED_BLOCKED}
+            and current_step - self.confirmed_step > self.max_age_steps
+        ):
+            self.status = BeliefStatus.STALE
+            self.history.append(self.status)
+            self.epoch_start = len(self.evidence)
+        return self.status
+
+    def is_action_allowed(
+        self,
+        action: str,
+        current_step: Optional[int] = None,
+    ) -> bool:
+        if current_step is not None:
+            self.refresh_status(current_step)
         if action == "go_to_goal":
             return self.status == BeliefStatus.CONFIRMED_CLEAR
         if action == "go_to_detour":

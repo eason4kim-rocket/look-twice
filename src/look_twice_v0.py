@@ -7,7 +7,7 @@ import random
 import subprocess
 import time
 from collections import Counter
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from enum import Enum, auto
 from pathlib import Path
 
@@ -16,6 +16,13 @@ import numpy as np
 import torch
 
 from belief import BeliefStatus, Observation, RegionBelief
+from perception import analyze_rgbd_segmentation, save_sensor_artifacts
+from viewpoint import (
+    DEFAULT_CANDIDATES,
+    Rectangle,
+    ViewpointCandidate,
+    ViewpointPlanner,
+)
 
 
 class MissionState(Enum):
@@ -23,6 +30,8 @@ class MissionState(Enum):
     GO_TO_INSPECTION = auto()
     INSPECT = auto()
     GO_TO_SECOND_INSPECTION = auto()
+    GO_TO_REINSPECTION = auto()
+    VERIFY_BEFORE_CROSSING = auto()
     GO_TO_DETOUR = auto()
     GO_TO_GOAL = auto()
     FINISHED = auto()
@@ -147,26 +156,598 @@ def apply_observation_noise(
     return flipped_result, confidence
 
 
+def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
+    """运行 RGB-D、Next-Best-View 与时效准入闭环。"""
+    if args.sensor_mode != "camera-rgbd":
+        raise SystemExit("Look Twice v2 requires --sensor-mode camera-rgbd")
+
+    gs.init(backend=gs.amdgpu, logging_level="warning")
+    device = torch.device("cuda:0")
+    active_policy = args.policy == "purify-active"
+    viewpoint_policy = (
+        "fixed" if args.policy == "purify-fixed" else args.viewpoint_policy
+    )
+
+    occluder_shift = 0.0
+    occluder_size_y = 1.2
+    if args.scenario == "shifted-occluder":
+        occluder_shift = -0.4 if args.seed % 2 == 0 else 0.4
+    elif args.scenario == "high-occlusion":
+        occluder_size_y = 1.8
+
+    scene = gs.Scene(
+        show_viewer=False,
+        sim_options=gs.options.SimOptions(
+            dt=0.02,
+            gravity=(0.0, 0.0, 0.0),
+        ),
+        vis_options=gs.options.VisOptions(segmentation_level="entity"),
+    )
+    scene.add_entity(gs.morphs.Plane())
+    robot = scene.add_entity(
+        gs.morphs.Box(
+            size=(0.4, 0.3, 0.2),
+            pos=(-2.0, 0.0, 0.1),
+            fixed=True,
+        ),
+        surface=gs.surfaces.Default(color=(0.1, 0.45, 0.95)),
+    )
+    scene.add_entity(
+        gs.morphs.Box(
+            size=(0.5, occluder_size_y, 1.0),
+            pos=(0.0, occluder_shift, 0.5),
+            fixed=True,
+        ),
+        surface=gs.surfaces.Default(color=(0.45, 0.45, 0.45)),
+    )
+    target_patch = scene.add_entity(
+        gs.morphs.Box(
+            size=(0.8, 0.8, 0.02),
+            pos=(0.8, 0.0, 0.015),
+            fixed=True,
+            collision=False,
+        ),
+        surface=gs.surfaces.Default(color=(0.15, 0.65, 0.25)),
+    )
+
+    starts_blocked = args.scenario in {
+        "blocked",
+        "dynamic-clears",
+        "shifted-occluder",
+        "high-occlusion",
+    }
+    obstacle_position = (0.8, 0.0, 0.25) if starts_blocked else (0.8, 3.0, 0.25)
+    color_rng = random.Random(args.seed + 991)
+    obstacle_color = tuple(color_rng.uniform(0.1, 0.9) for _ in range(3))
+    blocking_obstacle = scene.add_entity(
+        gs.morphs.Box(
+            size=(0.5, 0.5, 0.5),
+            pos=obstacle_position,
+            fixed=True,
+        ),
+        surface=gs.surfaces.Default(color=obstacle_color),
+    )
+
+    sensor_camera = scene.add_camera(
+        res=(320, 240),
+        pos=(-0.6, 1.2, 0.8),
+        lookat=(0.8, 0.0, 0.25),
+        up=(0.0, 0.0, 1.0),
+        fov=60,
+        GUI=False,
+    )
+    video_camera = None
+    if args.video_output is not None:
+        for candidate in DEFAULT_CANDIDATES:
+            scene.add_entity(
+                gs.morphs.Box(
+                    size=(0.12, 0.12, 0.05),
+                    pos=(candidate.xy[0], candidate.xy[1], 0.025),
+                    fixed=True,
+                    collision=False,
+                ),
+                surface=gs.surfaces.Default(color=(1.0, 0.65, 0.0)),
+            )
+        video_camera = scene.add_camera(
+            res=(640, 480),
+            pos=(0.0, 0.0, 8.0),
+            lookat=(0.0, 0.0, 0.0),
+            up=(0.0, 1.0, 0.0),
+            fov=43,
+            GUI=False,
+        )
+
+    scene.build()
+    if video_camera is not None:
+        video_camera.start_recording()
+
+    start_xy = torch.tensor([-2.0, 0.0], device=device)
+    detour_xy = torch.tensor([0.8, 1.5], device=device)
+    goal_xy = torch.tensor([2.0, 0.0], device=device)
+    current_xy = start_xy.clone()
+    target_region = Rectangle(0.4, 1.2, -0.4, 0.4)
+    occluders = [
+        Rectangle(
+            -0.25,
+            0.25,
+            occluder_shift - occluder_size_y / 2,
+            occluder_shift + occluder_size_y / 2,
+        )
+    ]
+    planner = ViewpointPlanner()
+    candidates = {candidate.name: candidate for candidate in DEFAULT_CANDIDATES}
+    fixed_order = ["left_near", "right_near", "left_far", "right_far"]
+    visited: set[str] = set()
+    viewpoint_evaluations: list[dict] = []
+
+    def choose_viewpoint(step: int, reason: str) -> ViewpointCandidate | None:
+        if viewpoint_policy == "fixed":
+            selected = next(
+                (candidates[name] for name in fixed_order if name not in visited),
+                None,
+            )
+            ranking = planner.rank(
+                current_xy=(current_xy[0].item(), current_xy[1].item()),
+                target_region=target_region,
+                occluders=occluders,
+                visited=visited,
+            )
+        else:
+            selected, ranking = planner.choose(
+                current_xy=(current_xy[0].item(), current_xy[1].item()),
+                target_region=target_region,
+                occluders=occluders,
+                visited=visited,
+            )
+        viewpoint_evaluations.append(
+            {
+                "step": step,
+                "reason": reason,
+                "selected": selected.name if selected else None,
+                "ranking": [item.to_dict() for item in ranking],
+            }
+        )
+        return selected
+
+    selected_viewpoint = choose_viewpoint(-1, "initial")
+    if selected_viewpoint is None:
+        raise RuntimeError("No initial inspection viewpoint is available")
+    active_target_xy = torch.tensor(selected_viewpoint.xy, device=device)
+    current_viewpoint = selected_viewpoint.name
+
+    state = MissionState.GO_TO_INSPECTION
+    inspection_steps = 0
+    belief = RegionBelief(
+        confirmation_threshold=0.8,
+        max_age_steps=args.belief_ttl if active_policy else None,
+    )
+    region_status = belief.status.value
+    belief_lifecycle = [{"step": -1, "status": region_status}]
+    action_decisions: list[dict] = []
+    state_transitions = [{"step": -1, "from": None, "to": state.name}]
+    trajectory = [{"step": -1, "x": -2.0, "y": 0.0}]
+    route_parts = ["start"]
+    dynamic_events: list[dict] = []
+    risk_entries: list[dict] = []
+    event_due_step = None
+    event_completed = False
+    risk_gate_passed = False
+    used_detour = False
+    unsafe_crossing = False
+    stale_count = 0
+    replan_count = 0
+    path_length = 0.0
+    speed, dt, tolerance = 0.8, 0.02, 0.05
+    inspection_interval_steps = 20
+    start_time = time.perf_counter()
+
+    for step in range(4000):
+        state_before = state
+        position_before = current_xy.clone()
+
+        if event_due_step is not None and step >= event_due_step and not event_completed:
+            if args.scenario == "dynamic-appears":
+                new_position = torch.tensor([0.8, 0.0, 0.25], device=device)
+                event_name = "obstacle_appeared"
+            else:
+                new_position = torch.tensor([0.8, 3.0, 0.25], device=device)
+                event_name = "obstacle_cleared"
+            blocking_obstacle.set_pos(new_position)
+            event_completed = True
+            dynamic_events.append({"step": step, "event": event_name})
+            print(f"[step={step}] Dynamic event: {event_name}")
+
+        if state in {
+            MissionState.GO_TO_INSPECTION,
+            MissionState.GO_TO_SECOND_INSPECTION,
+            MissionState.GO_TO_REINSPECTION,
+        }:
+            current_xy = move_toward(current_xy, active_target_xy, speed, dt)
+            if distance_between(current_xy, active_target_xy) < tolerance:
+                visited.add(current_viewpoint)
+                route_parts.append(current_viewpoint)
+                inspection_steps = 0
+                state = MissionState.INSPECT
+                print(f"[step={step}] Reached viewpoint: {current_viewpoint}")
+
+        elif state == MissionState.INSPECT:
+            inspection_steps += 1
+            if inspection_steps == 1:
+                print(f"[step={step}] Inspecting with RGB-D sensor...")
+            if inspection_steps % inspection_interval_steps == 0:
+                candidate = candidates[current_viewpoint]
+                sensor_camera.set_pose(
+                    pos=(candidate.xy[0], candidate.xy[1], candidate.camera_z),
+                    lookat=(0.8, 0.0, 0.25),
+                    up=(0.0, 0.0, 1.0),
+                )
+                rgb, depth, segmentation, _ = sensor_camera.render(
+                    rgb=True,
+                    depth=True,
+                    segmentation=True,
+                    colorize_seg=False,
+                    force_render=True,
+                )
+                perception = analyze_rgbd_segmentation(
+                    rgb=np.asarray(rgb),
+                    depth=np.asarray(depth),
+                    segmentation=np.asarray(segmentation),
+                    obstacle_entity_idx=blocking_obstacle.idx,
+                    target_entity_idx=target_patch.idx,
+                    target_reference_pixels=candidate.target_reference_pixels,
+                    device="cuda:0",
+                )
+                if args.evidence_dir is not None:
+                    stem = f"observation_{len(belief.evidence):02d}_{current_viewpoint}"
+                    artifacts = save_sensor_artifacts(
+                        rgb=np.asarray(rgb),
+                        depth=np.asarray(depth),
+                        segmentation=np.asarray(segmentation),
+                        output_dir=args.evidence_dir,
+                        stem=stem,
+                    )
+                    perception = replace(perception, artifact_paths=artifacts)
+
+                observed_result, confidence = perception.result, perception.confidence
+                if perception.result in {"clear", "blocked"}:
+                    observed_result, confidence = apply_observation_noise(
+                        perception.result,
+                        perception.confidence,
+                        args.noise_profile,
+                        len(belief.evidence),
+                        args.noise_rate,
+                        rng,
+                    )
+                observation = Observation(
+                    viewpoint=current_viewpoint,
+                    result=observed_result,
+                    confidence=confidence,
+                    step=step,
+                    source="camera-rgbd",
+                    artifact=perception.artifact_paths.get("rgb"),
+                    metadata=perception.to_dict(),
+                )
+                previous_status = belief.status
+                belief.add_observation(observation)
+                region_status = belief.status.value
+                if previous_status != belief.status:
+                    belief_lifecycle.append({"step": step, "status": region_status})
+                print(
+                    f"[step={step}] RGB-D evidence: result={observed_result} "
+                    f"confidence={confidence:.3f} obstacle_pixels="
+                    f"{perception.support_pixels} visibility="
+                    f"{perception.visible_fraction:.3f} device={perception.device}"
+                )
+
+                if (
+                    args.scenario in {"dynamic-appears", "dynamic-clears"}
+                    and event_due_step is None
+                    and belief.status
+                    in {BeliefStatus.CONFIRMED_CLEAR, BeliefStatus.CONFIRMED_BLOCKED}
+                ):
+                    event_due_step = step + args.event_delay
+                    dynamic_events.append(
+                        {"step": step, "event": "scheduled", "due": event_due_step}
+                    )
+
+                decision_result = None
+                if args.policy == "single-shot":
+                    decision_result = (
+                        observation.result
+                        if observation.result in {"clear", "blocked"}
+                        else "blocked"
+                    )
+                elif args.policy == "majority-vote" and len(belief.evidence) >= 3:
+                    counts = Counter(
+                        item.result
+                        for item in belief.evidence[:3]
+                        if item.result in {"clear", "blocked"}
+                    )
+                    decision_result = (
+                        "clear" if counts["clear"] > counts["blocked"] else "blocked"
+                    )
+                elif args.policy in {"purify", "purify-fixed", "purify-active"}:
+                    if belief.is_action_allowed("go_to_goal"):
+                        decision_result = "clear"
+                    elif belief.is_action_allowed("go_to_detour"):
+                        decision_result = "blocked"
+
+                if decision_result == "clear":
+                    state = MissionState.GO_TO_GOAL
+                    risk_gate_passed = not active_policy
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_goal", "allowed": True}
+                    )
+                elif decision_result == "blocked":
+                    state = MissionState.GO_TO_DETOUR
+                    used_detour = True
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_detour", "allowed": True}
+                    )
+                elif belief.status == BeliefStatus.UNCERTAIN:
+                    next_viewpoint = choose_viewpoint(step, "uncertain_evidence")
+                    if next_viewpoint is None or args.policy in {
+                        "single-shot",
+                        "majority-vote",
+                    }:
+                        state = MissionState.GO_TO_DETOUR
+                        used_detour = True
+                        action_decisions.append(
+                            {"step": step, "action": "safe_detour", "allowed": True}
+                        )
+                    else:
+                        selected_viewpoint = next_viewpoint
+                        current_viewpoint = next_viewpoint.name
+                        active_target_xy = torch.tensor(next_viewpoint.xy, device=device)
+                        state = MissionState.GO_TO_SECOND_INSPECTION
+                        replan_count += 1
+                        action_decisions.append(
+                            {"step": step, "action": "reinspect", "allowed": True}
+                        )
+                else:
+                    action_decisions.append(
+                        {"step": step, "action": "go_to_goal", "allowed": False}
+                    )
+
+        elif state == MissionState.VERIFY_BEFORE_CROSSING:
+            allowed = belief.is_action_allowed("go_to_goal", current_step=step)
+            region_status = belief.status.value
+            action_decisions.append(
+                {"step": step, "action": "cross_risk_gate", "allowed": allowed}
+            )
+            if allowed:
+                risk_gate_passed = True
+                risk_entries.append(
+                    {"step": step, "belief": belief.status.value, "allowed": True}
+                )
+                state = MissionState.GO_TO_GOAL
+            else:
+                if belief.status == BeliefStatus.STALE:
+                    stale_count += 1
+                    belief_lifecycle.append({"step": step, "status": "stale"})
+                next_viewpoint = choose_viewpoint(step, "stale_before_crossing")
+                if next_viewpoint is None:
+                    state = MissionState.GO_TO_DETOUR
+                    used_detour = True
+                else:
+                    current_viewpoint = next_viewpoint.name
+                    active_target_xy = torch.tensor(next_viewpoint.xy, device=device)
+                    state = MissionState.GO_TO_REINSPECTION
+                    replan_count += 1
+
+        elif state == MissionState.GO_TO_DETOUR:
+            if args.scenario == "dynamic-clears" and active_policy:
+                if not belief.is_action_allowed("go_to_detour", current_step=step):
+                    region_status = belief.status.value
+                    if belief.status == BeliefStatus.STALE:
+                        stale_count += 1
+                        belief_lifecycle.append({"step": step, "status": "stale"})
+                    next_viewpoint = choose_viewpoint(step, "stale_detour_evidence")
+                    if next_viewpoint is not None:
+                        current_viewpoint = next_viewpoint.name
+                        active_target_xy = torch.tensor(next_viewpoint.xy, device=device)
+                        state = MissionState.GO_TO_REINSPECTION
+                        replan_count += 1
+                        continue
+            current_xy = move_toward(current_xy, detour_xy, speed, dt)
+            if distance_between(current_xy, detour_xy) < tolerance:
+                route_parts.append("detour")
+                risk_gate_passed = True
+                state = MissionState.GO_TO_GOAL
+
+        elif state == MissionState.GO_TO_GOAL:
+            if active_policy and not risk_gate_passed and current_xy[0].item() >= 0.30:
+                state = MissionState.VERIFY_BEFORE_CROSSING
+            else:
+                current_xy = move_toward(current_xy, goal_xy, speed, dt)
+                obstacle_now = observe_region_geometry(blocking_obstacle)[0] == "blocked"
+                if current_xy[0].item() >= 0.4 and obstacle_now and not used_detour:
+                    unsafe_crossing = True
+                if distance_between(current_xy, goal_xy) < tolerance:
+                    route_parts.append("goal")
+                    state = MissionState.FINISHED
+
+        elif state == MissionState.FINISHED:
+            break
+
+        if state != state_before:
+            state_transitions.append(
+                {"step": step, "from": state_before.name, "to": state.name}
+            )
+        path_length += distance_between(position_before, current_xy)
+        robot.set_pos(
+            torch.tensor(
+                [current_xy[0].item(), current_xy[1].item(), 0.1],
+                device=device,
+            )
+        )
+        scene.step()
+        if video_camera is not None and step % args.video_stride == 0:
+            video_camera.render()
+        trajectory.append(
+            {"step": step, "x": current_xy[0].item(), "y": current_xy[1].item()}
+        )
+        if step % 50 == 0:
+            print(
+                f"step={step:04d} state={state.name:<24} "
+                f"x={current_xy[0].item():.3f} y={current_xy[1].item():.3f} "
+                f"region={region_status}"
+            )
+
+    elapsed = time.perf_counter() - start_time
+    final_pos = robot.get_pos()
+    if video_camera is not None:
+        args.video_output.parent.mkdir(parents=True, exist_ok=True)
+        video_camera.stop_recording(save_to_filename=str(args.video_output), fps=30)
+
+    final_distance = distance_between(final_pos[:2], goal_xy)
+    mission_success = state == MissionState.FINISHED and final_distance < tolerance
+    final_obstacle_blocked = observe_region_geometry(blocking_obstacle)[0] == "blocked"
+    wrong_detour = used_detour and not final_obstacle_blocked
+    gpu_times = [
+        item.metadata["gpu_time_ms"]
+        for item in belief.evidence
+        if item.metadata and "gpu_time_ms" in item.metadata
+    ]
+    print()
+    print("Final mission state:", state.name)
+    print("Final belief:", belief.status.value)
+    print("Route:", " -> ".join(route_parts))
+    print("Unsafe crossing:", unsafe_crossing)
+    print("GPU perception device: cuda:0")
+    print(f"Elapsed: {elapsed:.3f}s")
+
+    if args.json_output is not None:
+        try:
+            git_commit = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            git_commit = "unknown"
+        result = {
+            "schema_version": 2,
+            "git_commit": git_commit,
+            "configuration": {
+                "scenario": args.scenario,
+                "policy": args.policy,
+                "sensor_mode": args.sensor_mode,
+                "viewpoint_policy": viewpoint_policy,
+                "belief_ttl": args.belief_ttl,
+                "event_delay": args.event_delay,
+                "seed": args.seed,
+                "noise_profile": args.noise_profile,
+                "noise_rate": args.noise_rate,
+                "obstacle_color": obstacle_color,
+            },
+            "environment": {
+                "gpu": torch.cuda.get_device_name(0),
+                "rocm": torch.version.hip,
+                "torch": torch.__version__,
+                "genesis": gs.__version__,
+                "backend": "gs.amdgpu",
+                "perception_device": "cuda:0",
+            },
+            "evidence": [asdict(item) for item in belief.evidence],
+            "belief_lifecycle": belief_lifecycle,
+            "viewpoint_evaluations": viewpoint_evaluations,
+            "action_decisions": action_decisions,
+            "dynamic_events": dynamic_events,
+            "risk_entries": risk_entries,
+            "state_transitions": state_transitions,
+            "trajectory": trajectory,
+            "metrics": {
+                "mission_success": mission_success,
+                "safe_success": mission_success and not unsafe_crossing,
+                "unsafe_crossing": unsafe_crossing,
+                "wrong_detour": wrong_detour,
+                "observation_count": len(belief.evidence),
+                "replan_count": replan_count,
+                "stale_count": stale_count,
+                "path_length": path_length,
+                "final_distance": final_distance,
+                "elapsed_seconds": elapsed,
+                "simulation_steps": trajectory[-1]["step"] + 1,
+                "avg_gpu_perception_ms": (
+                    sum(gpu_times) / len(gpu_times) if gpu_times else 0.0
+                ),
+                "avg_visible_fraction": (
+                    sum(
+                        item.metadata["visible_fraction"]
+                        for item in belief.evidence
+                        if item.metadata
+                    )
+                    / len(gpu_times)
+                    if gpu_times
+                    else 0.0
+                ),
+            },
+            "outcome": {
+                "mission_state": state.name,
+                "belief_status": belief.status.value,
+                "route": route_parts,
+            },
+        }
+        args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        args.json_output.write_text(
+            json.dumps(result, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        print("JSON output:", args.json_output)
+
+
 def main() -> None:
     # 命令行参数选择场景真值，不再直接告诉机器人观察结论。
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--scenario",
-        choices=("clear", "blocked"),
+        choices=(
+            "clear",
+            "blocked",
+            "dynamic-appears",
+            "dynamic-clears",
+            "shifted-occluder",
+            "high-occlusion",
+        ),
         default="clear",
         help="选择受检区域的场景真值",
     )
     parser.add_argument(
         "--policy",
-        choices=("single-shot", "majority-vote", "purify"),
+        choices=(
+            "single-shot",
+            "majority-vote",
+            "purify",
+            "purify-fixed",
+            "purify-active",
+        ),
         default="purify",
         help="选择对照决策策略",
     )
     parser.add_argument(
         "--sensor-mode",
-        choices=("geometry", "camera"),
+        choices=("geometry", "camera", "camera-rgbd"),
         default="geometry",
         help="geometry 读取场景实体；camera 从 Genesis RGB 图像形成证据",
+    )
+    parser.add_argument(
+        "--viewpoint-policy",
+        choices=("fixed", "next-best"),
+        default="next-best",
+        help="选择固定观察顺序或 Next-Best-View",
+    )
+    parser.add_argument(
+        "--belief-ttl",
+        type=int,
+        default=60,
+        help="confirmed belief 的有效仿真步数",
+    )
+    parser.add_argument(
+        "--event-delay",
+        type=int,
+        default=40,
+        help="首次确认后触发动态事件的延迟步数",
     )
     parser.add_argument(
         "--evidence-dir",
@@ -212,7 +793,20 @@ def main() -> None:
         parser.error("--noise-rate must be between 0 and 1")
     if args.video_stride < 1:
         parser.error("--video-stride must be at least 1")
+    if args.belief_ttl < 1:
+        parser.error("--belief-ttl must be at least 1")
+    if args.event_delay < 1:
+        parser.error("--event-delay must be at least 1")
     rng = random.Random(args.seed)
+
+    v2_requested = (
+        args.sensor_mode == "camera-rgbd"
+        or args.scenario not in {"clear", "blocked"}
+        or args.policy in {"purify-fixed", "purify-active"}
+    )
+    if v2_requested:
+        run_v2(args, rng)
+        return
 
     # 1. 初始化 Genesis：使用 AMD GPU 运行仿真。
     gs.init(
