@@ -100,6 +100,11 @@ def analyze_rgbd_segmentation(
         end_event = torch.cuda.Event(enable_timing=True)
         start_event.record()
 
+    # Genesis 的相机数组可能是上下翻转得到的负 stride 视图；
+    # PyTorch 传入 ROCm 前需要连续内存。
+    segmentation = np.ascontiguousarray(segmentation)
+    depth = np.ascontiguousarray(depth)
+    rgb = np.ascontiguousarray(rgb)
     seg_tensor = torch.as_tensor(segmentation, device=device, dtype=torch.int64)
     depth_tensor = torch.as_tensor(depth, device=device, dtype=torch.float32)
     # RGB 也进入 GPU，确保完整的相机证据传输路径可验证。
