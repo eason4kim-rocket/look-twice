@@ -82,8 +82,8 @@ def analyze_rgbd_segmentation(
     rgb: np.ndarray,
     depth: np.ndarray,
     segmentation: np.ndarray,
-    obstacle_entity_idx: int,
-    target_entity_idx: int,
+    obstacle_segmentation_idx: int,
+    target_segmentation_idx: int,
     target_reference_pixels: int,
     device: str = "cuda:0",
 ) -> PerceptionResult:
@@ -110,8 +110,8 @@ def analyze_rgbd_segmentation(
     # RGB 也进入 GPU，确保完整的相机证据传输路径可验证。
     rgb_tensor = torch.as_tensor(rgb, device=device, dtype=torch.uint8)
 
-    obstacle_mask = seg_tensor == int(obstacle_entity_idx)
-    target_mask = seg_tensor == int(target_entity_idx)
+    obstacle_mask = seg_tensor == int(obstacle_segmentation_idx)
+    target_mask = seg_tensor == int(target_segmentation_idx)
     support_pixels = int(obstacle_mask.sum().item())
     target_pixels = int(target_mask.sum().item())
 

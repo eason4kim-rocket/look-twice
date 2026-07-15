@@ -36,10 +36,10 @@ class ViewpointScore:
 
 
 DEFAULT_CANDIDATES = (
-    ViewpointCandidate("left_near", (-0.6, 1.2), target_reference_pixels=37475),
-    ViewpointCandidate("left_far", (-0.2, 1.7), target_reference_pixels=19341),
-    ViewpointCandidate("right_near", (0.0, -1.2), target_reference_pixels=29282),
-    ViewpointCandidate("right_far", (0.4, -1.7), target_reference_pixels=18504),
+    ViewpointCandidate("left_near", (-0.6, 1.2), target_reference_pixels=808),
+    ViewpointCandidate("left_far", (-0.2, 1.7), target_reference_pixels=2329),
+    ViewpointCandidate("right_near", (0.0, -1.2), target_reference_pixels=5163),
+    ViewpointCandidate("right_far", (0.4, -1.7), target_reference_pixels=3654),
 )
 
 

@@ -230,17 +230,6 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
         ),
         surface=gs.surfaces.Default(color=obstacle_color),
     )
-    # Genesis 1.1.2 的未命中背景值等于实体数量。若障碍恰好是最后一个
-    # entity，其 idx 会与背景值冲突；末尾 sentinel 让障碍分割 ID 保持唯一。
-    scene.add_entity(
-        gs.morphs.Box(
-            size=(0.1, 0.1, 0.1),
-            pos=(-20.0, 0.0, 0.05),
-            fixed=True,
-            collision=False,
-        ),
-        surface=gs.surfaces.Default(color=(0.2, 0.2, 0.2)),
-    )
 
     sensor_camera = scene.add_camera(
         res=(320, 240),
@@ -272,6 +261,16 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
         )
 
     scene.build()
+    # render() 返回紧凑 segmentation index，而不是 Entity.idx。
+    segmentation_index_by_entity = {
+        entity_key: segmentation_idx
+        for segmentation_idx, entity_key
+        in scene.visualizer.segmentation_idx_dict.items()
+    }
+    obstacle_segmentation_idx = segmentation_index_by_entity[
+        blocking_obstacle.idx
+    ]
+    target_segmentation_idx = segmentation_index_by_entity[target_patch.idx]
     if video_camera is not None:
         video_camera.start_recording()
 
@@ -406,8 +405,8 @@ def run_v2(args: argparse.Namespace, rng: random.Random) -> None:
                     rgb=np.asarray(rgb),
                     depth=np.asarray(depth),
                     segmentation=np.asarray(segmentation),
-                    obstacle_entity_idx=blocking_obstacle.idx,
-                    target_entity_idx=target_patch.idx,
+                    obstacle_segmentation_idx=obstacle_segmentation_idx,
+                    target_segmentation_idx=target_segmentation_idx,
                     target_reference_pixels=candidate.target_reference_pixels,
                     device="cuda:0",
                 )
