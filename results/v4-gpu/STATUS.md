@@ -25,7 +25,7 @@
 | Artifact | N / note |
 | --- | --- |
 | Smoke completed episodes | **96** (0 runner failures) |
-| Formal completed raw JSON | **40** (plus **2** error JSON; incomplete vs 960) |
+| Formal completed raw JSON | **88** (plus **4** error JSON; incomplete vs 960) |
 | Formal design size | **960** |
 | Unsafe crossings (smoke 96) | **0** |
 | Unsafe crossings (packaged formal subset) | **0** (N incomplete) |

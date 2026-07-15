@@ -1,0 +1,42 @@
+{
+  "schema_version": "look-twice.experiment-error/v4",
+  "runner": {
+    "schema_version": "look-twice.experiment-runner/v4",
+    "mode": "formal",
+    "runtime": "genesis",
+    "motion_backend": "kinematic",
+    "device": "cuda:0",
+    "calibration_path": "/workspace/look-twice/outputs/v4-calibration-formal/calibration_artifact.json",
+    "calibration_sha256": "b6a0e54c3de4b1a4739a2266f0a01f27d9a15c81b240189ea1845062d45d90fb",
+    "python": "/opt/venv/bin/python",
+    "entrypoint": "/workspace/look-twice/src/look_twice_v4.py",
+    "policy": "naive-majority",
+    "profile": "time-skew",
+    "seed": 50018
+  },
+  "reason": "episode_subprocess_failed",
+  "returncode": 1,
+  "command": [
+    "/opt/venv/bin/python",
+    "src/look_twice_v4.py",
+    "--policy",
+    "naive-majority",
+    "--profile",
+    "time-skew",
+    "--seed",
+    "50018",
+    "--runtime",
+    "genesis",
+    "--json-output",
+    "outputs/v4-formal-genesis/raw/.naive-majority__time-skew__seed-50018.child-789610.json",
+    "--motion-backend",
+    "kinematic",
+    "--calibration",
+    "outputs/v4-calibration-formal/calibration_artifact.json",
+    "--device",
+    "cuda:0"
+  ],
+  "stdout_tail": "\u001b[38;5;226m[Genesis] [18:21:41] [WARNING] Ignoring inertia matrix of link 'left_front_wheel' because center of mass is not specified.\u001b[0m\n\u001b[38;5;226m[Genesis] [18:21:41] [WARNING] Ignoring inertia matrix of link 'left_rear_wheel' because center of mass is not specified.\u001b[0m\n\u001b[38;5;226m[Genesis] [18:21:41] [WARNING] Ignoring inertia matrix of link 'right_front_wheel' because center of mass is not specified.\u001b[0m\n\u001b[38;5;226m[Genesis] [18:21:41] [WARNING] Ignoring inertia matrix of link 'right_rear_wheel' because center of mass is not specified.\u001b[0m\nTraceback (most recent call last):\n  File \"/workspace/look-twice/src/look_twice_v4.py\", line 158, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/workspace/look-twice/src/look_twice_v4.py\", line 116, in main\n    result = run_v4_episode(\n             ^^^^^^^^^^^^^^^\n  File \"/workspace/look-twice/src/v4_episode.py\", line 532, in run_v4_episode\n    observe(initial, action_kind=\"initial\")\n  File \"/workspace/look-twice/src/v4_episode.py\", line 316, in observe\n    raise RuntimeError(\nRuntimeError: failed to reach evidence viewpoint right_far: obstacle_contact\n\n\u001b[38;5;9m[Genesis] [18:21:56] [ERROR] RuntimeError: failed to reach evidence viewpoint right_far: obstacle_contact\u001b[0m\n",
+  "stderr_tail": "",
+  "recorded_unix_time": 1784139718.0754313
+}

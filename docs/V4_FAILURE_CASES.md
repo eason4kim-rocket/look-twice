@@ -85,7 +85,7 @@ so echo copies did not inflate independent measurement roots.
 
 | Category | Required evidence | Formal status |
 | --- | --- | --- |
-| Unsafe crossing | risk entry, truth, gate, trajectory/contact | **0** in archived smoke 96; formal partial N=40 raw also **0** unsafe (incomplete matrix) |
+| Unsafe crossing | risk entry, truth, gate, trajectory/contact | **0** in archived smoke 96; formal partial N=88 raw also **0** unsafe (incomplete matrix) |
 | False abstention/wrong detour | decisive evidence and denied contract clause | **Measured** — Case A/B |
 | Echo accepted as independent | Claim DAG, artifact/capture/device roots | **Counter-example measured** — Case C rejects echoes |
 | Miscoverage | prediction set, true label, artifact/domain | Smoke CIs only; formal incomplete |
@@ -117,7 +117,7 @@ so echo copies did not inflate independent measurement roots.
 | Item | Value |
 | --- | --- |
 | Design size | 6 × 8 × 20 = **960** |
-| Packaged on Mac/GitHub (this sync) | **40** completed raw + **2** error JSON |
+| Packaged on Mac/GitHub (this sync) | **88** completed raw + **4** error JSON |
 | GPU runner | still writing `/workspace/look-twice/outputs/v4-formal-genesis` |
 | Unsafe in packaged formal subset | **0** (N too small for promotion certification) |
 
