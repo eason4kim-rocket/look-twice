@@ -18,6 +18,22 @@ randomized Genesis scene
 Genesis entity segmentation 是透明披露的模拟传感器代理，不是训练视觉模型。
 v3 会保存 raw 与 corrupted 证据，使每次判断可以审计。
 
+```mermaid
+flowchart LR
+    S["Randomized Genesis scene"] --> C["RGB-D + entity segmentation"]
+    C --> N["ROCm sensor corruption"]
+    N --> P["Perception evidence"]
+    P --> B["Probabilistic belief"]
+    B --> G["Temporal Action Gate"]
+    B --> V["Next-Best-View planner"]
+    V --> R["Robot moves to viewpoint"]
+    R --> C
+    G --> A["Proceed / detour / reinspect"]
+    S -. "truth only for scoring" .-> E["Offline evaluator"]
+    B --> E
+    A --> E
+```
+
 ## 数据隔离
 
 在线规划器只能读取：
