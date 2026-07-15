@@ -1,5 +1,19 @@
 # Look Twice 参赛路线图
 
+## V2 完成状态 — 2026-07-15
+
+- [x] Genesis RGB-D 与 entity segmentation
+- [x] AMD ROCm PyTorch `cuda:0` 证据计算
+- [x] 四候选点 Next-Best-View 规划器
+- [x] `stale` belief 与全新证据 epoch
+- [x] 动态障碍出现、消失和偏移遮挡
+- [x] 20 回合冒烟矩阵
+- [x] 120 回合正式对照实验
+- [x] 动态主动感知演示视频
+
+V2 正式实验源码提交为
+`f7a4e32467b984ef236eadbd767a99001c64113e`。
+
 ## 1. 项目定位
 
 **Look Twice: Evidence-gated active perception for safe navigation.**

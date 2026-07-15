@@ -36,3 +36,12 @@ Every JSON run records:
 - belief lifecycle and action-gate decisions;
 - mission state transitions and trajectory;
 - path length, observation count, simulation steps, and safety metrics.
+
+Schema v2 additionally records RGB-D evidence support, target visibility,
+occlusion, depth support, ROCm perception time, tensor device, Next-Best-View
+rankings, dynamic events, stale counts, replans, and risk-gate entries.
+
+The Genesis physics backend and PyTorch perception kernels use the AMD GPU.
+Camera rasterization is a graphics-rendering path, while state-machine logic,
+JSON, and experiment orchestration remain on CPU. The project does not claim
+that every operation runs on ROCm.

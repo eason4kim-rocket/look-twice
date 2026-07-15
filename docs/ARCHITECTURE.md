@@ -4,8 +4,9 @@
 
 ```mermaid
 flowchart LR
-    S["Genesis scene"] --> O["Geometry or rendered RGB sensor"]
-    O --> E["Observation evidence"]
+    S["Genesis scene"] --> O["RGB + Depth + entity segmentation"]
+    O --> P["ROCm PyTorch evidence kernels"]
+    P --> E["Observation evidence"]
     E --> B["Purify RegionBelief"]
     B --> G["Action Gate"]
     G -->|"confirmed_clear"| D["Go directly to goal"]
@@ -13,6 +14,8 @@ flowchart LR
     G -->|"uncertain"| R["Move to second viewpoint"]
     R --> O
     G -->|"still uncertain"| F["Safe detour fallback"]
+    G -->|"stale"| N["Next-Best-View planner"]
+    N --> O
 ```
 
 The implementation deliberately separates:
@@ -21,6 +24,13 @@ The implementation deliberately separates:
 - **observation** — what one noisy sensing event reports;
 - **belief** — what can be concluded from recent evidence;
 - **action** — what the reliability gate permits the robot to do.
+
+V2 adds two more boundaries:
+
+- **viewpoint planning** uses only known target/occluder geometry and travel
+  cost; it never reads the unknown blocking obstacle state;
+- **temporal validity** expires confirmed evidence after a configurable TTL,
+  starting a new evidence epoch before the robot can enter the passage.
 
 In `--sensor-mode camera`, the observation comes from a 320×240 Genesis RGB
 camera placed at the robot's current inspection viewpoint. A small,
@@ -63,6 +73,25 @@ flowchart TD
     D --> G
     G --> F["FINISHED"]
 ```
+
+V2 inserts `VERIFY_BEFORE_CROSSING` before the inspected passage. A stale
+belief transitions to `GO_TO_REINSPECTION`, while a current confirmed-clear
+belief grants passage entry. Dynamic obstacle events therefore revise actions,
+not just logs.
+
+## Next-Best-View score
+
+Four candidate viewpoints are ranked deterministically:
+
+```text
+score = expected_visibility
+      - 0.25 * normalized_travel_cost
+      - 0.40 * revisit_penalty
+```
+
+Expected visibility is estimated by two-dimensional ray sampling against the
+known occluder rectangle. JSON results retain the full ranking for every
+selection.
 
 ## Policy comparison
 

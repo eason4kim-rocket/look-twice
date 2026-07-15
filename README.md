@@ -1,6 +1,6 @@
 # Look Twice
 
-**Evidence-gated active perception for safe navigation.**
+**Temporal evidence-gated next-best-view navigation on AMD GPU.**
 
 Look Twice is a Physical AI project for the AMD AI DevMaster Hackathon. It
 addresses a simple safety problem: when a robot cannot confirm whether an
@@ -14,11 +14,11 @@ evidence is reliable enough.
 ## Why it is different
 
 ```text
-scene truth
--> noisy observations
+Genesis RGB + depth + instance segmentation
+-> AMD GPU evidence computation
 -> Purify belief resolution
 -> action gate
--> proceed, detour, or actively reinspect
+-> proceed, detour, actively reinspect, or reject stale evidence
 ```
 
 The action gate never treats one `clear` observation as sufficient evidence.
@@ -31,6 +31,10 @@ denied and a safe detour is selected.
 
 - Scene-driven `clear` and `blocked` outcomes in Genesis
 - Optional Genesis RGB camera perception with saved evidence frames
+- RGB-D and entity-segmentation evidence computed by ROCm PyTorch on `cuda:0`
+- Deterministic Next-Best-View selection from four candidate viewpoints
+- Temporal belief expiry and mandatory verification before passage entry
+- Dynamic obstacle appearance, clearance, and shifted-occluder scenarios
 - Evidence lifecycle: unknown, provisional, uncertain, and confirmed
 - Conflict-driven movement to a second inspection viewpoint
 - Safe fallback when evidence remains unresolved
@@ -76,6 +80,16 @@ The competition cloud image provides the tested environment at
   --noise-profile first-flip \
   --evidence-dir outputs/camera-evidence \
   --json-output outputs/camera-result.json
+
+# Look Twice v2: GPU RGB-D + Next-Best-View + temporal Action Gate
+/opt/venv/bin/python src/look_twice_v0.py \
+  --policy purify-active \
+  --scenario dynamic-appears \
+  --sensor-mode camera-rgbd \
+  --viewpoint-policy next-best \
+  --belief-ttl 60 \
+  --evidence-dir outputs/v2-evidence \
+  --json-output outputs/v2-dynamic.json
 ```
 
 Run the standard-library belief tests:
@@ -101,11 +115,15 @@ python scripts/summarize_experiments.py \
 
 - `src/look_twice_v0.py` — Genesis scene, mission state machine, policies, and results
 - `src/belief.py` — Purify evidence resolution and action gate
+- `src/perception.py` — ROCm RGB-D/segmentation evidence computation
+- `src/viewpoint.py` — deterministic visibility scoring and Next-Best-View
 - `tests/test_belief.py` — deterministic belief unit tests
 - `scripts/run_experiments.py` — resumable comparison matrix
 - `scripts/summarize_experiments.py` — aggregate metrics
 - `scripts/plot_trajectory.py` — top-down evidence and route plot
 - `scripts/plot_comparison.py` — safety and observation-cost comparison
+- `scripts/run_v2_experiments.py` — resumable 120-episode v2 matrix
+- `scripts/summarize_v2_experiments.py` — v2 aggregate metrics
 - `scripts/annotate_video.py` — state, belief, and Action Gate video overlays
 - `docs/ARCHITECTURE.md` — system design and state flow
 - `docs/ROADMAP.md` — implementation and submission roadmap
@@ -115,6 +133,7 @@ python scripts/summarize_experiments.py \
 
 - [Formal 480-run experiment](results/2026-07-15_formal-experiment/README.md)
 - [Rendered-camera perception validation](results/2026-07-15_camera-perception/README.md)
+- [Look Twice v2 formal 120-run experiment](results/2026-07-15_v2-formal/README.md)
 - [Clear demo](assets/demo/clear.mp4)
 - [Blocked demo](assets/demo/blocked.mp4)
 - [Conflict-driven reinspection demo](assets/demo/conflict.mp4)
@@ -123,6 +142,11 @@ python scripts/summarize_experiments.py \
 At observation noise `0.3`, Purify achieved 97.5% safe success with an average
 of 2.4 observations. Majority Vote achieved 95.0% with a fixed cost of 3
 observations, while Single Shot achieved 82.5% with 1 observation.
+
+In the v2 `dynamic-appears` experiment, Single Shot, Majority Vote, and fixed
+Purify all produced a 100% unsafe-crossing rate. Active Purify detected stale
+evidence, moved to a new viewpoint, and achieved 100% safe success across six
+seeds. This safety gain required 4 observations, 1 replan, and a longer path.
 
 ## Tested AMD environment
 
@@ -139,7 +163,9 @@ notes.
 ## Known limitations
 
 - The robot is currently a fixed box moved with `set_pos()`, not a wheel model.
-- Camera perception currently uses a deliberately simple red-pixel detector,
-  not a learned semantic or depth model.
+- Legacy `camera` mode uses a color rule. V2 `camera-rgbd` uses Genesis entity
+  segmentation as a transparent simulated sensor proxy, not a trained model.
+- Reported GPU perception latency includes first-use ROCm warm-up and is not an
+  optimized throughput benchmark.
 - Noise is controlled and synthetic so policy behavior remains reproducible.
 - Safe navigation is demonstrated in simulation; no real-robot claim is made.

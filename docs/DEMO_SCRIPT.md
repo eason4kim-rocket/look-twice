@@ -1,5 +1,18 @@
 # Look Twice demo script
 
+## V2 opening sequence
+
+Show `assets/demo/v2/dynamic-active-annotated.mp4` while explaining:
+
+> The robot first confirms the passage is clear. A dynamic obstacle then
+> appears. When the robot approaches the passage, the old evidence has expired,
+> so the Action Gate refuses entry. The robot moves to a new viewpoint, obtains
+> fresh RGB-D evidence on the AMD GPU, confirms blockage, and takes the detour.
+
+Briefly show the RGB, depth, and segmentation evidence triplets beside the
+top-down route. State explicitly that segmentation is a Genesis simulated
+sensor, not a trained perception model.
+
 Target length: 60–90 seconds.
 
 ## 0–12 seconds — Problem
