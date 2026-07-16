@@ -1,13 +1,18 @@
-# v5 repair-required mini-eval (W7900D)
+# v5 repair-required mini-eval **r2** (W7900D) — INVALIDATED
 
-## Decision
+> **Superseded by r3.** This archive is kept for audit only.
+> Bugs: (1) safe detour scored as `nav_success=False` / mission fail;
+> (2) zero-distance `side_view` revisits (`path_length=0`).
+> **Valid mini-eval:** [`../capability-v5-repair-required-r3/STATUS.md`](../capability-v5-repair-required-r3/STATUS.md)
+
+## Decision (historical — do not cite)
 
 | Question | Answer |
 | --- | --- |
-| Strategy differentiation shown? | **YES** |
-| GO for paired 90 (eligibility)? | **YES** (`GO_for_paired_90=true`) |
-| Paired 90 auto-started? | **NO** — remains an explicit user decision |
-| New contest tag / Gate B claim? | **NO** — this is capability evidence only |
+| Strategy differentiation shown? | claimed YES under **buggy** metrics (invalid) |
+| GO for paired 90 (eligibility)? | **superseded** — use r3 |
+| Paired 90 auto-started? | **NO** |
+| New contest tag / Gate B claim? | **NO** |
 
 ## Why this set exists
 
