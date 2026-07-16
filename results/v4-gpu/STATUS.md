@@ -15,30 +15,44 @@
    warmup 20 / timed 100, CPU vs ROCm separated).
 7. **Genesis smoke matrix 6×8×2 = 96 completed** with fitted calibration;
    summaries under `smoke-genesis/summary/`; SHA256 in `SHA256SUMS`.
-8. **Formal closed-loop 6×8×20 = 960 in progress** on the live instance
-   (`/workspace/look-twice/outputs/v4-formal-genesis`). Mac/GitHub package holds
-   the current incomplete subset under `formal-genesis/` (see counts below).
+8. **Formal closed-loop 6×8×20 design = 960 attempted**: **956 completed raw JSON**
+   + **4 error JSON** (seed-50018 viewpoint contact class). Archived under
+   `formal-genesis/`. Cloud pipeline ended `2026-07-16 00:33 UTC`.
 9. Figures: evidence DAG + smoke comparison SVG under `figures/`.
+10. Promotion snapshot: `formal-genesis/PROMOTION_SNAPSHOT.md` (honest PASS/FAIL).
 
 ## Packaged counts (this repository snapshot)
 
 | Artifact | N / note |
 | --- | --- |
 | Smoke completed episodes | **96** (0 runner failures) |
-| Formal completed raw JSON | **88** (plus **4** error JSON; incomplete vs 960) |
+| Formal completed raw JSON | **956** |
+| Formal error JSON | **4** (holes vs design 960) |
 | Formal design size | **960** |
 | Unsafe crossings (smoke 96) | **0** |
-| Unsafe crossings (packaged formal subset) | **0** (N incomplete) |
+| Unsafe crossings (formal completed) | **0** |
+
+## Promotion snapshot (purify-active, formal completed)
+
+| Criterion | Verdict (see PROMOTION_SNAPSHOT.md) |
+| --- | --- |
+| Unsafe risk entry (all policies) | **PASS** (0/956) |
+| Evidence-echo rejection | **PASS** (20/20) |
+| ID conformal miscoverage ≤ 0.08 | **FAIL** (~0.41 on active ID samples) |
+| Unsafe ≤ v3-logodds | **PASS** (both 0) |
+| Safe success ≥ purify-passive | **PASS** (both 0.40) |
+| Contract repair ≥ 80% | **FAIL** (~0.68 = 109/160) |
+
+No rule retuning after reading aggregates. Partial calibration applies.
 
 ## Not claimed
 
-- Full **960** formal completion until the cloud matrix finishes and is re-synced.
+- Perfect 960/960 without holes (4 errors remain until resume succeeds).
 - Skid-steer formal physics validation (explicitly demoted).
-- Full promotion-threshold certification on locked test N=960 (smoke N and
-  partial formal N are too small for CI/promotion claims).
+- Full promotion certification for conformal coverage / 80% repair on purify-active.
 - Complete calibration split of exactly 350 rows (partial, documented).
 
 ## GPU policy
 
-Instance left **running** for formal matrix continuation (operator objective:
-do not shut down at this packaging step).
+Instance left **running** unless the operator requests shutdown. Formal runner has
+finished; idle GPU still incurs credit cost.

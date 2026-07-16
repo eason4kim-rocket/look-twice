@@ -156,3 +156,26 @@ GPU is left running to continue the matrix.
 
 See `results/v4-gpu/bench/evidence_benchmark.json` when present (CPU vs ROCm
 separated timings, batches 1/8/32/128).
+
+
+## 12. Formal closed-loop results (W7900D, archived)
+
+Design matrix: 6 policies × 8 profiles × seeds `50000–50019` = 960.
+
+| Quantity | Value |
+| --- | ---: |
+| Completed episode JSON | 956 |
+| Error JSON | 4 |
+| Backend | kinematic + `gs.amdgpu` |
+| Unsafe crossings (completed) | 0 |
+
+Authoritative tables:
+
+- `results/v4-gpu/formal-genesis/summary/aggregate.csv`
+- `results/v4-gpu/formal-genesis/summary/paired_comparisons.csv`
+- `results/v4-gpu/formal-genesis/PROMOTION_SNAPSHOT.md`
+
+Full Purify promotion is **not** claimed: contract repair ≈ 68% and active ID
+conformal miscoverage exceeds `alpha+0.03` under the partial calibration artifact.
+Safety-side fail-closed (zero unsafe entries) and evidence-echo rejection hold
+on the completed set. No post-hoc rule changes.

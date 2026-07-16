@@ -1,0 +1,18 @@
+{
+  "schema_version": "look-twice.experiment-summary/v4",
+  "runner_configuration": {
+    "mode": "formal",
+    "runtime": "genesis",
+    "motion_backend": "kinematic",
+    "calibration": "outputs/v4-calibration-formal/calibration_artifact.json",
+    "device": "cuda:0",
+    "output_dir": "outputs/v4-formal-genesis",
+    "python": "/opt/venv/bin/python",
+    "entrypoint": "src/look_twice_v4.py"
+  },
+  "counts": {
+    "completed": 956,
+    "skipped": 0,
+    "error": 4
+  }
+}

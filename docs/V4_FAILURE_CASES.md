@@ -85,7 +85,7 @@ so echo copies did not inflate independent measurement roots.
 
 | Category | Required evidence | Formal status |
 | --- | --- | --- |
-| Unsafe crossing | risk entry, truth, gate, trajectory/contact | **0** in archived smoke 96; formal partial N=88 raw also **0** unsafe (incomplete matrix) |
+| Unsafe crossing | risk entry, truth, gate, trajectory/contact | **0** in archived smoke 96; formal completed N=956 also **0** unsafe (4 error holes remain) |
 | False abstention/wrong detour | decisive evidence and denied contract clause | **Measured** — Case A/B |
 | Echo accepted as independent | Claim DAG, artifact/capture/device roots | **Counter-example measured** — Case C rejects echoes |
 | Miscoverage | prediction set, true label, artifact/domain | Smoke CIs only; formal incomplete |
@@ -123,14 +123,16 @@ so echo copies did not inflate independent measurement roots.
 
 Earlier formal rows for seed 50018 remain error JSON until a resume re-run succeeds.
 
-## Formal matrix honesty (in progress)
+## Formal matrix honesty (archived)
 
 | Item | Value |
 | --- | --- |
 | Design size | 6 × 8 × 20 = **960** |
-| Packaged on Mac/GitHub (this sync) | **88** completed raw + **4** error JSON |
-| GPU runner | still writing `/workspace/look-twice/outputs/v4-formal-genesis` |
-| Unsafe in packaged formal subset | **0** (N too small for promotion certification) |
+| Packaged on Mac/GitHub | **956** completed raw + **4** error JSON |
+| GPU runner | finished `2026-07-16 00:33 UTC` (instance may still be up) |
+| Unsafe in completed formal episodes | **0** / 956 |
+| Promotion snapshot | `results/v4-gpu/formal-genesis/PROMOTION_SNAPSHOT.md` |
+
 
 ## Final submission checklist for this file
 
