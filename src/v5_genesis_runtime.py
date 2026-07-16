@@ -1,9 +1,9 @@
 """Genesis runtime for Look Twice v5 (navigation + grasp proxy object).
 
 Wraps the v4 Genesis scene for physical/kinematic motion and adds a grasp
-object. Sensor Claims for the gate remain produced by the v5 episode layer
-(synthetic modality proxies) unless future work wires full RGB-D Claims.
-STATUS must state that clearly when claims are synthetic-on-GPU.
+object. RGB-D / entity-segmentation capture is exposed via ``capture_raw`` and
+``evidence_scenario`` so the episode layer can build real Depth + Semantic
+Claims (see ``v5_rgbd_claims``). Synthetic Claims remain only for CPU CI.
 """
 
 from __future__ import annotations
@@ -107,13 +107,18 @@ class V5GenesisRuntime:
         env["v5"] = True
         env["v5_motion_backend"] = self.motion_backend
         env["grasp_entity_spawned"] = self._grasp_spawned
-        env["claims_mode"] = "synthetic_modality_proxies_on_gpu_motion"
-        # Eligible only when not using smoke cal (set by entrypoint) and physics used.
+        # Episode overwrites with genesis_rgbd_depth_semantic when RGB-D path runs.
+        env["claims_mode"] = "genesis_rgbd_depth_semantic_available"
         env["formal_result_eligible"] = self.motion_backend in {
             "skid-steer",
             "kinematic",
         }
         return env
+
+    @property
+    def evidence_scenario(self) -> Any:
+        """v4 ScenarioSample used by process_evidence_frame (fault/profile)."""
+        return self._inner.scenario
 
     def move_to(self, target_xy: tuple[float, float]):
         return self._inner.move_to(target_xy)

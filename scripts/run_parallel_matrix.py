@@ -120,6 +120,8 @@ def _build_command(
             str(job.seed),
             "--purify-bin",
             str(purify_bin),
+            "--device",
+            device,
             "--allow-smoke-calibration",
             "--json-output",
             str(output),

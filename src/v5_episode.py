@@ -26,6 +26,13 @@ from v5_policies import (
     get_policy_descriptor,
     naive_decision_from_claims,
 )
+from v5_rgbd_claims import (
+    CLAIMS_MODE_GENESIS_RGBD,
+    CLAIMS_MODE_SYNTHETIC,
+    V4_SENSOR_VERSION,
+    process_genesis_observation,
+    runtime_supports_rgbd_claims,
+)
 from v5_scenario import GRASP_XY, NAV_REGION, V5ScenarioSample
 
 EPISODE_SCHEMA = "look-twice.episode/v5"
@@ -65,7 +72,9 @@ def smoke_calibration_artifact(commit: str | None = None) -> CalibrationArtifact
         applicable_profiles=V5_ID_PROFILES,
         min_noise_intensity=0.0,
         max_noise_intensity=0.85,
-        sensor_versions=(SENSOR_VERSION,),
+        # Include v4 sensor id so Genesis RGB-D Claims (process_evidence_frame)
+        # remain calibration-applicable under smoke cal.
+        sensor_versions=(SENSOR_VERSION, V4_SENSOR_VERSION),
         git_commit=commit or git_commit(),
         dataset_sha256=canonical_sha256(dataset),
         seed_ranges=(SeedRange(30000, 30049),),
@@ -134,6 +143,8 @@ class V5EpisodeConfig:
     max_observations: int = 4
     max_replans: int = 2
     ttl_steps: int = DEFAULT_TTL_STEPS
+    device: str = "cpu"
+    prefer_rgbd_claims: bool = True
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
@@ -349,6 +360,12 @@ def run_v5_episode(
     task_nav_ok = False
     task_pick_ok = False
     used_detour = False
+    use_rgbd = bool(
+        config.prefer_rgbd_claims and runtime_supports_rgbd_claims(runtime)
+    )
+    claims_mode = CLAIMS_MODE_GENESIS_RGBD if use_rgbd else CLAIMS_MODE_SYNTHETIC
+    rgbd_observation_audits: list[dict[str, Any]] = []
+    last_gate_sensor_version = SENSOR_VERSION
 
     def nav_receipt_is_live(receipt: Mapping[str, Any] | None) -> bool:
         if not receipt or receipt.get("admitted") is not True:
@@ -421,8 +438,12 @@ def run_v5_episode(
             unsafe = True
         return result
 
-    def add_nav_observation(viewpoint: Mapping[str, Any]) -> None:
-        nonlocal capture_index
+    def add_nav_observation(
+        viewpoint: Mapping[str, Any],
+        *,
+        action_kind: str = "initial",
+    ) -> None:
+        nonlocal capture_index, last_gate_sensor_version
         xy = (float(viewpoint["xy"][0]), float(viewpoint["xy"][1]))
         movement = move(xy, str(viewpoint["name"]))
         if not movement.reached:
@@ -431,29 +452,93 @@ def run_v5_episode(
             )
         runtime.wait_steps(5)
         capture_root = f"cap-nav-{capture_index}-{runtime.current_step}"
+        obs_index = capture_index
         capture_index += 1
-        nav_claims.extend(
-            _synthetic_nav_claims(
-                scenario,
-                step=runtime.current_step,
-                capture_root=capture_root,
-                ttl=config.ttl_steps,
+        if use_rgbd:
+            raw = runtime.capture_raw(
+                viewpoint=str(viewpoint["name"]),
+                viewpoint_xy=xy,
+                predicted_coverage=float(viewpoint.get("predicted_coverage", 0.8)),
             )
-        )
+            claims, audit = process_genesis_observation(
+                raw,
+                runtime.evidence_scenario,
+                observation_index=obs_index,
+                repair_action_kind=action_kind,
+                device=config.device,
+                ttl_steps=config.ttl_steps,
+            )
+            nav_claims.extend(claims)
+            rgbd_observation_audits.append(audit)
+            last_gate_sensor_version = str(
+                audit.get("sensor_version") or V4_SENSOR_VERSION
+            )
+        else:
+            nav_claims.extend(
+                _synthetic_nav_claims(
+                    scenario,
+                    step=runtime.current_step,
+                    capture_root=capture_root,
+                    ttl=config.ttl_steps,
+                )
+            )
         visited.add(str(viewpoint["name"]))
+
+    def capture_claims_at_pose(
+        *,
+        label: str,
+        action_kind: str = "same_view",
+        predicted_coverage: float = 0.85,
+    ) -> list[RobotClaim]:
+        """New measurement roots at the current chassis pose (boundary / wait)."""
+        nonlocal capture_index, last_gate_sensor_version
+        capture_root = f"cap-nav-{label}-{capture_index}-{runtime.current_step}"
+        obs_index = capture_index
+        capture_index += 1
+        if use_rgbd:
+            pose = runtime.current_pose
+            raw = runtime.capture_raw(
+                viewpoint=label,
+                viewpoint_xy=(float(pose.x), float(pose.y)),
+                predicted_coverage=predicted_coverage,
+            )
+            claims, audit = process_genesis_observation(
+                raw,
+                runtime.evidence_scenario,
+                observation_index=obs_index,
+                repair_action_kind=action_kind,
+                device=config.device,
+                ttl_steps=config.ttl_steps,
+            )
+            rgbd_observation_audits.append(audit)
+            last_gate_sensor_version = str(
+                audit.get("sensor_version") or V4_SENSOR_VERSION
+            )
+            return list(claims)
+        return _synthetic_nav_claims(
+            scenario,
+            step=runtime.current_step,
+            capture_root=capture_root,
+            ttl=config.ttl_steps,
+        )
 
     def evaluate_nav() -> dict[str, Any]:
         nonlocal last_nav_receipt
         if descriptor.requires_go_gate:
             assert bridge is not None
+            noise = float(public["declared_noise_intensity"])
+            if rgbd_observation_audits:
+                corr = rgbd_observation_audits[-1].get("corruption") or {}
+                if isinstance(corr, dict) and "declared_noise_intensity" in corr:
+                    noise = float(corr["declared_noise_intensity"])
             receipt = bridge.evaluate_action(
                 claims=nav_claims,
                 contract=nav_contract,
                 calibration=calibration,
                 current_step=runtime.current_step,
                 profile=scenario.profile if scenario.profile != "manipulation-occlusion" else "independent-noise",
-                noise_intensity=float(public["declared_noise_intensity"]),
-                sensor_version=SENSOR_VERSION,
+                noise_intensity=noise,
+                sensor_version=last_gate_sensor_version,
             )
             # map profile for OOD-less v5: manipulation-occlusion treated as ID for cal smoke
             gate_receipts.append(receipt)
@@ -633,14 +718,10 @@ def run_v5_episode(
                     runtime.wait_steps(min(10, int(decision.selected_action.wait_steps)))
                     visited.add(f"wait:{repair_iters}")
                 else:
-                    capture_root = f"cap-nav-re-{capture_index}-{runtime.current_step}"
-                    capture_index += 1
                     nav_claims.extend(
-                        _synthetic_nav_claims(
-                            scenario,
-                            step=runtime.current_step,
-                            capture_root=capture_root,
-                            ttl=config.ttl_steps,
+                        capture_claims_at_pose(
+                            label=f"same_view_{repair_iters}",
+                            action_kind="same_view",
                         )
                     )
                     visited.add(f"same_view:{repair_iters}")
@@ -672,13 +753,10 @@ def run_v5_episode(
             # boundary.  Without this capture a dynamic world change cannot
             # invalidate a still-young receipt merely by existing.
             runtime.wait_steps(3)
-            capture_root = f"cap-nav-boundary-{capture_index}-{runtime.current_step}"
-            capture_index += 1
-            verification_claims = _synthetic_nav_claims(
-                scenario,
-                step=runtime.current_step,
-                capture_root=capture_root,
-                ttl=config.ttl_steps,
+            verification_claims = capture_claims_at_pose(
+                label="boundary_verification",
+                action_kind="same_view",
+                predicted_coverage=0.9,
             )
             nav_claims.extend(verification_claims)
             visited.add("boundary_verification")
@@ -707,18 +785,13 @@ def run_v5_episode(
             if allows_repair:
                 # Active: re-observe at the boundary, then re-evaluate the gate.
                 for repair_iters in range(config.max_observations):
-                    capture_root = (
-                        f"cap-nav-boundary-{capture_index}-{runtime.current_step}"
-                    )
-                    capture_index += 1
                     # fresh capture at current pose (no long side trip first)
                     runtime.wait_steps(3)
                     nav_claims.extend(
-                        _synthetic_nav_claims(
-                            scenario,
-                            step=runtime.current_step,
-                            capture_root=capture_root,
-                            ttl=config.ttl_steps,
+                        capture_claims_at_pose(
+                            label=f"boundary_recapture_{repair_iters}",
+                            action_kind="same_view",
+                            predicted_coverage=0.9,
                         )
                     )
                     visited.add(f"boundary_recapture:{repair_iters}")
@@ -955,6 +1028,9 @@ def run_v5_episode(
         outcome = "nav_only_not_mission"
 
     elapsed = time.perf_counter() - started
+    environment = dict(runtime.environment)
+    environment["claims_mode"] = claims_mode
+    environment["rgbd_observation_count"] = len(rgbd_observation_audits)
     return {
         "schema_version": EPISODE_SCHEMA,
         "git_commit": git_commit(),
@@ -962,13 +1038,15 @@ def run_v5_episode(
             **asdict(config),
             "alpha": calibration.alpha,
             "calibration_artifact_id": calibration.artifact_id,
+            "claims_mode": claims_mode,
         },
         "scenario": scenario.to_dict(),
-        "environment": runtime.environment,
+        "environment": environment,
         "action_contracts": [nav_contract, pick_contract],
         "calibration_artifact": calibration.to_wire(),
         "nav_claims": [c.to_wire() for c in nav_claims],
         "grasp_claims": [c.to_wire() for c in grasp_claims],
+        "rgbd_observation_audits": rgbd_observation_audits,
         "gate_receipts": gate_receipts,
         "plan_invalidation_receipts": invalidations,
         "repair_decisions": repair_decisions,
@@ -989,6 +1067,7 @@ def run_v5_episode(
             "elapsed_seconds": elapsed,
             "simulation_steps": runtime.current_step,
             "outcome": outcome,
+            "claims_mode": claims_mode,
         },
         "oracle": {"scenario": scenario.oracle_context},
         "outcome": {

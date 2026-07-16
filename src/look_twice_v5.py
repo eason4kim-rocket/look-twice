@@ -33,6 +33,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--json-output", type=Path)
     parser.add_argument("--allow-smoke-calibration", action="store_true")
     parser.add_argument("--calibration", type=Path)
+    parser.add_argument(
+        "--device",
+        default=None,
+        help="Perception device for RGB-D Claims (default: cuda:0 on genesis, cpu on synthetic)",
+    )
+    parser.add_argument(
+        "--no-rgbd-claims",
+        action="store_true",
+        help="Force synthetic modality proxies even on Genesis",
+    )
     args = parser.parse_args()
     if args.seed < 0:
         parser.error("seed must be non-negative")
@@ -81,11 +91,18 @@ def main() -> int:
             command = (args.purify_bin,) if args.purify_bin is not None else None
             bridge = PurifyBridge(command=command)
             bridge.start()
+        device = args.device
+        if device is None:
+            device = "cuda:0" if args.runtime == "genesis" else "cpu"
         result = run_v5_episode(
             scenario=scenario,
             runtime=runtime,
             calibration=calibration,
-            config=V5EpisodeConfig(policy=args.policy),
+            config=V5EpisodeConfig(
+                policy=args.policy,
+                device=device,
+                prefer_rgbd_claims=not args.no_rgbd_claims,
+            ),
             bridge=bridge,
         )
     finally:
@@ -115,6 +132,7 @@ def main() -> int:
         f"unsafe={m['unsafe_crossing']}",
         f"nav={m['nav_success']}",
         f"pick={m['pick_success']}",
+        f"claims_mode={m.get('claims_mode') or result.get('configuration', {}).get('claims_mode')}",
         f"output={out}",
     )
     return 0
