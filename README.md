@@ -57,10 +57,10 @@ GPU evidence. Packaged W7900D artifacts live under
 | 60 physical skid-steer validation episodes | No | — | Blocked by skid acceptance failure |
 | Upstream Genesis contribution | Planned | No | No PR claimed yet |
 
-**Completed on W7900D (archived):** Genesis smoke matrix 6×8×2=96 with fitted
-calibration; 8-profile single-seed smokes; ROCm evidence benchmark; partial
-calibration artifact; representative figures/DAG. **Incomplete:** locked-test
-formal closed-loop 6×8×20=960 (runner still on GPU; packaged subset only).
+**Completed on W7900D (archived):** Genesis smoke matrix 6×8×2=96; formal
+closed-loop **960/960** under `results/v4-gpu/formal-genesis/`; ROCm evidence
+benchmark; partial calibration artifact; figures/DAG. **Not claimed:** Full
+Purify promotion (repair/coverage), skid-steer physical 60, contest video.
 
 ## Purify IP boundary
 
