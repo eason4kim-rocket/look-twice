@@ -1,0 +1,20 @@
+parallel matrix kind=v5 jobs=9 workers=2
+[ok] naive__repair-required__50001 27.9s rc=0
+[ok] naive__repair-required__50000 28.6s rc=0
+[ok] naive__repair-required__50002 25.2s rc=0
+[ok] purify-passive__repair-required__50000 29.4s rc=0
+[ok] purify-passive__repair-required__50001 26.4s rc=0
+[ok] purify-passive__repair-required__50002 28.8s rc=0
+[ok] purify-active__repair-required__50000 26.3s rc=0
+[ok] purify-active__repair-required__50001 29.5s rc=0
+[ok] purify-active__repair-required__50002 25.5s rc=0
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 2,
+  "jobs": 9,
+  "ok": 9,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 131.27221131697297
+}

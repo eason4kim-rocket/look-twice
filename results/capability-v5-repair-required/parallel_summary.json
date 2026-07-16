@@ -1,0 +1,75 @@
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 2,
+  "jobs": 9,
+  "ok": 9,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 131.27221131697297,
+  "results": [
+    {
+      "stem": "naive__repair-required__50000",
+      "status": "ok",
+      "seconds": 28.628290835767984,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/naive__repair-required__50000.log"
+    },
+    {
+      "stem": "naive__repair-required__50001",
+      "status": "ok",
+      "seconds": 27.92995884642005,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/naive__repair-required__50001.log"
+    },
+    {
+      "stem": "naive__repair-required__50002",
+      "status": "ok",
+      "seconds": 25.195326291024685,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/naive__repair-required__50002.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50000",
+      "status": "ok",
+      "seconds": 26.26690063253045,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/purify-active__repair-required__50000.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50001",
+      "status": "ok",
+      "seconds": 29.486511003226042,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/purify-active__repair-required__50001.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50002",
+      "status": "ok",
+      "seconds": 25.482291288673878,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/purify-active__repair-required__50002.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50000",
+      "status": "ok",
+      "seconds": 29.40880534425378,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/purify-passive__repair-required__50000.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50001",
+      "status": "ok",
+      "seconds": 26.375914089381695,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/purify-passive__repair-required__50001.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50002",
+      "status": "ok",
+      "seconds": 28.780249524861574,
+      "returncode": 0,
+      "log": "outputs/v5-repair-required-eval-r2/logs/purify-passive__repair-required__50002.log"
+    }
+  ]
+}

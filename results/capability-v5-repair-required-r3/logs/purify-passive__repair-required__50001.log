@@ -1,0 +1,1 @@
+v5 finished policy=purify-passive profile=repair-required seed=50001 mission=True unsafe=False nav=True pick=True claims_mode=genesis_rgbd_depth_semantic output=outputs/v5-repair-required-eval-r3/purify-passive__repair-required__50001.json

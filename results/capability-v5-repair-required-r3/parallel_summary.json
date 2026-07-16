@@ -1,0 +1,48 @@
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 2,
+  "jobs": 9,
+  "ok": 9,
+  "skipped": 0,
+  "fail": 0,
+  "note": "Episodes produced under force-unvisited-side_view repair loop; a later resume pass only skipped and is not the authoritative run.",
+  "results": [
+    {
+      "stem": "naive__repair-required__50000",
+      "status": "ok"
+    },
+    {
+      "stem": "naive__repair-required__50001",
+      "status": "ok"
+    },
+    {
+      "stem": "naive__repair-required__50002",
+      "status": "ok"
+    },
+    {
+      "stem": "purify-active__repair-required__50000",
+      "status": "ok"
+    },
+    {
+      "stem": "purify-active__repair-required__50001",
+      "status": "ok"
+    },
+    {
+      "stem": "purify-active__repair-required__50002",
+      "status": "ok"
+    },
+    {
+      "stem": "purify-passive__repair-required__50000",
+      "status": "ok"
+    },
+    {
+      "stem": "purify-passive__repair-required__50001",
+      "status": "ok"
+    },
+    {
+      "stem": "purify-passive__repair-required__50002",
+      "status": "ok"
+    }
+  ]
+}
