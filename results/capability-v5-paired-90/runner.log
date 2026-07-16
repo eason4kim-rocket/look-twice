@@ -1,0 +1,101 @@
+parallel matrix kind=v5 jobs=90 workers=2
+[ok] naive__independent-noise__50000 30.4s rc=0
+[ok] naive__independent-noise__50001 30.7s rc=0
+[ok] naive__independent-noise__50002 28.3s rc=0
+[ok] naive__independent-noise__50003 29.2s rc=0
+[ok] naive__independent-noise__50004 29.8s rc=0
+[ok] naive__shared-occlusion__50000 29.0s rc=0
+[ok] naive__shared-occlusion__50001 29.2s rc=0
+[ok] naive__shared-occlusion__50002 29.5s rc=0
+[ok] naive__shared-occlusion__50004 26.5s rc=0
+[ok] naive__shared-occlusion__50003 27.7s rc=0
+[ok] naive__evidence-echo__50000 29.7s rc=0
+[ok] naive__evidence-echo__50001 30.3s rc=0
+[ok] naive__evidence-echo__50002 30.6s rc=0
+[ok] naive__evidence-echo__50003 31.1s rc=0
+[ok] naive__evidence-echo__50004 27.6s rc=0
+[ok] naive__time-skew__50000 30.0s rc=0
+[ok] naive__time-skew__50001 27.2s rc=0
+[ok] naive__time-skew__50002 29.4s rc=0
+[ok] naive__time-skew__50003 26.9s rc=0
+[ok] naive__time-skew__50004 27.8s rc=0
+[ok] naive__dynamic-change__50000 28.9s rc=0
+[ok] naive__dynamic-change__50001 28.1s rc=0
+[ok] naive__dynamic-change__50002 28.9s rc=0
+[ok] naive__dynamic-change__50003 28.2s rc=0
+[ok] naive__dynamic-change__50004 29.2s rc=0
+[ok] naive__repair-required__50000 26.1s rc=0
+[ok] naive__repair-required__50001 25.4s rc=0
+[ok] naive__repair-required__50002 26.4s rc=0
+[ok] naive__repair-required__50003 25.2s rc=0
+[ok] naive__repair-required__50004 26.6s rc=0
+[ok] purify-passive__independent-noise__50000 27.1s rc=0
+[ok] purify-passive__independent-noise__50001 30.2s rc=0
+[ok] purify-passive__independent-noise__50002 26.6s rc=0
+[ok] purify-passive__independent-noise__50003 30.2s rc=0
+[ok] purify-passive__independent-noise__50004 26.6s rc=0
+[ok] purify-passive__shared-occlusion__50000 28.1s rc=0
+[ok] purify-passive__shared-occlusion__50001 30.1s rc=0
+[ok] purify-passive__shared-occlusion__50002 27.7s rc=0
+[ok] purify-passive__shared-occlusion__50003 28.0s rc=0
+[ok] purify-passive__shared-occlusion__50004 29.0s rc=0
+[ok] purify-passive__evidence-echo__50000 26.8s rc=0
+[ok] purify-passive__evidence-echo__50001 30.3s rc=0
+[ok] purify-passive__evidence-echo__50002 26.7s rc=0
+[ok] purify-passive__evidence-echo__50003 30.4s rc=0
+[ok] purify-passive__evidence-echo__50004 26.5s rc=0
+[ok] purify-passive__time-skew__50000 28.6s rc=0
+[ok] purify-passive__time-skew__50001 28.2s rc=0
+[ok] purify-passive__time-skew__50002 26.7s rc=0
+[ok] purify-passive__time-skew__50003 31.0s rc=0
+[ok] purify-passive__time-skew__50004 26.6s rc=0
+[ok] purify-passive__dynamic-change__50000 31.2s rc=0
+[ok] purify-passive__dynamic-change__50001 28.3s rc=0
+[ok] purify-passive__dynamic-change__50002 30.6s rc=0
+[ok] purify-passive__dynamic-change__50003 28.5s rc=0
+[ok] purify-passive__dynamic-change__50004 30.8s rc=0
+[ok] purify-passive__repair-required__50000 26.2s rc=0
+[ok] purify-passive__repair-required__50001 28.4s rc=0
+[ok] purify-passive__repair-required__50002 26.1s rc=0
+[ok] purify-passive__repair-required__50003 28.9s rc=0
+[ok] purify-passive__repair-required__50004 26.8s rc=0
+[ok] purify-active__independent-noise__50000 26.8s rc=0
+[ok] purify-active__independent-noise__50001 31.3s rc=0
+[ok] purify-active__independent-noise__50002 26.5s rc=0
+[ok] purify-active__independent-noise__50003 31.5s rc=0
+[ok] purify-active__independent-noise__50004 26.8s rc=0
+[ok] purify-active__shared-occlusion__50000 31.7s rc=0
+[ok] purify-active__shared-occlusion__50001 30.0s rc=0
+[ok] purify-active__shared-occlusion__50002 31.3s rc=0
+[ok] purify-active__shared-occlusion__50003 30.1s rc=0
+[ok] purify-active__shared-occlusion__50004 31.1s rc=0
+[ok] purify-active__evidence-echo__50000 26.5s rc=0
+[ok] purify-active__evidence-echo__50001 32.0s rc=0
+[ok] purify-active__evidence-echo__50002 27.1s rc=0
+[ok] purify-active__evidence-echo__50004 26.5s rc=0
+[ok] purify-active__evidence-echo__50003 32.4s rc=0
+[ok] purify-active__time-skew__50000 26.8s rc=0
+[ok] purify-active__time-skew__50001 31.3s rc=0
+[ok] purify-active__time-skew__50002 26.6s rc=0
+[ok] purify-active__time-skew__50003 31.4s rc=0
+[ok] purify-active__time-skew__50004 26.7s rc=0
+[ok] purify-active__dynamic-change__50000 30.9s rc=0
+[ok] purify-active__dynamic-change__50001 30.3s rc=0
+[ok] purify-active__dynamic-change__50002 29.7s rc=0
+[ok] purify-active__dynamic-change__50003 30.3s rc=0
+[ok] purify-active__dynamic-change__50004 30.7s rc=0
+[ok] purify-active__repair-required__50000 27.7s rc=0
+[ok] purify-active__repair-required__50001 31.8s rc=0
+[ok] purify-active__repair-required__50002 27.9s rc=0
+[ok] purify-active__repair-required__50003 32.6s rc=0
+[ok] purify-active__repair-required__50004 27.7s rc=0
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 2,
+  "jobs": 90,
+  "ok": 90,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 1296.3605459406972
+}

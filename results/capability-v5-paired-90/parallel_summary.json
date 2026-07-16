@@ -1,0 +1,642 @@
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 2,
+  "jobs": 90,
+  "ok": 90,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 1296.3605459406972,
+  "results": [
+    {
+      "stem": "naive__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 28.888553768396378,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__dynamic-change__50000.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 28.149991966784,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__dynamic-change__50001.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 28.866461966186762,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__dynamic-change__50002.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 28.216800570487976,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__dynamic-change__50003.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50004",
+      "status": "ok",
+      "seconds": 29.22459027543664,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__dynamic-change__50004.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 29.68887497112155,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__evidence-echo__50000.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 30.3110364228487,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__evidence-echo__50001.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 30.551144648343325,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__evidence-echo__50002.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 31.134335923939943,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__evidence-echo__50003.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50004",
+      "status": "ok",
+      "seconds": 27.578297160565853,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__evidence-echo__50004.log"
+    },
+    {
+      "stem": "naive__independent-noise__50000",
+      "status": "ok",
+      "seconds": 30.412314914166927,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__independent-noise__50000.log"
+    },
+    {
+      "stem": "naive__independent-noise__50001",
+      "status": "ok",
+      "seconds": 30.712693091481924,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__independent-noise__50001.log"
+    },
+    {
+      "stem": "naive__independent-noise__50002",
+      "status": "ok",
+      "seconds": 28.256644934415817,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__independent-noise__50002.log"
+    },
+    {
+      "stem": "naive__independent-noise__50003",
+      "status": "ok",
+      "seconds": 29.224091704934835,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__independent-noise__50003.log"
+    },
+    {
+      "stem": "naive__independent-noise__50004",
+      "status": "ok",
+      "seconds": 29.842747282236814,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__independent-noise__50004.log"
+    },
+    {
+      "stem": "naive__repair-required__50000",
+      "status": "ok",
+      "seconds": 26.091386575251818,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__repair-required__50000.log"
+    },
+    {
+      "stem": "naive__repair-required__50001",
+      "status": "ok",
+      "seconds": 25.392314977943897,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__repair-required__50001.log"
+    },
+    {
+      "stem": "naive__repair-required__50002",
+      "status": "ok",
+      "seconds": 26.367450702935457,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__repair-required__50002.log"
+    },
+    {
+      "stem": "naive__repair-required__50003",
+      "status": "ok",
+      "seconds": 25.225534666329622,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__repair-required__50003.log"
+    },
+    {
+      "stem": "naive__repair-required__50004",
+      "status": "ok",
+      "seconds": 26.60660096630454,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__repair-required__50004.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 28.9695176333189,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 29.22654053941369,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 29.497710157185793,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 27.6949720159173,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50004",
+      "status": "ok",
+      "seconds": 26.52934967726469,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__shared-occlusion__50004.log"
+    },
+    {
+      "stem": "naive__time-skew__50000",
+      "status": "ok",
+      "seconds": 30.01118378713727,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__time-skew__50000.log"
+    },
+    {
+      "stem": "naive__time-skew__50001",
+      "status": "ok",
+      "seconds": 27.157089952379465,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__time-skew__50001.log"
+    },
+    {
+      "stem": "naive__time-skew__50002",
+      "status": "ok",
+      "seconds": 29.363011736422777,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__time-skew__50002.log"
+    },
+    {
+      "stem": "naive__time-skew__50003",
+      "status": "ok",
+      "seconds": 26.94778311252594,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__time-skew__50003.log"
+    },
+    {
+      "stem": "naive__time-skew__50004",
+      "status": "ok",
+      "seconds": 27.77963700518012,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/naive__time-skew__50004.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 30.863659024238586,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__dynamic-change__50000.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 30.29622756689787,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__dynamic-change__50001.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 29.71154398471117,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__dynamic-change__50002.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 30.29090904444456,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__dynamic-change__50003.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50004",
+      "status": "ok",
+      "seconds": 30.719564825296402,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__dynamic-change__50004.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 26.453709978610277,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__evidence-echo__50000.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 31.973069652915,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__evidence-echo__50001.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 27.100267484784126,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__evidence-echo__50002.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 32.4249747954309,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__evidence-echo__50003.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50004",
+      "status": "ok",
+      "seconds": 26.52390755712986,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__evidence-echo__50004.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50000",
+      "status": "ok",
+      "seconds": 26.761279199272394,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__independent-noise__50000.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50001",
+      "status": "ok",
+      "seconds": 31.255851708352566,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__independent-noise__50001.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50002",
+      "status": "ok",
+      "seconds": 26.536656469106674,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__independent-noise__50002.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50003",
+      "status": "ok",
+      "seconds": 31.504131484776735,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__independent-noise__50003.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50004",
+      "status": "ok",
+      "seconds": 26.775252748280764,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__independent-noise__50004.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50000",
+      "status": "ok",
+      "seconds": 27.70663057267666,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__repair-required__50000.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50001",
+      "status": "ok",
+      "seconds": 31.839263048022985,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__repair-required__50001.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50002",
+      "status": "ok",
+      "seconds": 27.902000691741705,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__repair-required__50002.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50003",
+      "status": "ok",
+      "seconds": 32.64369957894087,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__repair-required__50003.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50004",
+      "status": "ok",
+      "seconds": 27.682702224701643,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__repair-required__50004.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 31.680776823312044,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 30.002278588712215,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 31.253452248871326,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 30.072729114443064,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50004",
+      "status": "ok",
+      "seconds": 31.08805851265788,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__shared-occlusion__50004.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50000",
+      "status": "ok",
+      "seconds": 26.793575424700975,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__time-skew__50000.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50001",
+      "status": "ok",
+      "seconds": 31.2720505297184,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__time-skew__50001.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50002",
+      "status": "ok",
+      "seconds": 26.639281164854765,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__time-skew__50002.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50003",
+      "status": "ok",
+      "seconds": 31.417753517627716,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__time-skew__50003.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50004",
+      "status": "ok",
+      "seconds": 26.65507011115551,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-active__time-skew__50004.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 31.23079078644514,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__dynamic-change__50000.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 28.30326934531331,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__dynamic-change__50001.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 30.626927316188812,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__dynamic-change__50002.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 28.505908530205488,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__dynamic-change__50003.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50004",
+      "status": "ok",
+      "seconds": 30.79059462994337,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__dynamic-change__50004.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 26.79274383932352,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__evidence-echo__50000.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 30.346433702856302,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__evidence-echo__50001.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 26.67230409756303,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__evidence-echo__50002.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 30.356700483709574,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__evidence-echo__50003.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50004",
+      "status": "ok",
+      "seconds": 26.49122878909111,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__evidence-echo__50004.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50000",
+      "status": "ok",
+      "seconds": 27.10836150869727,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__independent-noise__50000.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50001",
+      "status": "ok",
+      "seconds": 30.228564105927944,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__independent-noise__50001.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50002",
+      "status": "ok",
+      "seconds": 26.56646439805627,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__independent-noise__50002.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50003",
+      "status": "ok",
+      "seconds": 30.20849910005927,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__independent-noise__50003.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50004",
+      "status": "ok",
+      "seconds": 26.55423502624035,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__independent-noise__50004.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50000",
+      "status": "ok",
+      "seconds": 26.221606757491827,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__repair-required__50000.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50001",
+      "status": "ok",
+      "seconds": 28.365958780050278,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__repair-required__50001.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50002",
+      "status": "ok",
+      "seconds": 26.101328190416098,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__repair-required__50002.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50003",
+      "status": "ok",
+      "seconds": 28.923633452504873,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__repair-required__50003.log"
+    },
+    {
+      "stem": "purify-passive__repair-required__50004",
+      "status": "ok",
+      "seconds": 26.841414585709572,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__repair-required__50004.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 28.086918734014034,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 30.12750158458948,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 27.658008858561516,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 28.022213224321604,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50004",
+      "status": "ok",
+      "seconds": 29.025131665170193,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__shared-occlusion__50004.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50000",
+      "status": "ok",
+      "seconds": 28.616581823676825,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__time-skew__50000.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50001",
+      "status": "ok",
+      "seconds": 28.249449469149113,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__time-skew__50001.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50002",
+      "status": "ok",
+      "seconds": 26.720463167876005,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__time-skew__50002.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50003",
+      "status": "ok",
+      "seconds": 31.019947737455368,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__time-skew__50003.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50004",
+      "status": "ok",
+      "seconds": 26.58018496260047,
+      "returncode": 0,
+      "log": "outputs/v5-paired-capability-90/logs/purify-passive__time-skew__50004.log"
+    }
+  ]
+}

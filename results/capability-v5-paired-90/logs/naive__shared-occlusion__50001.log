@@ -1,0 +1,1 @@
+v5 finished policy=naive profile=shared-occlusion seed=50001 mission=False unsafe=True nav=False pick=False claims_mode=genesis_rgbd_depth_semantic output=outputs/v5-paired-capability-90/naive__shared-occlusion__50001.json

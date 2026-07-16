@@ -1,0 +1,1 @@
+v5 finished policy=naive profile=dynamic-change seed=50000 mission=True unsafe=False nav=True pick=True claims_mode=genesis_rgbd_depth_semantic output=outputs/v5-paired-capability-90/naive__dynamic-change__50000.json

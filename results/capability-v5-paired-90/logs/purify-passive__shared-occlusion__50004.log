@@ -1,0 +1,1 @@
+v5 finished policy=purify-passive profile=shared-occlusion seed=50004 mission=False unsafe=False nav=True pick=False claims_mode=genesis_rgbd_depth_semantic output=outputs/v5-paired-capability-90/purify-passive__shared-occlusion__50004.json

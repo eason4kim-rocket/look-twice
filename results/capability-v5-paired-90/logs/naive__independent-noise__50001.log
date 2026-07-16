@@ -1,0 +1,1 @@
+v5 finished policy=naive profile=independent-noise seed=50001 mission=False unsafe=True nav=False pick=True claims_mode=genesis_rgbd_depth_semantic output=outputs/v5-paired-capability-90/naive__independent-noise__50001.json
