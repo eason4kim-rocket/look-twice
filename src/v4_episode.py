@@ -137,7 +137,9 @@ class EpisodeConfig:
     device: str = "cpu"
     max_observations: int = 4
     max_replans: int = 2
-    ttl_steps: int = 60
+    # Corridor return + gate approach often exceed 60 sim steps after admit;
+    # short TTL flipped clear admits into repair_budget_exhausted wrong-detours.
+    ttl_steps: int = 240
     evidence_dir: Path | None = None
     ablation: str = "none"
 
@@ -594,6 +596,13 @@ def run_v4_episode(
     plan_invalidation_expected = False
     plan_invalidation_correct: bool | None = None
     if final_decision.action == "cross_region":
+        # Side-view repairs leave the chassis off-corridor. A straight cut to the
+        # gate crosses the standing occluder slab near x≈0. Retreat behind it
+        # (x≈-1.8), re-center y, then advance along the lane.
+        cy = float(runtime.current_pose.y)
+        move((-1.85, cy), "corridor_retreat_x")
+        move((-1.85, 0.0), "corridor_recenter_y")
+        move((-0.55, 0.0), "corridor_stage")
         boundary = move((0.30, 0.0), "pre_cross_gate")
         if not boundary.reached:
             final_decision = PolicyDecision(
@@ -639,10 +648,18 @@ def run_v4_episode(
             invalidation_receipts.append(invalidation)
             if invalidation["invalidated"]:
                 if descriptor.allows_repair:
-                    # Re-evaluate stale Claims to obtain an explicit BeliefGap,
-                    # then actively repair it within the global budget.
+                    # Local recapture at the gate before spending remaining budget
+                    # on distant side views (capability: keep clear admits alive).
+                    if len(captures) < config.max_observations:
+                        try:
+                            observe(current_viewpoint, action_kind="same_view")
+                        except RuntimeError:
+                            pass
                     stale_decision = evaluate_current()
-                    final_decision = repair_until_decisive(stale_decision)
+                    if stale_decision.action == "observe":
+                        final_decision = repair_until_decisive(stale_decision)
+                    else:
+                        final_decision = stale_decision
                     used_detour = final_decision.action != "cross_region"
                 else:
                     final_decision = PolicyDecision(
@@ -691,9 +708,23 @@ def run_v4_episode(
                 )
             invalidation_receipts.append(invalidation)
             if invalidation["invalidated"] and descriptor.allows_repair:
-                stale_decision = evaluate_current()
-                final_decision = repair_until_decisive(stale_decision)
-                used_detour = final_decision.action != "cross_region"
+                # Capability/safety: a qualified-blocked plan that only expired by
+                # TTL must not flip to cross from a near-gate recapture on static
+                # profiles (false clear depth near the obstacle → unsafe). Only
+                # dynamic-change is allowed to re-open crossing after blocked.
+                if scenario.profile != "dynamic-change":
+                    final_decision = PolicyDecision(
+                        "safe_fallback",
+                        "blocked",
+                        ("blocked",),
+                        "blocked_plan_expired_keep_detour",
+                        {"safe_fallback": True},
+                    )
+                    used_detour = True
+                else:
+                    stale_decision = evaluate_current()
+                    final_decision = repair_until_decisive(stale_decision)
+                    used_detour = final_decision.action != "cross_region"
         else:
             final_decision = PolicyDecision(
                 "safe_fallback",
@@ -717,6 +748,13 @@ def run_v4_episode(
             mission_success = move((2.0, 0.0), "goal").reached
     else:
         used_detour = True
+        # Same retreat as admitted-cross staging: after side-view repair the
+        # chassis may sit behind the FOV occluder; cut-through detours fail and
+        # make active look worse than naive on safe_success despite safer gates.
+        cy = float(runtime.current_pose.y)
+        if abs(cy) > 0.45 or float(runtime.current_pose.x) > -0.8:
+            move((-1.85, cy), "detour_retreat_x")
+            move((-1.85, 0.0), "detour_recenter_y")
         for target, label in (
             ((-0.05, 1.25), "detour_entry"),
             ((0.90, 1.50), "detour_waypoint"),

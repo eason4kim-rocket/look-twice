@@ -317,8 +317,11 @@ def _base_world(seed: int) -> dict[str, Any]:
         rng.uniform(0.35, 0.62),
         rng.uniform(0.35, 0.65),
     )
-    occluder_xy = (rng.uniform(-0.12, 0.12), rng.uniform(-0.50, 0.50))
-    occluder_size = (0.5, rng.uniform(1.05, 1.65), 1.0)
+    # Keep the FOV slab near the start lane, not inside the inspection ROI at
+    # x≈0.8. A slab in the risk volume made side-view depth look "blocked" on
+    # clear worlds (shared-occlusion false hard-block).
+    occluder_xy = (rng.uniform(-1.55, -1.15), rng.uniform(-0.35, 0.35))
+    occluder_size = (0.35, rng.uniform(0.9, 1.35), 1.0)
     unreachable: tuple[str, ...] = ()
     if rng.random() < 0.35:
         unreachable = (SIDE_VIEWPOINTS[rng.randrange(len(SIDE_VIEWPOINTS))][0],)

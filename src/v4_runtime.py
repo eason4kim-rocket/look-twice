@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 
 from v4_evidence import RawEvidenceFrame, SyntheticEvidenceSource
 from v4_motion import KinematicMotionController, MotionResult, Pose2D
@@ -57,8 +57,12 @@ class SyntheticEpisodeRuntime:
         start_pose: Pose2D = Pose2D(-2.0, 0.0, 0.0),
         dt: float = 0.02,
         maximum_motion_steps: int = 2000,
+        final_heading_provider: Callable[[tuple[float, float]], float | None]
+        | None = None,
+        risk_region: tuple[float, float, float, float] = TARGET_REGION,
     ) -> None:
         self.scenario = scenario
+        self.risk_region = risk_region
         self.state = _SyntheticState(start_pose)
         self.source = SyntheticEvidenceSource()
         self.controller = KinematicMotionController(
@@ -68,6 +72,7 @@ class SyntheticEpisodeRuntime:
             obstacle_contact_count=lambda: self.state.collisions,
             dt=dt,
             maximum_steps=maximum_motion_steps,
+            final_heading_provider=final_heading_provider,
         )
 
     @property
@@ -98,9 +103,10 @@ class SyntheticEpisodeRuntime:
     def _step_once(self) -> None:
         self.state.step += 1
         pose = self.state.pose
+        min_x, max_x, min_y, max_y = self.risk_region
         in_risk_region = (
-            TARGET_REGION[0] <= pose.x <= TARGET_REGION[1]
-            and TARGET_REGION[2] <= pose.y <= TARGET_REGION[3]
+            min_x <= pose.x <= max_x
+            and min_y <= pose.y <= max_y
         )
         contact = in_risk_region and self.scenario.truth_blocked_at(self.state.step)
         if contact and not self.state.in_contact:

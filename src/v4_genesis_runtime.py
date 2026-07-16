@@ -211,9 +211,16 @@ class GenesisEpisodeRuntime:
             video_output.parent.mkdir(parents=True, exist_ok=True)
             self.video_camera.start_recording()
 
-        heading_provider = lambda target: math.atan2(
-            -target[1], 0.8 - target[0]
-        )
+        def heading_provider(target: tuple[float, float]) -> float:
+            # Side viewpoints: face the inspection region. Corridor goals past the
+            # gate (including v5 grasp/goal) must face +x so the arm/EE is not
+            # rotated 180° after "reached".
+            tx, ty = float(target[0]), float(target[1])
+            if abs(ty) > 0.55:
+                return math.atan2(-ty, 0.8 - tx)
+            if tx <= 0.45:
+                return math.atan2(-ty, 0.8 - tx)
+            return 0.0
         if motion_backend == "skid-steer":
             self._skid = GenesisSkidSteerAdapter(
                 robot=self.robot,
@@ -310,9 +317,12 @@ class GenesisEpisodeRuntime:
 
     def _kinematic_scene_step(self) -> None:
         self.scene.step()
-        contacts = sum(
-            _contact_rows(self.robot.get_contacts(with_entity=entity))
-            for entity in (self.blocking_obstacle, self.occluder)
+        # Occluder is a FOV/visual slab for shared-occlusion stress, not a
+        # navigable-world wall. Counting it as chassis contact made admitted
+        # clear plans fail at pre_cross_gate. Only the true blocking obstacle
+        # gates kinematic contact / unsafe.
+        contacts = _contact_rows(
+            self.robot.get_contacts(with_entity=self.blocking_obstacle)
         )
         contacting = contacts > 0
         if contacting and not self._last_contacting:

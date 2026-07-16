@@ -14,22 +14,27 @@ from repair_planner import BeliefGap, RepairPlanner, build_planning_context
 from v4_claims import ClaimScope, RobotClaim, build_robot_claim, canonical_sha256
 from v4_conformal import CalibrationArtifact, SeedRange
 from v4_episode import ordered_reachable_viewpoints
-from v4_motion import MotionResult
+from v4_motion import MotionResult, Pose2D
 from v5_manipulation import (
     build_workspace_claim,
     end_effector_xy,
     evaluate_proxy_grasp,
 )
 from v5_policies import (
+    POLICY_NAIVE,
     POLICIES,
     get_policy_descriptor,
     naive_decision_from_claims,
 )
-from v5_scenario import GRASP_XY, V5ScenarioSample
+from v5_scenario import GRASP_XY, NAV_REGION, V5ScenarioSample
 
 EPISODE_SCHEMA = "look-twice.episode/v5"
 ACTION_CONTRACT_SCHEMA = "purify.robotics.action-contract/v1"
 SENSOR_VERSION = "look-twice-rgbd-v5/1"
+
+# Motion between start and dual viewpoints routinely exceeds 80 steps; a short
+# TTL made every receipt expire before the risk boundary (nav_success always 0).
+DEFAULT_TTL_STEPS = 2000
 
 
 def git_commit() -> str:
@@ -77,7 +82,9 @@ V5_ID_PROFILES = tuple(p for p in (
 ) if p != "ood-severity")
 
 
-def cross_region_contract() -> dict[str, Any]:
+def cross_region_contract(
+    max_evidence_age: int = DEFAULT_TTL_STEPS,
+) -> dict[str, Any]:
     return {
         "schema_version": ACTION_CONTRACT_SCHEMA,
         "contract_id": "cross-nav-region-v5",
@@ -90,7 +97,7 @@ def cross_region_contract() -> dict[str, Any]:
             "region_id": "inspection-region",
         },
         "required_prediction_set": ["clear"],
-        "max_evidence_age": 80,
+        "max_evidence_age": max_evidence_age,
         "min_distinct_measurement_roots": 2,
         "max_modality_skew": 2,
         "max_unresolved_conflicts": 0,
@@ -98,7 +105,9 @@ def cross_region_contract() -> dict[str, Any]:
     }
 
 
-def pick_proxy_contract() -> dict[str, Any]:
+def pick_proxy_contract(
+    max_evidence_age: int = DEFAULT_TTL_STEPS,
+) -> dict[str, Any]:
     return {
         "schema_version": ACTION_CONTRACT_SCHEMA,
         "contract_id": "pick-proxy-v5",
@@ -111,7 +120,7 @@ def pick_proxy_contract() -> dict[str, Any]:
             "region_id": "grasp-zone",
         },
         "required_prediction_set": ["clear"],
-        "max_evidence_age": 40,
+        "max_evidence_age": max_evidence_age,
         "min_distinct_measurement_roots": 1,
         "max_modality_skew": 2,
         "max_unresolved_conflicts": 0,
@@ -124,11 +133,116 @@ class V5EpisodeConfig:
     policy: str
     max_observations: int = 4
     max_replans: int = 2
-    ttl_steps: int = 80
+    ttl_steps: int = DEFAULT_TTL_STEPS
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
             raise ValueError(f"unsupported v5 policy: {self.policy}")
+
+
+def point_in_risk_region(
+    x: float,
+    y: float,
+    region: tuple[float, float, float, float] = NAV_REGION,
+) -> bool:
+    min_x, max_x, min_y, max_y = region
+    return min_x <= x <= max_x and min_y <= y <= max_y
+
+
+def segment_intersects_risk(
+    start_xy: tuple[float, float],
+    end_xy: tuple[float, float],
+    region: tuple[float, float, float, float] = NAV_REGION,
+) -> bool:
+    """Exact axis-aligned slab intersection for a planned line segment."""
+    min_x, max_x, min_y, max_y = region
+    x0, y0 = start_xy
+    dx, dy = end_xy[0] - x0, end_xy[1] - y0
+    enter, leave = 0.0, 1.0
+    for origin, delta, lower, upper in (
+        (x0, dx, min_x, max_x),
+        (y0, dy, min_y, max_y),
+    ):
+        if abs(delta) <= 1e-12:
+            if origin < lower or origin > upper:
+                return False
+            continue
+        axis_enter = (lower - origin) / delta
+        axis_leave = (upper - origin) / delta
+        if axis_enter > axis_leave:
+            axis_enter, axis_leave = axis_leave, axis_enter
+        enter = max(enter, axis_enter)
+        leave = min(leave, axis_leave)
+        if enter > leave:
+            return False
+    return True
+
+
+def _timed_trajectory_samples(
+    result: MotionResult,
+    *,
+    start_step: int,
+    start_xy: tuple[float, float],
+) -> list[tuple[int, float, float]]:
+    samples = [(start_step, float(start_xy[0]), float(start_xy[1]))]
+    for point in result.trajectory:
+        samples.append(
+            (
+                start_step + int(point.get("step", 0)),
+                float(point.get("x", start_xy[0])),
+                float(point.get("y", start_xy[1])),
+            )
+        )
+    samples.append(
+        (
+            start_step + int(result.elapsed_steps),
+            float(result.final_pose.x),
+            float(result.final_pose.y),
+        )
+    )
+    samples.sort(key=lambda item: item[0])
+    return samples
+
+
+def trajectory_enters_risk(
+    result: MotionResult,
+    start_xy: tuple[float, float],
+    region: tuple[float, float, float, float] = NAV_REGION,
+) -> bool:
+    """True when any recorded path segment intersects the risk slab."""
+    samples = _timed_trajectory_samples(result, start_step=0, start_xy=start_xy)
+    return any(
+        segment_intersects_risk((left[1], left[2]), (right[1], right[2]), region)
+        for left, right in zip(samples, samples[1:])
+    )
+
+
+def trajectory_is_unsafe(
+    result: MotionResult,
+    *,
+    start_step: int,
+    start_xy: tuple[float, float],
+    truth_blocked_at,
+    region: tuple[float, float, float, float] = NAV_REGION,
+) -> bool:
+    """Evaluate blockage at the matching absolute step along the trajectory."""
+    samples = _timed_trajectory_samples(
+        result, start_step=start_step, start_xy=start_xy
+    )
+    for left, right in zip(samples, samples[1:]):
+        step0, x0, y0 = left
+        step1, x1, y1 = right
+        if not segment_intersects_risk((x0, y0), (x1, y1), region):
+            continue
+        duration = max(1, step1 - step0)
+        for offset in range(duration + 1):
+            fraction = offset / duration
+            x = x0 + fraction * (x1 - x0)
+            y = y0 + fraction * (y1 - y0)
+            step = step0 + offset
+            if point_in_risk_region(x, y, region) and truth_blocked_at(step):
+                return True
+    return False
 
 
 def _motion_record(label: str, start_step: int, result: MotionResult) -> dict[str, Any]:
@@ -215,8 +329,8 @@ def run_v5_episode(
         max_observations=config.max_observations, max_replans=config.max_replans
     )
     public = scenario.public_context
-    nav_contract = cross_region_contract()
-    pick_contract = pick_proxy_contract()
+    nav_contract = cross_region_contract(config.ttl_steps)
+    pick_contract = pick_proxy_contract(config.ttl_steps)
     nav_claims: list[RobotClaim] = []
     grasp_claims: list[RobotClaim] = []
     gate_receipts: list[dict[str, Any]] = []
@@ -229,11 +343,82 @@ def run_v5_episode(
     capture_index = 0
     last_nav_receipt: dict[str, Any] | None = None
     last_pick_receipt: dict[str, Any] | None = None
+    invalidated_nav_receipt_hashes: set[str] = set()
+    # Must be bound before nested move() (viewpoint travel can clip the slab).
+    unsafe = False
+    task_nav_ok = False
+    task_pick_ok = False
+    used_detour = False
 
-    def move(target: tuple[float, float], label: str) -> MotionResult:
-        start = runtime.current_step
+    def nav_receipt_is_live(receipt: Mapping[str, Any] | None) -> bool:
+        if not receipt or receipt.get("admitted") is not True:
+            return False
+        receipt_hash = str(receipt.get("receipt_sha256", ""))
+        if receipt_hash and receipt_hash in invalidated_nav_receipt_hashes:
+            return False
+        return runtime.current_step <= int(receipt.get("valid_until_step", -1))
+
+    def move(
+        target: tuple[float, float],
+        label: str,
+        *,
+        risk_gated: bool = False,
+        allow_without_admit: bool = False,
+    ) -> MotionResult:
+        """Execute motion; risk-slab segments require a live admitted nav receipt.
+
+        - purify (not allow_without_admit): refuse motion into risk without admit
+        - naive (allow_without_admit): may enter risk; unsafe if world blocked
+        - any completed segment that enters risk while truth is blocked → unsafe
+        """
+        nonlocal unsafe
+        start_xy = (float(runtime.current_pose.x), float(runtime.current_pose.y))
+        may_enter_risk = segment_intersects_risk(
+            start_xy, (float(target[0]), float(target[1]))
+        )
+        if risk_gated and may_enter_risk and not allow_without_admit:
+            if not nav_receipt_is_live(last_nav_receipt):
+                # Fail closed: do not move into risk without a live admit.
+                pose = runtime.current_pose
+                blocked = MotionResult(
+                    reached=False,
+                    target_xy=(float(target[0]), float(target[1])),
+                    final_pose=Pose2D(pose.x, pose.y, pose.yaw),
+                    path_length=0.0,
+                    collision_count=0,
+                    elapsed_steps=0,
+                    reason="gate_denied_risk_motion",
+                    trajectory=(),
+                    controls=(),
+                )
+                motion_segments.append(
+                    _motion_record(label, runtime.current_step, blocked)
+                )
+                return blocked
+        start_step = runtime.current_step
+        collision_count_before = runtime.collision_count
         result = runtime.move_to(target)
-        motion_segments.append(_motion_record(label, start, result))
+        motion_segments.append(_motion_record(label, start_step, result))
+        if trajectory_is_unsafe(
+            result,
+            start_step=start_step,
+            start_xy=start_xy,
+            truth_blocked_at=scenario.truth_nav_blocked_at,
+        ):
+            unsafe = True
+        elif (
+            risk_gated
+            and may_enter_risk
+            and runtime.collision_count > collision_count_before
+            and any(
+                scenario.truth_nav_blocked_at(step)
+                for step in range(start_step, runtime.current_step + 1)
+            )
+        ):
+            # The chassis footprint can contact a blocking object just before
+            # its centre enters NAV_REGION.  A collision on a risk-directed
+            # motion is still an unsafe action, not a safe abstention.
+            unsafe = True
         return result
 
     def add_nav_observation(viewpoint: Mapping[str, Any]) -> None:
@@ -310,7 +495,7 @@ def run_v5_episode(
             clear=online_clear,
             confidence=conf,
             observed_step=runtime.current_step,
-            valid_until_step=runtime.current_step + 40,
+            valid_until_step=runtime.current_step + config.ttl_steps,
             capture_root_id=f"cap-grasp-{runtime.current_step}",
         )
         grasp_claims.append(claim)
@@ -340,7 +525,7 @@ def run_v5_episode(
             "prediction_set": ["clear"] if admitted else ["blocked"],
             "receipt_id": "naive-pick",
             "receipt_sha256": canonical_sha256({"pick": admitted, "step": runtime.current_step}),
-            "valid_until_step": runtime.current_step + 40,
+            "valid_until_step": runtime.current_step + config.ttl_steps,
             "belief_gaps": [],
             "measurement_root_ids": [claim.capture_root_id],
             "p_blocked": 0.15 if admitted else 0.85,
@@ -351,7 +536,13 @@ def run_v5_episode(
         last_pick_receipt = synthetic
         return synthetic
 
-    def maybe_invalidate(receipt: dict[str, Any], *, reason_hint: str) -> bool:
+    def maybe_invalidate(
+        receipt: dict[str, Any],
+        *,
+        reason_hint: str,
+        triggering_claims: tuple[RobotClaim, ...] = (),
+    ) -> bool:
+        receipt_hash = str(receipt.get("receipt_sha256", ""))
         if not descriptor.requires_go_gate or bridge is None or not receipt:
             # synthetic TTL
             if runtime.current_step > int(receipt.get("valid_until_step", 10**9)):
@@ -362,15 +553,20 @@ def run_v5_episode(
                         "previous_receipt_sha256": receipt.get("receipt_sha256"),
                     }
                 )
+                if receipt is last_nav_receipt and receipt_hash:
+                    invalidated_nav_receipt_hashes.add(receipt_hash)
                 return True
             return False
         inv = bridge.invalidate_plan(
             previous_receipt=receipt,
             current_step=runtime.current_step,
-            triggering_claims=(),
+            triggering_claims=triggering_claims,
         )
         invalidations.append(inv)
-        return bool(inv.get("invalidated"))
+        invalidated = bool(inv.get("invalidated"))
+        if invalidated and receipt is last_nav_receipt and receipt_hash:
+            invalidated_nav_receipt_hashes.add(receipt_hash)
+        return invalidated
 
     # --- phase: initial observations for navigation ---
     start_xy = (runtime.current_pose.x, runtime.current_pose.y)
@@ -458,73 +654,275 @@ def run_v5_episode(
 
         nav_admitted = bool(receipt.get("admitted"))
 
-    task_nav_ok = False
-    task_pick_ok = False
-    used_detour = False
-    unsafe = False
+    is_naive = config.policy == POLICY_NAIVE
+    allows_repair = descriptor.allows_repair
+
+    def attempt_cross_region() -> bool:
+        """Boundary → invalidation recheck → optional active re-observe → cross."""
+        nonlocal nav_admitted, outcome, unsafe, last_nav_receipt, capture_index, replan_count, nav_claims
+        boundary = move((0.35, 0.0), "pre_cross_gate", risk_gated=False)
+        if not boundary.reached:
+            outcome = "pre_cross_unreachable"
+            return False
+
+        previous_receipt = last_nav_receipt
+        invalidated = False
+        if previous_receipt is not None and allows_repair:
+            # Active assurance obtains new physical evidence at the commitment
+            # boundary.  Without this capture a dynamic world change cannot
+            # invalidate a still-young receipt merely by existing.
+            runtime.wait_steps(3)
+            capture_root = f"cap-nav-boundary-{capture_index}-{runtime.current_step}"
+            capture_index += 1
+            verification_claims = _synthetic_nav_claims(
+                scenario,
+                step=runtime.current_step,
+                capture_root=capture_root,
+                ttl=config.ttl_steps,
+            )
+            nav_claims.extend(verification_claims)
+            visited.add("boundary_verification")
+            invalidated = maybe_invalidate(
+                previous_receipt,
+                reason_hint="boundary_new_evidence",
+                triggering_claims=tuple(verification_claims),
+            )
+            if invalidated:
+                # The old fact lineage no longer qualifies the new plan.  A
+                # replacement receipt must be based on post-invalidation roots.
+                nav_claims = list(verification_claims)
+                nav_admitted = False
+            else:
+                refreshed = evaluate_nav()
+                nav_admitted = bool(refreshed.get("admitted"))
+        elif previous_receipt is not None:
+            invalidated = maybe_invalidate(
+                previous_receipt, reason_hint="pre_cross_recheck"
+            )
+            if invalidated:
+                nav_admitted = False
+
+        if invalidated or (allows_repair and not nav_admitted):
+            nav_admitted = False
+            if allows_repair:
+                # Active: re-observe at the boundary, then re-evaluate the gate.
+                for repair_iters in range(config.max_observations):
+                    capture_root = (
+                        f"cap-nav-boundary-{capture_index}-{runtime.current_step}"
+                    )
+                    capture_index += 1
+                    # fresh capture at current pose (no long side trip first)
+                    runtime.wait_steps(3)
+                    nav_claims.extend(
+                        _synthetic_nav_claims(
+                            scenario,
+                            step=runtime.current_step,
+                            capture_root=capture_root,
+                            ttl=config.ttl_steps,
+                        )
+                    )
+                    visited.add(f"boundary_recapture:{repair_iters}")
+                    # side-view repair if still denied
+                    receipt = evaluate_nav()
+                    if receipt.get("admitted"):
+                        nav_admitted = True
+                        outcome = "nav_repaired_at_boundary"
+                        break
+                    gaps = [
+                        g.get("reason", "insufficient_roots")
+                        for g in receipt.get("belief_gaps", [])
+                    ] or ["insufficient_roots"]
+                    gap = BeliefGap.from_reasons(gaps)
+                    side_only = [
+                        c
+                        for c in public["candidate_viewpoints"]
+                        if str(c.get("name", "")).startswith(("left_", "right_"))
+                    ]
+                    context = build_planning_context(
+                        public_context={
+                            "candidate_viewpoints": side_only,
+                            "known_static_map": public["known_static_map"],
+                        },
+                        current_step=runtime.current_step,
+                        current_xy=(runtime.current_pose.x, runtime.current_pose.y),
+                        current_viewpoint_name="pre_cross_gate",
+                        current_predicted_coverage=0.75,
+                        current_predicted_degradation=0.2,
+                        current_physical_risk=0.1,
+                        visited_actions=visited,
+                        observations_taken=len(visited),
+                        replans_taken=replan_count,
+                    )
+                    decision = planner.choose(gap, context)
+                    repair_decisions.append(decision.to_dict())
+                    if decision.selected_action is None:
+                        break
+                    if decision.selected_action.kind == "side_view":
+                        replan_count += 1
+                        cand = next(
+                            (
+                                c
+                                for c in public["candidate_viewpoints"]
+                                if c["name"] == decision.selected_action.name
+                            ),
+                            None,
+                        )
+                        if cand is None:
+                            break
+                        try:
+                            add_nav_observation(cand)
+                        except RuntimeError:
+                            break
+                    else:
+                        runtime.wait_steps(
+                            min(10, int(decision.selected_action.wait_steps or 5))
+                        )
+                    receipt = evaluate_nav()
+                    if receipt.get("admitted"):
+                        nav_admitted = True
+                        outcome = "nav_repaired_at_boundary"
+                        break
+                if not nav_admitted:
+                    outcome = "nav_invalidated_repair_failed"
+                    return False
+            elif descriptor.requires_go_gate:
+                # Passive: fail closed after invalidation.
+                outcome = "nav_invalidated_passive_reject"
+                return False
+            else:
+                # Naive: may still push into the risk region (unsafe if blocked).
+                outcome = "nav_invalidated_naive_push"
+                crossing = move(
+                    (0.95, 0.0),
+                    "cross_region",
+                    risk_gated=True,
+                    allow_without_admit=True,
+                )
+                return bool(crossing.reached and not unsafe)
+
+        if not nav_admitted and not is_naive:
+            outcome = "nav_not_admitted"
+            return False
+
+        crossing = move(
+            (0.95, 0.0),
+            "cross_region",
+            risk_gated=True,
+            allow_without_admit=is_naive and not nav_admitted,
+        )
+        if not crossing.reached:
+            outcome = "cross_failed"
+            return False
+        return not unsafe
+
+    def execute_safe_detour() -> bool:
+        nonlocal used_detour, outcome
+        used_detour = True
+        entry = move((-0.2, 1.2), "detour_entry", risk_gated=False)
+        if not entry.reached:
+            outcome = "detour_entry_failed"
+            return False
+        side = move((1.0, 1.3), "detour_side", risk_gated=False)
+        if not side.reached:
+            outcome = "detour_side_failed"
+            return False
+        outcome = "safe_detour_complete"
+        return True
 
     if nav_admitted and last_nav_receipt is not None:
-        # Approach gate boundary then re-check invalidation
-        boundary = move((0.35, 0.0), "pre_cross_gate")
-        if boundary.reached and maybe_invalidate(
-            last_nav_receipt, reason_hint="pre_cross_recheck"
-        ):
-            nav_admitted = False
-            outcome = "nav_invalidated"
-        elif boundary.reached:
-            before = runtime.collision_count
-            crossing = move((0.95, 0.0), "cross_region")
-            if runtime.collision_count > before and scenario.truth_nav_blocked_at(
-                runtime.current_step
-            ):
-                unsafe = True
-            task_nav_ok = crossing.reached and not unsafe
-            # Mid-mission invalidation probe after crossing attempt
-            if last_nav_receipt and maybe_invalidate(
-                last_nav_receipt, reason_hint="post_cross_ttl"
-            ):
-                outcome = "nav_invalidated_after_cross"
-        else:
-            used_detour = True
-            outcome = "pre_cross_unreachable"
+        task_nav_ok = attempt_cross_region()
+        if not task_nav_ok and not unsafe:
+            task_nav_ok = execute_safe_detour()
+    elif is_naive:
+        # Naive may attempt corridor cross without a formal admit.
+        outcome = "naive_ungated_cross_attempt"
+        task_nav_ok = attempt_cross_region()
     else:
-        used_detour = True
         outcome = outcome if outcome != "running" else "nav_denied"
-        # Safe detour toward grasp side corridor
-        move((-0.2, 1.2), "detour_entry")
-        move((1.0, 1.3), "detour_side")
+        task_nav_ok = execute_safe_detour()
 
     # --- phase: pick_proxy ---
-    approach = move((1.05, 0.0), "grasp_approach")
+    # Approach base just outside the risk slab so grasp does not bypass the
+    # Action Gate by sneaking through the inspection region.
+    obj_xy = tuple(scenario.oracle_context["object_xy"])
+    arm_offset = 0.27
+    risk_max_x = NAV_REGION[1]
+    approach_x = max(float(obj_xy[0]) - arm_offset, risk_max_x + 0.08)
+    approach_xy = (approach_x, float(obj_xy[1]))
+
+    # Entering/lingering near the slab for grasp still requires a live admit
+    # for purify policies when the segment would clip the risk region.
+    if used_detour:
+        # From detour_side, stay above the slab then descend at x > risk.max_x.
+        side_approach = (approach_x, 0.55)
+        staged = move(side_approach, "grasp_side_stage", risk_gated=False)
+        approach = (
+            move(approach_xy, "grasp_approach", risk_gated=False)
+            if staged.reached
+            else staged
+        )
+    elif task_nav_ok or is_naive:
+        approach = move(
+            approach_xy,
+            "grasp_approach",
+            risk_gated=True,
+            allow_without_admit=is_naive,
+        )
+    else:
+        pose = runtime.current_pose
+        approach = MotionResult(
+            reached=False,
+            target_xy=approach_xy,
+            final_pose=Pose2D(pose.x, pose.y, pose.yaw),
+            path_length=0.0,
+            collision_count=0,
+            elapsed_steps=0,
+            reason="navigation_not_qualified",
+            trajectory=(),
+            controls=(),
+        )
+        motion_segments.append(
+            _motion_record("grasp_approach", runtime.current_step, approach)
+        )
+
     if approach.reached:
         pick_receipt = evaluate_pick()
-        if pick_receipt.get("admitted") and last_pick_receipt is not None:
-            if maybe_invalidate(last_pick_receipt, reason_hint="pre_pick"):
+        pick_ok_to_act = bool(
+            pick_receipt.get("admitted") and last_pick_receipt is not None
+        )
+        if pick_ok_to_act and maybe_invalidate(
+            last_pick_receipt, reason_hint="pre_pick"
+        ):
+            pick_ok_to_act = False
+            if allows_repair:
+                runtime.wait_steps(3)
+                pick_receipt = evaluate_pick()
+                pick_ok_to_act = bool(pick_receipt.get("admitted"))
+            if not pick_ok_to_act:
                 outcome = "pick_invalidated"
-            else:
-                grasp = evaluate_proxy_grasp(
-                    runtime.current_pose,
-                    tuple(scenario.oracle_context["object_xy"]),
-                    close_command=True,
-                    lift_command=True,
+        if pick_ok_to_act:
+            grasp = evaluate_proxy_grasp(
+                runtime.current_pose,
+                tuple(scenario.oracle_context["object_xy"]),
+                close_command=True,
+                lift_command=True,
+            )
+            if not scenario.truth_grasp_clear_at(runtime.current_step):
+                grasp = type(grasp)(
+                    False,
+                    "oracle_occluded_eval_only",
+                    grasp.ee_xy,
+                    grasp.object_xy,
+                    grasp.distance,
+                    False,
                 )
-                # Oracle only for evaluation of true attach feasibility under occlusion
-                if not scenario.truth_grasp_clear_at(runtime.current_step):
-                    grasp = type(grasp)(
-                        False,
-                        "oracle_occluded_eval_only",
-                        grasp.ee_xy,
-                        grasp.object_xy,
-                        grasp.distance,
-                        False,
-                    )
-                grasp_results.append(grasp.to_dict())
-                task_pick_ok = grasp.success
-                if task_pick_ok:
-                    outcome = "mission_complete"
-                else:
-                    outcome = "pick_failed"
-        else:
+            grasp_results.append(grasp.to_dict())
+            task_pick_ok = grasp.success
+            if task_pick_ok:
+                outcome = "pick_ok"
+            else:
+                outcome = "pick_failed"
+        elif outcome != "pick_invalidated":
             outcome = "pick_denied"
             grasp_results.append(
                 {
@@ -536,18 +934,25 @@ def run_v5_episode(
     else:
         outcome = "grasp_approach_failed"
 
-    # Final transit to goal if pick succeeded or nav-only fallback
-    if task_pick_ok or (task_nav_ok and config.policy == POLICY_NAIVE):
-        goal = move(tuple(public["goal_xy"]), "goal")
-        if not goal.reached:
-            task_pick_ok = task_pick_ok and False
+    # Final transit to goal (outside risk when possible)
+    if task_pick_ok or task_nav_ok:
+        goal = move(
+            tuple(public["goal_xy"]),
+            "goal",
+            risk_gated=True,
+            allow_without_admit=is_naive,
+        )
+        if not goal.reached and task_pick_ok:
             outcome = "goal_unreachable"
 
-    mission_success = task_nav_ok and task_pick_ok and not unsafe
-    # Allow mission success on detour path if pick still works and no unsafe
-    if not task_nav_ok and task_pick_ok and not unsafe and used_detour:
-        mission_success = True
-        outcome = "detour_then_pick_success"
+    # Contest mission: nav + pick + safe (no pick-only credit).
+    mission_success = bool(task_nav_ok and task_pick_ok and not unsafe)
+    if mission_success:
+        outcome = "mission_complete"
+    elif task_pick_ok and not task_nav_ok and not unsafe:
+        outcome = "pick_only_not_mission"
+    elif task_nav_ok and not task_pick_ok and not unsafe:
+        outcome = "nav_only_not_mission"
 
     elapsed = time.perf_counter() - started
     return {

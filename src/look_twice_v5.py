@@ -124,11 +124,12 @@ class _V5SyntheticRuntime:
     """Thin wrapper so v5 scenarios drive the v4 kinematic CI runtime."""
 
     def __init__(self, scenario) -> None:
+        import math
         from types import SimpleNamespace
 
         from v4_motion import Pose2D
         from v4_runtime import SyntheticEpisodeRuntime
-        from v5_scenario import START_XY
+        from v5_scenario import NAV_REGION, START_XY
 
         # Minimal duck-type for SyntheticEvidenceSource / motion only.
         fake = SimpleNamespace(
@@ -143,9 +144,17 @@ class _V5SyntheticRuntime:
             ),
             truth_blocked_at=scenario.truth_nav_blocked_at,
         )
+        def heading_provider(target):
+            tx, ty = float(target[0]), float(target[1])
+            if abs(ty) > 0.55 or tx <= 0.45:
+                return math.atan2(-ty, 0.8 - tx)
+            return 0.0
+
         self._inner = SyntheticEpisodeRuntime(
             fake,  # type: ignore[arg-type]
             start_pose=Pose2D(START_XY[0], START_XY[1], 0.0),
+            final_heading_provider=heading_provider,
+            risk_region=NAV_REGION,
         )
         self.scenario = scenario
 

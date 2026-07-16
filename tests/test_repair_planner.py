@@ -78,9 +78,11 @@ class RepairPlannerTests(unittest.TestCase):
         decision = self.planner.choose(BeliefGap(("low_coverage",)), context)
         self.assertIn(decision.selected_action.name, SIDE_VIEW_NAMES)
 
-    def test_shared_root_prefers_zero_travel_new_capture_when_coverage_is_good(self) -> None:
+    def test_shared_root_prefers_side_view_over_same_view(self) -> None:
+        """Shared-root faults need a new viewpoint; same-view cannot break them."""
         decision = self.planner.choose(BeliefGap(("shared_root",)), self.context)
-        self.assertEqual(decision.selected_action.name, ACTION_SAME_VIEW)
+        self.assertEqual(decision.selected_action.kind, "side_view")
+        self.assertIn(decision.selected_action.name, SIDE_VIEW_NAMES)
 
     def test_unreachable_candidate_is_ranked_but_never_selected(self) -> None:
         raw = deepcopy(self.sample.public_context)

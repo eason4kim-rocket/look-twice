@@ -80,6 +80,45 @@ class V5CoreTests(unittest.TestCase):
         self.assertIn("metrics", result)
         self.assertIn("nav_success", result["metrics"])
         self.assertIn("pick_success", result["metrics"])
+        # Mission is nav ∧ pick ∧ ¬unsafe (no pick-only credit).
+        if result["metrics"]["mission_success"]:
+            self.assertTrue(result["metrics"]["nav_success"])
+            self.assertTrue(result["metrics"]["pick_success"])
+            self.assertFalse(result["metrics"]["unsafe_crossing"])
+        self.assertGreaterEqual(result["configuration"]["ttl_steps"], 1000)
+
+    def test_point_in_risk_and_trajectory_helper(self) -> None:
+        from v5_episode import (
+            point_in_risk_region,
+            segment_intersects_risk,
+            trajectory_enters_risk,
+            trajectory_is_unsafe,
+        )
+        from v4_motion import MotionResult, Pose2D
+
+        self.assertTrue(point_in_risk_region(0.8, 0.0))
+        self.assertFalse(point_in_risk_region(-1.0, 0.0))
+        result = MotionResult(
+            reached=True,
+            target_xy=(0.9, 0.0),
+            final_pose=Pose2D(0.9, 0.0, 0.0),
+            path_length=1.0,
+            collision_count=0,
+            elapsed_steps=10,
+            reason="reached",
+            trajectory=({"step": 0, "x": 0.2, "y": 0.0}, {"step": 5, "x": 0.8, "y": 0.0}),
+            controls=(),
+        )
+        self.assertTrue(trajectory_enters_risk(result, (-0.5, 0.0)))
+        self.assertFalse(segment_intersects_risk((-1.0, 0.6), (1.0, 0.6)))
+        self.assertTrue(
+            trajectory_is_unsafe(
+                result,
+                start_step=100,
+                start_xy=(-0.5, 0.0),
+                truth_blocked_at=lambda step: step >= 105,
+            )
+        )
 
     def test_synthetic_episode_purify_active(self) -> None:
         if not CORE.is_file():
@@ -106,6 +145,71 @@ class V5CoreTests(unittest.TestCase):
         # Dual contract objects present even if not both admitted
         actions = {c["action"] for c in result["action_contracts"]}
         self.assertEqual(actions, {"cross_region", "pick_proxy"})
+
+    def test_dynamic_change_separates_naive_from_active(self) -> None:
+        if not CORE.is_file():
+            self.skipTest("Go core binary missing")
+        from look_twice_v5 import _V5SyntheticRuntime
+        from purify_bridge import PurifyBridge
+        from v5_episode import V5EpisodeConfig, run_v5_episode, smoke_calibration_artifact
+
+        scenario = sample_v5_scenario("dynamic-change", 50000)
+        naive_runtime = _V5SyntheticRuntime(scenario)
+        try:
+            naive = run_v5_episode(
+                scenario=scenario,
+                runtime=naive_runtime,
+                calibration=smoke_calibration_artifact("c" * 40),
+                config=V5EpisodeConfig(policy="naive"),
+            )
+        finally:
+            naive_runtime.close()
+        self.assertTrue(naive["metrics"]["unsafe_crossing"])
+        self.assertFalse(naive["metrics"]["mission_success"])
+
+        active_runtime = _V5SyntheticRuntime(scenario)
+        with PurifyBridge((CORE,)) as bridge:
+            try:
+                active = run_v5_episode(
+                    scenario=scenario,
+                    runtime=active_runtime,
+                    calibration=smoke_calibration_artifact("d" * 40),
+                    config=V5EpisodeConfig(policy="purify-active"),
+                    bridge=bridge,
+                )
+            finally:
+                active_runtime.close()
+        self.assertFalse(active["metrics"]["unsafe_crossing"])
+        self.assertTrue(active["metrics"]["mission_success"])
+        self.assertTrue(active["metrics"]["used_detour"])
+        self.assertGreaterEqual(active["metrics"]["invalidation_count"], 1)
+
+    def test_passive_expired_receipt_fails_closed_and_detours(self) -> None:
+        if not CORE.is_file():
+            self.skipTest("Go core binary missing")
+        from look_twice_v5 import _V5SyntheticRuntime
+        from purify_bridge import PurifyBridge
+        from v5_episode import V5EpisodeConfig, run_v5_episode, smoke_calibration_artifact
+
+        scenario = sample_v5_scenario("independent-noise", 50000)
+        runtime = _V5SyntheticRuntime(scenario)
+        with PurifyBridge((CORE,)) as bridge:
+            try:
+                result = run_v5_episode(
+                    scenario=scenario,
+                    runtime=runtime,
+                    calibration=smoke_calibration_artifact("e" * 40),
+                    # Both roots are fresh at evaluation, but the older root
+                    # expires during travel to the commitment boundary.
+                    config=V5EpisodeConfig(policy="purify-passive", ttl_steps=500),
+                    bridge=bridge,
+                )
+            finally:
+                runtime.close()
+        self.assertTrue(result["metrics"]["used_detour"])
+        self.assertFalse(result["metrics"]["unsafe_crossing"])
+        self.assertTrue(result["metrics"]["nav_success"])
+        self.assertGreaterEqual(result["metrics"]["invalidation_count"], 1)
 
 
 if __name__ == "__main__":

@@ -47,13 +47,13 @@ SIDE_VIEW_NAMES = ("left_near", "left_far", "right_near", "right_far")
 # These are policy priors, not realised outcomes or oracle labels.
 _REPAIR_EFFECTIVENESS: dict[str, dict[str, float]] = {
     "stale": {"same_view": 0.95, "wait": 0.90, "side_view": 0.85},
-    # A synchronised recapture creates a new physical capture root without
-    # paying side-view travel.  Side views remain superior for conflict and
-    # coverage gaps, but are not required merely to obtain root #2.
-    "shared_root": {"same_view": 1.00, "wait": 0.72, "side_view": 1.00},
+    # Shared capture roots are not broken by same-view recapture under
+    # shared-occlusion style faults (strip dropout persists). Side views are
+    # the intended repair; same_view/wait stay weak so utility prefers them.
+    "shared_root": {"same_view": 0.18, "wait": 0.12, "side_view": 1.00},
     "insufficient_roots": {
-        "same_view": 1.00,
-        "wait": 0.82,
+        "same_view": 0.55,
+        "wait": 0.40,
         "side_view": 1.00,
     },
     "modality_conflict": {
@@ -72,11 +72,11 @@ _REPAIR_EFFECTIVENESS: dict[str, dict[str, float]] = {
 
 _CONFLICT_DISCRIMINATION: dict[str, dict[str, float]] = {
     "stale": {"same_view": 0.25, "wait": 0.35, "side_view": 0.40},
-    "shared_root": {"same_view": 1.00, "wait": 0.55, "side_view": 1.00},
+    "shared_root": {"same_view": 0.20, "wait": 0.15, "side_view": 1.00},
     "insufficient_roots": {
-        "same_view": 0.50,
-        "wait": 0.30,
-        "side_view": 0.50,
+        "same_view": 0.35,
+        "wait": 0.25,
+        "side_view": 0.95,
     },
     "modality_conflict": {
         "same_view": 0.90,

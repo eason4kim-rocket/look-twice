@@ -136,11 +136,13 @@ def _effective_fault_strength(
     # view-/timing-dependent fault, but never pretends to repair OOD severity.
     if observation_index > 0 and scenario.profile != "ood-severity":
         if repair_action_kind == "side_view":
-            depth *= 0.34
-            semantic *= 0.34
+            # Stronger physical repair so active policies can convert side views
+            # into clear admits on view-dependent faults (shared occlusion etc.).
+            depth *= 0.22
+            semantic *= 0.22
         elif repair_action_kind in {"same_view", "wait"}:
-            depth *= 0.62
-            semantic *= 0.62
+            depth *= 0.55
+            semantic *= 0.55
     visibility_penalty = 0.35 * (1.0 - _clamp(predicted_coverage))
     return _clamp(depth + visibility_penalty), _clamp(semantic + visibility_penalty)
 

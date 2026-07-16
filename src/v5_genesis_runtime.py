@@ -8,10 +8,11 @@ STATUS must state that clearly when claims are synthetic-on-GPU.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any
 
 from v4_genesis_runtime import GenesisEpisodeRuntime
-from v4_scenario import sample_v4_scenario
+from v4_scenario import SIMULATION_DT_SECONDS, ExternalEvent, sample_v4_scenario
 from v5_scenario import V5ScenarioSample
 
 _V4_PROFILES = {
@@ -48,6 +49,19 @@ class V5GenesisRuntime:
             raise ValueError("motion_backend must be skid-steer or kinematic")
         physics_profile = _physics_profile(scenario.profile)
         v4_scenario = sample_v4_scenario(physics_profile, scenario.seed)
+        v5_event = scenario.oracle_context.get("external_event")
+        if v5_event:
+            event_step = int(v5_event["step"])
+            v4_scenario = replace(
+                v4_scenario,
+                external_event=ExternalEvent(
+                    kind=str(v5_event["kind"]),
+                    absolute_step=event_step,
+                    absolute_time_seconds=event_step * SIMULATION_DT_SECONDS,
+                    from_blocked=bool(scenario.oracle_context["nav_blocked_initial"]),
+                    to_blocked=bool(v5_event["to_blocked"]),
+                ),
+            )
         self.v5_scenario = scenario
         self.motion_backend = motion_backend
         self._inner = GenesisEpisodeRuntime(

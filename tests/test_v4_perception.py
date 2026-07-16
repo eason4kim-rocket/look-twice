@@ -65,6 +65,19 @@ class V4PerceptionTests(unittest.TestCase):
         )
         self.assertEqual(result.result, "inconclusive")
 
+    def test_depth_clear_despite_sparse_near_clutter(self) -> None:
+        """Median-free ROI must not hard-block on a few near pixels (v4 formal bug)."""
+        depth = np.full((20, 20), 5.0, dtype=np.float32)
+        depth[8:10, 8:10] = 0.5  # sparse clutter << 28% near fraction
+        result = analyze_depth_geometry(
+            depth=depth,
+            roi=ImageROI(2, 2, 18, 18),
+            expected_clear_depth=2.0,
+            minimum_near_pixels=4,
+        )
+        self.assertEqual(result.result, "clear")
+        self.assertLess(result.near_fraction, 0.24)
+
     def test_semantic_is_independent_and_can_conflict_with_depth(self) -> None:
         depth = np.full((20, 20), 2.0, dtype=np.float32)
         segmentation = np.full((20, 20), 2, dtype=np.int64)

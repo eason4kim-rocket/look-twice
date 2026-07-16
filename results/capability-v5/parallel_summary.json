@@ -1,0 +1,642 @@
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 2,
+  "jobs": 90,
+  "ok": 90,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 1175.74184031412,
+  "results": [
+    {
+      "stem": "naive__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 25.73054149746895,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__dynamic-change__50000.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 25.440966736525297,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__dynamic-change__50001.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 25.553224697709084,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__dynamic-change__50002.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 25.484523758292198,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__dynamic-change__50003.log"
+    },
+    {
+      "stem": "naive__dynamic-change__50004",
+      "status": "ok",
+      "seconds": 26.257127907127142,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__dynamic-change__50004.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 25.734187569469213,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__evidence-echo__50000.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 25.911485016345978,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__evidence-echo__50001.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 25.70213547348976,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__evidence-echo__50002.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 26.095625780522823,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__evidence-echo__50003.log"
+    },
+    {
+      "stem": "naive__evidence-echo__50004",
+      "status": "ok",
+      "seconds": 25.82875618711114,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__evidence-echo__50004.log"
+    },
+    {
+      "stem": "naive__independent-noise__50000",
+      "status": "ok",
+      "seconds": 25.324045196175575,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__independent-noise__50000.log"
+    },
+    {
+      "stem": "naive__independent-noise__50001",
+      "status": "ok",
+      "seconds": 25.854220665991306,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__independent-noise__50001.log"
+    },
+    {
+      "stem": "naive__independent-noise__50002",
+      "status": "ok",
+      "seconds": 25.40984031930566,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__independent-noise__50002.log"
+    },
+    {
+      "stem": "naive__independent-noise__50003",
+      "status": "ok",
+      "seconds": 26.048475917428732,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__independent-noise__50003.log"
+    },
+    {
+      "stem": "naive__independent-noise__50004",
+      "status": "ok",
+      "seconds": 25.687247194349766,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__independent-noise__50004.log"
+    },
+    {
+      "stem": "naive__manipulation-occlusion__50000",
+      "status": "ok",
+      "seconds": 25.5692864023149,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__manipulation-occlusion__50000.log"
+    },
+    {
+      "stem": "naive__manipulation-occlusion__50001",
+      "status": "ok",
+      "seconds": 26.513144064694643,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__manipulation-occlusion__50001.log"
+    },
+    {
+      "stem": "naive__manipulation-occlusion__50002",
+      "status": "ok",
+      "seconds": 25.4845149256289,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__manipulation-occlusion__50002.log"
+    },
+    {
+      "stem": "naive__manipulation-occlusion__50003",
+      "status": "ok",
+      "seconds": 26.5526485145092,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__manipulation-occlusion__50003.log"
+    },
+    {
+      "stem": "naive__manipulation-occlusion__50004",
+      "status": "ok",
+      "seconds": 25.56165386363864,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__manipulation-occlusion__50004.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 25.504838593304157,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 26.008508190512657,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 25.204295128583908,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 26.64863381534815,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__50004",
+      "status": "ok",
+      "seconds": 25.086752709001303,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__shared-occlusion__50004.log"
+    },
+    {
+      "stem": "naive__time-skew__50000",
+      "status": "ok",
+      "seconds": 24.989359613507986,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__time-skew__50000.log"
+    },
+    {
+      "stem": "naive__time-skew__50001",
+      "status": "ok",
+      "seconds": 25.537698701024055,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__time-skew__50001.log"
+    },
+    {
+      "stem": "naive__time-skew__50002",
+      "status": "ok",
+      "seconds": 25.43616233766079,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__time-skew__50002.log"
+    },
+    {
+      "stem": "naive__time-skew__50003",
+      "status": "ok",
+      "seconds": 25.587582979351282,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__time-skew__50003.log"
+    },
+    {
+      "stem": "naive__time-skew__50004",
+      "status": "ok",
+      "seconds": 25.220168832689524,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/naive__time-skew__50004.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 26.582415368407965,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__dynamic-change__50000.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 25.377242144197226,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__dynamic-change__50001.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 26.248731922358274,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__dynamic-change__50002.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 25.72237128019333,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__dynamic-change__50003.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50004",
+      "status": "ok",
+      "seconds": 26.33883860707283,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__dynamic-change__50004.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 25.331740014255047,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__evidence-echo__50000.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 26.219454869627953,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__evidence-echo__50001.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 25.62430277839303,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__evidence-echo__50002.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 26.308710549026728,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__evidence-echo__50003.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50004",
+      "status": "ok",
+      "seconds": 25.5497541166842,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__evidence-echo__50004.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50000",
+      "status": "ok",
+      "seconds": 25.768570825457573,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__independent-noise__50000.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50001",
+      "status": "ok",
+      "seconds": 26.26721927896142,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__independent-noise__50001.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50002",
+      "status": "ok",
+      "seconds": 25.477136362344027,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__independent-noise__50002.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50003",
+      "status": "ok",
+      "seconds": 25.819306697696447,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__independent-noise__50003.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50004",
+      "status": "ok",
+      "seconds": 25.25443024933338,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__independent-noise__50004.log"
+    },
+    {
+      "stem": "purify-active__manipulation-occlusion__50000",
+      "status": "ok",
+      "seconds": 25.342767488211393,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__manipulation-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-active__manipulation-occlusion__50001",
+      "status": "ok",
+      "seconds": 26.36428687721491,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__manipulation-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-active__manipulation-occlusion__50002",
+      "status": "ok",
+      "seconds": 25.26095760241151,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__manipulation-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-active__manipulation-occlusion__50003",
+      "status": "ok",
+      "seconds": 26.67135728150606,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__manipulation-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-active__manipulation-occlusion__50004",
+      "status": "ok",
+      "seconds": 25.701696880161762,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__manipulation-occlusion__50004.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 25.34656437113881,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 26.22023778781295,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 24.911263532936573,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 26.573948733508587,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50004",
+      "status": "ok",
+      "seconds": 24.88575564697385,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__shared-occlusion__50004.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50000",
+      "status": "ok",
+      "seconds": 25.90731416642666,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__time-skew__50000.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50001",
+      "status": "ok",
+      "seconds": 26.037100672721863,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__time-skew__50001.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50002",
+      "status": "ok",
+      "seconds": 24.72754916548729,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__time-skew__50002.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50003",
+      "status": "ok",
+      "seconds": 25.484173376113176,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__time-skew__50003.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50004",
+      "status": "ok",
+      "seconds": 25.742815248668194,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-active__time-skew__50004.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 25.84768319129944,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__dynamic-change__50000.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 26.971795603632927,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__dynamic-change__50001.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 25.36915149912238,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__dynamic-change__50002.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 27.440476316958666,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__dynamic-change__50003.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__50004",
+      "status": "ok",
+      "seconds": 26.4881363324821,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__dynamic-change__50004.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 27.44268412515521,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__evidence-echo__50000.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 26.51916180178523,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__evidence-echo__50001.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 27.27874855697155,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__evidence-echo__50002.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 26.583829537034035,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__evidence-echo__50003.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__50004",
+      "status": "ok",
+      "seconds": 27.503293335437775,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__evidence-echo__50004.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50000",
+      "status": "ok",
+      "seconds": 26.969056092202663,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__independent-noise__50000.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50001",
+      "status": "ok",
+      "seconds": 26.500336822122335,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__independent-noise__50001.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50002",
+      "status": "ok",
+      "seconds": 27.14274962246418,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__independent-noise__50002.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50003",
+      "status": "ok",
+      "seconds": 25.907391000539064,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__independent-noise__50003.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__50004",
+      "status": "ok",
+      "seconds": 27.549488857388496,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__independent-noise__50004.log"
+    },
+    {
+      "stem": "purify-passive__manipulation-occlusion__50000",
+      "status": "ok",
+      "seconds": 27.534330680966377,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__manipulation-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-passive__manipulation-occlusion__50001",
+      "status": "ok",
+      "seconds": 26.21758931875229,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__manipulation-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-passive__manipulation-occlusion__50002",
+      "status": "ok",
+      "seconds": 27.280739080160856,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__manipulation-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-passive__manipulation-occlusion__50003",
+      "status": "ok",
+      "seconds": 26.0878175906837,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__manipulation-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-passive__manipulation-occlusion__50004",
+      "status": "ok",
+      "seconds": 26.97251494601369,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__manipulation-occlusion__50004.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 27.588345147669315,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 26.23034693300724,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 26.83025671541691,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 26.430116031318903,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__50004",
+      "status": "ok",
+      "seconds": 26.765366114676,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__shared-occlusion__50004.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50000",
+      "status": "ok",
+      "seconds": 27.064350750297308,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__time-skew__50000.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50001",
+      "status": "ok",
+      "seconds": 26.334492940455675,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__time-skew__50001.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50002",
+      "status": "ok",
+      "seconds": 27.50811840966344,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__time-skew__50002.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50003",
+      "status": "ok",
+      "seconds": 26.334449231624603,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__time-skew__50003.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__50004",
+      "status": "ok",
+      "seconds": 27.084387861192226,
+      "returncode": 0,
+      "log": "outputs/capability-v5-parallel/logs/purify-passive__time-skew__50004.log"
+    }
+  ]
+}

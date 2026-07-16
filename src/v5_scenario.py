@@ -20,8 +20,11 @@ PROFILES = (
 )
 
 NAV_REGION = (0.55, 1.05, -0.35, 0.35)  # min_x, max_x, min_y, max_y risk slab
-GRASP_XY = (1.35, 0.0)
-GOAL_XY = (2.2, 0.0)
+# Leave enough chassis clearance beyond the risk slab and its blocking object.
+# With the previous x=1.35 target, a base positioned for the 0.27 m arm still
+# overlapped the obstacle even after a geometrically valid side detour.
+GRASP_XY = (1.80, 0.0)
+GOAL_XY = (2.70, 0.0)
 START_XY = (-2.0, 0.0)
 
 
@@ -131,9 +134,11 @@ def sample_v5_scenario(profile: str, seed: int) -> V5ScenarioSample:
     external_event: dict[str, Any] | None = None
     grasp_event: dict[str, Any] | None = None
     if profile == "dynamic-change":
-        # Absolute schedule — not policy-dependent.
+        # Absolute schedule — not policy-dependent.  It is intentionally after
+        # the common dual-view observation phase and before the usual boundary
+        # commitment, so a boundary recapture can detect a real revision.
         external_event = {
-            "step": 120 + (seed % 40),
+            "step": 700 + (seed % 40),
             "to_blocked": not nav_blocked,
             "kind": "nav_slab_flip",
         }
