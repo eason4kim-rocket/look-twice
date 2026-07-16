@@ -1,0 +1,219 @@
+{
+  "policies": {
+    "naive": {
+      "n": 8,
+      "mission": 5,
+      "nav": 5,
+      "pick": 7,
+      "unsafe": 3,
+      "rgbd": 8,
+      "syn": 0,
+      "mission_bad": 0
+    },
+    "purify-active": {
+      "n": 8,
+      "mission": 7,
+      "nav": 8,
+      "pick": 7,
+      "unsafe": 0,
+      "rgbd": 8,
+      "syn": 0,
+      "mission_bad": 0
+    },
+    "purify-passive": {
+      "n": 8,
+      "mission": 7,
+      "nav": 8,
+      "pick": 7,
+      "unsafe": 0,
+      "rgbd": 8,
+      "syn": 0,
+      "mission_bad": 0
+    }
+  },
+  "claims_modes": [
+    "genesis_rgbd_depth_semantic"
+  ],
+  "jobs": 24,
+  "summary_file": "outputs/v5-rgbd-smoke-3x4x2/parallel_summary.json",
+  "parallel": {
+    "schema_version": "look-twice.parallel-matrix/v1",
+    "kind": "v5",
+    "workers": 2,
+    "jobs": 24,
+    "ok": 24,
+    "skipped": 0,
+    "fail": 0,
+    "wall_seconds": 361.5569905228913,
+    "results": [
+      {
+        "stem": "naive__dynamic-change__50000",
+        "status": "ok",
+        "seconds": 29.40394015237689,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__dynamic-change__50000.log"
+      },
+      {
+        "stem": "naive__dynamic-change__50001",
+        "status": "ok",
+        "seconds": 29.983372312039137,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__dynamic-change__50001.log"
+      },
+      {
+        "stem": "naive__evidence-echo__50000",
+        "status": "ok",
+        "seconds": 26.721546106040478,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__evidence-echo__50000.log"
+      },
+      {
+        "stem": "naive__evidence-echo__50001",
+        "status": "ok",
+        "seconds": 29.3299761377275,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__evidence-echo__50001.log"
+      },
+      {
+        "stem": "naive__independent-noise__50000",
+        "status": "ok",
+        "seconds": 30.7932150028646,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__independent-noise__50000.log"
+      },
+      {
+        "stem": "naive__independent-noise__50001",
+        "status": "ok",
+        "seconds": 27.758081782609224,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__independent-noise__50001.log"
+      },
+      {
+        "stem": "naive__shared-occlusion__50000",
+        "status": "ok",
+        "seconds": 26.12922118231654,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__shared-occlusion__50000.log"
+      },
+      {
+        "stem": "naive__shared-occlusion__50001",
+        "status": "ok",
+        "seconds": 27.917524103075266,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/naive__shared-occlusion__50001.log"
+      },
+      {
+        "stem": "purify-active__dynamic-change__50000",
+        "status": "ok",
+        "seconds": 28.684309531003237,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__dynamic-change__50000.log"
+      },
+      {
+        "stem": "purify-active__dynamic-change__50001",
+        "status": "ok",
+        "seconds": 33.5979662053287,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__dynamic-change__50001.log"
+      },
+      {
+        "stem": "purify-active__evidence-echo__50000",
+        "status": "ok",
+        "seconds": 26.699937663972378,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__evidence-echo__50000.log"
+      },
+      {
+        "stem": "purify-active__evidence-echo__50001",
+        "status": "ok",
+        "seconds": 32.54833008348942,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__evidence-echo__50001.log"
+      },
+      {
+        "stem": "purify-active__independent-noise__50000",
+        "status": "ok",
+        "seconds": 27.15876481309533,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__independent-noise__50000.log"
+      },
+      {
+        "stem": "purify-active__independent-noise__50001",
+        "status": "ok",
+        "seconds": 31.374133002012968,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__independent-noise__50001.log"
+      },
+      {
+        "stem": "purify-active__shared-occlusion__50000",
+        "status": "ok",
+        "seconds": 28.085069216787815,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__shared-occlusion__50000.log"
+      },
+      {
+        "stem": "purify-active__shared-occlusion__50001",
+        "status": "ok",
+        "seconds": 30.64822307229042,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-active__shared-occlusion__50001.log"
+      },
+      {
+        "stem": "purify-passive__dynamic-change__50000",
+        "status": "ok",
+        "seconds": 31.668233700096607,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__dynamic-change__50000.log"
+      },
+      {
+        "stem": "purify-passive__dynamic-change__50001",
+        "status": "ok",
+        "seconds": 29.39624711498618,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__dynamic-change__50001.log"
+      },
+      {
+        "stem": "purify-passive__evidence-echo__50000",
+        "status": "ok",
+        "seconds": 29.975238043814898,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__evidence-echo__50000.log"
+      },
+      {
+        "stem": "purify-passive__evidence-echo__50001",
+        "status": "ok",
+        "seconds": 28.79222782328725,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__evidence-echo__50001.log"
+      },
+      {
+        "stem": "purify-passive__independent-noise__50000",
+        "status": "ok",
+        "seconds": 26.896515980362892,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__independent-noise__50000.log"
+      },
+      {
+        "stem": "purify-passive__independent-noise__50001",
+        "status": "ok",
+        "seconds": 28.812644973397255,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__independent-noise__50001.log"
+      },
+      {
+        "stem": "purify-passive__shared-occlusion__50000",
+        "status": "ok",
+        "seconds": 31.151878233999014,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__shared-occlusion__50000.log"
+      },
+      {
+        "stem": "purify-passive__shared-occlusion__50001",
+        "status": "ok",
+        "seconds": 28.310221772640944,
+        "returncode": 0,
+        "log": "outputs/v5-rgbd-smoke-3x4x2/logs/purify-passive__shared-occlusion__50001.log"
+      }
+    ]
+  }
+}

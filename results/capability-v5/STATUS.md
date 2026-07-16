@@ -84,3 +84,7 @@ commit semantic fix → pin git commit in results
 
 Instance was idle (0% util) after the last matrix; operator may shut down to
 save credits until the re-run.
+
+## RGB-D smoke follow-on
+
+See `results/capability-v5-rgbd-smoke/STATUS.md` for Genesis RGB-D Claims smoke (24 eps). No contest Gate B claim.
