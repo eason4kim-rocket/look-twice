@@ -42,6 +42,8 @@ SENSOR_VERSION = "look-twice-rgbd-v5/1"
 # Motion between start and dual viewpoints routinely exceeds 80 steps; a short
 # TTL made every receipt expire before the risk boundary (nav_success always 0).
 DEFAULT_TTL_STEPS = 2000
+# Minimum chassis translation for a side_view to count as a real viewpoint change.
+MIN_SIDE_VIEW_DISTANCE_M = 0.10
 
 
 def git_commit() -> str:
@@ -88,7 +90,17 @@ V5_ID_PROFILES = tuple(p for p in (
     "dynamic-change",
     "time-skew",
     "manipulation-occlusion",
+    "repair-required",
 ) if p != "ood-severity")
+
+
+def _gate_profile(profile: str) -> str:
+    """Map v5-only profiles onto calibration-applicable ID labels."""
+    if profile == "manipulation-occlusion":
+        return "independent-noise"
+    if profile == "repair-required":
+        return "shared-occlusion"
+    return profile
 
 
 def cross_region_contract(
@@ -438,12 +450,14 @@ def run_v5_episode(
             unsafe = True
         return result
 
+    last_viewpoint_name = "start"
+
     def add_nav_observation(
         viewpoint: Mapping[str, Any],
         *,
         action_kind: str = "initial",
-    ) -> None:
-        nonlocal capture_index, last_gate_sensor_version
+    ) -> MotionResult:
+        nonlocal capture_index, last_gate_sensor_version, last_viewpoint_name
         xy = (float(viewpoint["xy"][0]), float(viewpoint["xy"][1]))
         movement = move(xy, str(viewpoint["name"]))
         if not movement.reached:
@@ -483,6 +497,67 @@ def run_v5_episode(
                 )
             )
         visited.add(str(viewpoint["name"]))
+        last_viewpoint_name = str(viewpoint["name"])
+        return movement
+
+    def _all_side_candidates() -> list[dict[str, Any]]:
+        """Full left_/right_ side set required by the repair planner schema."""
+        return [
+            dict(cand)
+            for cand in public["candidate_viewpoints"]
+            if str(cand.get("name", "")).startswith(("left_", "right_"))
+        ]
+
+    def _eligible_side_candidates() -> list[dict[str, Any]]:
+        """Unvisited side viewpoints >0.10 m from the chassis."""
+        cur = (float(runtime.current_pose.x), float(runtime.current_pose.y))
+        out: list[dict[str, Any]] = []
+        for cand in _all_side_candidates():
+            name = str(cand.get("name", ""))
+            if name in visited or name == last_viewpoint_name:
+                continue
+            if not bool(cand.get("reachable", True)):
+                continue
+            xy = (float(cand["xy"][0]), float(cand["xy"][1]))
+            if math.dist(cur, xy) <= MIN_SIDE_VIEW_DISTANCE_M:
+                continue
+            out.append(cand)
+        return out
+
+    def _record_repair_decision(
+        decision_dict: dict[str, Any],
+        *,
+        previous_viewpoint: str,
+        previous_xy: tuple[float, float],
+        selected_viewpoint: str | None,
+        selected_xy: tuple[float, float] | None,
+        actual_distance: float | None,
+        executed_kind: str | None,
+    ) -> dict[str, Any]:
+        planned = (
+            float(math.dist(previous_xy, selected_xy))
+            if selected_xy is not None
+            else None
+        )
+        actual = None if actual_distance is None else float(actual_distance)
+        viewpoint_changed = bool(
+            selected_viewpoint is not None
+            and selected_viewpoint != previous_viewpoint
+            and actual is not None
+            and actual > MIN_SIDE_VIEW_DISTANCE_M
+        )
+        decision_dict = dict(decision_dict)
+        decision_dict.update(
+            {
+                "previous_viewpoint": previous_viewpoint,
+                "selected_viewpoint": selected_viewpoint,
+                "planned_distance": planned,
+                "actual_distance": actual,
+                "viewpoint_changed": viewpoint_changed,
+                "action_kind_executed": executed_kind,
+            }
+        )
+        return decision_dict
 
     def capture_claims_at_pose(
         *,
@@ -536,11 +611,10 @@ def run_v5_episode(
                 contract=nav_contract,
                 calibration=calibration,
                 current_step=runtime.current_step,
-                profile=scenario.profile if scenario.profile != "manipulation-occlusion" else "independent-noise",
+                profile=_gate_profile(scenario.profile),
                 noise_intensity=noise,
                 sensor_version=last_gate_sensor_version,
             )
-            # map profile for OOD-less v5: manipulation-occlusion treated as ID for cal smoke
             gate_receipts.append(receipt)
             last_nav_receipt = receipt
             return receipt
@@ -657,39 +731,50 @@ def run_v5_episode(
     start_xy = (runtime.current_pose.x, runtime.current_pose.y)
     ordered = ordered_reachable_viewpoints(public, start_xy)
     nav_admitted = False
+    initial_gate_admitted = False
+    repair_attempted = False
+    repair_success = False
+    initial_view_budget = int(public.get("initial_viewpoint_budget") or 2)
+    initial_view_budget = max(1, min(initial_view_budget, 4))
     if not ordered:
         outcome = "no_viewpoint"
     else:
         outcome = "running"
-        # collect up to 2 viewpoints for dual roots
-        for candidate in ordered[:2]:
+        # repair-required cells use budget=1 → single capture root → gate deny
+        # until active acquires a second independent viewpoint.
+        for candidate in ordered[:initial_view_budget]:
             try:
-                add_nav_observation(candidate)
+                add_nav_observation(candidate, action_kind="initial")
             except RuntimeError:
                 continue
         receipt = evaluate_nav()
+        initial_gate_admitted = bool(receipt.get("admitted"))
         if descriptor.allows_repair and not receipt.get("admitted"):
             # BeliefGap repair loop (navigation only)
+            repair_attempted = True
             gaps = [
                 g.get("reason", "insufficient_roots")
                 for g in receipt.get("belief_gaps", [])
             ] or ["insufficient_roots"]
             for repair_iters in range(config.max_observations):
                 gap = BeliefGap.from_reasons(gaps)
-                side_only = [
-                    c
-                    for c in public["candidate_viewpoints"]
-                    if str(c.get("name", "")).startswith(("left_", "right_"))
-                ]
+                prev_name = last_viewpoint_name
+                prev_xy = (
+                    float(runtime.current_pose.x),
+                    float(runtime.current_pose.y),
+                )
+                # Planner needs the full side set; eligibility excludes visited.
+                side_all = _all_side_candidates()
+                side_eligible = _eligible_side_candidates()
                 planner_public = {
-                    "candidate_viewpoints": side_only,
+                    "candidate_viewpoints": side_all,
                     "known_static_map": public["known_static_map"],
                 }
                 context = build_planning_context(
                     public_context=planner_public,
                     current_step=runtime.current_step,
-                    current_xy=(runtime.current_pose.x, runtime.current_pose.y),
-                    current_viewpoint_name=next(iter(visited), "start"),
+                    current_xy=prev_xy,
+                    current_viewpoint_name=prev_name,
                     current_predicted_coverage=0.7,
                     current_predicted_degradation=0.2,
                     current_physical_risk=0.1,
@@ -698,25 +783,183 @@ def run_v5_episode(
                     replans_taken=replan_count,
                 )
                 decision = planner.choose(gap, context)
-                repair_decisions.append(decision.to_dict())
-                if decision.selected_action is None:
-                    break
-                if decision.selected_action.kind == "side_view":
-                    replan_count += 1
-                    name = decision.selected_action.name
-                    cand = next(
-                        (c for c in public["candidate_viewpoints"] if c["name"] == name),
-                        None,
+                rec = decision.to_dict()
+                needs_roots = any(
+                    r in gaps
+                    for r in (
+                        "insufficient_roots",
+                        "shared_root",
+                        "low_coverage",
+                        "evidence_conflict",
                     )
+                )
+                # When the gate still needs independent roots, force a real
+                # unvisited side_view rather than same_view (planner travel cost
+                # can otherwise prefer zero-move recapture).
+                forced_side = None
+                if needs_roots and side_eligible:
+                    eligible_names = {c["name"] for c in side_eligible}
+                    for score in decision.ranking:
+                        act = score.action
+                        if (
+                            act.kind == "side_view"
+                            and score.eligible
+                            and act.name in eligible_names
+                        ):
+                            forced_side = next(
+                                c for c in side_eligible if c["name"] == act.name
+                            )
+                            break
+                    if forced_side is None:
+                        forced_side = min(
+                            side_eligible,
+                            key=lambda c: math.dist(
+                                prev_xy, (float(c["xy"][0]), float(c["xy"][1]))
+                            ),
+                        )
+                    rec["reason"] = "episode_force_unvisited_side_view"
+                    rec["status"] = "selected"
+                if forced_side is None and (
+                    decision.selected_action is None or not side_eligible
+                ):
+                    # Honest same_view fallback when no unvisited side view remains.
+                    nav_claims.extend(
+                        capture_claims_at_pose(
+                            label=f"same_view_fallback_{repair_iters}",
+                            action_kind="same_view",
+                        )
+                    )
+                    visited.add(f"same_view:{repair_iters}")
+                    rec = _record_repair_decision(
+                        rec,
+                        previous_viewpoint=prev_name,
+                        previous_xy=prev_xy,
+                        selected_viewpoint=prev_name,
+                        selected_xy=prev_xy,
+                        actual_distance=0.0,
+                        executed_kind="same_view",
+                    )
+                    repair_decisions.append(rec)
+                    receipt = evaluate_nav()
+                    if receipt.get("admitted"):
+                        repair_success = True
+                        break
+                    # No more side views and same_view did not admit → stop.
+                    break
+                kind = (
+                    "side_view"
+                    if forced_side is not None
+                    else decision.selected_action.kind
+                )
+                if kind == "side_view":
+                    replan_count += 1
+                    if forced_side is not None:
+                        cand = forced_side
+                        name = str(cand["name"])
+                    else:
+                        name = decision.selected_action.name
+                        cand = next(
+                            (c for c in side_eligible if c["name"] == name),
+                            None,
+                        )
                     if cand is None:
+                        # Planner returned a non-eligible name; force same_view.
+                        nav_claims.extend(
+                            capture_claims_at_pose(
+                                label=f"same_view_reject_{repair_iters}",
+                                action_kind="same_view",
+                            )
+                        )
+                        visited.add(f"same_view:{repair_iters}")
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=name,
+                            selected_xy=(
+                                float(decision.selected_action.target_xy[0]),
+                                float(decision.selected_action.target_xy[1]),
+                            ),
+                            actual_distance=0.0,
+                            executed_kind="same_view",
+                        )
+                        repair_decisions.append(rec)
+                        break
+                    target_xy = (float(cand["xy"][0]), float(cand["xy"][1]))
+                    planned = math.dist(prev_xy, target_xy)
+                    if planned <= MIN_SIDE_VIEW_DISTANCE_M or name in visited:
+                        nav_claims.extend(
+                            capture_claims_at_pose(
+                                label=f"same_view_close_{repair_iters}",
+                                action_kind="same_view",
+                            )
+                        )
+                        visited.add(f"same_view:{repair_iters}")
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=name,
+                            selected_xy=target_xy,
+                            actual_distance=0.0,
+                            executed_kind="same_view",
+                        )
+                        repair_decisions.append(rec)
                         break
                     try:
-                        add_nav_observation(cand)
+                        movement = add_nav_observation(
+                            cand, action_kind="side_view"
+                        )
                     except RuntimeError:
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=name,
+                            selected_xy=target_xy,
+                            actual_distance=None,
+                            executed_kind=None,
+                        )
+                        repair_decisions.append(rec)
                         break
+                    actual = float(movement.path_length)
+                    if actual <= MIN_SIDE_VIEW_DISTANCE_M:
+                        # Zero-move cannot be claimed as successful side_view.
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=name,
+                            selected_xy=target_xy,
+                            actual_distance=actual,
+                            executed_kind="same_view",
+                        )
+                    else:
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=name,
+                            selected_xy=target_xy,
+                            actual_distance=actual,
+                            executed_kind="side_view",
+                        )
+                    repair_decisions.append(rec)
                 elif decision.selected_action.wait_steps:
-                    runtime.wait_steps(min(10, int(decision.selected_action.wait_steps)))
+                    runtime.wait_steps(
+                        min(10, int(decision.selected_action.wait_steps))
+                    )
                     visited.add(f"wait:{repair_iters}")
+                    rec = _record_repair_decision(
+                        rec,
+                        previous_viewpoint=prev_name,
+                        previous_xy=prev_xy,
+                        selected_viewpoint=prev_name,
+                        selected_xy=prev_xy,
+                        actual_distance=0.0,
+                        executed_kind="wait",
+                    )
+                    repair_decisions.append(rec)
                 else:
                     nav_claims.extend(
                         capture_claims_at_pose(
@@ -725,8 +968,19 @@ def run_v5_episode(
                         )
                     )
                     visited.add(f"same_view:{repair_iters}")
+                    rec = _record_repair_decision(
+                        rec,
+                        previous_viewpoint=prev_name,
+                        previous_xy=prev_xy,
+                        selected_viewpoint=prev_name,
+                        selected_xy=prev_xy,
+                        actual_distance=0.0,
+                        executed_kind="same_view",
+                    )
+                    repair_decisions.append(rec)
                 receipt = evaluate_nav()
                 if receipt.get("admitted"):
+                    repair_success = True
                     break
                 gaps = [
                     g.get("reason", "insufficient_roots")
@@ -758,7 +1012,6 @@ def run_v5_episode(
                 action_kind="same_view",
                 predicted_coverage=0.9,
             )
-            nav_claims.extend(verification_claims)
             visited.add("boundary_verification")
             invalidated = maybe_invalidate(
                 previous_receipt,
@@ -766,11 +1019,17 @@ def run_v5_episode(
                 triggering_claims=tuple(verification_claims),
             )
             if invalidated:
-                # The old fact lineage no longer qualifies the new plan.  A
-                # replacement receipt must be based on post-invalidation roots.
-                nav_claims = list(verification_claims)
-                nav_admitted = False
+                # Dynamic flips: replace root set with the boundary recapture.
+                # Static / repair-required: keep side-view roots that already
+                # repaired the contract. Do **not** extend same_view boundary
+                # claims into nav_claims — that re-introduces shared_root denials
+                # after a successful pre-boundary repair (GPU RGB-D path).
+                if scenario.profile == "dynamic-change":
+                    nav_claims = list(verification_claims)
+                refreshed = evaluate_nav()
+                nav_admitted = bool(refreshed.get("admitted"))
             else:
+                # Receipt still valid; re-confirm with the existing claim set.
                 refreshed = evaluate_nav()
                 nav_admitted = bool(refreshed.get("admitted"))
         elif previous_receipt is not None:
@@ -780,45 +1039,33 @@ def run_v5_episode(
             if invalidated:
                 nav_admitted = False
 
-        if invalidated or (allows_repair and not nav_admitted):
-            nav_admitted = False
+        # Only re-repair when still denied after the invalidation recheck.
+        # (Previously: `if invalidated: nav_admitted = False` always re-entered
+        # the boundary loop even when kept roots re-admitted — wiping the win.)
+        if not nav_admitted:
             if allows_repair:
-                # Active: re-observe at the boundary, then re-evaluate the gate.
+                # Active: prefer unvisited side_view; same_view boundary is fallback.
                 for repair_iters in range(config.max_observations):
-                    # fresh capture at current pose (no long side trip first)
-                    runtime.wait_steps(3)
-                    nav_claims.extend(
-                        capture_claims_at_pose(
-                            label=f"boundary_recapture_{repair_iters}",
-                            action_kind="same_view",
-                            predicted_coverage=0.9,
-                        )
-                    )
-                    visited.add(f"boundary_recapture:{repair_iters}")
-                    # side-view repair if still denied
-                    receipt = evaluate_nav()
-                    if receipt.get("admitted"):
-                        nav_admitted = True
-                        outcome = "nav_repaired_at_boundary"
-                        break
                     gaps = [
                         g.get("reason", "insufficient_roots")
-                        for g in receipt.get("belief_gaps", [])
+                        for g in (last_nav_receipt or {}).get("belief_gaps", [])
                     ] or ["insufficient_roots"]
                     gap = BeliefGap.from_reasons(gaps)
-                    side_only = [
-                        c
-                        for c in public["candidate_viewpoints"]
-                        if str(c.get("name", "")).startswith(("left_", "right_"))
-                    ]
+                    prev_name = last_viewpoint_name
+                    prev_xy = (
+                        float(runtime.current_pose.x),
+                        float(runtime.current_pose.y),
+                    )
+                    side_all = _all_side_candidates()
+                    side_eligible = _eligible_side_candidates()
                     context = build_planning_context(
                         public_context={
-                            "candidate_viewpoints": side_only,
+                            "candidate_viewpoints": side_all,
                             "known_static_map": public["known_static_map"],
                         },
                         current_step=runtime.current_step,
-                        current_xy=(runtime.current_pose.x, runtime.current_pose.y),
-                        current_viewpoint_name="pre_cross_gate",
+                        current_xy=prev_xy,
+                        current_viewpoint_name=prev_name or "pre_cross_gate",
                         current_predicted_coverage=0.75,
                         current_predicted_degradation=0.2,
                         current_physical_risk=0.1,
@@ -827,44 +1074,121 @@ def run_v5_episode(
                         replans_taken=replan_count,
                     )
                     decision = planner.choose(gap, context)
-                    repair_decisions.append(decision.to_dict())
-                    if decision.selected_action is None:
-                        break
-                    if decision.selected_action.kind == "side_view":
+                    rec = decision.to_dict()
+                    if decision.selected_action is None or not side_eligible:
+                        runtime.wait_steps(3)
+                        nav_claims.extend(
+                            capture_claims_at_pose(
+                                label=f"boundary_recapture_{repair_iters}",
+                                action_kind="same_view",
+                                predicted_coverage=0.9,
+                            )
+                        )
+                        visited.add(f"boundary_recapture:{repair_iters}")
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=prev_name,
+                            selected_xy=prev_xy,
+                            actual_distance=0.0,
+                            executed_kind="same_view",
+                        )
+                        repair_decisions.append(rec)
+                    elif decision.selected_action.kind == "side_view":
                         replan_count += 1
+                        name = decision.selected_action.name
                         cand = next(
-                            (
-                                c
-                                for c in public["candidate_viewpoints"]
-                                if c["name"] == decision.selected_action.name
-                            ),
+                            (c for c in side_eligible if c["name"] == name),
                             None,
                         )
                         if cand is None:
+                            rec = _record_repair_decision(
+                                rec,
+                                previous_viewpoint=prev_name,
+                                previous_xy=prev_xy,
+                                selected_viewpoint=name,
+                                selected_xy=(
+                                    float(decision.selected_action.target_xy[0]),
+                                    float(decision.selected_action.target_xy[1]),
+                                ),
+                                actual_distance=0.0,
+                                executed_kind="same_view",
+                            )
+                            repair_decisions.append(rec)
                             break
+                        target_xy = (float(cand["xy"][0]), float(cand["xy"][1]))
                         try:
-                            add_nav_observation(cand)
+                            movement = add_nav_observation(
+                                cand, action_kind="side_view"
+                            )
                         except RuntimeError:
                             break
+                        actual = float(movement.path_length)
+                        executed = (
+                            "side_view"
+                            if actual > MIN_SIDE_VIEW_DISTANCE_M
+                            else "same_view"
+                        )
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=name,
+                            selected_xy=target_xy,
+                            actual_distance=actual,
+                            executed_kind=executed,
+                        )
+                        repair_decisions.append(rec)
                     else:
                         runtime.wait_steps(
                             min(10, int(decision.selected_action.wait_steps or 5))
                         )
+                        nav_claims.extend(
+                            capture_claims_at_pose(
+                                label=f"boundary_wait_{repair_iters}",
+                                action_kind="same_view",
+                                predicted_coverage=0.9,
+                            )
+                        )
+                        visited.add(f"boundary_wait:{repair_iters}")
+                        rec = _record_repair_decision(
+                            rec,
+                            previous_viewpoint=prev_name,
+                            previous_xy=prev_xy,
+                            selected_viewpoint=prev_name,
+                            selected_xy=prev_xy,
+                            actual_distance=0.0,
+                            executed_kind="wait",
+                        )
+                        repair_decisions.append(rec)
                     receipt = evaluate_nav()
                     if receipt.get("admitted"):
                         nav_admitted = True
                         outcome = "nav_repaired_at_boundary"
                         break
                 if not nav_admitted:
-                    outcome = "nav_invalidated_repair_failed"
+                    outcome = (
+                        "nav_invalidated_repair_failed"
+                        if invalidated
+                        else "nav_boundary_repair_failed"
+                    )
                     return False
             elif descriptor.requires_go_gate:
-                # Passive: fail closed after invalidation.
-                outcome = "nav_invalidated_passive_reject"
+                # Passive: fail closed when not admitted at the boundary.
+                outcome = (
+                    "nav_invalidated_passive_reject"
+                    if invalidated
+                    else "nav_not_admitted"
+                )
                 return False
             else:
                 # Naive: may still push into the risk region (unsafe if blocked).
-                outcome = "nav_invalidated_naive_push"
+                outcome = (
+                    "nav_invalidated_naive_push"
+                    if invalidated
+                    else "naive_ungated_cross"
+                )
                 crossing = move(
                     (0.95, 0.0),
                     "cross_region",
@@ -889,6 +1213,7 @@ def run_v5_episode(
         return not unsafe
 
     def execute_safe_detour() -> bool:
+        """High-|y| bypass past the risk slab. Counts as successful navigation."""
         nonlocal used_detour, outcome
         used_detour = True
         entry = move((-0.2, 1.2), "detour_entry", risk_gated=False)
@@ -902,17 +1227,35 @@ def run_v5_episode(
         outcome = "safe_detour_complete"
         return True
 
+    direct_cross_success = False
+    detour_success = False
+    route_mode = "none"
+
     if nav_admitted and last_nav_receipt is not None:
         task_nav_ok = attempt_cross_region()
-        if not task_nav_ok and not unsafe:
-            task_nav_ok = execute_safe_detour()
+        if task_nav_ok and not unsafe:
+            direct_cross_success = True
+            route_mode = "direct"
+        elif not unsafe:
+            # Fail-closed bypass: safe detour still qualifies as nav success.
+            if execute_safe_detour():
+                task_nav_ok = True
+                detour_success = True
+                route_mode = "detour"
     elif is_naive:
         # Naive may attempt corridor cross without a formal admit.
         outcome = "naive_ungated_cross_attempt"
         task_nav_ok = attempt_cross_region()
+        if task_nav_ok and not unsafe:
+            direct_cross_success = True
+            route_mode = "direct"
     else:
+        # Passive (and denied active): no gated cross → safe detour for nav.
         outcome = outcome if outcome != "running" else "nav_denied"
-        task_nav_ok = execute_safe_detour()
+        if execute_safe_detour():
+            task_nav_ok = True
+            detour_success = True
+            route_mode = "detour"
 
     # --- phase: pick_proxy ---
     # Approach base just outside the risk slab so grasp does not bypass the
@@ -1019,7 +1362,20 @@ def run_v5_episode(
             outcome = "goal_unreachable"
 
     # Contest mission: nav + pick + safe (no pick-only credit).
+    # Safe detour counts as nav_success; wrong_detour is scored separately.
     mission_success = bool(task_nav_ok and task_pick_ok and not unsafe)
+    oracle_clear = not bool(scenario.oracle_context.get("nav_blocked_initial"))
+    wrong_detour = bool(detour_success and oracle_clear)
+    path_length_total = float(
+        sum(float(seg.get("path_length") or 0.0) for seg in motion_segments)
+    )
+    real_side_views = [
+        d
+        for d in repair_decisions
+        if d.get("action_kind_executed") == "side_view"
+        and bool(d.get("viewpoint_changed"))
+        and float(d.get("actual_distance") or 0.0) > MIN_SIDE_VIEW_DISTANCE_M
+    ]
     if mission_success:
         outcome = "mission_complete"
     elif task_pick_ok and not task_nav_ok and not unsafe:
@@ -1058,6 +1414,12 @@ def run_v5_episode(
             "nav_success": task_nav_ok,
             "pick_success": task_pick_ok,
             "used_detour": used_detour,
+            "route_mode": route_mode,
+            "direct_cross_success": direct_cross_success,
+            "detour_success": detour_success,
+            "wrong_detour": wrong_detour,
+            "path_length_total": path_length_total,
+            "real_side_view_count": len(real_side_views),
             "observation_count": len(visited),
             "replan_count": replan_count,
             "collision_count": runtime.collision_count,
@@ -1068,11 +1430,16 @@ def run_v5_episode(
             "simulation_steps": runtime.current_step,
             "outcome": outcome,
             "claims_mode": claims_mode,
+            "initial_viewpoint_budget": initial_view_budget,
+            "initial_gate_admitted": initial_gate_admitted,
+            "repair_attempted": repair_attempted,
+            "repair_success": repair_success,
+            "repair_decision_count": len(repair_decisions),
         },
         "oracle": {"scenario": scenario.oracle_context},
         "outcome": {
             "mission_success": mission_success,
-            "safe_fallback": (not mission_success) and not unsafe,
+            "safe_fallback": (not mission_success) and not unsafe and detour_success,
             "label": outcome,
         },
     }

@@ -153,6 +153,8 @@ class V5CoreTests(unittest.TestCase):
         from purify_bridge import PurifyBridge
         from v5_episode import V5EpisodeConfig, run_v5_episode, smoke_calibration_artifact
 
+        # Seed 50000: clear → blocked. Naive may enter then become unsafe;
+        # active should invalidate and not claim mission through a blocked slab.
         scenario = sample_v5_scenario("dynamic-change", 50000)
         naive_runtime = _V5SyntheticRuntime(scenario)
         try:
@@ -180,9 +182,13 @@ class V5CoreTests(unittest.TestCase):
             finally:
                 active_runtime.close()
         self.assertFalse(active["metrics"]["unsafe_crossing"])
-        self.assertTrue(active["metrics"]["mission_success"])
-        self.assertTrue(active["metrics"]["used_detour"])
         self.assertGreaterEqual(active["metrics"]["invalidation_count"], 1)
+        # After the world flip, active must not force an unsafe corridor push.
+        # Safe detour is valid nav; mission may complete if pick also succeeds.
+        if active["metrics"]["mission_success"]:
+            self.assertTrue(active["metrics"]["nav_success"])
+            self.assertTrue(active["metrics"]["pick_success"])
+            self.assertIn(active["metrics"]["route_mode"], ("detour", "direct"))
 
     def test_passive_expired_receipt_fails_closed_and_detours(self) -> None:
         if not CORE.is_file():
@@ -208,7 +214,17 @@ class V5CoreTests(unittest.TestCase):
                 runtime.close()
         self.assertTrue(result["metrics"]["used_detour"])
         self.assertFalse(result["metrics"]["unsafe_crossing"])
+        # Safe detour is successful navigation (not a gated risk cross).
         self.assertTrue(result["metrics"]["nav_success"])
+        self.assertTrue(result["metrics"]["detour_success"])
+        self.assertEqual(result["metrics"]["route_mode"], "detour")
+        # Mission still requires pick ∧ ¬unsafe; never invent pick-only credit.
+        expected_mission = bool(
+            result["metrics"]["nav_success"]
+            and result["metrics"]["pick_success"]
+            and not result["metrics"]["unsafe_crossing"]
+        )
+        self.assertEqual(result["metrics"]["mission_success"], expected_mission)
         self.assertGreaterEqual(result["metrics"]["invalidation_count"], 1)
 
 

@@ -32,6 +32,9 @@ def _physics_profile(v5_profile: str) -> str:
         return v5_profile
     if v5_profile == "manipulation-occlusion":
         return "shared-occlusion"
+    if v5_profile == "repair-required":
+        # Heavy first-view occlusion/fault; side views repair (same as shared-occlusion).
+        return "shared-occlusion"
     return "independent-noise"
 
 

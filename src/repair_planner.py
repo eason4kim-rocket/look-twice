@@ -416,7 +416,19 @@ class RepairPlanner:
             physical_risk=physical_risk,
         )
         reachable = viewpoint is None or viewpoint.reachable
-        eligible = reachable
+        # side_view must target an unvisited, geometrically distinct pose.
+        # Same-pose recapture is not "viewpoint diversity".
+        min_side_view_m = 0.10
+        if kind == "side_view":
+            dist = math.dist(context.current_xy, action.target_xy)
+            already_visited = action.name in context.visited_actions
+            same_name = action.name == context.current_viewpoint_name
+            too_close = dist <= min_side_view_m
+            eligible = bool(
+                reachable and not already_visited and not same_name and not too_close
+            )
+        else:
+            eligible = reachable
         return RepairScore(
             action=action,
             features=features,

@@ -17,6 +17,9 @@ PROFILES = (
     "dynamic-change",
     "time-skew",
     "manipulation-occlusion",
+    # Forces one initial capture (one measurement root) so passive cannot admit
+    # without repair; active must side_view / re-capture for a second root.
+    "repair-required",
 )
 
 NAV_REGION = (0.55, 1.05, -0.35, 0.35)  # min_x, max_x, min_y, max_y risk slab
@@ -87,6 +90,10 @@ def sample_v5_scenario(profile: str, seed: int) -> V5ScenarioSample:
     noise = 0.35 + 0.15 * (seed % 5) / 4.0
     if profile == "independent-noise":
         noise = 0.25 + 0.1 * (seed % 3) / 2.0
+    if profile == "repair-required":
+        # Shared-occlusion-class sensor stress; still paired clear/blocked by seed.
+        noise = 0.45 + 0.1 * (seed % 3) / 2.0
+        grasp_occluded = False
 
     viewpoints = [
         {
@@ -149,6 +156,7 @@ def sample_v5_scenario(profile: str, seed: int) -> V5ScenarioSample:
             "kind": "grasp_clear_late",
         }
 
+    initial_viewpoint_budget = 1 if profile == "repair-required" else 2
     public = {
         "start_xy": list(START_XY),
         "goal_xy": list(GOAL_XY),
@@ -163,6 +171,8 @@ def sample_v5_scenario(profile: str, seed: int) -> V5ScenarioSample:
         "declared_noise_intensity": min(0.75, noise),
         "sensor_version": "look-twice-rgbd-v5/1",
         "profile_label": profile,
+        "repair_required": profile == "repair-required",
+        "initial_viewpoint_budget": initial_viewpoint_budget,
     }
     oracle = {
         "nav_blocked_initial": nav_blocked,

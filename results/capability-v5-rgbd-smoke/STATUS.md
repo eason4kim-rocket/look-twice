@@ -37,11 +37,25 @@ Invariant check: mission without nav = **0**.
 
 - Purify active/passive **fail-closed** (unsafe 0); naive shows **unsafe=3** on blocked seeds.
 - Mission: purify 7/8 > naive 5/8 on this cut.
+- **Active does not beat passive on this mix** (both 7/8 mission, 0 unsafe). Expanding
+  this profile mix to 90 would mainly re-prove “Gate works,” not “active evidence
+  repair has value.”
 - Not a Full Purify promotion claim; small N; smoke cal allowed.
+
+## Follow-on: repair-required mini-eval
+
+Strategy differentiation is demonstrated on a separate forced set:
+
+→ [`results/capability-v5-repair-required/STATUS.md`](../capability-v5-repair-required/STATUS.md)
+
+There: clear worlds give passive mission=0 vs active mission=2 with `repair_success`,
+all on `genesis_rgbd_depth_semantic` / W7900D. Paired 90 still **not** auto-started.
 
 ## Go/no-go for paired 90
 
-**GO** for a later RGB-D paired 90. **Not run in this package** (plan default).
+- **On this 24-smoke mix alone:** do **not** spend 90 proving gate-only safety parity.
+- **After repair-required mini-eval:** eligibility **GO** (`GO_for_paired_90=true` in
+  that rollup). **90 still not run** here or there without an explicit decision.
 
 ## Contest Gate B
 
