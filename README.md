@@ -48,7 +48,7 @@ GPU evidence. Packaged W7900D artifacts live under
 | Root-aware fusion, Action Contract and hashed receipts | Yes | Yes | GateReceipts in archived JSON |
 | Class-conditional split-conformal artifact | Yes | Yes | Fitted partial cal in `results/v4-gpu/calibration/` |
 | BeliefGap-driven repair planner | Yes | Yes | Exercised on W7900D smoke |
-| Six comparison policies and eight stress profiles | Yes | Yes | **96 smoke complete**; **formal 956+4 archived** |
+| Six comparison policies and eight stress profiles | Yes | Yes | **96 smoke complete**; **formal 960 completed archived** |
 | Deterministic synthetic runtime | Yes | Yes | **Never a formal GPU result** |
 | Kinematic motion backend | Yes | Yes | **Formal/smoke default after skid demotion** |
 | Four-wheel skid-steer URDF and wheel controller | Yes | Unit tests | **Acceptance failed** → demoted (see STATUS) |
@@ -190,7 +190,7 @@ Frozen data splits and matrices:
 - locked test pool: 8 profiles × seeds `50000–50099` = 800;
 - smoke matrix: 6 policies × 8 profiles × 2 seeds = 96 — **complete on W7900D**
   (`results/v4-gpu/smoke-genesis/`);
-- formal closed loop: 6 × 8 × 20 design — **956 completed + 4 errors archived**
+- formal closed loop: 6 × 8 × 20 design — **960 completed archived**
   under `results/v4-gpu/formal-genesis/` (resume can fill holes);
 - skid-steer validation: 3 × 4 × 5 = 60 — **not run** (motion acceptance failed;
   kinematic demotion).
@@ -257,7 +257,7 @@ ROCm tensor corruption/evidence processing, and experiment throughput. The Go
 admission core intentionally runs on CPU as a low-latency governance layer.
 **Archived W7900D work** (see [`results/v4-gpu/STATUS.md`](results/v4-gpu/STATUS.md)):
 smoke matrix 96, partial calibration, ROCm evidence benchmark, and a growing
-formal closed-loop subset. Formal matrix **finished** on the live instance (**956** raw + **4** errors); see `results/v4-gpu/formal-genesis/`.
+formal closed-loop subset. Formal matrix **finished** on the live instance (**960** raw, **0** errors after resume); see `results/v4-gpu/formal-genesis/`.
 Timing reports separate simulation, rendering, tensor kernels, transfer, gate,
 and end-to-end stages where measured (`results/v4-gpu/bench/`).
 
@@ -276,8 +276,8 @@ and end-to-end stages where measured (`results/v4-gpu/bench/`).
   coverage claim. The archived calibration split is **partial** (336/350).
 - The Purify reference core is a contest slice, not the complete Purify product
   or a certified robot-safety system.
-- Claimed when archived: smoke **96**, formal **956+4**, GPU evidence **benchmark**.
-  **Not** claimed: perfect 960/960, Full Purify promotion (repair/coverage FAIL),
+- Claimed when archived: smoke **96**, formal **960**, GPU evidence **benchmark**.
+  **Not** claimed: skid-steer 60 / Full Purify promotion, Full Purify promotion (repair/coverage FAIL),
   skid-steer physical **60**, contest video, upstream Genesis PR.
 
 See [environment notes](docs/ENVIRONMENT.md), [architecture](docs/ARCHITECTURE.md),

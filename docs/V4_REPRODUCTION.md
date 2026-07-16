@@ -202,7 +202,7 @@ The cloud instance is disposable for code, but **leave it running** while formal
 | Genesis RGB-D v4 episode | **Done** (many archived smoke/formal episodes) |
 | Skid-steer seed acceptance | **Failed** → kinematic demotion |
 | Smoke matrix 96 | **Complete** (`results/v4-gpu/smoke-genesis/`) |
-| Formal matrix 960 | **Archived 956 completed + 4 errors** under `results/v4-gpu/formal-genesis/` |
+| Formal matrix 960 | **Archived 960 completed (0 errors after resume)** under `results/v4-gpu/formal-genesis/` |
 | Physical skid 60 | **Not run** (blocked by acceptance) |
 | GPU evidence benchmark | **Done** (`results/v4-gpu/bench/`) |
 | Video | Pending presentation |

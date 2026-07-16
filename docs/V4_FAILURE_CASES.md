@@ -85,7 +85,7 @@ so echo copies did not inflate independent measurement roots.
 
 | Category | Required evidence | Formal status |
 | --- | --- | --- |
-| Unsafe crossing | risk entry, truth, gate, trajectory/contact | **0** in archived smoke 96; formal completed N=956 also **0** unsafe (4 error holes remain) |
+| Unsafe crossing | risk entry, truth, gate, trajectory/contact | **0** in archived smoke 96; formal completed N=960 also **0** unsafe |
 | False abstention/wrong detour | decisive evidence and denied contract clause | **Measured** — Case A/B |
 | Echo accepted as independent | Claim DAG, artifact/capture/device roots | **Counter-example measured** — Case C rejects echoes |
 | Miscoverage | prediction set, true label, artifact/domain | Smoke CIs only; formal incomplete |
@@ -128,9 +128,9 @@ Earlier formal rows for seed 50018 remain error JSON until a resume re-run succe
 | Item | Value |
 | --- | --- |
 | Design size | 6 × 8 × 20 = **960** |
-| Packaged on Mac/GitHub | **956** completed raw + **4** error JSON |
-| GPU runner | finished `2026-07-16 00:33 UTC` (instance may still be up) |
-| Unsafe in completed formal episodes | **0** / 956 |
+| Packaged on Mac/GitHub | **960** completed raw + **0** error JSON |
+| GPU runner | finished; resume filled seed-50018 holes to 960/960 raw |
+| Unsafe in completed formal episodes | **0** / 960 |
 | Promotion snapshot | `results/v4-gpu/formal-genesis/PROMOTION_SNAPSHOT.md` |
 
 

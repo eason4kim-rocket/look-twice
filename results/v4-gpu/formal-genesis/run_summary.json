@@ -8,11 +8,11 @@
     "device": "cuda:0",
     "output_dir": "outputs/v4-formal-genesis",
     "python": "/opt/venv/bin/python",
-    "entrypoint": "src/look_twice_v4.py"
+    "entrypoint": "/workspace/look-twice/src/look_twice_v4.py"
   },
   "counts": {
-    "completed": 956,
-    "skipped": 0,
-    "error": 4
+    "completed": 4,
+    "skipped": 956,
+    "error": 0
   }
 }

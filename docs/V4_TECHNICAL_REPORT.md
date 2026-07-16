@@ -164,8 +164,8 @@ Design matrix: 6 policies × 8 profiles × seeds `50000–50019` = 960.
 
 | Quantity | Value |
 | --- | ---: |
-| Completed episode JSON | 956 |
-| Error JSON | 4 |
+| Completed episode JSON | 960 |
+| Error JSON | 0 (after resume) |
 | Backend | kinematic + `gs.amdgpu` |
 | Unsafe crossings (completed) | 0 |
 
