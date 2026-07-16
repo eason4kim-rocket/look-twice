@@ -1,0 +1,1 @@
+v5 finished policy=purify-active profile=manipulation-occlusion seed=50000 mission=False unsafe=False nav=False pick=False output=outputs/v5-smoke-matrix/purify-active__manipulation-occlusion__50000.json

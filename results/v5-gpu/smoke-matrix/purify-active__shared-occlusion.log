@@ -1,0 +1,1 @@
+v5 finished policy=purify-active profile=shared-occlusion seed=50000 mission=False unsafe=False nav=False pick=False output=outputs/v5-smoke-matrix/purify-active__shared-occlusion__50000.json

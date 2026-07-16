@@ -282,3 +282,8 @@ and end-to-end stages where measured (`results/v4-gpu/bench/`).
 
 See [environment notes](docs/ENVIRONMENT.md), [architecture](docs/ARCHITECTURE.md),
 and the [submission checklist](docs/SUBMISSION_CHECKLIST.md).
+
+## Look Twice v5 (in progress)
+
+Branch `v5-embodied-evidence`: embodied navigation + proxy pick + dual contracts.
+See `docs/V5_DESIGN.md` and `results/v5-gpu/STATUS.md`. v4 formal 960 remains frozen.

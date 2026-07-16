@@ -1,24 +1,47 @@
-# Look Twice v5 status
+# Look Twice v5 status (honest)
 
 ## Positioning
 
-**Embodied Evidence Assurance** — physical navigation + proxy manipulation +
-dual Action Contracts with mid-execution invalidation on AMD GPU.
+**Embodied Evidence Assurance** — contract-gated mobile navigation + proxy
+manipulation under lineage-aware evidence on AMD W7900D.
 
 Branch: `v5-embodied-evidence`  
-v4 formal 960 remains frozen.
+v4 (`v4.0-hackathon-final`) frozen.
 
-## Scaffold status
+## Motion demotion
 
-| Item | Status |
+Skid-steer 5-seed × 4-viewpoint acceptance **failed** (12 failures, mostly
+`obstacle_contact`). See `motion/v5-motion-accept-5.json`.
+
+**v5 demo/matrix default: `kinematic`** (bounded velocity + chassis camera).
+URDF/skid code retained; not claimed as skid-physics formal acceptance.
+
+## GPU results archived
+
+| Artifact | N / note |
 | --- | --- |
-| Design freeze (`docs/V5_DESIGN.md`) | Yes |
-| URDF + arm proxy geometry | Updated |
-| Synthetic dual-contract episode | Yes (CI) |
-| Skid motion acceptance on W7900D | Pending |
-| Genesis full v5 runtime | Staged (CLI rejects until adapter complete) |
-| Formal v5 matrix | Not started |
+| Cloud unit tests | 131 OK |
+| Synthetic v5 episode | OK |
+| Genesis single episode | `genesis-smoke/` W7900D `gs.amdgpu` |
+| Smoke matrix | **18** = 3 policies × 6 profiles × seed 50000 |
+| Unsafe crossings (smoke) | **0** |
+| Dual contracts in JSON | `cross_region` + `pick_proxy` |
+| Invalidation fields | present (counts vary by episode) |
+| Claims mode on GPU | `synthetic_modality_proxies_on_gpu_motion` (honest) |
 
-## Explicit non-goals
+## Smoke rollup (seed 50000)
 
-Quadruped/humanoid, real-robot claims, VLA/RL, private Purify product.
+See `smoke-matrix/summary.csv`. Mission success rates are modest; safety-side
+fail-closed (unsafe=0) is the primary formal-quality claim for this scaffold.
+
+## Not claimed
+
+- Skid-steer 10×4 acceptance
+- Full formal large-N v5 matrix
+- Real RGB-D Claims on GPU (still synthetic modality proxies for gate)
+- Upstream Genesis PR
+- Real-robot / sim-to-real
+
+## GPU policy
+
+Instance left running unless operator shuts down.

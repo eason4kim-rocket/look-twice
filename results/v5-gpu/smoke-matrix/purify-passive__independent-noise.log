@@ -1,0 +1,1 @@
+v5 finished policy=purify-passive profile=independent-noise seed=50000 mission=False unsafe=False nav=False pick=False output=outputs/v5-smoke-matrix/purify-passive__independent-noise__50000.json

@@ -63,19 +63,15 @@ def main() -> int:
         calibration = smoke_calibration_artifact()
 
     if args.runtime == "synthetic":
-        from v4_motion import Pose2D
-        from v4_runtime import SyntheticEpisodeRuntime
-        from v5_scenario import START_XY
-
-        # Adapt: SyntheticEpisodeRuntime expects v4 ScenarioSample — wrap lightly
         runtime = _V5SyntheticRuntime(scenario)
     else:
         import genesis as gs
 
         gs.init(backend=gs.amdgpu, logging_level="warning")
-        raise SystemExit(
-            "Genesis v5 runtime adapter is staged; use --runtime synthetic for CI "
-            "or complete v5_genesis_runtime on W7900D next."
+        from v5_genesis_runtime import V5GenesisRuntime
+
+        runtime = V5GenesisRuntime(
+            scenario, motion_backend=args.motion_backend
         )
 
     descriptor = get_policy_descriptor(args.policy)
@@ -102,6 +98,9 @@ def main() -> int:
         "kinematic-ci" if args.runtime == "synthetic" else args.motion_backend
     )
     result["configuration"]["smoke_calibration"] = args.calibration is None
+    # Smoke calibration must never be formal-eligible.
+    if args.calibration is None and isinstance(result.get("environment"), dict):
+        result["environment"]["formal_result_eligible"] = False
     out = args.json_output or Path(
         f"outputs/v5-{args.runtime}-{args.policy}-{args.profile}-{args.seed}.json"
     )

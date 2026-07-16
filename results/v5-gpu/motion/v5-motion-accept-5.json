@@ -1,0 +1,261 @@
+{
+  "schema": "look-twice.motion-acceptance/v5",
+  "backend": "skid-steer",
+  "threshold_m": 0.1,
+  "elapsed_seconds": 38.64651298522949,
+  "n_failures": 12,
+  "passed": false,
+  "failures": [
+    {
+      "seed": 50000,
+      "viewpoint": "right_near",
+      "error_m": 0.7111116496204044,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50001,
+      "viewpoint": "left_near",
+      "error_m": 0.07364780518697676,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50001,
+      "viewpoint": "left_far",
+      "error_m": 0.8923525668809144,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50001,
+      "viewpoint": "right_near",
+      "error_m": 2.1890843837452363,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50001,
+      "viewpoint": "right_far",
+      "error_m": 2.7875775817929522,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50002,
+      "viewpoint": "right_near",
+      "error_m": 0.9290326413716509,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50003,
+      "viewpoint": "left_near",
+      "error_m": 0.07180346886250427,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50003,
+      "viewpoint": "left_far",
+      "error_m": 0.9472198728978645,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50003,
+      "viewpoint": "right_near",
+      "error_m": 2.155099445117025,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50003,
+      "viewpoint": "right_far",
+      "error_m": 2.7657967318987566,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50004,
+      "viewpoint": "right_near",
+      "error_m": 0.06578820567355237,
+      "reached": false,
+      "reason": "obstacle_contact"
+    },
+    {
+      "seed": 50004,
+      "viewpoint": "right_far",
+      "error_m": 0.8986427899500542,
+      "reached": false,
+      "reason": "obstacle_contact"
+    }
+  ],
+  "results": [
+    {
+      "seed": 50000,
+      "viewpoints": [
+        {
+          "seed": 50000,
+          "viewpoint": "left_near",
+          "error_m": 0.06324071462009387,
+          "reached": true,
+          "reason": "reached"
+        },
+        {
+          "seed": 50000,
+          "viewpoint": "left_far",
+          "error_m": 0.06658313385524789,
+          "reached": true,
+          "reason": "reached"
+        },
+        {
+          "seed": 50000,
+          "viewpoint": "right_near",
+          "error_m": 0.7111116496204044,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50000,
+          "viewpoint": "right_far",
+          "error_m": 0.026933853367070323,
+          "reached": true,
+          "reason": "reached"
+        }
+      ]
+    },
+    {
+      "seed": 50001,
+      "viewpoints": [
+        {
+          "seed": 50001,
+          "viewpoint": "left_near",
+          "error_m": 0.07364780518697676,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50001,
+          "viewpoint": "left_far",
+          "error_m": 0.8923525668809144,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50001,
+          "viewpoint": "right_near",
+          "error_m": 2.1890843837452363,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50001,
+          "viewpoint": "right_far",
+          "error_m": 2.7875775817929522,
+          "reached": false,
+          "reason": "obstacle_contact"
+        }
+      ]
+    },
+    {
+      "seed": 50002,
+      "viewpoints": [
+        {
+          "seed": 50002,
+          "viewpoint": "left_near",
+          "error_m": 0.06324071462009387,
+          "reached": true,
+          "reason": "reached"
+        },
+        {
+          "seed": 50002,
+          "viewpoint": "left_far",
+          "error_m": 0.06658313385524789,
+          "reached": true,
+          "reason": "reached"
+        },
+        {
+          "seed": 50002,
+          "viewpoint": "right_near",
+          "error_m": 0.9290326413716509,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50002,
+          "viewpoint": "right_far",
+          "error_m": 0.02324552015134257,
+          "reached": true,
+          "reason": "reached"
+        }
+      ]
+    },
+    {
+      "seed": 50003,
+      "viewpoints": [
+        {
+          "seed": 50003,
+          "viewpoint": "left_near",
+          "error_m": 0.07180346886250427,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50003,
+          "viewpoint": "left_far",
+          "error_m": 0.9472198728978645,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50003,
+          "viewpoint": "right_near",
+          "error_m": 2.155099445117025,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50003,
+          "viewpoint": "right_far",
+          "error_m": 2.7657967318987566,
+          "reached": false,
+          "reason": "obstacle_contact"
+        }
+      ]
+    },
+    {
+      "seed": 50004,
+      "viewpoints": [
+        {
+          "seed": 50004,
+          "viewpoint": "left_near",
+          "error_m": 0.06324071462009387,
+          "reached": true,
+          "reason": "reached"
+        },
+        {
+          "seed": 50004,
+          "viewpoint": "left_far",
+          "error_m": 0.06658313385524789,
+          "reached": true,
+          "reason": "reached"
+        },
+        {
+          "seed": 50004,
+          "viewpoint": "right_near",
+          "error_m": 0.06578820567355237,
+          "reached": false,
+          "reason": "obstacle_contact"
+        },
+        {
+          "seed": 50004,
+          "viewpoint": "right_far",
+          "error_m": 0.8986427899500542,
+          "reached": false,
+          "reason": "obstacle_contact"
+        }
+      ]
+    }
+  ]
+}
