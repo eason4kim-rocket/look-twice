@@ -98,15 +98,8 @@ def main() -> int:
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--workers", type=int, choices=(1, 2, 3, 4), default=4)
     parser.add_argument("--max-jobs", type=int, default=0)
-    parser.add_argument(
-        "--profiles",
-        nargs="+",
-        choices=PROFILES,
-        default=list(PROFILES),
-        help="Optional non-overlapping profile shard; full run remains default",
-    )
     args = parser.parse_args()
-    jobs = [Job(profile, seed) for profile in args.profiles for seed in SEEDS]
+    jobs = [Job(profile, seed) for profile in PROFILES for seed in SEEDS]
     if args.max_jobs > 0:
         jobs = jobs[: args.max_jobs]
     rows = args.output_dir / "rows"
