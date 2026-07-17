@@ -11,7 +11,13 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from learned_rgbd import INPUT_CHANNELS, array_sha256, preprocess_rgbd
+from learned_rgbd import (
+    INPUT_CHANNELS,
+    MIN_ONLINE_DEPTH_VISIBILITY,
+    apply_online_visibility_gate,
+    array_sha256,
+    preprocess_rgbd,
+)
 from v4_perception import ImageROI
 from v4_evidence import SyntheticEvidenceSource, corrupt_evidence_frame
 from v4_scenario import sample_v4_scenario
@@ -80,6 +86,18 @@ class LearnedRgbdTests(unittest.TestCase):
 
         self.assertEqual(profile_for_seed(10000, 10000), profile_for_seed(10001, 10000))
         self.assertNotEqual(profile_for_seed(10001, 10000), profile_for_seed(10002, 10000))
+
+    def test_online_visibility_gate_fails_closed(self) -> None:
+        self.assertGreater(MIN_ONLINE_DEPTH_VISIBILITY, 0.0)
+        self.assertLess(MIN_ONLINE_DEPTH_VISIBILITY, 1.0)
+        self.assertEqual(
+            apply_online_visibility_gate(("clear",), 0.0),
+            (("clear", "blocked"), "insufficient_depth_visibility"),
+        )
+        self.assertEqual(
+            apply_online_visibility_gate(("clear",), 0.9),
+            (("clear",), None),
+        )
 
 
 if __name__ == "__main__":

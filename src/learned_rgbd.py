@@ -20,6 +20,16 @@ from v4_perception import ImageROI
 MODEL_SCHEMA = "look-twice.learned-rgbd/v1"
 INPUT_CHANNELS = 5
 DEFAULT_IMAGE_SIZE = 64
+MIN_ONLINE_DEPTH_VISIBILITY = 0.20
+
+
+def apply_online_visibility_gate(
+    labels: tuple[str, ...], visibility: float
+) -> tuple[tuple[str, ...], str | None]:
+    """Fail closed when RGB-D lacks minimum geometric support."""
+    if not np.isfinite(visibility) or visibility < MIN_ONLINE_DEPTH_VISIBILITY:
+        return ("clear", "blocked"), "insufficient_depth_visibility"
+    return tuple(labels), None
 
 
 def _nearest_indices(length: int, output_length: int) -> np.ndarray:
@@ -196,6 +206,13 @@ class LearnedRGBDSensor:
             clear_threshold=self.clear_threshold,
             blocked_threshold=self.blocked_threshold,
         )
+        visibility = float(features[4].mean())
+        raw_labels = labels
+        # RGB appearance can remain predictive while depth is entirely absent.
+        # Preserve that raw set for audit, then apply the action-ready gate.
+        labels, abstention_reason = apply_online_visibility_gate(
+            labels, visibility
+        )
         if labels == ("clear",):
             value, confidence = "clear", 1.0 - probability
         elif labels == ("blocked",):
@@ -213,8 +230,11 @@ class LearnedRGBDSensor:
             "p_blocked": probability,
             "prediction_set": list(labels),
             "entropy": entropy,
-            "quality": max(0.0, 1.0 - entropy),
-            "visibility": float(features[4].mean()),
+            "quality": max(0.0, 1.0 - entropy) * visibility,
+            "visibility": visibility,
+            "minimum_depth_visibility": MIN_ONLINE_DEPTH_VISIBILITY,
+            "raw_prediction_set": list(raw_labels),
+            "abstention_reason": abstention_reason,
             "input_sha256": array_sha256(features),
             "model_id": self.model_id,
             "model_sha256": self.model_sha256,
@@ -229,7 +249,9 @@ __all__ = (
     "DEFAULT_IMAGE_SIZE",
     "INPUT_CHANNELS",
     "MODEL_SCHEMA",
+    "MIN_ONLINE_DEPTH_VISIBILITY",
     "LearnedRGBDSensor",
+    "apply_online_visibility_gate",
     "array_sha256",
     "build_model",
     "load_checkpoint",
