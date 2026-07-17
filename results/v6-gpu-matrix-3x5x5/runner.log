@@ -1,0 +1,87 @@
+v6 parallel matrix jobs=75 workers=2 runtime=genesis device=cuda:0
+[ok] naive__independent-noise__90001 20.6s rc=0
+[ok] naive__independent-noise__90000 22.2s rc=0
+[ok] naive__independent-noise__90002 22.6s rc=0
+[ok] naive__independent-noise__90003 21.0s rc=0
+[ok] naive__independent-noise__90004 22.2s rc=0
+[ok] naive__shared-occlusion__90000 22.4s rc=0
+[ok] naive__shared-occlusion__90001 21.0s rc=0
+[ok] naive__shared-occlusion__90002 22.6s rc=0
+[ok] naive__shared-occlusion__90003 20.9s rc=0
+[ok] naive__shared-occlusion__90004 21.8s rc=0
+[ok] naive__evidence-echo__90000 22.4s rc=0
+[ok] naive__evidence-echo__90001 20.7s rc=0
+[ok] naive__evidence-echo__90003 20.6s rc=0
+[ok] naive__evidence-echo__90002 22.5s rc=0
+[ok] naive__evidence-echo__90004 22.1s rc=0
+[ok] naive__time-skew__90000 22.7s rc=0
+[ok] naive__time-skew__90001 20.9s rc=0
+[ok] naive__time-skew__90002 22.5s rc=0
+[ok] naive__time-skew__90003 20.5s rc=0
+[ok] naive__time-skew__90004 22.3s rc=0
+[ok] naive__dynamic-change__90000 21.4s rc=0
+[ok] naive__dynamic-change__90001 20.7s rc=0
+[ok] naive__dynamic-change__90002 21.1s rc=0
+[ok] naive__dynamic-change__90003 20.4s rc=0
+[ok] naive__dynamic-change__90004 20.9s rc=0
+[ok] purify-passive__independent-noise__90000 23.2s rc=0
+[ok] purify-passive__independent-noise__90001 23.5s rc=0
+[ok] purify-passive__independent-noise__90002 23.4s rc=0
+[ok] purify-passive__independent-noise__90003 23.5s rc=0
+[ok] purify-passive__independent-noise__90004 23.5s rc=0
+[ok] purify-passive__shared-occlusion__90000 23.1s rc=0
+[ok] purify-passive__shared-occlusion__90001 23.0s rc=0
+[ok] purify-passive__shared-occlusion__90002 24.0s rc=0
+[ok] purify-passive__shared-occlusion__90003 23.3s rc=0
+[ok] purify-passive__shared-occlusion__90004 23.5s rc=0
+[ok] purify-passive__evidence-echo__90000 23.3s rc=0
+[ok] purify-passive__evidence-echo__90001 23.7s rc=0
+[ok] purify-passive__evidence-echo__90002 23.3s rc=0
+[ok] purify-passive__evidence-echo__90003 23.7s rc=0
+[ok] purify-passive__evidence-echo__90004 23.7s rc=0
+[ok] purify-passive__time-skew__90000 24.0s rc=0
+[ok] purify-passive__time-skew__90001 23.5s rc=0
+[ok] purify-passive__time-skew__90002 23.7s rc=0
+[ok] purify-passive__time-skew__90003 23.6s rc=0
+[ok] purify-passive__time-skew__90004 24.0s rc=0
+[ok] purify-passive__dynamic-change__90000 23.7s rc=0
+[ok] purify-passive__dynamic-change__90001 23.8s rc=0
+[ok] purify-passive__dynamic-change__90002 23.3s rc=0
+[ok] purify-passive__dynamic-change__90003 23.8s rc=0
+[ok] purify-passive__dynamic-change__90004 23.5s rc=0
+[ok] purify-active__independent-noise__90000 26.4s rc=0
+[ok] purify-active__independent-noise__90001 25.9s rc=0
+[ok] purify-active__independent-noise__90002 26.4s rc=0
+[ok] purify-active__independent-noise__90003 26.4s rc=0
+[ok] purify-active__independent-noise__90004 25.8s rc=0
+[ok] purify-active__shared-occlusion__90000 26.4s rc=0
+[ok] purify-active__shared-occlusion__90001 26.0s rc=0
+[ok] purify-active__shared-occlusion__90002 26.5s rc=0
+[ok] purify-active__shared-occlusion__90003 26.0s rc=0
+[ok] purify-active__shared-occlusion__90004 26.1s rc=0
+[ok] purify-active__evidence-echo__90000 26.5s rc=0
+[ok] purify-active__evidence-echo__90001 26.3s rc=0
+[ok] purify-active__evidence-echo__90002 25.8s rc=0
+[ok] purify-active__evidence-echo__90003 26.5s rc=0
+[ok] purify-active__evidence-echo__90004 25.7s rc=0
+[ok] purify-active__time-skew__90000 26.3s rc=0
+[ok] purify-active__time-skew__90001 25.8s rc=0
+[ok] purify-active__time-skew__90002 26.2s rc=0
+[ok] purify-active__time-skew__90003 25.8s rc=0
+[ok] purify-active__time-skew__90004 26.1s rc=0
+[ok] purify-active__dynamic-change__90000 25.9s rc=0
+[ok] purify-active__dynamic-change__90001 26.5s rc=0
+[ok] purify-active__dynamic-change__90002 25.9s rc=0
+[ok] purify-active__dynamic-change__90003 26.2s rc=0
+[ok] purify-active__dynamic-change__90004 25.5s rc=0
+{
+  "schema_version": "look-twice.v6-parallel-matrix/v1",
+  "workers": 2,
+  "jobs": 75,
+  "ok": 75,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 899.8699874810409,
+  "runtime": "genesis",
+  "device": "cuda:0"
+}

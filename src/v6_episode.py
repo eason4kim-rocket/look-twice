@@ -25,6 +25,8 @@ from v6_scenario import CARRIER_ID, PAYLOAD_ID, SCOUT_ID, V6ScenarioSample
 
 EPISODE_SCHEMA = "look-twice.episode/v6"
 POLICIES = ("naive", "purify-passive", "purify-active")
+CLAIMS_MODE_SYNTHETIC = "synthetic_multi_agent_v6"
+CLAIMS_MODE_GENESIS = "genesis_rgbd_multi_agent_v6"
 
 
 @dataclass
@@ -33,10 +35,63 @@ class V6EpisodeConfig:
     ttl_steps: int = 2000
     max_observations: int = 6
     max_replans: int = 3
+    device: str = "cpu"
+    prefer_rgbd_claims: bool = True
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
             raise ValueError(f"unsupported policy: {self.policy}")
+
+
+def _runtime_supports_rgbd(runtime: Any) -> bool:
+    return callable(getattr(runtime, "capture_raw", None)) and hasattr(
+        runtime, "evidence_scenario"
+    )
+
+
+def _v1_claims_to_v2(
+    v1_claims: list[Any],
+    *,
+    agent_id: str,
+    corridor_id: str,
+    step: int,
+    ttl: int,
+) -> list[RobotClaimV2]:
+    """Project Genesis RGB-D Claims into multi-agent v2 carrier contracts."""
+    out: list[RobotClaimV2] = []
+    scope = ClaimScope(CARRIER_ID, PAYLOAD_ID, corridor_id)
+    for claim in v1_claims:
+        modality = str(getattr(claim, "modality", ""))
+        if modality == "static_map":
+            continue
+        # Keep physical capture root; re-scope to carrier corridor contract.
+        out.append(
+            build_robot_claim_v2(
+                fact_id=f"region:{corridor_id}",
+                predicate="carrier_traversable",
+                value=str(claim.value),
+                confidence=float(claim.confidence),
+                observed_step=int(getattr(claim, "observed_step", step)),
+                valid_until_step=int(
+                    getattr(claim, "valid_until_step", step + ttl)
+                ),
+                modality=modality or "depth_geometry",
+                device_root_id=f"rgbd-{agent_id}-01",
+                capture_root_id=str(claim.capture_root_id),
+                calibration_id=SENSOR_VERSION_V6,
+                pose_version="base-link-v6",
+                model_id=str(getattr(claim, "model_id", "genesis-rgbd-v6")),
+                artifact_sha256=str(claim.artifact_sha256),
+                observer_agent_id=agent_id,
+                intended_actor_id=CARRIER_ID,
+                received_step=step,
+                communication_root_id=str(claim.capture_root_id),
+                quality=float(getattr(claim, "quality", 0.7)),
+                visibility=float(getattr(claim, "visibility", 0.7)),
+                scope=scope,
+            )
+        )
+    return out
 
 
 def _synthetic_observation(
@@ -118,13 +173,16 @@ def run_v6_episode(
     *,
     scenario: V6ScenarioSample,
     config: V6EpisodeConfig | None = None,
-    runtime: MultiAgentKinematicRuntime | None = None,
+    runtime: Any | None = None,
 ) -> dict[str, Any]:
     config = config or V6EpisodeConfig()
     started = time.perf_counter()
     public = scenario.public_context
     owns_runtime = runtime is None
     runtime = runtime or build_runtime_from_scenario(scenario)
+    use_rgbd = bool(config.prefer_rgbd_claims and _runtime_supports_rgbd(runtime))
+    claims_mode = CLAIMS_MODE_GENESIS if use_rgbd else CLAIMS_MODE_SYNTHETIC
+    rgbd_audits: list[dict[str, Any]] = []
 
     comm_cfg = public.get("communication") or {}
     inbox = CommunicationQueue(
@@ -188,6 +246,7 @@ def run_v6_episode(
         *,
         risk_gated: bool = False,
         admitted: bool = False,
+        action_kind: str = "side_view",
     ) -> None:
         nonlocal capture_index, observations
         result = runtime.move_agent_to(
@@ -201,16 +260,49 @@ def run_v6_episode(
         if not result.reached:
             return
         runtime.wait_steps(3)
-        new_claims = _synthetic_observation(
-            scenario=scenario,
-            agent_id=agent_id,
-            corridor_id=corridor_id,
-            step=runtime.current_step,
-            capture_index=capture_index,
-            viewpoint_name=viewpoint_name,
-            predicted_coverage=predicted_coverage,
-            ttl=config.ttl_steps,
-        )
+        if use_rgbd:
+            from v5_rgbd_claims import process_genesis_observation
+
+            raw = runtime.capture_raw(
+                agent_id=agent_id,
+                viewpoint=viewpoint_name,
+                viewpoint_xy=target_xy,
+                predicted_coverage=predicted_coverage,
+            )
+            v1_claims, audit = process_genesis_observation(
+                raw,
+                runtime.evidence_scenario,
+                observation_index=capture_index,
+                repair_action_kind=action_kind,
+                device=config.device,
+                ttl_steps=config.ttl_steps,
+            )
+            rgbd_audits.append(
+                {
+                    **audit,
+                    "observer_agent_id": agent_id,
+                    "corridor_id": corridor_id,
+                    "viewpoint": viewpoint_name,
+                }
+            )
+            new_claims = _v1_claims_to_v2(
+                list(v1_claims),
+                agent_id=agent_id,
+                corridor_id=corridor_id,
+                step=runtime.current_step,
+                ttl=config.ttl_steps,
+            )
+        else:
+            new_claims = _synthetic_observation(
+                scenario=scenario,
+                agent_id=agent_id,
+                corridor_id=corridor_id,
+                step=runtime.current_step,
+                capture_index=capture_index,
+                viewpoint_name=viewpoint_name,
+                predicted_coverage=predicted_coverage,
+                ttl=config.ttl_steps,
+            )
         capture_index += 1
         observations += 1
         visited.add(viewpoint_name)
@@ -224,6 +316,7 @@ def run_v6_episode(
         "carrier_initial_front",
         (-0.5, 0.0),
         0.55,
+        action_kind="initial",
     )
 
     def evaluate_all() -> dict[str, Any]:
@@ -551,12 +644,11 @@ def run_v6_episode(
         outcome = "deadline_exceeded"
 
     elapsed = time.perf_counter() - started
-    if owns_runtime:
-        env = runtime.environment()
-    else:
-        env = runtime.environment()
-    env["claims_mode"] = "synthetic_multi_agent_v6"
+    env = dict(runtime.environment())
+    env["claims_mode"] = claims_mode
+    env["rgbd_observation_count"] = len(rgbd_audits)
     env["communication"] = inbox.stats()
+    env["device"] = config.device
 
     result = {
         "schema_version": EPISODE_SCHEMA,
@@ -564,6 +656,7 @@ def run_v6_episode(
         "scenario": scenario.to_dict(),
         "environment": env,
         "claims": [c.to_wire() for c in claims],
+        "rgbd_observation_audits": rgbd_audits,
         "gate_receipts": gate_receipts,
         "evidence_request_receipts": evidence_requests,
         "repair_decisions": repair_decisions,
@@ -591,7 +684,8 @@ def run_v6_episode(
             "elapsed_seconds": elapsed,
             "outcome": outcome,
             "policy": policy,
-            "claims_mode": env["claims_mode"],
+            "claims_mode": claims_mode,
+            "device": config.device,
         },
         "oracle": {"scenario": scenario.oracle_context},
         "outcome": {

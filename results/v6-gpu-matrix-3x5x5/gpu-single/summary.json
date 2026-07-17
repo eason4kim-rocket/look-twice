@@ -1,0 +1,17 @@
+{
+  "remote_path": "/workspace/look-twice-v6/outputs/v6/gpu-single/purify-active__shared-occlusion__90000.json",
+  "claims_mode": "genesis_rgbd_multi_agent_v6",
+  "device": "cuda:0",
+  "gpu": "AMD Radeon Graphics",
+  "mission": true,
+  "unsafe": false,
+  "route": "detour",
+  "repair_attempted": true,
+  "repair_success": false,
+  "observation_count": 4,
+  "n_gate_receipts": 8,
+  "n_evidence_requests": 4,
+  "n_rgbd_audits": 4,
+  "carrier_reached_goal": true,
+  "payload_delivered": true
+}

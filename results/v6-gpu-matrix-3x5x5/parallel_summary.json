@@ -1,0 +1,538 @@
+{
+  "schema_version": "look-twice.v6-parallel-matrix/v1",
+  "workers": 2,
+  "jobs": 75,
+  "ok": 75,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 899.8699874810409,
+  "runtime": "genesis",
+  "device": "cuda:0",
+  "results": [
+    {
+      "stem": "naive__dynamic-change__90000",
+      "status": "ok",
+      "seconds": 21.363030076026917,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__dynamic-change__90000.log"
+    },
+    {
+      "stem": "naive__dynamic-change__90001",
+      "status": "ok",
+      "seconds": 20.695798024069518,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__dynamic-change__90001.log"
+    },
+    {
+      "stem": "naive__dynamic-change__90002",
+      "status": "ok",
+      "seconds": 21.08821456809528,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__dynamic-change__90002.log"
+    },
+    {
+      "stem": "naive__dynamic-change__90003",
+      "status": "ok",
+      "seconds": 20.366591111989692,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__dynamic-change__90003.log"
+    },
+    {
+      "stem": "naive__dynamic-change__90004",
+      "status": "ok",
+      "seconds": 20.90229638805613,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__dynamic-change__90004.log"
+    },
+    {
+      "stem": "naive__evidence-echo__90000",
+      "status": "ok",
+      "seconds": 22.384463615948334,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__evidence-echo__90000.log"
+    },
+    {
+      "stem": "naive__evidence-echo__90001",
+      "status": "ok",
+      "seconds": 20.677706465823576,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__evidence-echo__90001.log"
+    },
+    {
+      "stem": "naive__evidence-echo__90002",
+      "status": "ok",
+      "seconds": 22.517451942898333,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__evidence-echo__90002.log"
+    },
+    {
+      "stem": "naive__evidence-echo__90003",
+      "status": "ok",
+      "seconds": 20.550605069147423,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__evidence-echo__90003.log"
+    },
+    {
+      "stem": "naive__evidence-echo__90004",
+      "status": "ok",
+      "seconds": 22.08678085403517,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__evidence-echo__90004.log"
+    },
+    {
+      "stem": "naive__independent-noise__90000",
+      "status": "ok",
+      "seconds": 22.239891827106476,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__independent-noise__90000.log"
+    },
+    {
+      "stem": "naive__independent-noise__90001",
+      "status": "ok",
+      "seconds": 20.63260714383796,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__independent-noise__90001.log"
+    },
+    {
+      "stem": "naive__independent-noise__90002",
+      "status": "ok",
+      "seconds": 22.610973643139005,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__independent-noise__90002.log"
+    },
+    {
+      "stem": "naive__independent-noise__90003",
+      "status": "ok",
+      "seconds": 21.034367365995422,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__independent-noise__90003.log"
+    },
+    {
+      "stem": "naive__independent-noise__90004",
+      "status": "ok",
+      "seconds": 22.18546374491416,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__independent-noise__90004.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__90000",
+      "status": "ok",
+      "seconds": 22.441699316957965,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__shared-occlusion__90000.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__90001",
+      "status": "ok",
+      "seconds": 20.964415242895484,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__shared-occlusion__90001.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__90002",
+      "status": "ok",
+      "seconds": 22.552726481109858,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__shared-occlusion__90002.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__90003",
+      "status": "ok",
+      "seconds": 20.93661059997976,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__shared-occlusion__90003.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__90004",
+      "status": "ok",
+      "seconds": 21.758043130859733,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__shared-occlusion__90004.log"
+    },
+    {
+      "stem": "naive__time-skew__90000",
+      "status": "ok",
+      "seconds": 22.673742264974862,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__time-skew__90000.log"
+    },
+    {
+      "stem": "naive__time-skew__90001",
+      "status": "ok",
+      "seconds": 20.91686557396315,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__time-skew__90001.log"
+    },
+    {
+      "stem": "naive__time-skew__90002",
+      "status": "ok",
+      "seconds": 22.507089264923707,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__time-skew__90002.log"
+    },
+    {
+      "stem": "naive__time-skew__90003",
+      "status": "ok",
+      "seconds": 20.516561334952712,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__time-skew__90003.log"
+    },
+    {
+      "stem": "naive__time-skew__90004",
+      "status": "ok",
+      "seconds": 22.261085376143456,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/naive__time-skew__90004.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__90000",
+      "status": "ok",
+      "seconds": 25.85564055899158,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__dynamic-change__90000.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__90001",
+      "status": "ok",
+      "seconds": 26.479480237932876,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__dynamic-change__90001.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__90002",
+      "status": "ok",
+      "seconds": 25.86053386097774,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__dynamic-change__90002.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__90003",
+      "status": "ok",
+      "seconds": 26.19833401287906,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__dynamic-change__90003.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__90004",
+      "status": "ok",
+      "seconds": 25.482461352832615,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__dynamic-change__90004.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__90000",
+      "status": "ok",
+      "seconds": 26.50260480493307,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__evidence-echo__90000.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__90001",
+      "status": "ok",
+      "seconds": 26.290725477039814,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__evidence-echo__90001.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__90002",
+      "status": "ok",
+      "seconds": 25.77736165188253,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__evidence-echo__90002.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__90003",
+      "status": "ok",
+      "seconds": 26.536319291917607,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__evidence-echo__90003.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__90004",
+      "status": "ok",
+      "seconds": 25.72111301496625,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__evidence-echo__90004.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__90000",
+      "status": "ok",
+      "seconds": 26.40242496994324,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__independent-noise__90000.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__90001",
+      "status": "ok",
+      "seconds": 25.872747778892517,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__independent-noise__90001.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__90002",
+      "status": "ok",
+      "seconds": 26.351939451880753,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__independent-noise__90002.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__90003",
+      "status": "ok",
+      "seconds": 26.354442641837522,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__independent-noise__90003.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__90004",
+      "status": "ok",
+      "seconds": 25.843826164025813,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__independent-noise__90004.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__90000",
+      "status": "ok",
+      "seconds": 26.43028669198975,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__shared-occlusion__90000.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__90001",
+      "status": "ok",
+      "seconds": 26.016332532977685,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__shared-occlusion__90001.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__90002",
+      "status": "ok",
+      "seconds": 26.504303548950702,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__shared-occlusion__90002.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__90003",
+      "status": "ok",
+      "seconds": 26.00123875704594,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__shared-occlusion__90003.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__90004",
+      "status": "ok",
+      "seconds": 26.11819030996412,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__shared-occlusion__90004.log"
+    },
+    {
+      "stem": "purify-active__time-skew__90000",
+      "status": "ok",
+      "seconds": 26.289805134991184,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__time-skew__90000.log"
+    },
+    {
+      "stem": "purify-active__time-skew__90001",
+      "status": "ok",
+      "seconds": 25.776525187073275,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__time-skew__90001.log"
+    },
+    {
+      "stem": "purify-active__time-skew__90002",
+      "status": "ok",
+      "seconds": 26.164456330938265,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__time-skew__90002.log"
+    },
+    {
+      "stem": "purify-active__time-skew__90003",
+      "status": "ok",
+      "seconds": 25.786362144863233,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__time-skew__90003.log"
+    },
+    {
+      "stem": "purify-active__time-skew__90004",
+      "status": "ok",
+      "seconds": 26.065487711923197,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-active__time-skew__90004.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__90000",
+      "status": "ok",
+      "seconds": 23.689040546072647,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__dynamic-change__90000.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__90001",
+      "status": "ok",
+      "seconds": 23.791464877082035,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__dynamic-change__90001.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__90002",
+      "status": "ok",
+      "seconds": 23.304405404021963,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__dynamic-change__90002.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__90003",
+      "status": "ok",
+      "seconds": 23.832227851031348,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__dynamic-change__90003.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__90004",
+      "status": "ok",
+      "seconds": 23.501830225111917,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__dynamic-change__90004.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__90000",
+      "status": "ok",
+      "seconds": 23.347934202989563,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__evidence-echo__90000.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__90001",
+      "status": "ok",
+      "seconds": 23.688847228884697,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__evidence-echo__90001.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__90002",
+      "status": "ok",
+      "seconds": 23.32509579602629,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__evidence-echo__90002.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__90003",
+      "status": "ok",
+      "seconds": 23.72867286694236,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__evidence-echo__90003.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__90004",
+      "status": "ok",
+      "seconds": 23.701278313994408,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__evidence-echo__90004.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__90000",
+      "status": "ok",
+      "seconds": 23.194230306893587,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__independent-noise__90000.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__90001",
+      "status": "ok",
+      "seconds": 23.487470005871728,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__independent-noise__90001.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__90002",
+      "status": "ok",
+      "seconds": 23.444896748987958,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__independent-noise__90002.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__90003",
+      "status": "ok",
+      "seconds": 23.482559758936986,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__independent-noise__90003.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__90004",
+      "status": "ok",
+      "seconds": 23.49165051500313,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__independent-noise__90004.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__90000",
+      "status": "ok",
+      "seconds": 23.136909652967006,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__shared-occlusion__90000.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__90001",
+      "status": "ok",
+      "seconds": 23.029438419034705,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__shared-occlusion__90001.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__90002",
+      "status": "ok",
+      "seconds": 24.004397833021358,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__shared-occlusion__90002.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__90003",
+      "status": "ok",
+      "seconds": 23.334174427902326,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__shared-occlusion__90003.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__90004",
+      "status": "ok",
+      "seconds": 23.47787618311122,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__shared-occlusion__90004.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__90000",
+      "status": "ok",
+      "seconds": 23.98083301098086,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__time-skew__90000.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__90001",
+      "status": "ok",
+      "seconds": 23.458661624928936,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__time-skew__90001.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__90002",
+      "status": "ok",
+      "seconds": 23.697989518055692,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__time-skew__90002.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__90003",
+      "status": "ok",
+      "seconds": 23.562708507990465,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__time-skew__90003.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__90004",
+      "status": "ok",
+      "seconds": 23.963202374987304,
+      "returncode": 0,
+      "log": "outputs/v6/gpu-matrix-3x5x5/logs/purify-passive__time-skew__90004.log"
+    }
+  ]
+}
