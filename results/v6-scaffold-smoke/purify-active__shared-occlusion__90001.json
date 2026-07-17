@@ -1,0 +1,2041 @@
+{
+  "schema_version": "look-twice.episode/v6",
+  "configuration": {
+    "policy": "purify-active",
+    "ttl_steps": 2000,
+    "max_observations": 6,
+    "max_replans": 3,
+    "sensor_version": "look-twice-rgbd-multi-agent-v6/1"
+  },
+  "scenario": {
+    "schema_version": "look-twice.scenario/v6",
+    "scenario_id": "v6:shared-occlusion:90001",
+    "profile": "shared-occlusion",
+    "seed": 90001,
+    "public_context": {
+      "carrier_id": "carrier",
+      "scout_id": "scout",
+      "payload_id": "payload_loaded",
+      "carrier_start_xy": [
+        -2.0,
+        0.0
+      ],
+      "scout_start_xy": [
+        -1.6,
+        1.2
+      ],
+      "goal_xy": [
+        2.8,
+        0.0
+      ],
+      "corridors": [
+        {
+          "id": "corridor_a",
+          "region": [
+            0.4,
+            1.6,
+            -0.55,
+            -0.05
+          ],
+          "width": 0.95
+        },
+        {
+          "id": "corridor_b",
+          "region": [
+            0.4,
+            1.6,
+            0.05,
+            0.55
+          ],
+          "width": 0.95
+        }
+      ],
+      "candidate_viewpoints": [
+        {
+          "name": "corridor_a/left_near",
+          "corridor_id": "corridor_a",
+          "xy": [
+            -0.3,
+            -0.95
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.78,
+          "predicted_degradation": 0.18,
+          "physical_risk": 0.05
+        },
+        {
+          "name": "corridor_a/left_far",
+          "corridor_id": "corridor_a",
+          "xy": [
+            -0.9,
+            -1.35
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.7,
+          "predicted_degradation": 0.26,
+          "physical_risk": 0.1
+        },
+        {
+          "name": "corridor_a/right_near",
+          "corridor_id": "corridor_a",
+          "xy": [
+            -0.3,
+            0.95
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.78,
+          "predicted_degradation": 0.18,
+          "physical_risk": 0.05
+        },
+        {
+          "name": "corridor_a/right_far",
+          "corridor_id": "corridor_a",
+          "xy": [
+            -0.9,
+            1.35
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.7,
+          "predicted_degradation": 0.26,
+          "physical_risk": 0.1
+        },
+        {
+          "name": "corridor_b/left_near",
+          "corridor_id": "corridor_b",
+          "xy": [
+            -0.3,
+            0.95
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.78,
+          "predicted_degradation": 0.18,
+          "physical_risk": 0.05
+        },
+        {
+          "name": "corridor_b/left_far",
+          "corridor_id": "corridor_b",
+          "xy": [
+            -0.9,
+            1.35
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.7,
+          "predicted_degradation": 0.26,
+          "physical_risk": 0.1
+        },
+        {
+          "name": "corridor_b/right_near",
+          "corridor_id": "corridor_b",
+          "xy": [
+            -0.3,
+            0.95
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.78,
+          "predicted_degradation": 0.18,
+          "physical_risk": 0.05
+        },
+        {
+          "name": "corridor_b/right_far",
+          "corridor_id": "corridor_b",
+          "xy": [
+            -0.9,
+            1.35
+          ],
+          "reachable": true,
+          "predicted_coverage": 0.7,
+          "predicted_degradation": 0.26,
+          "physical_risk": 0.1
+        }
+      ],
+      "carrier_width": 0.55,
+      "scout_width": 0.32,
+      "payload_width": 0.5,
+      "mission_deadline": 3000,
+      "max_observations": 6,
+      "max_replans": 3,
+      "evidence_age_limit": 80,
+      "communication_delay_limit": 40,
+      "min_distinct_capture_roots": 2,
+      "declared_noise_intensity": 0.5,
+      "sensor_version": "look-twice-rgbd-multi-agent-v6/1",
+      "profile_label": "shared-occlusion",
+      "communication": {
+        "delay_steps": 0,
+        "drop_rate": 0.0,
+        "echo_fanout": 1,
+        "reorder": false
+      },
+      "known_static_map": {
+        "map_version": "static-map-v6",
+        "declared_noise_intensity": 0.5,
+        "sensor_version": "look-twice-rgbd-multi-agent-v6/1"
+      }
+    },
+    "oracle_context": {
+      "corridor_a_blocked_initial": true,
+      "corridor_b_blocked_initial": false,
+      "external_event": null,
+      "true_noise_realization": 0.5,
+      "profile": "shared-occlusion",
+      "seed": 90001,
+      "true_obstacle_xy": [
+        1.0,
+        -0.3
+      ]
+    }
+  },
+  "environment": {
+    "runtime": "v6-synthetic-kinematic",
+    "formal_result_eligible": false,
+    "physics_backend": "batched-kinematic",
+    "v6": true,
+    "claims_mode": "synthetic_multi_agent_v6",
+    "communication": {
+      "pending": 0,
+      "delivered": 8,
+      "dropped": 0,
+      "echoed": 0,
+      "delay_steps": 0,
+      "drop_rate": 0.0,
+      "echo_fanout": 1
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "clm_f3bf6c82343566394e376db7",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "inconclusive",
+      "confidence": 0.55,
+      "observed_step": 13,
+      "valid_until_step": 2013,
+      "modality": "depth_geometry",
+      "device_root_id": "rgbd-carrier-01",
+      "capture_root_id": "shared-fault:90001:corridor_a",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "depth-proxy-v6",
+      "artifact_sha256": "32722108a41759f77acb6ded9a34a6cf3d17ed2f6bf9079ef33c63bd7cb16af3",
+      "observer_agent_id": "carrier",
+      "intended_actor_id": "carrier",
+      "received_step": 13,
+      "communication_root_id": "shared-fault:90001:corridor_a",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.28,
+      "visibility": 0.25,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_afc3fc58b51cfe1efc747211",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "inconclusive",
+      "confidence": 0.55,
+      "observed_step": 13,
+      "valid_until_step": 2013,
+      "modality": "simulated_semantic_sensor",
+      "device_root_id": "rgbd-carrier-01",
+      "capture_root_id": "shared-fault:90001:corridor_a",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "sem-proxy-v6",
+      "artifact_sha256": "aff8148fb0c098caf13329fafa3fecc15821946bb491f86a086371979b1f43a4",
+      "observer_agent_id": "carrier",
+      "intended_actor_id": "carrier",
+      "received_step": 13,
+      "communication_root_id": "shared-fault:90001:corridor_a",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.28,
+      "visibility": 0.25,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_2a2849dc70fdfc88d49a93d4",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 21,
+      "valid_until_step": 2021,
+      "modality": "depth_geometry",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90001:1:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "depth-proxy-v6",
+      "artifact_sha256": "b545059f45c96e61cdd56526922cb222e5c42044b74c8cb48ca42ca1140d328c",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 21,
+      "communication_root_id": "capture:90001:1:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_abdd0451072c5fb3f44d83f4",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 21,
+      "valid_until_step": 2021,
+      "modality": "simulated_semantic_sensor",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90001:1:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "sem-proxy-v6",
+      "artifact_sha256": "2d010df9835c003b85372b5c8c4b1eb5f64e9b5582845f2ac283adafb3851f8f",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 21,
+      "communication_root_id": "capture:90001:1:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_950361395cbaecf74530ee20",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 25,
+      "valid_until_step": 2025,
+      "modality": "depth_geometry",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90001:2:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "depth-proxy-v6",
+      "artifact_sha256": "c8bdbf7679240069d8e57d14cd011c72302d25ff4f55d8c594ae27c919196eee",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 25,
+      "communication_root_id": "capture:90001:2:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_a994323ab4777e1cfac70f49",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 25,
+      "valid_until_step": 2025,
+      "modality": "simulated_semantic_sensor",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90001:2:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "sem-proxy-v6",
+      "artifact_sha256": "b063d59f72fc7c95920293a0faa5357f5695e0de0cd2a03819734d3da4fb5701",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 25,
+      "communication_root_id": "capture:90001:2:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_0d3b90a8d3c45db32847507c",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 29,
+      "valid_until_step": 2029,
+      "modality": "depth_geometry",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90001:3:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "depth-proxy-v6",
+      "artifact_sha256": "ef12b21f798d8b030612b62b783a4ecd574e5a1461e154a9a15c91f912457097",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 29,
+      "communication_root_id": "capture:90001:3:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_a2cedf1dac3f52b30a9521cf",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 29,
+      "valid_until_step": 2029,
+      "modality": "simulated_semantic_sensor",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90001:3:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "sem-proxy-v6",
+      "artifact_sha256": "d4e3506eac09fc3461c1ae826ec1d711b6e1e91cdbd3641333afe944e3996bd5",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 29,
+      "communication_root_id": "capture:90001:3:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    }
+  ],
+  "gate_receipts": [
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_a",
+      "action": "cross_corridor",
+      "reasons": [
+        "insufficient_roots",
+        "shared_root",
+        "low_coverage"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 got 1"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "shared_root",
+          "detail": "claim multiplicity exceeds independent capture roots"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [
+        "shared-fault:90001:corridor_a"
+      ],
+      "claim_count": 2,
+      "distinct_capture_roots": 1,
+      "p_blocked": 0.55,
+      "receipt_sha256": "f4d1fceb8dfc44fd8ba8b32c305d9b36d1a67f627a46b44e6e8dd09eb5345afc",
+      "valid_until_step": 93,
+      "evaluated_step": 13,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_b",
+      "action": "cross_corridor",
+      "reasons": [
+        "scope_mismatch",
+        "insufficient_roots",
+        "low_coverage"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [],
+      "claim_count": 0,
+      "distinct_capture_roots": 0,
+      "p_blocked": 0.55,
+      "receipt_sha256": "29f4d644608444a156455b8e7766d642e9d5bc55b6a5c596e9de6e04c2bc5f21",
+      "valid_until_step": 93,
+      "evaluated_step": 13,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_a",
+      "action": "cross_corridor",
+      "reasons": [
+        "low_coverage",
+        "prediction_blocked"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [
+        "shared-fault:90001:corridor_a",
+        "capture:90001:1:scout:corridor_a/right_far"
+      ],
+      "claim_count": 4,
+      "distinct_capture_roots": 2,
+      "p_blocked": 0.85,
+      "receipt_sha256": "4245c462e80e8a3cc5f11bb097a86353e4916a87df2f94c9ef2d6deeb1c0ed11",
+      "valid_until_step": 101,
+      "evaluated_step": 21,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_b",
+      "action": "cross_corridor",
+      "reasons": [
+        "scope_mismatch",
+        "insufficient_roots",
+        "low_coverage"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [],
+      "claim_count": 0,
+      "distinct_capture_roots": 0,
+      "p_blocked": 0.55,
+      "receipt_sha256": "d24883332bdb7100f8a9990ffe105c7799fe69c2f27d7754372dfe99b9d1d691",
+      "valid_until_step": 101,
+      "evaluated_step": 21,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_a",
+      "action": "cross_corridor",
+      "reasons": [
+        "low_coverage",
+        "prediction_blocked"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [
+        "shared-fault:90001:corridor_a",
+        "capture:90001:1:scout:corridor_a/right_far",
+        "capture:90001:2:scout:corridor_a/right_far"
+      ],
+      "claim_count": 6,
+      "distinct_capture_roots": 3,
+      "p_blocked": 0.85,
+      "receipt_sha256": "6dae1551d9f528c21c352664acee7cbb3ee12a04cf4dfffe9bb349ac269894ed",
+      "valid_until_step": 105,
+      "evaluated_step": 25,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_b",
+      "action": "cross_corridor",
+      "reasons": [
+        "scope_mismatch",
+        "insufficient_roots",
+        "low_coverage"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [],
+      "claim_count": 0,
+      "distinct_capture_roots": 0,
+      "p_blocked": 0.55,
+      "receipt_sha256": "7f7cd0826df22363a1b32733909e573c412c9859ead2d8d83ef017dacf08b1e0",
+      "valid_until_step": 105,
+      "evaluated_step": 25,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_a",
+      "action": "cross_corridor",
+      "reasons": [
+        "low_coverage",
+        "prediction_blocked"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [
+        "shared-fault:90001:corridor_a",
+        "capture:90001:1:scout:corridor_a/right_far",
+        "capture:90001:2:scout:corridor_a/right_far",
+        "capture:90001:3:scout:corridor_a/right_far"
+      ],
+      "claim_count": 8,
+      "distinct_capture_roots": 4,
+      "p_blocked": 0.85,
+      "receipt_sha256": "b3dd3e27b8a43f4fff8399725f505589a88f6f16bc3da67cf644a2da576d4c73",
+      "valid_until_step": 109,
+      "evaluated_step": 29,
+      "decision": "deny"
+    },
+    {
+      "schema_version": "look-twice.gate-receipt/v6",
+      "admitted": false,
+      "corridor_id": "corridor_b",
+      "action": "cross_corridor",
+      "reasons": [
+        "scope_mismatch",
+        "insufficient_roots",
+        "low_coverage"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "usable evidence thin or empty"
+        }
+      ],
+      "measurement_root_ids": [],
+      "claim_count": 0,
+      "distinct_capture_roots": 0,
+      "p_blocked": 0.55,
+      "receipt_sha256": "52aab90ac0eae070874f1f27417c5c5fc651072dc4799cb3f28192c2b0547787",
+      "valid_until_step": 109,
+      "evaluated_step": 29,
+      "decision": "deny"
+    }
+  ],
+  "evidence_request_receipts": [
+    {
+      "schema_version": "look-twice.evidence-request-receipt/v1",
+      "receipt_id": "evr_2cdc15df7ddad7603bab",
+      "authorized": true,
+      "selected_observer": "scout",
+      "target_viewpoint": "corridor_a/right_far",
+      "target_fact_id": "region:corridor_a",
+      "target_scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "expected_gap_repairs": [
+        "insufficient_roots",
+        "shared_root",
+        "low_coverage"
+      ],
+      "policy_artifact_id": "heuristic-v6/1",
+      "candidate_ranking_sha256": "79dd5c20f6a1f5f2afc0b5bf4cf6da8e1647634449b2c56ddf18a34812664699",
+      "physical_risk": 0.1,
+      "valid_until_step": 53,
+      "receipt_sha256": "2cdc15df7ddad7603bab44702e9a06b4dfb9b728cb8f7d1a512faf6f62737218",
+      "reasons": []
+    },
+    {
+      "schema_version": "look-twice.evidence-request-receipt/v1",
+      "receipt_id": "evr_c60327fc11972afe06ab",
+      "authorized": true,
+      "selected_observer": "scout",
+      "target_viewpoint": "corridor_a/right_far",
+      "target_fact_id": "region:corridor_a",
+      "target_scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "expected_gap_repairs": [
+        "low_coverage"
+      ],
+      "policy_artifact_id": "heuristic-v6/1",
+      "candidate_ranking_sha256": "c15c40b673a84a7ea0a14f09ab122114d9ba939a0892d9bea3da8dfd80cbfcd3",
+      "physical_risk": 0.1,
+      "valid_until_step": 61,
+      "receipt_sha256": "c60327fc11972afe06ab5fdf88f22d22b37f499876508bc24eb7399c6355113e",
+      "reasons": []
+    },
+    {
+      "schema_version": "look-twice.evidence-request-receipt/v1",
+      "receipt_id": "evr_a12495bfef3533ca05af",
+      "authorized": true,
+      "selected_observer": "scout",
+      "target_viewpoint": "corridor_a/right_far",
+      "target_fact_id": "region:corridor_a",
+      "target_scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "expected_gap_repairs": [
+        "low_coverage"
+      ],
+      "policy_artifact_id": "heuristic-v6/1",
+      "candidate_ranking_sha256": "c15c40b673a84a7ea0a14f09ab122114d9ba939a0892d9bea3da8dfd80cbfcd3",
+      "physical_risk": 0.1,
+      "valid_until_step": 65,
+      "receipt_sha256": "a12495bfef3533ca05af0279565c12b02efa5136649d51002e21c5c516d3fa10",
+      "reasons": []
+    },
+    {
+      "schema_version": "look-twice.evidence-request-receipt/v1",
+      "receipt_id": "evr_6fe5b85d1ac73f93ac35",
+      "authorized": false,
+      "selected_observer": "scout",
+      "target_viewpoint": "corridor_a/right_far",
+      "target_fact_id": "region:corridor_a",
+      "target_scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "expected_gap_repairs": [
+        "low_coverage"
+      ],
+      "policy_artifact_id": "heuristic-v6/1",
+      "candidate_ranking_sha256": "c15c40b673a84a7ea0a14f09ab122114d9ba939a0892d9bea3da8dfd80cbfcd3",
+      "physical_risk": 0.1,
+      "valid_until_step": 69,
+      "receipt_sha256": "6fe5b85d1ac73f93ac35b6bfc424279546fd2bbdec8a87a02365d965a9b9a801",
+      "reasons": [
+        "max_replans_reached"
+      ]
+    }
+  ],
+  "repair_decisions": [
+    {
+      "selected": {
+        "name": "scout_a_right_far",
+        "kind": "side_view",
+        "observer": "scout",
+        "corridor_id": "corridor_a",
+        "viewpoint": "corridor_a/right_far",
+        "target_xy": [
+          -0.9,
+          1.35
+        ],
+        "predicted_coverage": 0.7,
+        "predicted_degradation": 0.26,
+        "physical_risk": 0.1,
+        "reachable": true,
+        "travel_cost": 0.17897276329095443,
+        "wait_steps": 0
+      },
+      "ranking_head": [
+        {
+          "action": {
+            "name": "scout_a_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.17897276329095443,
+            "wait_steps": 0
+          },
+          "utility": 1.4042568091772611,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.17897276329095443,
+            "wait_steps": 0
+          },
+          "utility": 1.4042568091772611,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.17897276329095443,
+            "wait_steps": 0
+          },
+          "utility": 1.4042568091772611,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_a_right_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.33095505737184316,
+            "wait_steps": 0
+          },
+          "utility": 1.401261235657039,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.33095505737184316,
+            "wait_steps": 0
+          },
+          "utility": 1.401261235657039,
+          "eligible": true
+        }
+      ],
+      "authorized": true
+    },
+    {
+      "selected": {
+        "name": "scout_a_right_far",
+        "kind": "side_view",
+        "observer": "scout",
+        "corridor_id": "corridor_a",
+        "viewpoint": "corridor_a/right_far",
+        "target_xy": [
+          -0.9,
+          1.35
+        ],
+        "predicted_coverage": 0.7,
+        "predicted_degradation": 0.26,
+        "physical_risk": 0.1,
+        "reachable": true,
+        "travel_cost": 0.0,
+        "wait_steps": 0
+      },
+      "ranking_head": [
+        {
+          "action": {
+            "name": "scout_a_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_a_right_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.1802775637731995,
+            "wait_steps": 0
+          },
+          "utility": 1.0889306090567001,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.1802775637731995,
+            "wait_steps": 0
+          },
+          "utility": 1.0889306090567001,
+          "eligible": true
+        }
+      ],
+      "authorized": true
+    },
+    {
+      "selected": {
+        "name": "scout_a_right_far",
+        "kind": "side_view",
+        "observer": "scout",
+        "corridor_id": "corridor_a",
+        "viewpoint": "corridor_a/right_far",
+        "target_xy": [
+          -0.9,
+          1.35
+        ],
+        "predicted_coverage": 0.7,
+        "predicted_degradation": 0.26,
+        "physical_risk": 0.1,
+        "reachable": true,
+        "travel_cost": 0.0,
+        "wait_steps": 0
+      },
+      "ranking_head": [
+        {
+          "action": {
+            "name": "scout_a_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_a_right_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.1802775637731995,
+            "wait_steps": 0
+          },
+          "utility": 1.0889306090567001,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.1802775637731995,
+            "wait_steps": 0
+          },
+          "utility": 1.0889306090567001,
+          "eligible": true
+        }
+      ],
+      "authorized": true
+    },
+    {
+      "selected": {
+        "name": "scout_a_right_far",
+        "kind": "side_view",
+        "observer": "scout",
+        "corridor_id": "corridor_a",
+        "viewpoint": "corridor_a/right_far",
+        "target_xy": [
+          -0.9,
+          1.35
+        ],
+        "predicted_coverage": 0.7,
+        "predicted_degradation": 0.26,
+        "physical_risk": 0.1,
+        "reachable": true,
+        "travel_cost": 0.0,
+        "wait_steps": 0
+      },
+      "ranking_head": [
+        {
+          "action": {
+            "name": "scout_a_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_right_far",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/right_far",
+            "target_xy": [
+              -0.9,
+              1.35
+            ],
+            "predicted_coverage": 0.7,
+            "predicted_degradation": 0.26,
+            "physical_risk": 0.1,
+            "reachable": true,
+            "travel_cost": 0.0,
+            "wait_steps": 0
+          },
+          "utility": 1.099,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_a_right_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_a",
+            "viewpoint": "corridor_a/right_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.1802775637731995,
+            "wait_steps": 0
+          },
+          "utility": 1.0889306090567001,
+          "eligible": true
+        },
+        {
+          "action": {
+            "name": "scout_b_left_near",
+            "kind": "side_view",
+            "observer": "scout",
+            "corridor_id": "corridor_b",
+            "viewpoint": "corridor_b/left_near",
+            "target_xy": [
+              -0.3,
+              0.95
+            ],
+            "predicted_coverage": 0.78,
+            "predicted_degradation": 0.18,
+            "physical_risk": 0.05,
+            "reachable": true,
+            "travel_cost": 0.1802775637731995,
+            "wait_steps": 0
+          },
+          "utility": 1.0889306090567001,
+          "eligible": true
+        }
+      ],
+      "authorized": false
+    }
+  ],
+  "plan_invalidation_receipts": [],
+  "motion_segments": [
+    {
+      "agent_id": "carrier",
+      "reached": true,
+      "target_xy": [
+        -0.5,
+        0.0
+      ],
+      "final_pose": {
+        "x": -0.5,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "path_length": 1.5,
+      "collision_count": 0,
+      "elapsed_steps": 10,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -1.85,
+          "y": 0.0
+        },
+        {
+          "step": 2,
+          "x": -1.7,
+          "y": 0.0
+        },
+        {
+          "step": 3,
+          "x": -1.55,
+          "y": 0.0
+        },
+        {
+          "step": 4,
+          "x": -1.4,
+          "y": 0.0
+        },
+        {
+          "step": 5,
+          "x": -1.25,
+          "y": 0.0
+        },
+        {
+          "step": 6,
+          "x": -1.1,
+          "y": 0.0
+        },
+        {
+          "step": 7,
+          "x": -0.9500000000000002,
+          "y": 0.0
+        },
+        {
+          "step": 8,
+          "x": -0.7999999999999998,
+          "y": 0.0
+        },
+        {
+          "step": 9,
+          "x": -0.6499999999999999,
+          "y": 0.0
+        },
+        {
+          "step": 10,
+          "x": -0.5,
+          "y": 0.0
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 2,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 3,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 4,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 10,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "scout",
+      "reached": true,
+      "target_xy": [
+        -0.9,
+        1.35
+      ],
+      "final_pose": {
+        "x": -0.9,
+        "y": 1.35,
+        "yaw": 0.2110933332227467
+      },
+      "path_length": 0.7158910531638177,
+      "collision_count": 0,
+      "elapsed_steps": 5,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -1.46,
+          "y": 1.23
+        },
+        {
+          "step": 2,
+          "x": -1.32,
+          "y": 1.26
+        },
+        {
+          "step": 3,
+          "x": -1.1800000000000002,
+          "y": 1.29
+        },
+        {
+          "step": 4,
+          "x": -1.04,
+          "y": 1.32
+        },
+        {
+          "step": 5,
+          "x": -0.9,
+          "y": 1.35
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 2,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 3,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 4,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "scout",
+      "reached": true,
+      "target_xy": [
+        -0.9,
+        1.35
+      ],
+      "final_pose": {
+        "x": -0.9,
+        "y": 1.35,
+        "yaw": 0.2110933332227467
+      },
+      "path_length": 0.0,
+      "collision_count": 0,
+      "elapsed_steps": 1,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -0.9,
+          "y": 1.35
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "scout",
+      "reached": true,
+      "target_xy": [
+        -0.9,
+        1.35
+      ],
+      "final_pose": {
+        "x": -0.9,
+        "y": 1.35,
+        "yaw": 0.2110933332227467
+      },
+      "path_length": 0.0,
+      "collision_count": 0,
+      "elapsed_steps": 1,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -0.9,
+          "y": 1.35
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "carrier",
+      "reached": true,
+      "target_xy": [
+        -0.2,
+        1.35
+      ],
+      "final_pose": {
+        "x": -0.2,
+        "y": 1.35,
+        "yaw": 1.3521273809209546
+      },
+      "path_length": 1.3829316685939332,
+      "collision_count": 0,
+      "elapsed_steps": 10,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -0.47,
+          "y": 0.135
+        },
+        {
+          "step": 2,
+          "x": -0.44,
+          "y": 0.27
+        },
+        {
+          "step": 3,
+          "x": -0.41000000000000003,
+          "y": 0.405
+        },
+        {
+          "step": 4,
+          "x": -0.38,
+          "y": 0.54
+        },
+        {
+          "step": 5,
+          "x": -0.35,
+          "y": 0.675
+        },
+        {
+          "step": 6,
+          "x": -0.32,
+          "y": 0.81
+        },
+        {
+          "step": 7,
+          "x": -0.29000000000000004,
+          "y": 0.945
+        },
+        {
+          "step": 8,
+          "x": -0.26,
+          "y": 1.08
+        },
+        {
+          "step": 9,
+          "x": -0.22999999999999998,
+          "y": 1.215
+        },
+        {
+          "step": 10,
+          "x": -0.2,
+          "y": 1.35
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 2,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 3,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 4,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 10,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "carrier",
+      "reached": true,
+      "target_xy": [
+        1.0,
+        1.4
+      ],
+      "final_pose": {
+        "x": 1.0,
+        "y": 1.4,
+        "yaw": 0.041642579098588275
+      },
+      "path_length": 1.2010412149464313,
+      "collision_count": 0,
+      "elapsed_steps": 9,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -0.06666666666666668,
+          "y": 1.3555555555555556
+        },
+        {
+          "step": 2,
+          "x": 0.06666666666666665,
+          "y": 1.3611111111111112
+        },
+        {
+          "step": 3,
+          "x": 0.19999999999999996,
+          "y": 1.3666666666666667
+        },
+        {
+          "step": 4,
+          "x": 0.3333333333333333,
+          "y": 1.3722222222222222
+        },
+        {
+          "step": 5,
+          "x": 0.4666666666666666,
+          "y": 1.3777777777777778
+        },
+        {
+          "step": 6,
+          "x": 0.5999999999999999,
+          "y": 1.3833333333333333
+        },
+        {
+          "step": 7,
+          "x": 0.7333333333333334,
+          "y": 1.3888888888888888
+        },
+        {
+          "step": 8,
+          "x": 0.8666666666666667,
+          "y": 1.3944444444444444
+        },
+        {
+          "step": 9,
+          "x": 1.0,
+          "y": 1.4
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 2,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 3,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 4,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "carrier",
+      "reached": true,
+      "target_xy": [
+        2.2,
+        0.6
+      ],
+      "final_pose": {
+        "x": 2.2,
+        "y": 0.6,
+        "yaw": -0.5880026035475674
+      },
+      "path_length": 1.4422205101855956,
+      "collision_count": 0,
+      "elapsed_steps": 10,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": 1.12,
+          "y": 1.3199999999999998
+        },
+        {
+          "step": 2,
+          "x": 1.24,
+          "y": 1.24
+        },
+        {
+          "step": 3,
+          "x": 1.36,
+          "y": 1.16
+        },
+        {
+          "step": 4,
+          "x": 1.48,
+          "y": 1.0799999999999998
+        },
+        {
+          "step": 5,
+          "x": 1.6,
+          "y": 1.0
+        },
+        {
+          "step": 6,
+          "x": 1.7200000000000002,
+          "y": 0.9199999999999999
+        },
+        {
+          "step": 7,
+          "x": 1.84,
+          "y": 0.84
+        },
+        {
+          "step": 8,
+          "x": 1.9600000000000002,
+          "y": 0.7599999999999999
+        },
+        {
+          "step": 9,
+          "x": 2.08,
+          "y": 0.6799999999999999
+        },
+        {
+          "step": 10,
+          "x": 2.2,
+          "y": 0.6
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 2,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 3,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 4,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 10,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "carrier",
+      "reached": true,
+      "target_xy": [
+        2.8,
+        0.0
+      ],
+      "final_pose": {
+        "x": 2.8,
+        "y": 0.0,
+        "yaw": -0.7853981633974486
+      },
+      "path_length": 0.8485281374238568,
+      "collision_count": 0,
+      "elapsed_steps": 6,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": 2.3000000000000003,
+          "y": 0.5
+        },
+        {
+          "step": 2,
+          "x": 2.4,
+          "y": 0.4
+        },
+        {
+          "step": 3,
+          "x": 2.5,
+          "y": 0.3
+        },
+        {
+          "step": 4,
+          "x": 2.6,
+          "y": 0.2
+        },
+        {
+          "step": 5,
+          "x": 2.6999999999999997,
+          "y": 0.09999999999999998
+        },
+        {
+          "step": 6,
+          "x": 2.8,
+          "y": 0.0
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 2,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 3,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 4,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "mission_success": true,
+    "carrier_reached_goal": true,
+    "payload_delivered": true,
+    "unsafe_crossing": false,
+    "collision_count": 0,
+    "elapsed_steps": 64,
+    "within_deadline": true,
+    "selected_corridor": null,
+    "route_mode": "detour",
+    "used_detour": true,
+    "repair_attempted": true,
+    "repair_success": false,
+    "observation_count": 4,
+    "replan_count": 3,
+    "claim_count": 8,
+    "distinct_capture_roots": 4,
+    "elapsed_seconds": 0.0018630409999786934,
+    "outcome": "mission_complete",
+    "policy": "purify-active",
+    "claims_mode": "synthetic_multi_agent_v6"
+  },
+  "oracle": {
+    "scenario": {
+      "corridor_a_blocked_initial": true,
+      "corridor_b_blocked_initial": false,
+      "external_event": null,
+      "true_noise_realization": 0.5,
+      "profile": "shared-occlusion",
+      "seed": 90001,
+      "true_obstacle_xy": [
+        1.0,
+        -0.3
+      ]
+    }
+  },
+  "outcome": {
+    "mission_success": true,
+    "label": "mission_complete",
+    "safe_fallback": false
+  }
+}
