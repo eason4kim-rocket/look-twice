@@ -23,7 +23,7 @@ PROFILES = (
     "dynamic-change",
     "repair-required",
 )
-SEEDS = range(30000, 30050)
+SEEDS = range(31000, 31050)
 ROW_SCHEMA = "look-twice.learned-rgbd-gate-calibration-row/v1"
 
 
@@ -96,7 +96,9 @@ def main() -> int:
     parser.add_argument("--learned-calibration", type=Path, required=True)
     parser.add_argument("--purify-bin", type=Path, required=True)
     parser.add_argument("--python", default=sys.executable)
-    parser.add_argument("--workers", type=int, choices=(1, 2, 3, 4), default=4)
+    parser.add_argument(
+        "--workers", type=int, choices=tuple(range(1, 9)), default=4
+    )
     parser.add_argument("--max-jobs", type=int, default=0)
     args = parser.parse_args()
     jobs = [Job(profile, seed) for profile in PROFILES for seed in SEEDS]

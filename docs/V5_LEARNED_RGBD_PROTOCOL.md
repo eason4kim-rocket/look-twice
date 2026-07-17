@@ -26,6 +26,14 @@ root, so Purify cannot count them as independent physical observations.
 | Validation | `40000–40039` | 40 | architecture/early stopping |
 | Locked test | `50000–50099` | 100 | one final evaluation |
 
+The combined Depth + learned-semantic Action Gate uses a separate formal
+calibration split: six profiles × seeds `31000–31049` (300 independent
+worlds). Seeds `30000–30049` were used once to diagnose Gate integration and
+are permanently development/audit data. Dynamic worlds reset accumulated
+Claims at an oracle-labelled exogenous epoch boundary during calibration,
+matching the online plan-invalidation semantics; oracle values never enter a
+runtime Claim or planner input.
+
 Each consecutive even/odd seed pair uses the same profile, preventing profile
 identity from becoming a clear/blocked shortcut. Profiles rotate across
 `independent-noise`, `shared-occlusion`, `evidence-echo`, `time-skew`,

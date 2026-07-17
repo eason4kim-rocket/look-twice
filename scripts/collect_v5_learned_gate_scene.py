@@ -39,7 +39,7 @@ def placeholder_artifact() -> CalibrationArtifact:
         sensor_versions=(LEARNED_RGBD_SENSOR_VERSION,),
         git_commit="collection-only",
         dataset_sha256=canonical_sha256({"purpose": "uncalibrated-score"}),
-        seed_ranges=(SeedRange(30000, 30049),),
+        seed_ranges=(SeedRange(31000, 31049),),
     )
 
 
@@ -65,6 +65,8 @@ def main() -> int:
     bridge = PurifyBridge(command=(args.purify_bin,))
     claims = []
     prefixes = []
+    epoch_label: str | None = None
+    epoch_observations = 0
     try:
         bridge.start()
         observation_index = 0
@@ -93,9 +95,22 @@ def main() -> int:
                 ttl_steps=2000,
                 learned_sensor=sensor,
             )
+            label = (
+                "blocked"
+                if scenario.truth_nav_blocked_at(runtime.current_step)
+                else "clear"
+            )
+            if epoch_label is not None and label != epoch_label:
+                # Calibration oracle marks the exogenous fact boundary only.
+                # Old physical Claims belong to the invalidated world epoch and
+                # must not be fused with post-change observations.
+                claims = []
+                epoch_observations = 0
+            epoch_label = label
             claims.extend(new_claims)
             observation_index += 1
-            if observation_index < 2:
+            epoch_observations += 1
+            if epoch_observations < 2:
                 continue
             receipt = bridge.evaluate_action(
                 claims=claims,
@@ -108,16 +123,12 @@ def main() -> int:
                 ),
                 sensor_version=LEARNED_RGBD_SENSOR_VERSION,
             )
-            label = (
-                "blocked"
-                if scenario.truth_nav_blocked_at(runtime.current_step)
-                else "clear"
-            )
             p_blocked = float(receipt["p_blocked"])
             p_true = p_blocked if label == "blocked" else 1.0 - p_blocked
             prefixes.append(
                 {
-                    "observation_count": observation_index,
+                    "observation_count": epoch_observations,
+                    "global_observation_index": observation_index,
                     "capture_step": runtime.current_step,
                     "viewpoint": name,
                     "true_label": label,
