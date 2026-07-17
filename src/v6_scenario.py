@@ -136,9 +136,11 @@ def sample_v6_scenario(profile: str, seed: int) -> V6ScenarioSample:
 
     external_event: dict[str, Any] | None = None
     if profile == "dynamic-change":
+        # Fire early enough that synthetic episodes (tens of steps) can observe
+        # invalidation before mission end — not a post-hoc 900-step ghost.
         flip_corridor = "corridor_a" if not a_blocked else "corridor_b"
         external_event = {
-            "step": 900 + (seed % 50),
+            "step": 28 + (seed % 8),
             "corridor_id": flip_corridor,
             "to_blocked": True,
             "kind": "corridor_block_appear",

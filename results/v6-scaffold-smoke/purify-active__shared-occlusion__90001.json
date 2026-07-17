@@ -459,33 +459,25 @@
       "action": "cross_corridor",
       "reasons": [
         "insufficient_roots",
-        "shared_root",
         "low_coverage"
       ],
       "belief_gaps": [
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 1"
-        },
-        {
-          "schema_version": "purify.robotics.belief-gap/v1",
-          "reason": "shared_root",
-          "detail": "claim multiplicity exceeds independent capture roots"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
-      "measurement_root_ids": [
-        "shared-fault:90001:corridor_a"
-      ],
+      "measurement_root_ids": [],
       "claim_count": 2,
-      "distinct_capture_roots": 1,
+      "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "f4d1fceb8dfc44fd8ba8b32c305d9b36d1a67f627a46b44e6e8dd09eb5345afc",
+      "receipt_sha256": "56bcd5a4de7908e5f30052d19d07f2c897b23dc69f0e835543b14cfc426977a9",
       "valid_until_step": 93,
       "evaluated_step": 13,
       "decision": "deny"
@@ -504,19 +496,19 @@
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 0"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
       "measurement_root_ids": [],
       "claim_count": 0,
       "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "29f4d644608444a156455b8e7766d642e9d5bc55b6a5c596e9de6e04c2bc5f21",
+      "receipt_sha256": "7b144e81bb7566d145026f568b643cd87db815555e83038cc5cc84b350a010a4",
       "valid_until_step": 93,
       "evaluated_step": 13,
       "decision": "deny"
@@ -527,24 +519,33 @@
       "corridor_id": "corridor_a",
       "action": "cross_corridor",
       "reasons": [
+        "insufficient_roots",
         "low_coverage",
+        "prediction_not_clear",
         "prediction_blocked"
       ],
       "belief_gaps": [
         {
           "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 clear roots got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "prediction_not_clear",
+          "detail": "decisive prediction set ['blocked'] != ['clear']"
         }
       ],
-      "measurement_root_ids": [
-        "shared-fault:90001:corridor_a",
-        "capture:90001:1:scout:corridor_a/right_far"
-      ],
+      "measurement_root_ids": [],
       "claim_count": 4,
-      "distinct_capture_roots": 2,
+      "distinct_capture_roots": 0,
       "p_blocked": 0.85,
-      "receipt_sha256": "4245c462e80e8a3cc5f11bb097a86353e4916a87df2f94c9ef2d6deeb1c0ed11",
+      "receipt_sha256": "f8ee7ce7c963d86d04ee2af36986c02aea3b863af3464ce1c07dbc73c56f6c6d",
       "valid_until_step": 101,
       "evaluated_step": 21,
       "decision": "deny"
@@ -563,19 +564,19 @@
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 0"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
       "measurement_root_ids": [],
       "claim_count": 0,
       "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "d24883332bdb7100f8a9990ffe105c7799fe69c2f27d7754372dfe99b9d1d691",
+      "receipt_sha256": "89742739e29a2ace888004ab3558a6ba319f3d7cb11742faa2ad3ae5de07300e",
       "valid_until_step": 101,
       "evaluated_step": 21,
       "decision": "deny"
@@ -586,25 +587,33 @@
       "corridor_id": "corridor_a",
       "action": "cross_corridor",
       "reasons": [
+        "insufficient_roots",
         "low_coverage",
+        "prediction_not_clear",
         "prediction_blocked"
       ],
       "belief_gaps": [
         {
           "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 clear roots got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "prediction_not_clear",
+          "detail": "decisive prediction set ['blocked'] != ['clear']"
         }
       ],
-      "measurement_root_ids": [
-        "shared-fault:90001:corridor_a",
-        "capture:90001:1:scout:corridor_a/right_far",
-        "capture:90001:2:scout:corridor_a/right_far"
-      ],
+      "measurement_root_ids": [],
       "claim_count": 6,
-      "distinct_capture_roots": 3,
+      "distinct_capture_roots": 0,
       "p_blocked": 0.85,
-      "receipt_sha256": "6dae1551d9f528c21c352664acee7cbb3ee12a04cf4dfffe9bb349ac269894ed",
+      "receipt_sha256": "6c85130782b046fc9f7107d21880ecfe34aafc39eadf474fcda6e8e807630add",
       "valid_until_step": 105,
       "evaluated_step": 25,
       "decision": "deny"
@@ -623,19 +632,19 @@
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 0"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
       "measurement_root_ids": [],
       "claim_count": 0,
       "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "7f7cd0826df22363a1b32733909e573c412c9859ead2d8d83ef017dacf08b1e0",
+      "receipt_sha256": "01e9738700c7e4aa5c7a276118d6a52c7d5bfb13f1f07a13b7db22c89b25fa09",
       "valid_until_step": 105,
       "evaluated_step": 25,
       "decision": "deny"
@@ -646,26 +655,33 @@
       "corridor_id": "corridor_a",
       "action": "cross_corridor",
       "reasons": [
+        "insufficient_roots",
         "low_coverage",
+        "prediction_not_clear",
         "prediction_blocked"
       ],
       "belief_gaps": [
         {
           "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 clear roots got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "prediction_not_clear",
+          "detail": "decisive prediction set ['blocked'] != ['clear']"
         }
       ],
-      "measurement_root_ids": [
-        "shared-fault:90001:corridor_a",
-        "capture:90001:1:scout:corridor_a/right_far",
-        "capture:90001:2:scout:corridor_a/right_far",
-        "capture:90001:3:scout:corridor_a/right_far"
-      ],
+      "measurement_root_ids": [],
       "claim_count": 8,
-      "distinct_capture_roots": 4,
+      "distinct_capture_roots": 0,
       "p_blocked": 0.85,
-      "receipt_sha256": "b3dd3e27b8a43f4fff8399725f505589a88f6f16bc3da67cf644a2da576d4c73",
+      "receipt_sha256": "ad196afb125fc7abdf8b0ef6581fce67b38a110f450324e1f493e8cd7bf67bf3",
       "valid_until_step": 109,
       "evaluated_step": 29,
       "decision": "deny"
@@ -684,19 +700,19 @@
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 0"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
       "measurement_root_ids": [],
       "claim_count": 0,
       "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "52aab90ac0eae070874f1f27417c5c5fc651072dc4799cb3f28192c2b0547787",
+      "receipt_sha256": "78a5e25eadecbd4639ef5a198aa2bc69e16ae6b412dbec87ccdf10fe9d3b06e3",
       "valid_until_step": 109,
       "evaluated_step": 29,
       "decision": "deny"
@@ -717,7 +733,6 @@
       },
       "expected_gap_repairs": [
         "insufficient_roots",
-        "shared_root",
         "low_coverage"
       ],
       "policy_artifact_id": "heuristic-v6/1",
@@ -729,7 +744,7 @@
     },
     {
       "schema_version": "look-twice.evidence-request-receipt/v1",
-      "receipt_id": "evr_c60327fc11972afe06ab",
+      "receipt_id": "evr_cdd902eb78f2770056f9",
       "authorized": true,
       "selected_observer": "scout",
       "target_viewpoint": "corridor_a/right_far",
@@ -740,18 +755,20 @@
         "region_id": "corridor_a"
       },
       "expected_gap_repairs": [
-        "low_coverage"
+        "insufficient_roots",
+        "low_coverage",
+        "prediction_not_clear"
       ],
       "policy_artifact_id": "heuristic-v6/1",
-      "candidate_ranking_sha256": "c15c40b673a84a7ea0a14f09ab122114d9ba939a0892d9bea3da8dfd80cbfcd3",
+      "candidate_ranking_sha256": "d147954aad0627281c6e4d209ed74132b851b2a25cd185dc8a8e3343eef8c5b2",
       "physical_risk": 0.1,
       "valid_until_step": 61,
-      "receipt_sha256": "c60327fc11972afe06ab5fdf88f22d22b37f499876508bc24eb7399c6355113e",
+      "receipt_sha256": "cdd902eb78f2770056f9222a3b99b0678b045917b08d9652472102c2bbfa4ea6",
       "reasons": []
     },
     {
       "schema_version": "look-twice.evidence-request-receipt/v1",
-      "receipt_id": "evr_a12495bfef3533ca05af",
+      "receipt_id": "evr_6c985e3741590cd41e2c",
       "authorized": true,
       "selected_observer": "scout",
       "target_viewpoint": "corridor_a/right_far",
@@ -762,18 +779,20 @@
         "region_id": "corridor_a"
       },
       "expected_gap_repairs": [
-        "low_coverage"
+        "insufficient_roots",
+        "low_coverage",
+        "prediction_not_clear"
       ],
       "policy_artifact_id": "heuristic-v6/1",
-      "candidate_ranking_sha256": "c15c40b673a84a7ea0a14f09ab122114d9ba939a0892d9bea3da8dfd80cbfcd3",
+      "candidate_ranking_sha256": "d147954aad0627281c6e4d209ed74132b851b2a25cd185dc8a8e3343eef8c5b2",
       "physical_risk": 0.1,
       "valid_until_step": 65,
-      "receipt_sha256": "a12495bfef3533ca05af0279565c12b02efa5136649d51002e21c5c516d3fa10",
+      "receipt_sha256": "6c985e3741590cd41e2c7e89edf486ebc3181db3b97d3e904a335d3e1e6f0312",
       "reasons": []
     },
     {
       "schema_version": "look-twice.evidence-request-receipt/v1",
-      "receipt_id": "evr_6fe5b85d1ac73f93ac35",
+      "receipt_id": "evr_943f7135e940cad8f65f",
       "authorized": false,
       "selected_observer": "scout",
       "target_viewpoint": "corridor_a/right_far",
@@ -784,13 +803,15 @@
         "region_id": "corridor_a"
       },
       "expected_gap_repairs": [
-        "low_coverage"
+        "insufficient_roots",
+        "low_coverage",
+        "prediction_not_clear"
       ],
       "policy_artifact_id": "heuristic-v6/1",
-      "candidate_ranking_sha256": "c15c40b673a84a7ea0a14f09ab122114d9ba939a0892d9bea3da8dfd80cbfcd3",
+      "candidate_ranking_sha256": "d147954aad0627281c6e4d209ed74132b851b2a25cd185dc8a8e3343eef8c5b2",
       "physical_risk": 0.1,
       "valid_until_step": 69,
-      "receipt_sha256": "6fe5b85d1ac73f93ac35b6bfc424279546fd2bbdec8a87a02365d965a9b9a801",
+      "receipt_sha256": "943f7135e940cad8f65f691d2f2cf9e527f0a3ada7e22ed66d2eb0f96e2fc7ac",
       "reasons": [
         "max_replans_reached"
       ]
@@ -961,7 +982,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -982,7 +1003,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1003,7 +1024,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1024,7 +1045,7 @@
             "travel_cost": 0.1802775637731995,
             "wait_steps": 0
           },
-          "utility": 1.0889306090567001,
+          "utility": 1.4389306090567,
           "eligible": true
         },
         {
@@ -1045,7 +1066,7 @@
             "travel_cost": 0.1802775637731995,
             "wait_steps": 0
           },
-          "utility": 1.0889306090567001,
+          "utility": 1.4389306090567,
           "eligible": true
         }
       ],
@@ -1088,7 +1109,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1109,7 +1130,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1130,7 +1151,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1151,7 +1172,7 @@
             "travel_cost": 0.1802775637731995,
             "wait_steps": 0
           },
-          "utility": 1.0889306090567001,
+          "utility": 1.4389306090567,
           "eligible": true
         },
         {
@@ -1172,7 +1193,7 @@
             "travel_cost": 0.1802775637731995,
             "wait_steps": 0
           },
-          "utility": 1.0889306090567001,
+          "utility": 1.4389306090567,
           "eligible": true
         }
       ],
@@ -1215,7 +1236,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1236,7 +1257,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1257,7 +1278,7 @@
             "travel_cost": 0.0,
             "wait_steps": 0
           },
-          "utility": 1.099,
+          "utility": 1.4489999999999998,
           "eligible": true
         },
         {
@@ -1278,7 +1299,7 @@
             "travel_cost": 0.1802775637731995,
             "wait_steps": 0
           },
-          "utility": 1.0889306090567001,
+          "utility": 1.4389306090567,
           "eligible": true
         },
         {
@@ -1299,7 +1320,7 @@
             "travel_cost": 0.1802775637731995,
             "wait_steps": 0
           },
-          "utility": 1.0889306090567001,
+          "utility": 1.4389306090567,
           "eligible": true
         }
       ],
@@ -2014,7 +2035,7 @@
     "replan_count": 3,
     "claim_count": 8,
     "distinct_capture_roots": 4,
-    "elapsed_seconds": 0.0018630409999786934,
+    "elapsed_seconds": 0.0016227080000135174,
     "outcome": "mission_complete",
     "policy": "purify-active",
     "claims_mode": "synthetic_multi_agent_v6"

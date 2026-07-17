@@ -311,33 +311,83 @@ def run_v6_episode(
                 break
 
     decisions = evaluate_all() if not gate_receipts else decisions
+    # Corridors whose prior GateReceipts were wiped by world change.
+    invalidated_corridors: set[str] = set()
+    event_applied = False
+
+    def apply_due_world_events() -> bool:
+        """Apply absolute-step external events; invalidate prior admits.
+
+        Returns True if any corridor admit was invalidated.
+        """
+        nonlocal event_applied, selected_corridor, repair_success
+        event = scenario.oracle_context.get("external_event") or {}
+        if event_applied or not event:
+            return False
+        if runtime.current_step < int(event.get("step", 10**9)):
+            return False
+        event_applied = True
+        wiped = False
+        if event.get("to_blocked") and event.get("corridor_id"):
+            cid = str(event["corridor_id"])
+            y = -0.3 if cid == "corridor_a" else 0.3
+            runtime.set_obstacle(1.0, y, 0.28)
+            invalidated_corridors.add(cid)
+            invalidations.append(
+                {
+                    "schema_version": "look-twice.plan-invalidation/v6",
+                    "invalidated": True,
+                    "reason": "dynamic_corridor_change",
+                    "corridor_id": cid,
+                    "step": runtime.current_step,
+                    "previous_admitted": any(
+                        g.get("admitted") and g.get("corridor_id") == cid
+                        for g in gate_receipts
+                    ),
+                }
+            )
+            wiped = True
+            if selected_corridor == cid:
+                selected_corridor = None
+                repair_success = False
+        return wiped
+
+    def live_admit(cid: str) -> bool:
+        if cid in invalidated_corridors:
+            return False
+        dec = evaluate_corridor_contract(
+            claims, contracts[cid], current_step=runtime.current_step
+        )
+        gate_receipts.append(dec.to_wire())
+        return bool(dec.admitted)
+
     # Choose admitted corridor, else safest detour.
     for cid, dec in decisions.items():
-        if dec.admitted:
+        if dec.admitted and cid not in invalidated_corridors:
             selected_corridor = cid
             break
 
     def cross_corridor(cid: str, *, force: bool = False) -> bool:
-        nonlocal unsafe, route_mode
+        nonlocal unsafe, route_mode, selected_corridor
         contract = contracts[cid]
         region = next(c["region"] for c in public["corridors"] if c["id"] == cid)
         entry = (float(region[0]) - 0.05, 0.5 * (float(region[2]) + float(region[3])))
         mid = (0.5 * (float(region[0]) + float(region[1])), entry[1])
         exit_xy = (float(region[1]) + 0.1, entry[1])
-        admitted = force or (
-            evaluate_corridor_contract(
-                claims, contract, current_step=runtime.current_step
-            ).admitted
-        )
+        admitted = force or live_admit(cid)
         if requires_gate and not admitted and not force:
             return False
         for target, label in ((entry, "entry"), (mid, "mid"), (exit_xy, "exit")):
+            # Absolute schedule may flip the world mid-crossing.
+            if apply_due_world_events() and cid in invalidated_corridors and not force:
+                selected_corridor = None
+                return False
             res = runtime.move_agent_to(
                 CARRIER_ID,
                 target,
                 risk_gated=True,
                 allow_without_admit=is_naive or force,
-                admitted=admitted or force,
+                admitted=(force or live_admit(cid)),
             )
             motion_segments.append(res.to_dict())
             if not res.reached:
@@ -347,6 +397,8 @@ def run_v6_episode(
                 # Entering risk while blocked counts unsafe for naive force.
                 if is_naive or force:
                     unsafe = True
+                    return False
+                if requires_gate:
                     return False
         route_mode = "direct"
         return not unsafe
@@ -371,38 +423,101 @@ def run_v6_episode(
         outcome = "safe_detour_complete"
         return True
 
+    # Advance to event step when scheduled soon so invalidation is testable.
+    event = scenario.oracle_context.get("external_event") or {}
+    if event and int(event.get("step", 10**9)) < 200:
+        while runtime.current_step < int(event["step"]):
+            runtime.wait_steps(1)
+            delivered = inbox.poll(runtime.current_step)
+            if delivered:
+                claims.extend(delivered)
+                claims = list(collapse_echo_claims(claims))
+        apply_due_world_events()
+        # Re-evaluate after invalidation — prior admit for flipped corridor dies.
+        decisions = evaluate_all()
+        selected_corridor = None
+        for cid, dec in decisions.items():
+            if dec.admitted and cid not in invalidated_corridors:
+                selected_corridor = cid
+                break
+        # Active may re-repair once after invalidation.
+        if (
+            requires_gate
+            and allows_repair
+            and selected_corridor is None
+            and observations < config.max_observations
+        ):
+            repair_attempted = True
+            for _ in range(max(1, config.max_observations - observations)):
+                primary = next(iter(decisions.values()))
+                gaps = [
+                    g.get("reason", "insufficient_roots") for g in primary.belief_gaps
+                ] or list(primary.reasons) or ["insufficient_roots"]
+                selected, ranking = choose_evidence_action(
+                    public,
+                    gap_reasons=gaps,
+                    carrier_xy=(
+                        runtime.pose_of(CARRIER_ID).x,
+                        runtime.pose_of(CARRIER_ID).y,
+                    ),
+                    scout_xy=(
+                        runtime.pose_of(SCOUT_ID).x,
+                        runtime.pose_of(SCOUT_ID).y,
+                    ),
+                    visited=visited,
+                    observations_taken=observations,
+                    max_observations=config.max_observations,
+                )
+                receipt = authorize_evidence_request(
+                    belief_gaps=gaps,
+                    selected_action=selected.to_dict() if selected else None,
+                    current_step=runtime.current_step,
+                    observations_taken=observations,
+                    replans_taken=replan_count,
+                    max_observations=config.max_observations,
+                    max_replans=config.max_replans,
+                    candidate_ranking=ranking,
+                )
+                evidence_requests.append(receipt.to_wire())
+                if selected is None or not receipt.authorized:
+                    break
+                if selected.kind == "safe_fallback":
+                    break
+                if selected.kind == "side_view":
+                    replan_count += 1
+                if selected.kind != "wait":
+                    observe(
+                        selected.observer,
+                        selected.corridor_id or "corridor_a",
+                        selected.viewpoint,
+                        selected.target_xy,
+                        selected.predicted_coverage,
+                    )
+                else:
+                    runtime.wait_steps(20)
+                decisions = evaluate_all()
+                for cid, dec in decisions.items():
+                    if dec.admitted and cid not in invalidated_corridors:
+                        selected_corridor = cid
+                        repair_success = True
+                        break
+                if selected_corridor is not None:
+                    break
+
     nav_ok = False
     if selected_corridor is not None:
         nav_ok = cross_corridor(selected_corridor)
         if not nav_ok and not unsafe:
+            # Invalidate mid-cross or failed gated cross → fail-closed detour.
+            apply_due_world_events()
             nav_ok = safe_detour()
     elif is_naive:
         # Naive tries corridor_a without admit.
         nav_ok = cross_corridor("corridor_a", force=True)
     else:
         # Passive denied: safe detour only.
+        apply_due_world_events()
         nav_ok = safe_detour()
-
-    # Dynamic event / invalidation check
-    event = scenario.oracle_context.get("external_event") or {}
-    if event and runtime.current_step >= int(event.get("step", 10**9)):
-        # Force world obstacle if flip to blocked.
-        if event.get("to_blocked") and event.get("corridor_id"):
-            cid = str(event["corridor_id"])
-            y = -0.3 if cid == "corridor_a" else 0.3
-            runtime.set_obstacle(1.0, y, 0.28)
-            invalidations.append(
-                {
-                    "invalidated": True,
-                    "reason": "dynamic_corridor_change",
-                    "corridor_id": cid,
-                    "step": runtime.current_step,
-                }
-            )
-            # Prior admits no longer trusted.
-            if selected_corridor == cid and route_mode == "direct" and not carrier_reached_goal:
-                # Need replan if still mid-mission — for smoke, detour if needed.
-                pass
 
     # Deliver to goal
     if nav_ok and not unsafe:

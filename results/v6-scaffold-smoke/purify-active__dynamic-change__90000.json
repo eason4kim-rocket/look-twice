@@ -9,8 +9,8 @@
   },
   "scenario": {
     "schema_version": "look-twice.scenario/v6",
-    "scenario_id": "v6:shared-occlusion:90000",
-    "profile": "shared-occlusion",
+    "scenario_id": "v6:dynamic-change:90000",
+    "profile": "dynamic-change",
     "seed": 90000,
     "public_context": {
       "carrier_id": "carrier",
@@ -157,9 +157,9 @@
       "evidence_age_limit": 80,
       "communication_delay_limit": 40,
       "min_distinct_capture_roots": 2,
-      "declared_noise_intensity": 0.45,
+      "declared_noise_intensity": 0.3,
       "sensor_version": "look-twice-rgbd-multi-agent-v6/1",
-      "profile_label": "shared-occlusion",
+      "profile_label": "dynamic-change",
       "communication": {
         "delay_steps": 0,
         "drop_rate": 0.0,
@@ -168,16 +168,21 @@
       },
       "known_static_map": {
         "map_version": "static-map-v6",
-        "declared_noise_intensity": 0.45,
+        "declared_noise_intensity": 0.3,
         "sensor_version": "look-twice-rgbd-multi-agent-v6/1"
       }
     },
     "oracle_context": {
       "corridor_a_blocked_initial": false,
       "corridor_b_blocked_initial": true,
-      "external_event": null,
-      "true_noise_realization": 0.45,
-      "profile": "shared-occlusion",
+      "external_event": {
+        "step": 28,
+        "corridor_id": "corridor_a",
+        "to_blocked": true,
+        "kind": "corridor_block_appear"
+      },
+      "true_noise_realization": 0.3,
+      "profile": "dynamic-change",
       "seed": 90000,
       "true_obstacle_xy": [
         1.0,
@@ -193,7 +198,7 @@
     "claims_mode": "synthetic_multi_agent_v6",
     "communication": {
       "pending": 0,
-      "delivered": 6,
+      "delivered": 8,
       "dropped": 0,
       "echoed": 0,
       "delay_steps": 0,
@@ -376,6 +381,68 @@
       "intended_actor_id": "carrier",
       "received_step": 25,
       "communication_root_id": "capture:90000:2:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_62e81ba9a96d4045f18cfb68",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 32,
+      "valid_until_step": 2032,
+      "modality": "depth_geometry",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90000:3:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "depth-proxy-v6",
+      "artifact_sha256": "5a23a02fbc51a5200ef75f4f0170a5487dd73b0d2c755fb7184aed17a76f0a4d",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 32,
+      "communication_root_id": "capture:90000:3:scout:corridor_a/right_far",
+      "parent_claim_ids": [],
+      "communication_path": [],
+      "quality": 0.82,
+      "visibility": 0.7,
+      "temporal_skew": 0,
+      "scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "schema_version": "look-twice.robot-claim/v2"
+    },
+    {
+      "claim_id": "clm_09fbc06590f82e681b983f8d",
+      "fact_id": "region:corridor_a",
+      "predicate": "carrier_traversable",
+      "value": "blocked",
+      "confidence": 0.82,
+      "observed_step": 32,
+      "valid_until_step": 2032,
+      "modality": "simulated_semantic_sensor",
+      "device_root_id": "rgbd-scout-01",
+      "capture_root_id": "capture:90000:3:scout:corridor_a/right_far",
+      "calibration_id": "look-twice-rgbd-multi-agent-v6/1",
+      "pose_version": "base-link-v6",
+      "model_id": "sem-proxy-v6",
+      "artifact_sha256": "a9fcf4506d51874b1786b4ba21d1dd1010591f617e6e4b2c61538c6b1b1541ba",
+      "observer_agent_id": "scout",
+      "intended_actor_id": "carrier",
+      "received_step": 32,
+      "communication_root_id": "capture:90000:3:scout:corridor_a/right_far",
       "parent_claim_ids": [],
       "communication_path": [],
       "quality": 0.82,
@@ -578,67 +645,105 @@
       "claim_count": 6,
       "distinct_capture_roots": 2,
       "p_blocked": 0.15,
-      "receipt_sha256": "46caefcbe7235db8145327fdf8fc8de5ef265f1bf8c28940cdad750ebe342fb1",
-      "valid_until_step": 105,
-      "evaluated_step": 25,
+      "receipt_sha256": "51939b3d45049cd470c0a743477f1478dac6c0af8fc61991734794a07df07952",
+      "valid_until_step": 108,
+      "evaluated_step": 28,
       "decision": "admit"
     },
     {
       "schema_version": "look-twice.gate-receipt/v6",
-      "admitted": true,
-      "corridor_id": "corridor_a",
+      "admitted": false,
+      "corridor_id": "corridor_b",
       "action": "cross_corridor",
-      "reasons": [],
-      "belief_gaps": [],
-      "measurement_root_ids": [
-        "capture:90000:1:scout:corridor_a/right_far",
-        "capture:90000:2:scout:corridor_a/right_far"
+      "reasons": [
+        "scope_mismatch",
+        "insufficient_roots",
+        "low_coverage"
       ],
-      "claim_count": 6,
-      "distinct_capture_roots": 2,
-      "p_blocked": 0.15,
-      "receipt_sha256": "46caefcbe7235db8145327fdf8fc8de5ef265f1bf8c28940cdad750ebe342fb1",
-      "valid_until_step": 105,
-      "evaluated_step": 25,
-      "decision": "admit"
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 clear roots got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "clear evidence thin, empty, or low quality/visibility"
+        }
+      ],
+      "measurement_root_ids": [],
+      "claim_count": 0,
+      "distinct_capture_roots": 0,
+      "p_blocked": 0.55,
+      "receipt_sha256": "080cbee58f0a059d2080a1b485fe40329815b5df5103880cf0c00c42a157a8d4",
+      "valid_until_step": 108,
+      "evaluated_step": 28,
+      "decision": "deny"
     },
     {
       "schema_version": "look-twice.gate-receipt/v6",
-      "admitted": true,
+      "admitted": false,
       "corridor_id": "corridor_a",
       "action": "cross_corridor",
-      "reasons": [],
-      "belief_gaps": [],
+      "reasons": [
+        "evidence_conflict",
+        "prediction_not_clear"
+      ],
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "evidence_conflict",
+          "detail": "clear and blocked both present"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "prediction_not_clear",
+          "detail": "decisive prediction set ['blocked', 'clear'] != ['clear']"
+        }
+      ],
       "measurement_root_ids": [
         "capture:90000:1:scout:corridor_a/right_far",
         "capture:90000:2:scout:corridor_a/right_far"
       ],
-      "claim_count": 6,
+      "claim_count": 8,
       "distinct_capture_roots": 2,
-      "p_blocked": 0.15,
-      "receipt_sha256": "643e5d6c907171beddd40d40d4aa463e95863eabfe4de30796238826ffb2bdb7",
+      "p_blocked": 0.85,
+      "receipt_sha256": "ba2537a3db332ce1ff1a55c4c7a316a62c06f82674a16230214d9f2df662f75c",
       "valid_until_step": 112,
       "evaluated_step": 32,
-      "decision": "admit"
+      "decision": "deny"
     },
     {
       "schema_version": "look-twice.gate-receipt/v6",
-      "admitted": true,
-      "corridor_id": "corridor_a",
+      "admitted": false,
+      "corridor_id": "corridor_b",
       "action": "cross_corridor",
-      "reasons": [],
-      "belief_gaps": [],
-      "measurement_root_ids": [
-        "capture:90000:1:scout:corridor_a/right_far",
-        "capture:90000:2:scout:corridor_a/right_far"
+      "reasons": [
+        "scope_mismatch",
+        "insufficient_roots",
+        "low_coverage"
       ],
-      "claim_count": 6,
-      "distinct_capture_roots": 2,
-      "p_blocked": 0.15,
-      "receipt_sha256": "66dc3a8ad9d80c5c482172b43d3c82d79ad59a1ba65e0bdbe0a66a93635f109c",
-      "valid_until_step": 117,
-      "evaluated_step": 37,
-      "decision": "admit"
+      "belief_gaps": [
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "insufficient_roots",
+          "detail": "need>=2 clear roots got 0"
+        },
+        {
+          "schema_version": "purify.robotics.belief-gap/v1",
+          "reason": "low_coverage",
+          "detail": "clear evidence thin, empty, or low quality/visibility"
+        }
+      ],
+      "measurement_root_ids": [],
+      "claim_count": 0,
+      "distinct_capture_roots": 0,
+      "p_blocked": 0.55,
+      "receipt_sha256": "0a76b30feadb4b74e45eb8b3be659464f9a7bdcdd7e3c8b05cd41c7dfc93acb4",
+      "valid_until_step": 112,
+      "evaluated_step": 32,
+      "decision": "deny"
     }
   ],
   "evidence_request_receipts": [
@@ -687,6 +792,53 @@
       "valid_until_step": 61,
       "receipt_sha256": "e913fb8f176982395084757c3ceccafaf1a2ef688c88e70f3a3bec539364b4dc",
       "reasons": []
+    },
+    {
+      "schema_version": "look-twice.evidence-request-receipt/v1",
+      "receipt_id": "evr_0a41b4aea3f222ee55e5",
+      "authorized": true,
+      "selected_observer": "scout",
+      "target_viewpoint": "corridor_a/right_far",
+      "target_fact_id": "region:corridor_a",
+      "target_scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "expected_gap_repairs": [
+        "insufficient_roots"
+      ],
+      "policy_artifact_id": "heuristic-v6/1",
+      "candidate_ranking_sha256": "23f6e9b1580618524a626ee9f1b58a4433d3ab73ab6b55820fc80e28a2c6c65c",
+      "physical_risk": 0.1,
+      "valid_until_step": 68,
+      "receipt_sha256": "0a41b4aea3f222ee55e5d8a2f0a140e08cf0d51a390deb3987197e4675094d40",
+      "reasons": []
+    },
+    {
+      "schema_version": "look-twice.evidence-request-receipt/v1",
+      "receipt_id": "evr_d3ffe4cd2c77d3db6b5c",
+      "authorized": false,
+      "selected_observer": "scout",
+      "target_viewpoint": "corridor_a/right_far",
+      "target_fact_id": "region:corridor_a",
+      "target_scope": {
+        "robot_id": "carrier",
+        "payload_id": "payload_loaded",
+        "region_id": "corridor_a"
+      },
+      "expected_gap_repairs": [
+        "evidence_conflict",
+        "prediction_not_clear"
+      ],
+      "policy_artifact_id": "heuristic-v6/1",
+      "candidate_ranking_sha256": "e5584b3137ecd8436b45ef171f9fe7b15310e4b3b57877f710973d0a9038ff9b",
+      "physical_risk": 0.1,
+      "valid_until_step": 72,
+      "receipt_sha256": "d3ffe4cd2c77d3db6b5caab62884cf63c9c00ddcd7e29eaa61526a465f370272",
+      "reasons": [
+        "max_replans_reached"
+      ]
     }
   ],
   "repair_decisions": [
@@ -945,7 +1097,16 @@
       "authorized": true
     }
   ],
-  "plan_invalidation_receipts": [],
+  "plan_invalidation_receipts": [
+    {
+      "schema_version": "look-twice.plan-invalidation/v6",
+      "invalidated": true,
+      "reason": "dynamic_corridor_change",
+      "corridor_id": "corridor_a",
+      "step": 28,
+      "previous_admitted": true
+    }
+  ],
   "motion_segments": [
     {
       "agent_id": "carrier",
@@ -1171,56 +1332,102 @@
       ]
     },
     {
-      "agent_id": "carrier",
+      "agent_id": "scout",
       "reached": true,
       "target_xy": [
-        0.35000000000000003,
-        -0.30000000000000004
+        -0.9,
+        1.35
       ],
       "final_pose": {
-        "x": 0.35000000000000003,
-        "y": -0.30000000000000004,
-        "yaw": -0.3392926144540447
+        "x": -0.9,
+        "y": 1.35,
+        "yaw": 0.2110933332227467
       },
-      "path_length": 0.9013878188659976,
+      "path_length": 0.0,
       "collision_count": 0,
-      "elapsed_steps": 7,
+      "elapsed_steps": 1,
       "reason": "ok",
       "trajectory": [
         {
           "step": 1,
-          "x": -0.37857142857142856,
-          "y": -0.042857142857142864
+          "x": -0.9,
+          "y": 1.35
+        }
+      ],
+      "control_commands": [
+        {
+          "step": 1,
+          "v": 0.15,
+          "w": 0.0
+        }
+      ]
+    },
+    {
+      "agent_id": "carrier",
+      "reached": true,
+      "target_xy": [
+        -0.2,
+        1.35
+      ],
+      "final_pose": {
+        "x": -0.2,
+        "y": 1.35,
+        "yaw": 1.3521273809209546
+      },
+      "path_length": 1.3829316685939332,
+      "collision_count": 0,
+      "elapsed_steps": 10,
+      "reason": "ok",
+      "trajectory": [
+        {
+          "step": 1,
+          "x": -0.47,
+          "y": 0.135
         },
         {
           "step": 2,
-          "x": -0.2571428571428571,
-          "y": -0.08571428571428573
+          "x": -0.44,
+          "y": 0.27
         },
         {
           "step": 3,
-          "x": -0.13571428571428568,
-          "y": -0.1285714285714286
+          "x": -0.41000000000000003,
+          "y": 0.405
         },
         {
           "step": 4,
-          "x": -0.014285714285714235,
-          "y": -0.17142857142857146
+          "x": -0.38,
+          "y": 0.54
         },
         {
           "step": 5,
-          "x": 0.1071428571428572,
-          "y": -0.21428571428571433
+          "x": -0.35,
+          "y": 0.675
         },
         {
           "step": 6,
-          "x": 0.22857142857142865,
-          "y": -0.2571428571428572
+          "x": -0.32,
+          "y": 0.81
         },
         {
           "step": 7,
-          "x": 0.3500000000000001,
-          "y": -0.30000000000000004
+          "x": -0.29000000000000004,
+          "y": 0.945
+        },
+        {
+          "step": 8,
+          "x": -0.26,
+          "y": 1.08
+        },
+        {
+          "step": 9,
+          "x": -0.22999999999999998,
+          "y": 1.215
+        },
+        {
+          "step": 10,
+          "x": -0.2,
+          "y": 1.35
         }
       ],
       "control_commands": [
@@ -1256,6 +1463,21 @@
         },
         {
           "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 10,
           "v": 0.15,
           "w": 0.0
         }
@@ -1266,42 +1488,62 @@
       "reached": true,
       "target_xy": [
         1.0,
-        -0.30000000000000004
+        1.4
       ],
       "final_pose": {
         "x": 1.0,
-        "y": -0.30000000000000004,
-        "yaw": 0.0
+        "y": 1.4,
+        "yaw": 0.041642579098588275
       },
-      "path_length": 0.6499999999999999,
+      "path_length": 1.2010412149464313,
       "collision_count": 0,
-      "elapsed_steps": 5,
+      "elapsed_steps": 9,
       "reason": "ok",
       "trajectory": [
         {
           "step": 1,
-          "x": 0.48,
-          "y": -0.30000000000000004
+          "x": -0.06666666666666668,
+          "y": 1.3555555555555556
         },
         {
           "step": 2,
-          "x": 0.61,
-          "y": -0.30000000000000004
+          "x": 0.06666666666666665,
+          "y": 1.3611111111111112
         },
         {
           "step": 3,
-          "x": 0.74,
-          "y": -0.30000000000000004
+          "x": 0.19999999999999996,
+          "y": 1.3666666666666667
         },
         {
           "step": 4,
-          "x": 0.8699999999999999,
-          "y": -0.30000000000000004
+          "x": 0.3333333333333333,
+          "y": 1.3722222222222222
         },
         {
           "step": 5,
+          "x": 0.4666666666666666,
+          "y": 1.3777777777777778
+        },
+        {
+          "step": 6,
+          "x": 0.5999999999999999,
+          "y": 1.3833333333333333
+        },
+        {
+          "step": 7,
+          "x": 0.7333333333333334,
+          "y": 1.3888888888888888
+        },
+        {
+          "step": 8,
+          "x": 0.8666666666666667,
+          "y": 1.3944444444444444
+        },
+        {
+          "step": 9,
           "x": 1.0,
-          "y": -0.30000000000000004
+          "y": 1.4
         }
       ],
       "control_commands": [
@@ -1327,6 +1569,26 @@
         },
         {
           "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
           "v": 0.15,
           "w": 0.0
         }
@@ -1336,43 +1598,68 @@
       "agent_id": "carrier",
       "reached": true,
       "target_xy": [
-        1.7000000000000002,
-        -0.30000000000000004
+        2.2,
+        0.6
       ],
       "final_pose": {
-        "x": 1.7000000000000002,
-        "y": -0.30000000000000004,
-        "yaw": 0.0
+        "x": 2.2,
+        "y": 0.6,
+        "yaw": -0.5880026035475674
       },
-      "path_length": 0.7000000000000002,
+      "path_length": 1.4422205101855956,
       "collision_count": 0,
-      "elapsed_steps": 5,
+      "elapsed_steps": 10,
       "reason": "ok",
       "trajectory": [
         {
           "step": 1,
-          "x": 1.1400000000000001,
-          "y": -0.30000000000000004
+          "x": 1.12,
+          "y": 1.3199999999999998
         },
         {
           "step": 2,
-          "x": 1.28,
-          "y": -0.30000000000000004
+          "x": 1.24,
+          "y": 1.24
         },
         {
           "step": 3,
-          "x": 1.4200000000000002,
-          "y": -0.30000000000000004
+          "x": 1.36,
+          "y": 1.16
         },
         {
           "step": 4,
-          "x": 1.56,
-          "y": -0.30000000000000004
+          "x": 1.48,
+          "y": 1.0799999999999998
         },
         {
           "step": 5,
-          "x": 1.7000000000000002,
-          "y": -0.30000000000000004
+          "x": 1.6,
+          "y": 1.0
+        },
+        {
+          "step": 6,
+          "x": 1.7200000000000002,
+          "y": 0.9199999999999999
+        },
+        {
+          "step": 7,
+          "x": 1.84,
+          "y": 0.84
+        },
+        {
+          "step": 8,
+          "x": 1.9600000000000002,
+          "y": 0.7599999999999999
+        },
+        {
+          "step": 9,
+          "x": 2.08,
+          "y": 0.6799999999999999
+        },
+        {
+          "step": 10,
+          "x": 2.2,
+          "y": 0.6
         }
       ],
       "control_commands": [
@@ -1398,6 +1685,31 @@
         },
         {
           "step": 5,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 6,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 7,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 8,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 9,
+          "v": 0.15,
+          "w": 0.0
+        },
+        {
+          "step": 10,
           "v": 0.15,
           "w": 0.0
         }
@@ -1413,50 +1725,40 @@
       "final_pose": {
         "x": 2.8,
         "y": 0.0,
-        "yaw": 0.2662520491509255
+        "yaw": -0.7853981633974486
       },
-      "path_length": 1.1401754250991376,
+      "path_length": 0.8485281374238568,
       "collision_count": 0,
-      "elapsed_steps": 8,
+      "elapsed_steps": 6,
       "reason": "ok",
       "trajectory": [
         {
           "step": 1,
-          "x": 1.8375000000000001,
-          "y": -0.26250000000000007
+          "x": 2.3000000000000003,
+          "y": 0.5
         },
         {
           "step": 2,
-          "x": 1.975,
-          "y": -0.22500000000000003
+          "x": 2.4,
+          "y": 0.4
         },
         {
           "step": 3,
-          "x": 2.1125,
-          "y": -0.18750000000000003
+          "x": 2.5,
+          "y": 0.3
         },
         {
           "step": 4,
-          "x": 2.25,
-          "y": -0.15000000000000002
+          "x": 2.6,
+          "y": 0.2
         },
         {
           "step": 5,
-          "x": 2.3875,
-          "y": -0.11250000000000002
+          "x": 2.6999999999999997,
+          "y": 0.09999999999999998
         },
         {
           "step": 6,
-          "x": 2.525,
-          "y": -0.07500000000000001
-        },
-        {
-          "step": 7,
-          "x": 2.6624999999999996,
-          "y": -0.03749999999999998
-        },
-        {
-          "step": 8,
           "x": 2.8,
           "y": 0.0
         }
@@ -1491,16 +1793,6 @@
           "step": 6,
           "v": 0.15,
           "w": 0.0
-        },
-        {
-          "step": 7,
-          "v": 0.15,
-          "w": 0.0
-        },
-        {
-          "step": 8,
-          "v": 0.15,
-          "w": 0.0
         }
       ]
     }
@@ -1511,18 +1803,18 @@
     "payload_delivered": true,
     "unsafe_crossing": false,
     "collision_count": 0,
-    "elapsed_steps": 50,
+    "elapsed_steps": 67,
     "within_deadline": true,
-    "selected_corridor": "corridor_a",
-    "route_mode": "direct",
-    "used_detour": false,
+    "selected_corridor": null,
+    "route_mode": "detour",
+    "used_detour": true,
     "repair_attempted": true,
-    "repair_success": true,
-    "observation_count": 3,
-    "replan_count": 2,
-    "claim_count": 6,
-    "distinct_capture_roots": 3,
-    "elapsed_seconds": 0.0013033750001341105,
+    "repair_success": false,
+    "observation_count": 4,
+    "replan_count": 3,
+    "claim_count": 8,
+    "distinct_capture_roots": 4,
+    "elapsed_seconds": 0.0016493749999426655,
     "outcome": "mission_complete",
     "policy": "purify-active",
     "claims_mode": "synthetic_multi_agent_v6"
@@ -1531,9 +1823,14 @@
     "scenario": {
       "corridor_a_blocked_initial": false,
       "corridor_b_blocked_initial": true,
-      "external_event": null,
-      "true_noise_realization": 0.45,
-      "profile": "shared-occlusion",
+      "external_event": {
+        "step": 28,
+        "corridor_id": "corridor_a",
+        "to_blocked": true,
+        "kind": "corridor_block_appear"
+      },
+      "true_noise_realization": 0.3,
+      "profile": "dynamic-change",
       "seed": 90000,
       "true_obstacle_xy": [
         1.0,

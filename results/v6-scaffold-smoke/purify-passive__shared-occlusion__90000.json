@@ -273,33 +273,25 @@
       "action": "cross_corridor",
       "reasons": [
         "insufficient_roots",
-        "shared_root",
         "low_coverage"
       ],
       "belief_gaps": [
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 1"
-        },
-        {
-          "schema_version": "purify.robotics.belief-gap/v1",
-          "reason": "shared_root",
-          "detail": "claim multiplicity exceeds independent capture roots"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
-      "measurement_root_ids": [
-        "shared-fault:90000:corridor_a"
-      ],
+      "measurement_root_ids": [],
       "claim_count": 2,
-      "distinct_capture_roots": 1,
+      "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "a62eb5f24ea0c475f2341c3037c0ca4e9a30a1f4812ec087cfe1ecf96e4dbad3",
+      "receipt_sha256": "56bcd5a4de7908e5f30052d19d07f2c897b23dc69f0e835543b14cfc426977a9",
       "valid_until_step": 93,
       "evaluated_step": 13,
       "decision": "deny"
@@ -318,19 +310,19 @@
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "insufficient_roots",
-          "detail": "need>=2 got 0"
+          "detail": "need>=2 clear roots got 0"
         },
         {
           "schema_version": "purify.robotics.belief-gap/v1",
           "reason": "low_coverage",
-          "detail": "usable evidence thin or empty"
+          "detail": "clear evidence thin, empty, or low quality/visibility"
         }
       ],
       "measurement_root_ids": [],
       "claim_count": 0,
       "distinct_capture_roots": 0,
       "p_blocked": 0.55,
-      "receipt_sha256": "29f4d644608444a156455b8e7766d642e9d5bc55b6a5c596e9de6e04c2bc5f21",
+      "receipt_sha256": "7b144e81bb7566d145026f568b643cd87db815555e83038cc5cc84b350a010a4",
       "valid_until_step": 93,
       "evaluated_step": 13,
       "decision": "deny"
@@ -913,7 +905,7 @@
     "replan_count": 0,
     "claim_count": 2,
     "distinct_capture_roots": 1,
-    "elapsed_seconds": 0.0007551250000688015,
+    "elapsed_seconds": 0.0006057090004105703,
     "outcome": "mission_complete",
     "policy": "purify-passive",
     "claims_mode": "synthetic_multi_agent_v6"

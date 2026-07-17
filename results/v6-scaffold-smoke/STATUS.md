@@ -75,3 +75,11 @@ Formal narrative alignment (scaffold):
 ## Cloud
 
 Target: `root@36.150.116.206 -p 31128` → `/workspace/look-twice-v6` (sync after push).
+
+
+## Gate contract fixes (post-skeptic)
+
+- Distinct roots counted only over `value==clear` claims; clear+inconclusive with one clear root is DENIED.
+- Admit implies empty deny-class `belief_gaps` / reasons (no residual `low_coverage` on admit).
+- Calibration requires **exact** `look-twice-rgbd-multi-agent-v6/1` match.
+- `dynamic-change` events fire mid-episode and emit `plan_invalidation_receipts`, wiping live admits for the flipped corridor.

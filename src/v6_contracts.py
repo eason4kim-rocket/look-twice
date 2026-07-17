@@ -137,11 +137,10 @@ def filter_contract_claims(
         if not claim.has_known_measurement_root:
             reasons.append("unknown_root")
             continue
+        # Exact calibration version match — v5 ids must not authorize v6 contracts.
         if claim.calibration_id != contract.calibration_id:
-            # Allow exact match only for this smoke gate.
-            if not claim.calibration_id.startswith("look-twice-rgbd"):
-                reasons.append("calibration_not_applicable")
-                continue
+            reasons.append("calibration_not_applicable")
+            continue
         if not claim.is_fresh_at(current_step):
             reasons.append("stale")
             continue
@@ -157,6 +156,26 @@ def filter_contract_claims(
     return tuple(usable), tuple(dict.fromkeys(reasons))
 
 
+# Residual deny-class gaps that block cross_corridor (fail closed).
+_DENY_CLASS_REASONS = frozenset(
+    {
+        "insufficient_roots",
+        "shared_root",
+        "evidence_conflict",
+        "low_coverage",
+        "stale",
+        "communication_delay",
+        "scope_mismatch",
+        "calibration_not_applicable",
+        "prediction_blocked",
+        "unknown_root",
+        "unknown_observer",
+        "evidence_age",
+        "prediction_not_clear",
+    }
+)
+
+
 def evaluate_corridor_contract(
     claims: Sequence[RobotClaimV2],
     contract: CorridorContract,
@@ -166,21 +185,28 @@ def evaluate_corridor_contract(
     usable, reject_reasons = filter_contract_claims(
         claims, contract, current_step=current_step
     )
-    roots = distinct_capture_roots(usable)
+    clear_claims = tuple(c for c in usable if c.value == "clear")
+    blocked_claims = tuple(c for c in usable if c.value == "blocked")
+    # Contract prediction_set must be {clear}: only *clear* capture roots count.
+    clear_roots = distinct_capture_roots(clear_claims)
     values = [c.value for c in usable]
-    clear_n = sum(1 for v in values if v == "clear")
-    blocked_n = sum(1 for v in values if v == "blocked")
+    clear_n = len(clear_claims)
+    blocked_n = len(blocked_claims)
     conflicts = 1 if clear_n > 0 and blocked_n > 0 else 0
+    decisive = {v for v in values if v != "inconclusive"}
 
     gaps: list[dict[str, Any]] = []
     reasons: list[str] = list(reject_reasons)
 
-    if len(roots) < contract.min_distinct_capture_roots:
+    if len(clear_roots) < contract.min_distinct_capture_roots:
         gaps.append(
             {
                 "schema_version": "purify.robotics.belief-gap/v1",
                 "reason": "insufficient_roots",
-                "detail": f"need>={contract.min_distinct_capture_roots} got {len(roots)}",
+                "detail": (
+                    f"need>={contract.min_distinct_capture_roots} clear roots "
+                    f"got {len(clear_roots)}"
+                ),
             }
         )
         reasons.append("insufficient_roots")
@@ -193,46 +219,66 @@ def evaluate_corridor_contract(
             }
         )
         reasons.append("evidence_conflict")
-    # Shared-root style: many claims but few roots after collapse.
-    if len(usable) > max(1, len(roots)) and len(roots) < contract.min_distinct_capture_roots:
+    # Shared-root style among clear support.
+    if (
+        clear_n > max(1, len(clear_roots))
+        and len(clear_roots) < contract.min_distinct_capture_roots
+    ):
         gaps.append(
             {
                 "schema_version": "purify.robotics.belief-gap/v1",
                 "reason": "shared_root",
-                "detail": "claim multiplicity exceeds independent capture roots",
+                "detail": "clear claim multiplicity exceeds independent clear roots",
             }
         )
         reasons.append("shared_root")
-    low_cov = any(c.visibility < 0.35 or c.quality < 0.35 for c in usable)
-    if low_cov or not usable:
+    # Coverage quality of clear support only (inconclusives do not pad quality).
+    low_cov = (not clear_claims) or any(
+        c.visibility < 0.35 or c.quality < 0.35 for c in clear_claims
+    )
+    if low_cov:
         gaps.append(
             {
                 "schema_version": "purify.robotics.belief-gap/v1",
                 "reason": "low_coverage",
-                "detail": "usable evidence thin or empty",
+                "detail": "clear evidence thin, empty, or low quality/visibility",
             }
         )
         reasons.append("low_coverage")
-
-    # Admit only if prediction set collapses to clear with enough roots and no conflict.
-    admitted = (
-        len(roots) >= contract.min_distinct_capture_roots
-        and conflicts == 0
-        and clear_n >= 1
-        and blocked_n == 0
-        and not any(r in reasons for r in ("stale", "communication_delay", "scope_mismatch"))
-    )
-    # If only blocked with enough roots → not admitted for cross (safe).
-    if blocked_n >= 1 and clear_n == 0 and len(roots) >= 1:
-        admitted = False
+    # prediction_set must be exactly {clear} among decisive (non-inconclusive) values.
+    if decisive and decisive != {"clear"}:
+        gaps.append(
+            {
+                "schema_version": "purify.robotics.belief-gap/v1",
+                "reason": "prediction_not_clear",
+                "detail": f"decisive prediction set {sorted(decisive)} != ['clear']",
+            }
+        )
+        reasons.append("prediction_not_clear")
+    if blocked_n >= 1 and clear_n == 0:
         reasons.append("prediction_blocked")
 
     reasons = list(dict.fromkeys(reasons))
+    # Admit only with enough *clear* independent roots, pure clear prediction set,
+    # and no residual deny-class BeliefGaps.
+    admitted = (
+        len(clear_roots) >= contract.min_distinct_capture_roots
+        and conflicts == 0
+        and blocked_n == 0
+        and clear_n >= contract.min_distinct_capture_roots
+        and decisive == {"clear"}
+        and not any(r in _DENY_CLASS_REASONS for r in reasons)
+    )
+    if admitted:
+        # Fail-closed invariant: admit ⇒ no residual deny-class gaps/reasons.
+        gaps = []
+        reasons = []
+
     p_blocked = 0.15 if admitted else (0.85 if blocked_n else 0.55)
     body = {
         "corridor_id": contract.corridor_id,
         "admitted": admitted,
-        "roots": list(roots),
+        "clear_roots": list(clear_roots),
         "step": current_step,
         "reasons": reasons,
     }
@@ -242,9 +288,9 @@ def evaluate_corridor_contract(
         corridor_id=contract.corridor_id,
         reasons=tuple(reasons),
         belief_gaps=tuple(gaps),
-        measurement_root_ids=roots,
+        measurement_root_ids=clear_roots,
         claim_count=len(usable),
-        distinct_capture_roots=len(roots),
+        distinct_capture_roots=len(clear_roots),
         p_blocked=p_blocked,
         receipt_sha256=receipt,
         valid_until_step=current_step + contract.evidence_age_limit,

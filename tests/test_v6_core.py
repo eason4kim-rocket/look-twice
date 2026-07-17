@@ -155,13 +155,106 @@ class V6ClaimContractTests(unittest.TestCase):
 
     def test_two_independent_clear_roots_can_admit(self) -> None:
         claims = [
-            _claim(capture_root="r1", artifact_salt="1", visibility=0.9),
-            _claim(capture_root="r2", artifact_salt="2", visibility=0.9),
+            _claim(capture_root="r1", artifact_salt="1", visibility=0.9, quality=0.9),
+            _claim(capture_root="r2", artifact_salt="2", visibility=0.9, quality=0.9),
         ]
         contract = CorridorContract(corridor_id="corridor_a")
         dec = evaluate_corridor_contract(claims, contract, current_step=20)
         self.assertTrue(dec.admitted)
         self.assertEqual(dec.distinct_capture_roots, 2)
+        self.assertEqual(dec.reasons, ())
+        self.assertEqual(dec.belief_gaps, ())
+
+    def test_clear_plus_inconclusive_one_clear_root_denied(self) -> None:
+        """prediction_set is not {clear} with enough clear roots — deny."""
+        claims = [
+            _claim(
+                capture_root="shared-fault",
+                artifact_salt="inc",
+                value="inconclusive",
+                visibility=0.25,
+                quality=0.28,
+            ),
+            _claim(
+                capture_root="only-clear",
+                artifact_salt="clr",
+                value="clear",
+                visibility=0.9,
+                quality=0.9,
+            ),
+        ]
+        contract = CorridorContract(corridor_id="corridor_a")
+        dec = evaluate_corridor_contract(claims, contract, current_step=20)
+        self.assertFalse(dec.admitted)
+        self.assertEqual(dec.distinct_capture_roots, 1)
+        self.assertIn("insufficient_roots", dec.reasons)
+
+    def test_admit_implies_no_residual_deny_gaps(self) -> None:
+        claims = [
+            _claim(capture_root="r1", artifact_salt="1", visibility=0.9, quality=0.9),
+            _claim(capture_root="r2", artifact_salt="2", visibility=0.9, quality=0.9),
+        ]
+        contract = CorridorContract(corridor_id="corridor_a")
+        dec = evaluate_corridor_contract(claims, contract, current_step=20)
+        self.assertTrue(dec.admitted)
+        self.assertEqual(dec.belief_gaps, ())
+        self.assertNotIn("low_coverage", dec.reasons)
+
+    def test_low_quality_clear_pair_denied(self) -> None:
+        claims = [
+            _claim(capture_root="r1", artifact_salt="1", visibility=0.2, quality=0.2),
+            _claim(capture_root="r2", artifact_salt="2", visibility=0.2, quality=0.2),
+        ]
+        contract = CorridorContract(corridor_id="corridor_a")
+        dec = evaluate_corridor_contract(claims, contract, current_step=20)
+        self.assertFalse(dec.admitted)
+        self.assertIn("low_coverage", dec.reasons)
+
+    def test_calibration_version_skew_denied(self) -> None:
+        c1 = build_robot_claim_v2(
+            fact_id="region:corridor_a",
+            predicate="carrier_traversable",
+            value="clear",
+            confidence=0.8,
+            observed_step=10,
+            valid_until_step=210,
+            modality="depth_geometry",
+            device_root_id="rgbd-scout-01",
+            capture_root_id="r1",
+            calibration_id="look-twice-rgbd-v5/1",  # wrong version
+            pose_version="base-link-v6",
+            model_id="test",
+            artifact_sha256=canonical_sha256({"cal": "v5", "i": 1}),
+            observer_agent_id="scout",
+            intended_actor_id="carrier",
+            quality=0.9,
+            visibility=0.9,
+            scope=ClaimScope("carrier", "payload_loaded", "corridor_a"),
+        )
+        c2 = build_robot_claim_v2(
+            fact_id="region:corridor_a",
+            predicate="carrier_traversable",
+            value="clear",
+            confidence=0.8,
+            observed_step=11,
+            valid_until_step=211,
+            modality="depth_geometry",
+            device_root_id="rgbd-scout-01",
+            capture_root_id="r2",
+            calibration_id="look-twice-rgbd-v5/1",
+            pose_version="base-link-v6",
+            model_id="test",
+            artifact_sha256=canonical_sha256({"cal": "v5", "i": 2}),
+            observer_agent_id="scout",
+            intended_actor_id="carrier",
+            quality=0.9,
+            visibility=0.9,
+            scope=ClaimScope("carrier", "payload_loaded", "corridor_a"),
+        )
+        contract = CorridorContract(corridor_id="corridor_a")
+        dec = evaluate_corridor_contract([c1, c2], contract, current_step=20)
+        self.assertFalse(dec.admitted)
+        self.assertIn("calibration_not_applicable", dec.reasons)
 
 
 class V6CommAndPlannerTests(unittest.TestCase):
@@ -303,6 +396,38 @@ class V6EpisodePathTests(unittest.TestCase):
         a = sample_v6_scenario("comm-fault", 90123).to_dict()
         b = sample_v6_scenario("comm-fault", 90123).to_dict()
         self.assertEqual(a, b)
+
+    def test_dynamic_change_invalidates_prior_admit(self) -> None:
+        """World flip must emit invalidation and re-deny the flipped corridor."""
+        sc = sample_v6_scenario("dynamic-change", 90000)
+        event = sc.oracle_context.get("external_event") or {}
+        self.assertIsNotNone(event)
+        self.assertLess(int(event["step"]), 80)
+        flip_cid = str(event["corridor_id"])
+        result = run_v6_episode(
+            scenario=sc, config=V6EpisodeConfig(policy="purify-active")
+        )
+        inv = result["plan_invalidation_receipts"]
+        self.assertGreaterEqual(len(inv), 1, msg="expected plan invalidation receipt")
+        self.assertTrue(any(i.get("invalidated") for i in inv))
+        self.assertTrue(
+            any(i.get("corridor_id") == flip_cid for i in inv),
+            msg=f"expected invalidation of {flip_cid}, got {inv}",
+        )
+        # After flip, truth is blocked for that corridor — no unsafe for purify.
+        self.assertFalse(result["metrics"]["unsafe_crossing"])
+        # Must not treat a wiped corridor as a live direct cross without re-admit.
+        if result["metrics"]["route_mode"] == "direct":
+            # Direct is only ok on a non-invalidated corridor with live admit.
+            admits = [
+                g
+                for g in result["gate_receipts"]
+                if g.get("admitted") and g.get("corridor_id") != flip_cid
+            ]
+            # Or direct after re-repair on another corridor.
+            self.assertTrue(
+                admits or result["metrics"]["selected_corridor"] != flip_cid
+            )
 
 
 if __name__ == "__main__":
