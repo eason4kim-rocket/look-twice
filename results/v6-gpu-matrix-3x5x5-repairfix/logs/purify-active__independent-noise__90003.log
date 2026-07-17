@@ -1,0 +1,1 @@
+v6 finished policy=purify-active profile=independent-noise seed=90003 mission=True unsafe=False route=detour repair_ok=False claims_mode=genesis_rgbd_multi_agent_v6 device=cuda:0 gpu=AMD Radeon Graphics output=outputs/v6/gpu-matrix-3x5x5-repairfix/purify-active__independent-noise__90003.json

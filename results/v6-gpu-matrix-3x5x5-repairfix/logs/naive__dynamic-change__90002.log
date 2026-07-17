@@ -1,0 +1,1 @@
+v6 finished policy=naive profile=dynamic-change seed=90002 mission=False unsafe=True route=none repair_ok=False claims_mode=genesis_rgbd_multi_agent_v6 device=cuda:0 gpu=AMD Radeon Graphics output=outputs/v6/gpu-matrix-3x5x5-repairfix/naive__dynamic-change__90002.json

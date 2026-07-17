@@ -1,0 +1,1 @@
+v6 finished policy=purify-active profile=evidence-echo seed=90004 mission=True unsafe=False route=detour repair_ok=False claims_mode=genesis_rgbd_multi_agent_v6 device=cuda:0 gpu=AMD Radeon Graphics output=outputs/v6/gpu-matrix-3x5x5-repairfix/purify-active__evidence-echo__90004.json

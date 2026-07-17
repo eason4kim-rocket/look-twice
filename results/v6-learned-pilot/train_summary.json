@@ -1,0 +1,8 @@
+{
+  "n_worlds": 256,
+  "epochs": 40,
+  "in_dim": 32,
+  "final_loss": 2.4647620879113674,
+  "checkpoint": "outputs/v6/learned-pilot/best.pt",
+  "data": "outputs/v6/learned-pilot/counterfactual_pilot.jsonl"
+}

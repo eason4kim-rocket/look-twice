@@ -1,0 +1,16 @@
+labeled 32/256
+labeled 64/256
+labeled 96/256
+labeled 128/256
+labeled 160/256
+labeled 192/256
+labeled 224/256
+labeled 256/256
+{
+  "n_worlds": 256,
+  "epochs": 40,
+  "in_dim": 32,
+  "final_loss": 2.4647620879113674,
+  "checkpoint": "outputs/v6/learned-pilot/best.pt",
+  "data": "outputs/v6/learned-pilot/counterfactual_pilot.jsonl"
+}

@@ -1,0 +1,54 @@
+{
+  "urdfs": [
+    {
+      "path": "/workspace/look-twice-v6/assets/robots/diff_drive_carrier.urdf",
+      "n_joints": 4,
+      "continuous_wheels": [
+        {
+          "name": "left_wheel_joint",
+          "type": "continuous"
+        },
+        {
+          "name": "right_wheel_joint",
+          "type": "continuous"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "path": "/workspace/look-twice-v6/assets/robots/diff_drive_scout.urdf",
+      "n_joints": 3,
+      "continuous_wheels": [
+        {
+          "name": "left_wheel_joint",
+          "type": "continuous"
+        },
+        {
+          "name": "right_wheel_joint",
+          "type": "continuous"
+        }
+      ],
+      "ok": true
+    }
+  ],
+  "all_urdf_ok": true,
+  "genesis": {
+    "attempted": true,
+    "build": true,
+    "entities": [
+      {
+        "file": "diff_drive_carrier.urdf",
+        "loaded": true
+      },
+      {
+        "file": "diff_drive_scout.urdf",
+        "loaded": true
+      }
+    ]
+  },
+  "waypoint_acceptance": {
+    "criterion": "20 seeds reach all viewpoints, err<0.10m, yaw<8deg, zero collision on clear",
+    "status": "not_run_full_bar",
+    "note": "URDFs and continuous wheel joints are present. Full differential-drive PD control acceptance requires a dedicated physics backend integration; large-scale matrices continue on batched kinematic and must not claim true wheel dynamics in video."
+  }
+}
