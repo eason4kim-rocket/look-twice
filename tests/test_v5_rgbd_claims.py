@@ -107,6 +107,7 @@ class V5RgbdClaimsTests(unittest.TestCase):
         self.assertFalse(runtime_supports_rgbd_claims(object()))
 
     def test_learned_adapter_replaces_segmentation_proxy_and_keeps_root(self) -> None:
+        from v5_rgbd_claims import LEARNED_RGBD_SENSOR_VERSION
         scenario = sample_v4_scenario("independent-noise", 50000)
         frame = SyntheticEvidenceSource().raw_frame(
             scenario=scenario,
@@ -150,6 +151,12 @@ class V5RgbdClaimsTests(unittest.TestCase):
         self.assertEqual(len(roots), 1)
         learned = next(c for c in claims if c.modality == "learned_rgbd_semantic")
         self.assertTrue(learned.is_physical_measurement)
+        physical = [c for c in claims if c.modality != "static_map"]
+        self.assertEqual(
+            {c.calibration_id for c in physical},
+            {LEARNED_RGBD_SENSOR_VERSION},
+        )
+        self.assertEqual(audit["sensor_version"], LEARNED_RGBD_SENSOR_VERSION)
         self.assertEqual(audit["claims_mode"], "genesis_rgbd_depth_learned_semantic")
 
     def test_synthetic_episode_still_marks_synthetic_mode(self) -> None:

@@ -33,6 +33,7 @@ from v4_perception import (
 CLAIMS_MODE_SYNTHETIC = "synthetic_modality_proxies"
 CLAIMS_MODE_GENESIS_RGBD = "genesis_rgbd_depth_semantic"
 CLAIMS_MODE_GENESIS_LEARNED_RGBD = "genesis_rgbd_depth_learned_semantic"
+LEARNED_RGBD_SENSOR_VERSION = "look-twice-rgbd-learned-v5/1"
 
 
 def claims_from_depth_and_segmentation(
@@ -155,6 +156,39 @@ def process_genesis_observation(
         if not proxy_semantics:
             raise RuntimeError("learned adapter requires a semantic Claim template")
         template = proxy_semantics[0]
+        # The deployed depth + learned-semantic pair is a new combined sensor,
+        # not the v4 segmentation-proxy sensor. Rebuild physical depth Claims
+        # under that version so Go can fuse both modalities, while requiring a
+        # separately fitted Gate calibration artifact for this distribution.
+        versioned_claims: list[RobotClaim] = []
+        for claim in claims:
+            if claim.modality == "simulated_semantic_sensor":
+                continue
+            if claim.modality == "static_map":
+                versioned_claims.append(claim)
+                continue
+            versioned_claims.append(
+                build_robot_claim(
+                    fact_id=claim.fact_id,
+                    predicate=claim.predicate,
+                    value=claim.value,
+                    confidence=claim.confidence,
+                    observed_step=claim.observed_step,
+                    valid_until_step=claim.valid_until_step,
+                    modality=claim.modality,
+                    device_root_id=claim.device_root_id,
+                    capture_root_id=claim.capture_root_id,
+                    calibration_id=LEARNED_RGBD_SENSOR_VERSION,
+                    pose_version=claim.pose_version,
+                    model_id=claim.model_id,
+                    artifact_sha256=claim.artifact_sha256,
+                    parent_claim_ids=claim.parent_claim_ids,
+                    quality=claim.quality,
+                    visibility=claim.visibility,
+                    temporal_skew=claim.temporal_skew,
+                    scope=claim.scope,
+                )
+            )
         learned_claim = build_robot_claim(
             fact_id=template.fact_id,
             predicate=template.predicate,
@@ -165,7 +199,7 @@ def process_genesis_observation(
             modality="learned_rgbd_semantic",
             device_root_id=template.device_root_id,
             capture_root_id=template.capture_root_id,
-            calibration_id=str(learned["calibration_id"]),
+            calibration_id=LEARNED_RGBD_SENSOR_VERSION,
             pose_version=template.pose_version,
             model_id=str(learned["model_id"]),
             artifact_sha256=str(learned["input_sha256"]),
@@ -174,7 +208,7 @@ def process_genesis_observation(
             temporal_skew=template.temporal_skew,
             scope=template.scope,
         )
-        claims = [claim for claim in claims if claim.modality != "simulated_semantic_sensor"]
+        claims = versioned_claims
         claims.append(learned_claim)
         for index in range(max(0, len(proxy_semantics) - 1)):
             claims.append(
@@ -211,7 +245,11 @@ def process_genesis_observation(
         "depth_result": dict(capture.depth_result),
         "semantic_result": semantic_result,
         "corruption": corruption_wire,
-        "sensor_version": str(corruption_wire.get("sensor_version", V4_SENSOR_VERSION)),
+        "sensor_version": (
+            LEARNED_RGBD_SENSOR_VERSION
+            if learned_sensor is not None
+            else str(corruption_wire.get("sensor_version", V4_SENSOR_VERSION))
+        ),
         "claim_ids": [c.claim_id for c in claims],
         "claim_values": [c.value for c in claims],
         "claim_modalities": [c.modality for c in claims],
@@ -230,6 +268,7 @@ __all__ = (
     "CLAIMS_MODE_GENESIS_RGBD",
     "CLAIMS_MODE_GENESIS_LEARNED_RGBD",
     "CLAIMS_MODE_SYNTHETIC",
+    "LEARNED_RGBD_SENSOR_VERSION",
     "V4_SENSOR_VERSION",
     "claims_from_depth_and_segmentation",
     "process_genesis_observation",
