@@ -47,5 +47,12 @@ The learned sensor enters the final Look Twice demo only if all are true:
 5. closed-loop Purify unsafe crossing remains zero on the selected evaluation;
 6. the online model receives no clean segmentation or oracle world state.
 
+Before opening the locked test results, the conformal tolerance is frozen at
+coverage `>= 0.92` (`1 - alpha - 0.03`) for overall, clear, and blocked
+coverage. To prevent a vacuous predictor from passing by always returning both
+labels, locked-test singleton rate must be at least `0.50` and singleton
+accuracy at least `0.85`. Passing these offline gates creates only a model
+candidate; final online promotion still requires a closed-loop safety run.
+
 Failure is reported honestly. The existing segmentation-proxy path remains the
 stable baseline and is not overwritten.
