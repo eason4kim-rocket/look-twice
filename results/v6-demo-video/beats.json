@@ -1,0 +1,29 @@
+[
+  {
+    "policy": "purify-active",
+    "route_mode": "direct",
+    "repair_success": true,
+    "mission_success": true,
+    "unsafe_crossing": false,
+    "claims_mode": "genesis_rgbd_multi_agent_v6",
+    "observation_count": 3
+  },
+  {
+    "policy": "purify-passive",
+    "route_mode": "detour",
+    "repair_success": false,
+    "mission_success": true,
+    "unsafe_crossing": false,
+    "claims_mode": "genesis_rgbd_multi_agent_v6",
+    "observation_count": 1
+  },
+  {
+    "policy": "naive",
+    "route_mode": "direct",
+    "repair_success": false,
+    "mission_success": true,
+    "unsafe_crossing": false,
+    "claims_mode": "genesis_rgbd_multi_agent_v6",
+    "observation_count": 1
+  }
+]

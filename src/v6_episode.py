@@ -24,9 +24,33 @@ from v6_repair import choose_evidence_action
 from v6_scenario import CARRIER_ID, PAYLOAD_ID, SCOUT_ID, V6ScenarioSample
 
 EPISODE_SCHEMA = "look-twice.episode/v6"
-POLICIES = ("naive", "purify-passive", "purify-active")
+POLICIES = (
+    "naive",
+    "purify-passive",
+    "purify-active",
+    "purify-active-learned",
+    "purify-active-dagger",
+    "purify-random",
+)
 CLAIMS_MODE_SYNTHETIC = "synthetic_multi_agent_v6"
 CLAIMS_MODE_GENESIS = "genesis_rgbd_multi_agent_v6"
+ACTIVE_REPAIR_POLICIES = frozenset(
+    {
+        "purify-active",
+        "purify-active-learned",
+        "purify-active-dagger",
+        "purify-random",
+    }
+)
+GATED_POLICIES = frozenset(
+    {
+        "purify-passive",
+        "purify-active",
+        "purify-active-learned",
+        "purify-active-dagger",
+        "purify-random",
+    }
+)
 
 
 @dataclass
@@ -37,6 +61,7 @@ class V6EpisodeConfig:
     max_replans: int = 3
     device: str = "cpu"
     prefer_rgbd_claims: bool = True
+    learned_checkpoint: str | None = None
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
@@ -225,8 +250,32 @@ def run_v6_episode(
 
     policy = config.policy
     is_naive = policy == "naive"
-    allows_repair = policy == "purify-active"
-    requires_gate = policy in ("purify-passive", "purify-active")
+    allows_repair = policy in ACTIVE_REPAIR_POLICIES
+    requires_gate = policy in GATED_POLICIES
+    learned_model = None
+    learned_device = config.device if str(config.device).startswith("cuda") else "cpu"
+    if policy in ("purify-active-learned", "purify-active-dagger"):
+        from pathlib import Path as _Path
+
+        from v6_learned_policy import LearnedPolicyArtifact
+
+        ckpt = config.learned_checkpoint
+        if not ckpt:
+            # Prefer DAgger round-3 then pilot best.
+            candidates = [
+                _Path("outputs/v6/learned-dagger/round3/best.pt"),
+                _Path("outputs/v6/learned-dagger/best.pt"),
+                _Path("outputs/v6/learned-pilot/best.pt"),
+                _Path("results/v6-learned-pilot/best.pt"),
+            ]
+            ckpt = next((str(p) for p in candidates if p.is_file()), None)
+        if not ckpt:
+            raise FileNotFoundError(
+                f"policy {policy} requires --learned-checkpoint or a default best.pt"
+            )
+        learned_model = LearnedPolicyArtifact(_Path(ckpt), in_dim=0).load(
+            device=learned_device
+        )
 
     def publish_and_receive(new_claims: list[RobotClaimV2]) -> None:
         nonlocal claims
@@ -351,15 +400,62 @@ def run_v6_episode(
                 runtime.pose_of(CARRIER_ID).y,
             )
             scout_xy = (runtime.pose_of(SCOUT_ID).x, runtime.pose_of(SCOUT_ID).y)
-            selected, ranking = choose_evidence_action(
-                public,
-                gap_reasons=gaps,
-                carrier_xy=carrier_xy,
-                scout_xy=scout_xy,
-                visited=visited,
-                observations_taken=observations,
-                max_observations=config.max_observations,
-            )
+            if policy in ("purify-active-learned", "purify-active-dagger") and learned_model is not None:
+                from v6_learned_policy import rank_with_learned
+                from v6_repair import build_candidate_actions
+
+                candidates = build_candidate_actions(
+                    public,
+                    carrier_xy=carrier_xy,
+                    scout_xy=scout_xy,
+                    visited=visited,
+                )
+                selected, ranking = rank_with_learned(
+                    learned_model,
+                    candidates,
+                    gap_reasons=gaps,
+                    observations_taken=observations,
+                    max_observations=config.max_observations,
+                    device=learned_device,
+                )
+            elif policy == "purify-random":
+                import random as _random
+
+                from v6_repair import build_candidate_actions
+
+                candidates = build_candidate_actions(
+                    public,
+                    carrier_xy=carrier_xy,
+                    scout_xy=scout_xy,
+                    visited=visited,
+                )
+                eligible = [
+                    a
+                    for a in candidates
+                    if a.reachable or a.kind == "safe_fallback"
+                ]
+                rng = _random.Random(
+                    (scenario.seed * 1009 + observations * 17 + replan_count) % (2**31)
+                )
+                selected = rng.choice(eligible) if eligible else None
+                ranking = [
+                    {
+                        "action": a.to_dict(),
+                        "utility": 1.0 if a is selected else 0.0,
+                        "eligible": True,
+                    }
+                    for a in eligible
+                ]
+            else:
+                selected, ranking = choose_evidence_action(
+                    public,
+                    gap_reasons=gaps,
+                    carrier_xy=carrier_xy,
+                    scout_xy=scout_xy,
+                    visited=visited,
+                    observations_taken=observations,
+                    max_observations=config.max_observations,
+                )
             receipt = authorize_evidence_request(
                 belief_gaps=gaps,
                 selected_action=selected.to_dict() if selected else None,

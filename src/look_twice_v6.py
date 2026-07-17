@@ -46,6 +46,12 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Force synthetic claims even on Genesis",
     )
+    parser.add_argument(
+        "--learned-checkpoint",
+        type=Path,
+        default=None,
+        help="Checkpoint for purify-active-learned / purify-active-dagger",
+    )
     args = parser.parse_args(argv)
 
     scenario = sample_v6_scenario(args.profile, args.seed)
@@ -54,6 +60,9 @@ def main(argv: list[str] | None = None) -> int:
         policy=args.policy,
         device=device,
         prefer_rgbd_claims=not args.no_rgbd_claims,
+        learned_checkpoint=str(args.learned_checkpoint)
+        if args.learned_checkpoint
+        else None,
     )
 
     if args.runtime == "synthetic":

@@ -15,6 +15,9 @@ PROFILES = (
     "dynamic-change",
     "time-skew",
     "comm-fault",
+    # OOD holdout profiles (not used in locked formal tranche by default)
+    "heavy-occlusion",
+    "multi-fault",
 )
 
 CARRIER_ID = "carrier"
@@ -124,6 +127,10 @@ def sample_v6_scenario(profile: str, seed: int) -> V6ScenarioSample:
         noise = 0.22 + 0.1 * (seed % 3) / 2.0
     if profile == "shared-occlusion":
         noise = 0.45 + 0.1 * (seed % 3) / 2.0
+    if profile == "heavy-occlusion":
+        noise = 0.62 + 0.12 * (seed % 4) / 3.0
+    if profile == "multi-fault":
+        noise = 0.40 + 0.15 * (seed % 3) / 2.0
 
     viewpoints = _viewpoints_for("corridor_a", 1.0) + _viewpoints_for("corridor_b", 1.0)
     # Make one far view occasionally unreachable.
@@ -168,6 +175,28 @@ def sample_v6_scenario(profile: str, seed: int) -> V6ScenarioSample:
         }
     if profile == "time-skew":
         comm["delay_steps"] = 35 + seed % 10
+    if profile == "heavy-occlusion":
+        # More unreachable side views → harder independent roots.
+        for i, vp in enumerate(viewpoints):
+            if i % 3 == 1:
+                vp["reachable"] = False
+            vp["predicted_coverage"] = max(
+                0.35, float(vp.get("predicted_coverage", 0.75)) - 0.2
+            )
+    if profile == "multi-fault":
+        comm = {
+            "delay_steps": 20 + seed % 15,
+            "drop_rate": 0.12,
+            "echo_fanout": 2 + seed % 2,
+            "reorder": True,
+        }
+        if seed % 2 == 0:
+            external_event = {
+                "step": 30 + (seed % 6),
+                "corridor_id": "corridor_a" if not a_blocked else "corridor_b",
+                "to_blocked": True,
+                "kind": "corridor_block_appear",
+            }
 
     public = {
         "carrier_id": CARRIER_ID,

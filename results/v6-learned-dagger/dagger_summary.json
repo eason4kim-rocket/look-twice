@@ -1,0 +1,324 @@
+{
+  "rounds": 3,
+  "bc_worlds": 256,
+  "dagger_worlds_per_round": 96,
+  "aggregate_final": 1120,
+  "round_meta": [
+    {
+      "round": 1,
+      "aggregate_n": 544,
+      "new_n": 288,
+      "final_loss": 2.3774152643540325,
+      "in_dim": 32
+    },
+    {
+      "round": 2,
+      "aggregate_n": 832,
+      "new_n": 288,
+      "final_loss": 2.355489405588462,
+      "in_dim": 32
+    },
+    {
+      "round": 3,
+      "aggregate_n": 1120,
+      "new_n": 288,
+      "final_loss": 2.3448186727506775,
+      "in_dim": 32
+    }
+  ],
+  "teacher_top1_agree": 0.8541666666666666,
+  "promote_candidate": true,
+  "promotion_rule": "teacher_top1_agree>=0.55 on 48 synthetic probe worlds",
+  "checkpoint": "results/v6-learned-dagger/best.pt",
+  "probe": [
+    {
+      "seed": 99000,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99001,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99002,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99003,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99004,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99005,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99006,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99007,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99008,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99009,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99010,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99011,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99012,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99013,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99014,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99015,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99016,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99017,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99018,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99019,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99020,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99021,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99022,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99023,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99024,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99025,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99026,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99027,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99028,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99029,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99030,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99031,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99032,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99033,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99034,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99035,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99036,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99037,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99038,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99039,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99040,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99041,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99042,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99043,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99044,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99045,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    },
+    {
+      "seed": 99046,
+      "teacher": "scout_b_left_far",
+      "student": "scout_a_right_near",
+      "agree": false
+    },
+    {
+      "seed": 99047,
+      "teacher": "scout_a_right_far",
+      "student": "scout_a_right_far",
+      "agree": true
+    }
+  ],
+  "note": "Promotion here is teacher-agreement only. Online GPU mission promotion requires paired genesis matrix beating heuristic on locked seeds."
+}

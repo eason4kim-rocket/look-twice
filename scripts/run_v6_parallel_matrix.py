@@ -53,6 +53,8 @@ def _run_one(payload: dict[str, Any]) -> dict[str, Any]:
         "--json-output",
         str(output),
     ]
+    if payload.get("learned_checkpoint"):
+        cmd.extend(["--learned-checkpoint", str(payload["learned_checkpoint"])])
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT / "src")
     env.setdefault("PYOPENGL_PLATFORM", "egl")
@@ -110,6 +112,11 @@ def main() -> int:
     parser.add_argument("--runtime", default="genesis", choices=("genesis", "synthetic"))
     parser.add_argument("--motion", default="kinematic")
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument(
+        "--learned-checkpoint",
+        default="",
+        help="Optional checkpoint path for learned/dagger policies",
+    )
     args = parser.parse_args()
 
     out = args.output_dir
@@ -132,6 +139,7 @@ def main() -> int:
                         "runtime": args.runtime,
                         "motion": args.motion,
                         "device": args.device,
+                        "learned_checkpoint": args.learned_checkpoint or "",
                         "output": str(out / f"{stem}.json"),
                         "log": str(log_dir / f"{stem}.log"),
                     }
