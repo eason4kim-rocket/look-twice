@@ -17,7 +17,12 @@ from typing import Any, Iterable, Mapping
 ROBOT_CLAIM_SCHEMA = "look-twice.robot-claim/v1"
 CLAIM_VALUES = frozenset(("clear", "blocked", "inconclusive"))
 PHYSICAL_MODALITIES = frozenset(
-    ("depth_geometry", "simulated_semantic_sensor", "learned_rgbd_semantic")
+    (
+        "depth_geometry",
+        "simulated_semantic_sensor",
+        "learned_rgbd_semantic",
+        "vision_semantic_v7",
+    )
 )
 UNKNOWN_ROOTS = frozenset(("", "unknown", "unavailable", "none"))
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")

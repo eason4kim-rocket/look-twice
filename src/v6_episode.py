@@ -19,6 +19,25 @@ from v6_contracts import (
     authorize_evidence_request,
     evaluate_corridor_contract,
 )
+
+def _evaluate_gate(claims, contract, *, current_step: int, config: "V6EpisodeConfig"):
+    if config.use_v7_contract:
+        from v7_contracts import CorridorContractV7, evaluate_corridor_contract_v7
+
+        if not isinstance(contract, CorridorContractV7):
+            contract = CorridorContractV7(
+                corridor_id=contract.corridor_id,
+                evidence_age_limit=contract.evidence_age_limit,
+                min_distinct_capture_roots=contract.min_distinct_capture_roots,
+                communication_delay_limit=contract.communication_delay_limit,
+                calibration_id=contract.calibration_id,
+                require_vision_clear_root=config.require_vision_clear_root,
+                enforce_modality_conflict=config.enforce_modality_conflict,
+            )
+        return evaluate_corridor_contract_v7(
+            claims, contract, current_step=current_step
+        )
+    return evaluate_corridor_contract(claims, contract, current_step=current_step)
 from v6_motion import MultiAgentKinematicRuntime, build_runtime_from_scenario
 from v6_repair import choose_evidence_action
 from v6_scenario import CARRIER_ID, PAYLOAD_ID, SCOUT_ID, V6ScenarioSample
@@ -62,6 +81,13 @@ class V6EpisodeConfig:
     device: str = "cpu"
     prefer_rgbd_claims: bool = True
     learned_checkpoint: str | None = None
+    # v7 optional hooks (default off — v6 matrices unchanged)
+    vision_enabled: bool = False
+    vision_backend: str = "heuristic_rgb_proxy"
+    vision_checkpoint: str | None = None
+    require_vision_clear_root: bool = False
+    enforce_modality_conflict: bool = True
+    use_v7_contract: bool = False
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
@@ -352,6 +378,63 @@ def run_v6_episode(
                 predicted_coverage=predicted_coverage,
                 ttl=config.ttl_steps,
             )
+        # Optional v7 vision proposer (appends; does not replace geometry claims).
+        if config.vision_enabled:
+            from v7_vision_claims import (
+                propose_vision,
+                synthetic_rgb_for_label,
+                vision_proposal_to_claim_v2,
+            )
+
+            # Prefer real RGB if runtime exposed it on last audit; else synthetic proxy RGB.
+            rgb = None
+            depth = None
+            if rgbd_audits:
+                # No raw pixels in audit by default — synthetic labeled by public profile cue.
+                rgb = None
+            if rgb is None:
+                # Public proxy label (not oracle blocked flag).
+                cue = "inconclusive"
+                if "heavy" in str(scenario.profile) or "shared-occlusion" in str(
+                    scenario.profile
+                ):
+                    cue = "blocked" if (scenario.seed + capture_index) % 3 == 0 else "clear"
+                else:
+                    cue = "clear" if (scenario.seed + capture_index) % 2 == 0 else "inconclusive"
+                rgb = synthetic_rgb_for_label(
+                    cue, seed=scenario.seed * 17 + capture_index
+                )
+            prop = propose_vision(
+                rgb,
+                depth=depth,
+                backend=config.vision_backend,
+                checkpoint=config.vision_checkpoint,
+                device=config.device if str(config.device).startswith("cuda") else "cpu",
+                meta={
+                    "agent_id": agent_id,
+                    "corridor_id": corridor_id,
+                    "viewpoint": viewpoint_name,
+                    "step": runtime.current_step,
+                },
+            )
+            vclaim = vision_proposal_to_claim_v2(
+                prop,
+                agent_id=agent_id,
+                corridor_id=corridor_id,
+                step=runtime.current_step,
+                ttl=config.ttl_steps,
+                capture_root_id=f"vision-{agent_id}-{capture_index}-{prop.input_sha256[:10]}",
+            )
+            new_claims = list(new_claims) + [vclaim]
+            rgbd_audits.append(
+                {
+                    "kind": "vision_proposal_v7",
+                    "observer_agent_id": agent_id,
+                    "corridor_id": corridor_id,
+                    "viewpoint": viewpoint_name,
+                    **prop.to_dict(),
+                }
+            )
         capture_index += 1
         observations += 1
         visited.add(viewpoint_name)
@@ -376,8 +459,8 @@ def run_v6_episode(
     def evaluate_all() -> dict[str, Any]:
         decisions = {}
         for cid, contract in contracts.items():
-            dec = evaluate_corridor_contract(
-                claims, contract, current_step=runtime.current_step
+            dec = _evaluate_gate(
+                claims, contract, current_step=runtime.current_step, config=config
             )
             decisions[cid] = dec
             gate_receipts.append(dec.to_wire())
@@ -549,8 +632,8 @@ def run_v6_episode(
     def live_admit(cid: str) -> bool:
         if cid in invalidated_corridors:
             return False
-        dec = evaluate_corridor_contract(
-            claims, contracts[cid], current_step=runtime.current_step
+        dec = _evaluate_gate(
+            claims, contracts[cid], current_step=runtime.current_step, config=config
         )
         gate_receipts.append(dec.to_wire())
         return bool(dec.admitted)
