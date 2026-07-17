@@ -120,9 +120,11 @@ def build_candidate_actions(
         if aname not in ALLOWED_EVIDENCE_ACTIONS:
             continue
         xy = (float(vp["xy"][0]), float(vp["xy"][1]))
-        reachable = bool(vp.get("reachable", True)) and aname not in visited
+        # Visited may store action name and/or raw viewpoint path.
+        already = aname in visited or vname in visited
+        reachable = bool(vp.get("reachable", True)) and not already
         # Geometric revisit: already at pose.
-        if math.dist(scout_xy, xy) <= 0.10 and aname in visited:
+        if math.dist(scout_xy, xy) <= 0.10:
             reachable = False
         actions.append(
             EvidenceAction(

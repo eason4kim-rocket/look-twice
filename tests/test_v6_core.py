@@ -210,6 +210,48 @@ class V6ClaimContractTests(unittest.TestCase):
         self.assertFalse(dec.admitted)
         self.assertIn("low_coverage", dec.reasons)
 
+    def test_stale_sibling_claims_do_not_block_fresh_clear_roots(self) -> None:
+        """Filtered stale/out-of-scope claims must not poison a valid admit."""
+        fresh = [
+            _claim(capture_root="r1", artifact_salt="1", visibility=0.9, quality=0.9, observed=100),
+            _claim(capture_root="r2", artifact_salt="2", visibility=0.9, quality=0.9, observed=100),
+        ]
+        stale = _claim(
+            capture_root="old",
+            artifact_salt="old",
+            visibility=0.9,
+            quality=0.9,
+            observed=0,
+        )
+        # Make stale expire early
+        stale = build_robot_claim_v2(
+            fact_id=stale.fact_id,
+            predicate=stale.predicate,
+            value="clear",
+            confidence=0.8,
+            observed_step=0,
+            valid_until_step=10,
+            modality="depth_geometry",
+            device_root_id=stale.device_root_id,
+            capture_root_id="old",
+            calibration_id=SENSOR_VERSION_V6,
+            pose_version="base-link-v6",
+            model_id="test",
+            artifact_sha256=canonical_sha256({"stale": True}),
+            observer_agent_id="scout",
+            intended_actor_id="carrier",
+            received_step=0,
+            quality=0.9,
+            visibility=0.9,
+            scope=ClaimScope("carrier", "payload_loaded", "corridor_a"),
+        )
+        contract = CorridorContract(corridor_id="corridor_a")
+        dec = evaluate_corridor_contract(
+            [stale, *fresh], contract, current_step=100
+        )
+        self.assertTrue(dec.admitted, msg=f"reasons={dec.reasons} gaps={dec.belief_gaps}")
+        self.assertEqual(dec.reasons, ())
+
     def test_calibration_version_skew_denied(self) -> None:
         c1 = build_robot_claim_v2(
             fact_id="region:corridor_a",

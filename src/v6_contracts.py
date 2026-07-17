@@ -196,7 +196,12 @@ def evaluate_corridor_contract(
     decisive = {v for v in values if v != "inconclusive"}
 
     gaps: list[dict[str, Any]] = []
-    reasons: list[str] = list(reject_reasons)
+    # Discarded-claim diagnostics (stale/echo/scope of *other* messages) must
+    # NOT poison admit when the usable clear support already satisfies the
+    # contract. Only elevate filter rejects when nothing usable remains.
+    reasons: list[str] = []
+    if not usable:
+        reasons.extend(reject_reasons)
 
     if len(clear_roots) < contract.min_distinct_capture_roots:
         gaps.append(

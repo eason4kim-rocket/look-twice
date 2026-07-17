@@ -184,8 +184,11 @@ def sample_v6_scenario(profile: str, seed: int) -> V6ScenarioSample:
         "mission_deadline": MISSION_DEADLINE,
         "max_observations": 6,
         "max_replans": 3,
-        "evidence_age_limit": 80,
-        "communication_delay_limit": 40,
+        # Motion between scout viewpoints burns hundreds of sim steps; a
+        # paper-scale TTL of 80 made the first clear root expire before the
+        # second independent root could be collected. Align with claim TTL.
+        "evidence_age_limit": 2000,
+        "communication_delay_limit": 200,
         "min_distinct_capture_roots": 2,
         "declared_noise_intensity": min(0.75, noise),
         "sensor_version": "look-twice-rgbd-multi-agent-v6/1",

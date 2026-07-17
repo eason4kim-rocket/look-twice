@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot name="look_twice_diff_drive_carrier">
+  <link name="base_link">
+    <visual>
+      <geometry><box size="0.55 0.42 0.22"/></geometry>
+      <material name="orange"><color rgba="0.9 0.45 0.15 1"/></material>
+    </visual>
+    <collision>
+      <geometry><box size="0.55 0.42 0.22"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="18.0"/>
+      <inertia ixx="0.35" ixy="0" ixz="0" iyy="0.42" iyz="0" izz="0.50"/>
+    </inertial>
+  </link>
+  <link name="payload">
+    <visual>
+      <geometry><box size="0.30 0.25 0.18"/></geometry>
+      <material name="crate"><color rgba="0.55 0.35 0.2 1"/></material>
+    </visual>
+    <collision>
+      <geometry><box size="0.30 0.25 0.18"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="4.0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0" iyy="0.05" iyz="0" izz="0.05"/>
+    </inertial>
+  </link>
+  <link name="left_wheel">
+    <visual><geometry><cylinder radius="0.08" length="0.05"/></geometry></visual>
+    <collision><geometry><cylinder radius="0.08" length="0.05"/></geometry></collision>
+    <inertial>
+      <mass value="0.6"/>
+      <inertia ixx="0.002" ixy="0" ixz="0" iyy="0.002" iyz="0" izz="0.002"/>
+    </inertial>
+  </link>
+  <link name="right_wheel">
+    <visual><geometry><cylinder radius="0.08" length="0.05"/></geometry></visual>
+    <collision><geometry><cylinder radius="0.08" length="0.05"/></geometry></collision>
+    <inertial>
+      <mass value="0.6"/>
+      <inertia ixx="0.002" ixy="0" ixz="0" iyy="0.002" iyz="0" izz="0.002"/>
+    </inertial>
+  </link>
+  <link name="caster">
+    <visual><geometry><sphere radius="0.04"/></geometry></visual>
+    <collision><geometry><sphere radius="0.04"/></geometry></collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="0.0002" ixy="0" ixz="0" iyy="0.0002" iyz="0" izz="0.0002"/>
+    </inertial>
+  </link>
+  <joint name="payload_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="payload"/>
+    <origin xyz="0 0 0.20" rpy="0 0 0"/>
+  </joint>
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="0 0.22 -0.07" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0 -0.22 -0.07" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster"/>
+    <origin xyz="-0.18 0 -0.10" rpy="0 0 0"/>
+  </joint>
+</robot>

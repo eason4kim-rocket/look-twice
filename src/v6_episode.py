@@ -306,6 +306,11 @@ def run_v6_episode(
         capture_index += 1
         observations += 1
         visited.add(viewpoint_name)
+        # Also mark fixed action-set aliases so planner does not re-pick same side.
+        if viewpoint_name.startswith("corridor_a/"):
+            visited.add("scout_a_" + viewpoint_name.split("/", 1)[1])
+        elif viewpoint_name.startswith("corridor_b/"):
+            visited.add("scout_b_" + viewpoint_name.split("/", 1)[1])
         publish_and_receive(new_claims)
 
     # Initial carrier front-view (low coverage / shared root on first capture).
