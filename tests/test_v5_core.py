@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -18,6 +19,14 @@ CORE = ROOT / "purify_robotics" / "bin" / "purify-robotics-core"
 
 
 class V5CoreTests(unittest.TestCase):
+    def test_live_git_commit_precedes_static_pin(self) -> None:
+        from v5_episode import git_commit
+
+        live = "a" * 40
+        with mock.patch.dict("os.environ", {"LOOK_TWICE_GIT_COMMIT": ""}):
+            with mock.patch("v5_episode.subprocess.check_output", return_value=live + "\n"):
+                self.assertEqual(git_commit(), live)
+
     def test_profiles_and_determinism(self) -> None:
         self.assertIn("manipulation-occlusion", PROFILES)
         a = sample_v5_scenario("dynamic-change", 50000).to_dict()

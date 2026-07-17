@@ -54,16 +54,21 @@ def git_commit() -> str:
     pinned = os.environ.get("LOOK_TWICE_GIT_COMMIT", "").strip()
     if len(pinned) == 40 and all(c in "0123456789abcdef" for c in pinned):
         return pinned
-    pin_file = Path(__file__).resolve().parents[1] / ".git_commit"
-    if pin_file.is_file():
-        value = pin_file.read_text(encoding="utf-8").strip()
-        if len(value) == 40 and all(c in "0123456789abcdef" for c in value):
-            return value
     try:
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
     except (OSError, subprocess.CalledProcessError):
+        # Source archives may not include .git; their build pipeline can pin
+        # provenance in this file. A live checkout must never be shadowed by a
+        # stale pin committed for an earlier cloud image.
+        pin_file = Path(__file__).resolve().parents[1] / ".git_commit"
+        if pin_file.is_file():
+            value = pin_file.read_text(encoding="utf-8").strip()
+            if len(value) == 40 and all(
+                c in "0123456789abcdef" for c in value
+            ):
+                return value
         return "unknown"
 
 
