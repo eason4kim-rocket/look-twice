@@ -78,6 +78,16 @@ class CorruptionAudit:
 
 
 @dataclass(frozen=True, slots=True)
+class CorruptedEvidenceArrays:
+    """Corrupted sensor arrays shared by online Claims and offline training."""
+
+    rgb: np.ndarray
+    depth: np.ndarray
+    segmentation: np.ndarray
+    audit: CorruptionAudit
+
+
+@dataclass(frozen=True, slots=True)
 class EvidenceCapture:
     viewpoint: str
     viewpoint_xy: tuple[float, float]
@@ -377,19 +387,17 @@ def _save_arrays(
     return paths
 
 
-def process_evidence_frame(
+def corrupt_evidence_frame(
     frame: RawEvidenceFrame,
     scenario: ScenarioSample,
     *,
     observation_index: int,
     repair_action_kind: str = "initial",
     device: str = "cpu",
-    ttl_steps: int = 60,
-    evidence_dir: Path | None = None,
-) -> EvidenceCapture:
-    """Corrupt one raw frame, derive independent claims, and attach lineage."""
-    if ttl_steps < 1 or observation_index < 0:
-        raise ValueError("ttl_steps must be positive and observation_index non-negative")
+) -> CorruptedEvidenceArrays:
+    """Apply the exact deployed sensor degradation without deriving Claims."""
+    if observation_index < 0:
+        raise ValueError("observation_index must be non-negative")
     if device.startswith("cuda"):
         rgb, depth, segmentation, audit = _torch_corrupt(
             frame,
@@ -405,6 +413,40 @@ def process_evidence_frame(
             observation_index=observation_index,
             repair_action_kind=repair_action_kind,
         )
+    return CorruptedEvidenceArrays(
+        rgb=np.ascontiguousarray(rgb),
+        depth=np.ascontiguousarray(depth),
+        segmentation=np.ascontiguousarray(segmentation),
+        audit=audit,
+    )
+
+
+def process_evidence_frame(
+    frame: RawEvidenceFrame,
+    scenario: ScenarioSample,
+    *,
+    observation_index: int,
+    repair_action_kind: str = "initial",
+    device: str = "cpu",
+    ttl_steps: int = 60,
+    evidence_dir: Path | None = None,
+) -> EvidenceCapture:
+    """Corrupt one raw frame, derive independent claims, and attach lineage."""
+    if ttl_steps < 1 or observation_index < 0:
+        raise ValueError("ttl_steps must be positive and observation_index non-negative")
+    corrupted = corrupt_evidence_frame(
+        frame,
+        scenario,
+        observation_index=observation_index,
+        repair_action_kind=repair_action_kind,
+        device=device,
+    )
+    rgb, depth, segmentation, audit = (
+        corrupted.rgb,
+        corrupted.depth,
+        corrupted.segmentation,
+        corrupted.audit,
+    )
 
     capture_root = f"capture:{scenario.paired_world_id}:{observation_index}:{frame.viewpoint}"
     if (
@@ -585,10 +627,12 @@ class SyntheticEvidenceSource:
 
 
 __all__ = (
+    "CorruptedEvidenceArrays",
     "CorruptionAudit",
     "EvidenceCapture",
     "RawEvidenceFrame",
     "SENSOR_VERSION",
     "SyntheticEvidenceSource",
+    "corrupt_evidence_frame",
     "process_evidence_frame",
 )
