@@ -7,6 +7,9 @@ segmentation is never part of the model input; it remains an offline oracle.
 from __future__ import annotations
 
 import hashlib
+import json
+import math
+import time
 from pathlib import Path
 from typing import Any
 
@@ -123,10 +126,110 @@ def load_checkpoint(path: Path, *, device: str = "cpu") -> tuple[Any, dict[str, 
     return model, checkpoint
 
 
+class LearnedRGBDSensor:
+    """Frozen model + conformal artifact used by the online Claim adapter."""
+
+    def __init__(
+        self,
+        checkpoint_path: Path,
+        calibration_path: Path,
+        *,
+        device: str = "cuda:0",
+    ) -> None:
+        import torch
+
+        self.torch = torch
+        self.device = device
+        self.checkpoint_path = Path(checkpoint_path)
+        self.calibration_path = Path(calibration_path)
+        self.model_sha256 = hashlib.sha256(self.checkpoint_path.read_bytes()).hexdigest()
+        self.calibration_sha256 = hashlib.sha256(
+            self.calibration_path.read_bytes()
+        ).hexdigest()
+        self.model, self.checkpoint = load_checkpoint(
+            self.checkpoint_path, device=device
+        )
+        self.calibration = json.loads(
+            self.calibration_path.read_text(encoding="utf-8")
+        )
+        if (
+            self.calibration.get("schema_version")
+            != "look-twice.learned-rgbd-conformal/v1"
+        ):
+            raise ValueError("unsupported learned RGB-D calibration schema")
+        if self.calibration.get("model_sha256") != self.model_sha256:
+            raise ValueError("learned RGB-D model/calibration hash mismatch")
+        thresholds = self.calibration.get("thresholds") or {}
+        self.clear_threshold = float(thresholds["clear"])
+        self.blocked_threshold = float(thresholds["blocked"])
+        self.model_id = f"learned-rgbd:{self.model_sha256[:16]}"
+        self.calibration_id = f"learned-rgbd-conformal:{self.calibration_sha256[:16]}"
+
+    def predict(
+        self,
+        *,
+        rgb: np.ndarray,
+        depth: np.ndarray,
+        risk_roi: ImageROI,
+        expected_clear_depth: float,
+    ) -> dict[str, Any]:
+        from learned_rgbd_conformal import prediction_set
+
+        features = preprocess_rgbd(
+            rgb=rgb,
+            depth=depth,
+            risk_roi=risk_roi,
+            expected_clear_depth=expected_clear_depth,
+        )
+        tensor = self.torch.from_numpy(features[None]).to(self.device)
+        started = time.perf_counter()
+        self.model.eval()
+        with self.torch.no_grad():
+            probability = float(
+                self.torch.sigmoid(self.model(tensor).squeeze()).item()
+            )
+        if self.device.startswith("cuda"):
+            self.torch.cuda.synchronize()
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        labels = prediction_set(
+            probability,
+            clear_threshold=self.clear_threshold,
+            blocked_threshold=self.blocked_threshold,
+        )
+        if labels == ("clear",):
+            value, confidence = "clear", 1.0 - probability
+        elif labels == ("blocked",):
+            value, confidence = "blocked", probability
+        else:
+            value, confidence = "inconclusive", 0.5
+        clipped = min(1.0 - 1e-7, max(1e-7, probability))
+        entropy = -(
+            clipped * math.log2(clipped)
+            + (1.0 - clipped) * math.log2(1.0 - clipped)
+        )
+        return {
+            "value": value,
+            "confidence": confidence,
+            "p_blocked": probability,
+            "prediction_set": list(labels),
+            "entropy": entropy,
+            "quality": max(0.0, 1.0 - entropy),
+            "visibility": float(features[4].mean()),
+            "input_sha256": array_sha256(features),
+            "model_id": self.model_id,
+            "model_sha256": self.model_sha256,
+            "calibration_id": self.calibration_id,
+            "calibration_sha256": self.calibration_sha256,
+            "device": self.device,
+            "inference_time_ms": elapsed_ms,
+        }
+
+
 __all__ = (
     "DEFAULT_IMAGE_SIZE",
     "INPUT_CHANNELS",
     "MODEL_SCHEMA",
+    "LearnedRGBDSensor",
     "array_sha256",
     "build_model",
     "load_checkpoint",

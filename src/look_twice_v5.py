@@ -43,11 +43,27 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Force synthetic modality proxies even on Genesis",
     )
+    parser.add_argument(
+        "--learned-rgbd-model",
+        type=Path,
+        help="Optional promoted learned RGB-D model checkpoint (Genesis only)",
+    )
+    parser.add_argument(
+        "--learned-rgbd-calibration",
+        type=Path,
+        help="Clustered conformal artifact paired with --learned-rgbd-model",
+    )
     args = parser.parse_args()
     if args.seed < 0:
         parser.error("seed must be non-negative")
     if args.runtime == "genesis" and not args.calibration and not args.allow_smoke_calibration:
         parser.error("Genesis requires --calibration or --allow-smoke-calibration")
+    if bool(args.learned_rgbd_model) != bool(args.learned_rgbd_calibration):
+        parser.error(
+            "--learned-rgbd-model and --learned-rgbd-calibration must be used together"
+        )
+    if args.learned_rgbd_model is not None and args.runtime != "genesis":
+        parser.error("learned RGB-D Claims require --runtime genesis")
     return args
 
 
@@ -102,6 +118,16 @@ def main() -> int:
                 policy=args.policy,
                 device=device,
                 prefer_rgbd_claims=not args.no_rgbd_claims,
+                learned_rgbd_model=(
+                    str(args.learned_rgbd_model)
+                    if args.learned_rgbd_model is not None
+                    else None
+                ),
+                learned_rgbd_calibration=(
+                    str(args.learned_rgbd_calibration)
+                    if args.learned_rgbd_calibration is not None
+                    else None
+                ),
             ),
             bridge=bridge,
         )

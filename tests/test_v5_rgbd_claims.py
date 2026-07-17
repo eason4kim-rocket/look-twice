@@ -106,6 +106,52 @@ class V5RgbdClaimsTests(unittest.TestCase):
         self.assertTrue(runtime_supports_rgbd_claims(Fake()))
         self.assertFalse(runtime_supports_rgbd_claims(object()))
 
+    def test_learned_adapter_replaces_segmentation_proxy_and_keeps_root(self) -> None:
+        scenario = sample_v4_scenario("independent-noise", 50000)
+        frame = SyntheticEvidenceSource().raw_frame(
+            scenario=scenario,
+            viewpoint="left_near",
+            viewpoint_xy=(-0.4, 1.1),
+            predicted_coverage=0.82,
+            capture_step=100,
+        )
+
+        class FakeLearnedSensor:
+            def predict(self, **kwargs):
+                return {
+                    "value": "clear",
+                    "confidence": 0.91,
+                    "p_blocked": 0.09,
+                    "prediction_set": ["clear"],
+                    "entropy": 0.44,
+                    "quality": 0.56,
+                    "visibility": 0.88,
+                    "input_sha256": "a" * 64,
+                    "model_id": "learned-rgbd:unit",
+                    "model_sha256": "b" * 64,
+                    "calibration_id": "learned-rgbd-conformal:unit",
+                    "calibration_sha256": "c" * 64,
+                    "device": "cpu",
+                    "inference_time_ms": 0.1,
+                }
+
+        claims, audit = process_genesis_observation(
+            frame,
+            scenario,
+            observation_index=0,
+            device="cpu",
+            learned_sensor=FakeLearnedSensor(),
+        )
+        modalities = {claim.modality for claim in claims}
+        self.assertIn("depth_geometry", modalities)
+        self.assertIn("learned_rgbd_semantic", modalities)
+        self.assertNotIn("simulated_semantic_sensor", modalities)
+        roots = {claim.capture_root_id for claim in claims}
+        self.assertEqual(len(roots), 1)
+        learned = next(c for c in claims if c.modality == "learned_rgbd_semantic")
+        self.assertTrue(learned.is_physical_measurement)
+        self.assertEqual(audit["claims_mode"], "genesis_rgbd_depth_learned_semantic")
+
     def test_synthetic_episode_still_marks_synthetic_mode(self) -> None:
         from look_twice_v5 import _V5SyntheticRuntime
         from v5_episode import V5EpisodeConfig, run_v5_episode, smoke_calibration_artifact
@@ -130,6 +176,20 @@ class V5RgbdClaimsTests(unittest.TestCase):
         self.assertEqual(
             result["environment"]["claims_mode"], CLAIMS_MODE_SYNTHETIC
         )
+
+    def test_learned_episode_config_requires_paired_artifacts(self) -> None:
+        from v5_episode import V5EpisodeConfig
+
+        with self.assertRaisesRegex(ValueError, "both model and calibration"):
+            V5EpisodeConfig(
+                policy="purify-active",
+                learned_rgbd_model="model.pt",
+            )
+        with self.assertRaisesRegex(ValueError, "both model and calibration"):
+            V5EpisodeConfig(
+                policy="purify-active",
+                learned_rgbd_calibration="calibration.json",
+            )
 
 
 if __name__ == "__main__":

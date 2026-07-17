@@ -430,11 +430,12 @@ def process_evidence_frame(
     device: str = "cpu",
     ttl_steps: int = 60,
     evidence_dir: Path | None = None,
+    corrupted_arrays: CorruptedEvidenceArrays | None = None,
 ) -> EvidenceCapture:
     """Corrupt one raw frame, derive independent claims, and attach lineage."""
     if ttl_steps < 1 or observation_index < 0:
         raise ValueError("ttl_steps must be positive and observation_index non-negative")
-    corrupted = corrupt_evidence_frame(
+    corrupted = corrupted_arrays or corrupt_evidence_frame(
         frame,
         scenario,
         observation_index=observation_index,

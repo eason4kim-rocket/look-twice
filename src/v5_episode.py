@@ -15,6 +15,7 @@ from v4_claims import ClaimScope, RobotClaim, build_robot_claim, canonical_sha25
 from v4_conformal import CalibrationArtifact, SeedRange
 from v4_episode import ordered_reachable_viewpoints
 from v4_motion import MotionResult, Pose2D
+from learned_rgbd import LearnedRGBDSensor
 from v5_manipulation import (
     build_workspace_claim,
     end_effector_xy,
@@ -28,6 +29,7 @@ from v5_policies import (
 )
 from v5_rgbd_claims import (
     CLAIMS_MODE_GENESIS_RGBD,
+    CLAIMS_MODE_GENESIS_LEARNED_RGBD,
     CLAIMS_MODE_SYNTHETIC,
     V4_SENSOR_VERSION,
     process_genesis_observation,
@@ -157,10 +159,16 @@ class V5EpisodeConfig:
     ttl_steps: int = DEFAULT_TTL_STEPS
     device: str = "cpu"
     prefer_rgbd_claims: bool = True
+    learned_rgbd_model: str | None = None
+    learned_rgbd_calibration: str | None = None
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
             raise ValueError(f"unsupported v5 policy: {self.policy}")
+        if bool(self.learned_rgbd_model) != bool(self.learned_rgbd_calibration):
+            raise ValueError(
+                "learned RGB-D requires both model and calibration artifacts"
+            )
 
 
 def point_in_risk_region(
@@ -375,7 +383,22 @@ def run_v5_episode(
     use_rgbd = bool(
         config.prefer_rgbd_claims and runtime_supports_rgbd_claims(runtime)
     )
-    claims_mode = CLAIMS_MODE_GENESIS_RGBD if use_rgbd else CLAIMS_MODE_SYNTHETIC
+    learned_sensor = None
+    if config.learned_rgbd_model is not None:
+        if not use_rgbd:
+            raise ValueError("learned RGB-D Claims require a Genesis RGB-D runtime")
+        learned_sensor = LearnedRGBDSensor(
+            Path(config.learned_rgbd_model),
+            Path(config.learned_rgbd_calibration),
+            device=config.device,
+        )
+    claims_mode = (
+        CLAIMS_MODE_GENESIS_LEARNED_RGBD
+        if learned_sensor is not None
+        else CLAIMS_MODE_GENESIS_RGBD
+        if use_rgbd
+        else CLAIMS_MODE_SYNTHETIC
+    )
     rgbd_observation_audits: list[dict[str, Any]] = []
     last_gate_sensor_version = SENSOR_VERSION
 
@@ -481,6 +504,7 @@ def run_v5_episode(
                 repair_action_kind=action_kind,
                 device=config.device,
                 ttl_steps=config.ttl_steps,
+                learned_sensor=learned_sensor,
             )
             nav_claims.extend(claims)
             rgbd_observation_audits.append(audit)
@@ -584,6 +608,7 @@ def run_v5_episode(
                 repair_action_kind=action_kind,
                 device=config.device,
                 ttl_steps=config.ttl_steps,
+                learned_sensor=learned_sensor,
             )
             rgbd_observation_audits.append(audit)
             last_gate_sensor_version = str(
