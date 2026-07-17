@@ -1,0 +1,180 @@
+{
+  "schema_version": "look-twice.parallel-matrix/v1",
+  "kind": "v5",
+  "workers": 8,
+  "jobs": 24,
+  "ok": 24,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 104.06072351895273,
+  "results": [
+    {
+      "stem": "purify-active__dynamic-change__50000",
+      "status": "ok",
+      "seconds": 29.539604685967788,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__dynamic-change__50000.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50001",
+      "status": "ok",
+      "seconds": 31.283939143875614,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__dynamic-change__50001.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50002",
+      "status": "ok",
+      "seconds": 31.140510611934587,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__dynamic-change__50002.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__50003",
+      "status": "ok",
+      "seconds": 34.50269976910204,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__dynamic-change__50003.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50000",
+      "status": "ok",
+      "seconds": 33.21321634482592,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__evidence-echo__50000.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50001",
+      "status": "ok",
+      "seconds": 35.33170071407221,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__evidence-echo__50001.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50002",
+      "status": "ok",
+      "seconds": 35.33612458710559,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__evidence-echo__50002.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__50003",
+      "status": "ok",
+      "seconds": 34.318743768846616,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__evidence-echo__50003.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50000",
+      "status": "ok",
+      "seconds": 29.50222531100735,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__independent-noise__50000.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50001",
+      "status": "ok",
+      "seconds": 36.05912483809516,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__independent-noise__50001.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50002",
+      "status": "ok",
+      "seconds": 29.998060135170817,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__independent-noise__50002.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__50003",
+      "status": "ok",
+      "seconds": 34.6925728127826,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__independent-noise__50003.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50000",
+      "status": "ok",
+      "seconds": 32.96987773501314,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__repair-required__50000.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50001",
+      "status": "ok",
+      "seconds": 32.004549043951556,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__repair-required__50001.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50002",
+      "status": "ok",
+      "seconds": 29.82629557698965,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__repair-required__50002.log"
+    },
+    {
+      "stem": "purify-active__repair-required__50003",
+      "status": "ok",
+      "seconds": 32.37789075006731,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__repair-required__50003.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50000",
+      "status": "ok",
+      "seconds": 35.79622556013055,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__shared-occlusion__50000.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50001",
+      "status": "ok",
+      "seconds": 34.316668255021796,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__shared-occlusion__50001.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50002",
+      "status": "ok",
+      "seconds": 34.03845694893971,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__shared-occlusion__50002.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__50003",
+      "status": "ok",
+      "seconds": 34.06802044901997,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__shared-occlusion__50003.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50000",
+      "status": "ok",
+      "seconds": 34.09615717991255,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__time-skew__50000.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50001",
+      "status": "ok",
+      "seconds": 36.963142034830526,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__time-skew__50001.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50002",
+      "status": "ok",
+      "seconds": 34.166226784931496,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__time-skew__50002.log"
+    },
+    {
+      "stem": "purify-active__time-skew__50003",
+      "status": "ok",
+      "seconds": 35.237184680067,
+      "returncode": 0,
+      "log": "outputs/learned-rgbd-closed-loop-final/logs/purify-active__time-skew__50003.log"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": "look-twice.learned-rgbd-gate-calibration/v1",
+  "jobs": 300,
+  "ok": 300,
+  "skipped": 0,
+  "failed": 0,
+  "workers": 8,
+  "wall_seconds": 1046.019225994125
+}

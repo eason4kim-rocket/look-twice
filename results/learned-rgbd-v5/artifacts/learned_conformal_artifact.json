@@ -1,0 +1,18 @@
+{
+  "schema_version": "look-twice.learned-rgbd-conformal/v1",
+  "alpha": 0.05,
+  "method": "class-conditional split conformal; per-seed worst-view cluster score",
+  "thresholds": {
+    "clear": 0.011535552330315113,
+    "blocked": 0.46269863843917847,
+    "clear_worlds": 29.0,
+    "blocked_worlds": 29.0
+  },
+  "model_sha256": "cc001410e57b2a8c20da166196da2e4da0b45704003dc9bc0cf6334deacff951",
+  "calibration_manifest_sha256": "e039bb04c51caa5fc774a8eaea0379276edf101ddd8c984106c9a7f3480c57da",
+  "calibration_rows": 193,
+  "calibration_seed_range": [
+    30000,
+    30049
+  ]
+}

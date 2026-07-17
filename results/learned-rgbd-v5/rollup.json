@@ -1,0 +1,74 @@
+{
+  "episodes": 24,
+  "unsafe_crossing": 0,
+  "nav_success": 24,
+  "mission_success": 0,
+  "pick_success": 0,
+  "repair_attempted": 16,
+  "repair_success": 2,
+  "wrong_detour": 8,
+  "commits": {
+    "f015ed01a1b5f542e44634be8341ea073764a962": 24
+  },
+  "claims_modes": {
+    "genesis_rgbd_depth_learned_semantic": 24
+  },
+  "formal_eligible": {
+    "True": 24
+  },
+  "artifact_ids": {
+    "cal_055d4597b16bce9e0c442d1a": 24
+  },
+  "profiles": {
+    "dynamic-change": {
+      "n": 4,
+      "unsafe": 0,
+      "nav": 4,
+      "direct": 0,
+      "detour": 4,
+      "repair_success": 0
+    },
+    "evidence-echo": {
+      "n": 4,
+      "unsafe": 0,
+      "nav": 4,
+      "direct": 0,
+      "detour": 4,
+      "repair_success": 0
+    },
+    "independent-noise": {
+      "n": 4,
+      "unsafe": 0,
+      "nav": 4,
+      "direct": 2,
+      "detour": 2,
+      "repair_success": 0
+    },
+    "repair-required": {
+      "n": 4,
+      "unsafe": 0,
+      "nav": 4,
+      "direct": 1,
+      "detour": 3,
+      "repair_success": 1
+    },
+    "shared-occlusion": {
+      "n": 4,
+      "unsafe": 0,
+      "nav": 4,
+      "direct": 1,
+      "detour": 3,
+      "repair_success": 1
+    },
+    "time-skew": {
+      "n": 4,
+      "unsafe": 0,
+      "nav": 4,
+      "direct": 0,
+      "detour": 4,
+      "repair_success": 0
+    }
+  },
+  "calibration_version_mismatch_discounts": 0,
+  "known_limitation": "pick proxy fails closed because no action-specific formal calibration; navigation promotion only"
+}
