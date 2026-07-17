@@ -75,6 +75,8 @@ def _build_command(
     motion: str,
     device: str,
     log: Path,
+    learned_rgbd_model: Path | None = None,
+    learned_rgbd_calibration: Path | None = None,
 ) -> list[str]:
     if job.kind == "v4":
         entry = ROOT / "src" / "look_twice_v4.py"
@@ -105,7 +107,7 @@ def _build_command(
         return cmd
     if job.kind == "v5":
         entry = ROOT / "src" / "look_twice_v5.py"
-        return [
+        cmd = [
             python,
             str(entry),
             "--runtime",
@@ -122,10 +124,25 @@ def _build_command(
             str(purify_bin),
             "--device",
             device,
-            "--allow-smoke-calibration",
             "--json-output",
             str(output),
         ]
+        if calibration is not None:
+            cmd.extend(["--calibration", str(calibration)])
+        else:
+            cmd.append("--allow-smoke-calibration")
+        if learned_rgbd_model is not None:
+            if learned_rgbd_calibration is None:
+                raise ValueError("learned RGB-D model requires calibration")
+            cmd.extend(
+                [
+                    "--learned-rgbd-model",
+                    str(learned_rgbd_model),
+                    "--learned-rgbd-calibration",
+                    str(learned_rgbd_calibration),
+                ]
+            )
+        return cmd
     raise ValueError(f"unsupported kind: {job.kind}")
 
 
@@ -155,6 +172,16 @@ def _run_one(payload: dict[str, Any]) -> dict[str, Any]:
         motion=payload["motion"],
         device=payload["device"],
         log=log,
+        learned_rgbd_model=(
+            Path(payload["learned_rgbd_model"])
+            if payload.get("learned_rgbd_model")
+            else None
+        ),
+        learned_rgbd_calibration=(
+            Path(payload["learned_rgbd_calibration"])
+            if payload.get("learned_rgbd_calibration")
+            else None
+        ),
     )
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT / "src")
@@ -223,11 +250,19 @@ def main() -> int:
     )
     parser.add_argument("--motion", default="kinematic", choices=("kinematic", "skid-steer"))
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--learned-rgbd-model", type=Path)
+    parser.add_argument("--learned-rgbd-calibration", type=Path)
     parser.add_argument("--max-jobs", type=int, default=0, help="0 = all")
     args = parser.parse_args()
 
     if args.workers < 1:
         raise SystemExit("--workers must be >= 1")
+    if bool(args.learned_rgbd_model) != bool(args.learned_rgbd_calibration):
+        raise SystemExit(
+            "--learned-rgbd-model and --learned-rgbd-calibration must be paired"
+        )
+    if args.kind != "v5" and args.learned_rgbd_model is not None:
+        raise SystemExit("learned RGB-D artifacts are only supported for v5")
 
     if args.kind == "v4":
         policies = args.policies or [
@@ -280,6 +315,16 @@ def main() -> int:
                 "calibration": str(cal) if cal else None,
                 "motion": args.motion,
                 "device": args.device,
+                "learned_rgbd_model": (
+                    str(args.learned_rgbd_model)
+                    if args.learned_rgbd_model is not None
+                    else None
+                ),
+                "learned_rgbd_calibration": (
+                    str(args.learned_rgbd_calibration)
+                    if args.learned_rgbd_calibration is not None
+                    else None
+                ),
                 "output": str(out_dir / f"{job.stem}.json"),
                 "log": str(log_dir / f"{job.stem}.log"),
             }
