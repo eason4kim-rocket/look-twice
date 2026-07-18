@@ -95,7 +95,7 @@ def build_sample(profile: str, seed: int) -> dict:
                 trial_claims, contract, current_step=runtime.current_step + 30 + idx
             )
             repaired = bool(after.admitted and not before.admitted)
-        util = score_action(action, gap_reasons=gaps, visited=set())
+        util, _audit = score_action(action, gap_reasons=gaps, visited=set())
         if repaired:
             util += 1.0
         if new_root:

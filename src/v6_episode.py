@@ -706,11 +706,30 @@ def run_v6_episode(
                 candidate_ranking=ranking,
             )
             evidence_requests.append(receipt.to_wire())
+            chosen_rank = next((r for r in ranking if r.get("chosen")), None)
             repair_decisions.append(
                 {
                     "selected": None if selected is None else selected.to_dict(),
                     "ranking_head": ranking[:5],
                     "authorized": receipt.authorized,
+                    "nbv_alignment_score": (
+                        None
+                        if chosen_rank is None
+                        else chosen_rank.get("alignment_score")
+                    ),
+                    "nbv_contamination_risk": (
+                        None
+                        if chosen_rank is None
+                        else chosen_rank.get("contamination_risk")
+                    ),
+                    "nbv_selection_reason": (
+                        None
+                        if chosen_rank is None
+                        else chosen_rank.get("selection_reason")
+                    ),
+                    "nbv_same_side": (
+                        None if chosen_rank is None else chosen_rank.get("same_side")
+                    ),
                 }
             )
             if selected is None or not receipt.authorized:

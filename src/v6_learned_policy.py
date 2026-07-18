@@ -186,7 +186,7 @@ def heuristic_teacher_utility(
     new_root: bool,
 ) -> float:
     """Offline teacher; may use repair outcome labels, not online oracle world."""
-    base = score_action(action, gap_reasons=gap_reasons, visited=set())
+    base, _audit = score_action(action, gap_reasons=gap_reasons, visited=set())
     if contract_repaired:
         base += 1.0
     if new_root:
