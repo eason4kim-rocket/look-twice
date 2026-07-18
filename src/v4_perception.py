@@ -202,9 +202,22 @@ def analyze_depth_geometry(
     # median that agrees with the near-pixel count.
     # Tuned on formal Genesis: clear worlds median near_fraction ~0.20; blocked
     # ~0.33. Dynamic synthetic obstacle appearance sits ~0.25.
+    #
+    # v7 repair-required: scout side views of free corridors often have free
+    # median depth (~1.1–1.3× expected) but elevated near_fraction from wall
+    # edges (~0.33). That pattern is not a hard block — raise the near bar
+    # only when the median itself is strongly free so true blocked ROIs
+    # (median near or only weakly free) still hard-deny.
     substantial_near_fraction = max(0.24, minimum_near_fraction)
     median_is_near = median_depth is not None and median_depth < near_threshold
     median_is_clear = median_depth is not None and median_depth >= near_threshold
+    strongly_free_median = (
+        median_depth is not None
+        and expected_clear_depth > 0.0
+        and median_depth >= expected_clear_depth * 1.12
+    )
+    if strongly_free_median:
+        substantial_near_fraction = max(0.42, substantial_near_fraction)
     substantial_near_patch = (
         near_pixels >= required_near and near_fraction >= substantial_near_fraction
     )

@@ -186,10 +186,18 @@ def evaluate_corridor_contract(
         claims, contract, current_step=current_step
     )
     clear_claims = tuple(c for c in usable if c.value == "clear")
-    blocked_claims = tuple(c for c in usable if c.value == "blocked")
+    # Weak blocked claims (thin semantic/visibility) must not veto clear support —
+    # common on Genesis side views where segmentation proxy fires with ~6% visibility.
+    blocked_claims = tuple(
+        c
+        for c in usable
+        if c.value == "blocked"
+        and float(getattr(c, "quality", 1.0) or 0.0) >= 0.35
+        and float(getattr(c, "visibility", 1.0) or 0.0) >= 0.35
+    )
     # Contract prediction_set must be {clear}: only *clear* capture roots count.
     clear_roots = distinct_capture_roots(clear_claims)
-    values = [c.value for c in usable]
+    values = [c.value for c in usable if c.value != "blocked" or c in blocked_claims]
     clear_n = len(clear_claims)
     blocked_n = len(blocked_claims)
     conflicts = 1 if clear_n > 0 and blocked_n > 0 else 0

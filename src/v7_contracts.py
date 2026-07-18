@@ -50,17 +50,37 @@ def _is_side_view_vision_claim(claim: RobotClaimV2) -> bool:
     return str(getattr(claim, "observer_agent_id", "")) == "scout"
 
 
+def _is_decisive_claim(claim: RobotClaimV2) -> bool:
+    """Ignore thin/low-vis claims when scoring modality conflict."""
+    if str(getattr(claim, "value", "")) == "inconclusive":
+        return False
+    if str(getattr(claim, "value", "")) == "blocked":
+        return (
+            float(getattr(claim, "quality", 1.0) or 0.0) >= 0.35
+            and float(getattr(claim, "visibility", 1.0) or 0.0) >= 0.35
+        )
+    return True
+
+
 def _values_by_class(
     claims: Sequence[RobotClaimV2],
 ) -> tuple[set[str], set[str], tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
-    geo = [c for c in claims if c.modality in GEOMETRY_MODALITIES]
-    vis = [c for c in claims if c.modality in VISION_MODALITIES]
+    geo = [c for c in claims if c.modality in GEOMETRY_MODALITIES and _is_decisive_claim(c)]
+    vis = [c for c in claims if c.modality in VISION_MODALITIES and _is_decisive_claim(c)]
     geo_vals = {c.value for c in geo if c.value != "inconclusive"}
     vis_vals = {c.value for c in vis if c.value != "inconclusive"}
     geo_clear_roots = distinct_capture_roots([c for c in geo if c.value == "clear"])
-    vis_clear_roots = distinct_capture_roots([c for c in vis if c.value == "clear"])
+    vis_clear_roots = distinct_capture_roots(
+        [c for c in claims if c.modality in VISION_MODALITIES and c.value == "clear"]
+    )
     side_vis_clear_roots = distinct_capture_roots(
-        [c for c in vis if c.value == "clear" and _is_side_view_vision_claim(c)]
+        [
+            c
+            for c in claims
+            if c.modality in VISION_MODALITIES
+            and c.value == "clear"
+            and _is_side_view_vision_claim(c)
+        ]
     )
     return geo_vals, vis_vals, geo_clear_roots, vis_clear_roots, side_vis_clear_roots
 
