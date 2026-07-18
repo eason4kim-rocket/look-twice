@@ -37,7 +37,18 @@ class CorridorRGBDataset(Dataset):
                 continue
             if not meta.get("world_alignment_passed", True):
                 continue
+            # v2: exclude audit-only carrier fronts (train_eligible=false).
+            if meta.get("train_eligible") is False or meta.get("audit_only") is True:
+                continue
             img = root / meta["image_path"]
+            if not img.is_file():
+                # legacy: path without .npy
+                alt = Path(str(img) + ".npy")
+                if alt.is_file():
+                    meta = {**meta, "image_path": str(Path(meta["image_path"]).with_suffix(".npy"))}
+                    img = root / meta["image_path"]
+                else:
+                    continue
             if not img.is_file():
                 continue
             self.items.append(meta)

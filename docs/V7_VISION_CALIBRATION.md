@@ -91,7 +91,16 @@ max 2 corridors × 2 side obs; else safe detour
 
 | Script | Role |
 | --- | --- |
-| `scripts/v7_collect_genesis_vision_dataset.py` | Homology RGB collection |
-| `scripts/v7_train_genesis_vision_head.py` | Real-RGB torch head |
+| `scripts/v7_collect_genesis_vision_dataset.py` | Homology RGB collection **v2** |
+| `scripts/v7_audit_vision_dataset.py` | Pre-train integrity audit |
+| `scripts/v7_train_genesis_vision_head.py` | Real-RGB torch head (train_eligible only) |
 | `scripts/v7_calibrate_vision_conformal.py` | Class-conditional conformal |
 | `scripts/v7_paired_passive_active.py` | Capability matrices (unchanged entry) |
+
+## Collect v2 integrity rules
+
+1. **No dual-label of one RGB** as A+B. Scout side views only for `train_eligible=true`. Carrier front is **audit-only** with corridor-specific pose + ROI.
+2. Images saved as real `.npy`; `image_path` must exist; SHA256 reloads must match.
+3. Resume only via `_COMPLETE__{seed}.json` after full world collection.
+4. Polluted preflight: GPU `outputs/v7/vision-dataset-invalid-preflight` — **do not train**.
+5. Preflight gate: 20 worlds → audit pass → full collect with `--workers 8` (then 12–16).
