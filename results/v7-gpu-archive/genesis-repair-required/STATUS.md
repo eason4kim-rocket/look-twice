@@ -1,108 +1,124 @@
-# V7 Genesis Repair-Required Paired Matrix (honest)
+# V7 Genesis Repair-Required — STATUS (honest)
 
-**Branch tip:** `0edf58d` on `v7-vision-evidence-contracts`  
-**Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
-**Runtime:** Genesis AMD (`gs.amdgpu`) · `device=cuda:0` · `vision_source=genesis_rgb`  
-**Matrix:** 2 policies × 3 profiles × 20 seeds = **120 episodes** (60 pairs)
+**Branch tip:** `67cb253` on `v7-vision-evidence-contracts`  
+**Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`
 
-Profiles: `independent-noise`, `shared-occlusion`, `evidence-echo`  
-Seeds: `95000–95019`
+## Freeze policy (do not overwrite)
 
-## What we built
-
-Repair-required contract so **carrier initial front alone cannot admit**:
-
-1. `require_side_view_vision_root` — need scout/side vision clear root  
-2. Vision capture roots tagged `vision-initial-*` vs `vision-side-*`  
-3. Both Active and Passive share this contract (`--repair-required`)  
-4. Metrics: `initial_gate_denied`, `scout_viewpoint_changed`, `new_capture_root_added`, `repair_chain_complete`  
-5. Corridor preference: skip hard-denied A when B only lacks side vision  
-6. Depth: strongly free median raises near-fraction bar (side-view false blocks)  
-7. Weak low-vis semantic blocked claims no longer veto clear support  
-
-## Locked smoke (chain fields)
-
-| Seed | Policy | init_deny | viewpoint | new root | repair | route | chain | vision | device |
-| ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 95000 | Active | ✅ | ✅ | ✅ | ✅ | direct | ✅ | genesis_rgb | cuda:0 |
-| 95000 | Passive | ✅ | ❌ | ❌ | ❌ | detour | ❌ | genesis_rgb | cuda:0 |
-
-Single-seed **GPU-validated full chain** exists (95000).
-
-## Formal paired results
-
-### r1 (side-view contract only; pre depth/semantic soft fixes)
-
-| policy | n | mission | unsafe | init_deny | repair_attempted | scout_vp | new_root | repair_success | direct | **gpu_chain** |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Passive | 60 | 60 | **0** | 60 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Active | 60 | 60 | **0** | 60 | 60 | 60 | 60 | 30 | 27 | **27 (45%)** |
-
-`genesis_upgrade_ready = false` (need ≥70% active gpu chain)
-
-### r3 (depth + weak-blocked filters + corridor preference) — primary archive
-
-Artifacts: `r3/paired_summary.json`, full episodes under `r3-episodes/`
-
-| policy | n | mission | unsafe | init_deny | repair_attempted | scout_vp | new_root | repair_success | direct | **gpu_chain** |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Passive | 60 | 60 | **0** | 60 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Active | 60 | 37 | **0** | 60 | **60** | **60** | **60** | **54** | 12 | **12 (20%)** |
-
-| Gate | Target | r3 |
+| Archive | Meaning | Touch? |
 | --- | --- | --- |
-| Active full chain (deny→side→repair→**direct**) | ≥70% | **20% ❌** |
-| Passive repair | 0 | **0 ✅** |
-| Unsafe both | 0 | **0 ✅** |
-| Passive contract (deny + detour) | high | **60/60 ✅** |
-| Active always attempts scout repair | — | **60/60 ✅** |
+| `r1/` | Pre-homology side-view contract; **45% full chain** | **FROZEN** |
+| `r3/` + `r3-episodes/` | Gate repair 90% but world mismatch; **20% direct** | **FROZEN** |
+| `homology-physics8/` | Oracle==physics collision check 8/8 | keep |
+| `homology-smoke-3x2/` | Post-homology 12-ep capability smoke | keep |
+| `homology-paired-3x20/` | Full 120 after homology (when complete) | write only here |
 
-`genesis_upgrade_ready = false`
+**r3 is not an upgrade candidate.** It exposed Gate admit → wrong physics.
 
-## How to read r3 honestly
+## Root cause (fixed in `67cb253`)
 
-**Gate-level evidence repair is largely working:**
+V6 Genesis was:
 
-```text
-initial deny → scout viewpoint change → new capture root → repair_success
-= 54/60 Active (90%)
+```python
+v4_scenario = sample_v4_scenario(physics_profile, scenario.seed)
+# independent V4 obstacle_xy RNG — not V6 oracle
 ```
 
-**Physical direct after admit is the bottleneck:**
+V6 oracle / synthetic used `(1.0, ±0.3)` while Genesis used a random V4 base-world obstacle.  
+`set_obstacle()` only appended to a Python list — **no Genesis entity move**.
 
-```text
-repair_success ∧ route=direct ∧ full chain = 12/60 (20%)
-```
+### Fix
 
-Many Active episodes **admit after side vision**, then `cross_corridor` hits `obstacle_contact` and fail-closed detours (`unsafe=0`). So:
+- `v6_aligned_v4_scenario()` forces obstacle anchors from V6 oracle  
+- Primary + secondary Genesis boxes at A/B anchors (created before `scene.build`)  
+- Real `set_obstacle()` → `entity.set_pos`  
+- `world_alignment_audit()` → `world_alignment_passed`, `obstacle_pose_error`  
+- Corridor **approach → entry → mid → exit** centerline path  
 
-- Evidence contract + active repair **are** on Genesis RGB + cuda:0  
-- End-to-end “recovered direct route” is **not** yet contest-upgrade grade  
+## Physics validation (8 force-corridor)
 
-r1 had **higher direct rate (45%)** with fewer false admits; r3 raised gate repair at the cost of more admit-then-nav-fail cases.
+`homology-physics8/physics_alignment_summary.json`
 
-## Claimable sentences (contest-safe)
-
-> On AMD Genesis (ROCm `cuda:0`), a repair-required Purify contract denies both policies after the carrier’s initial front view until an independent scout side-view vision claim is present. Passive always detours with unsafe=0. Active always attempts scout repair (60/60) and completes gate-level repair on 54/60 pairs; 12/60 also recover a direct route with the full deny→viewpoint→repair→direct chain on `genesis_rgb`.
-
-**Must not claim yet:**
-
-> GPU-validated active visual evidence repair at ≥70% direct recovery.
-
-## Remaining gap to upgrade tag
-
-`GPU-validated active visual evidence repair` still needs:
-
-1. **Admit ↔ navigable corridor alignment** (reduce admit-then-obstacle_contact)  
-2. Active **route=direct** after repair ≥ **70%** with same chain fields  
-3. Preferably non-degenerate vision labels (currently heuristic almost always `clear` on Genesis RGB)
-
-Not more mega formal matrices — next work is **physics/geometry–oracle alignment** for the corridor that gets admitted.
-
-## Code commits
-
-| SHA | Note |
+| Check | Result |
 | --- | --- |
-| `b3eb519` | side-view vision contract + paired strict gates |
-| `e363e43` | prefer repairable corridor |
-| `0edf58d` | depth strongly-free median + weak blocked filter |
+| n | 8 |
+| world_alignment_passed | **8/8** |
+| physics_ok (contact iff blocked) | **8/8** |
+| all_passed | **true** |
+
+Seeds: A-only `95001,95003`; B-only `95002,95004`.
+
+## Capability smoke (12 = 2 pol × 3 prof × 2 seeds)
+
+`homology-smoke-3x2/`
+
+| Gate | Target | Result |
+| --- | --- | --- |
+| world_alignment_passed | 12/12 | **12/12** |
+| Passive deny → detour | 6/6 | **6/6** |
+| Active init_deny + scout + new root | 6/6 | **6/6** |
+| clear admitted collision | 0 | **0** |
+| unsafe | 0 | **0** |
+| Active full chain | ≥4/6 | **4/6** |
+
+Active: repair_success 5/6, direct/chain **4/6 (67%)**, rate slightly under formal 70% threshold on this tiny n.
+
+## Pre-homology baselines (frozen numbers)
+
+### r1
+
+| policy | repair_success | direct / chain | unsafe |
+| --- | ---: | ---: | ---: |
+| Passive | 0/60 | 0 | 0 |
+| Active | 30/60 | **27/60 (45%)** | 0 |
+
+### r3
+
+| policy | repair_success | direct / chain | unsafe |
+| --- | ---: | ---: | ---: |
+| Passive | 0/60 | 0 | 0 |
+| Active | 54/60 (90% gate) | **12/60 (20%)** | 0 |
+
+## Full 120 matrix (homology) — COMPLETE
+
+Local: `homology-paired-3x20/` · GPU: `outputs/v7/genesis-repair-required-paired-3x20-homology`
+
+| Metric | Target | Result | Pass |
+| --- | --- | ---: | --- |
+| Active initial deny | 60/60 | **60/60** | ✅ |
+| Scout viewpoint changed | 60/60 | **60/60** | ✅ |
+| New independent root | 60/60 | **60/60** | ✅ |
+| Gate repair | ≥48/60 | **57/60 (95%)** | ✅ |
+| **Full repair→direct chain** | **≥42/60** | **32/60 (53%)** | ❌ |
+| Unsafe | 0 | **0** | ✅ |
+| Clear admitted collision | 0 | **0** | ✅ |
+| World alignment | 60/60 (×2 pol) | **120/120** | ✅ |
+| Passive repair | 0 | **0** | ✅ |
+| Passive safe detour | 60/60 | **60/60** | ✅ |
+
+`genesis_upgrade_ready = false` (chain 53% < 70%)
+
+### vs frozen baselines
+
+| Run | World | Gate repair | Full chain | clear_admitted_collision |
+| --- | --- | ---: | ---: | ---: |
+| r1 | mismatched | 50% | **45%** | n/a |
+| r3 | mismatched | 90% | **20%** | high admit-then-fail |
+| **homology** | **aligned** | **95%** | **53%** | **0** |
+
+Homology fixed the physics bug: **no admit-then-contact / clear_admitted_collision**.  
+Remaining misses are mostly **false gate admits of oracle-blocked corridors** (heuristic vision nearly always `clear`) → fail-closed detour via truth check, mission still complete, unsafe=0.
+
+## Vision (separate issue — do not mix)
+
+Heuristic labels still nearly all `clear` on Genesis RGB (`clear=203`). Even with world homology, this drives false admits. Next workstream (not mixed into this fix): Genesis RGB dataset + non-degenerate vision calibration.
+
+## Claimable now
+
+> V6/V7 oracle corridor obstacles are the same entities used for Genesis collision and rendering (`world_alignment_passed` 120/120). Force-corridor physics checks pass 8/8. On the 120-episode repair-required paired matrix, Active completes gate-level evidence repair on 57/60 pairs and full deny→scout→repair→direct on **32/60 (53%)**, with unsafe=0, clear-admitted collision=0, and Passive always fail-closed detour.
+
+## Not claimable yet
+
+> GPU-validated active visual evidence repair at ≥70% (42/60) full chain.
+
+Next (separate): reduce false clear admits of blocked corridors — vision/geometry calibration, not more world rewiring.
