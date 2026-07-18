@@ -1,6 +1,6 @@
 # V7 Genesis Repair-Required — STATUS (honest)
 
-**Branch tip:** `b2b3f68` on `v7-vision-evidence-contracts`  
+**Branch tip:** `2333fc9` on `v7-vision-evidence-contracts`  
 **Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
 **Phase lock:** world homology **closed**. Active phase = **Genesis RGB vision calibration only**  
 (no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).  
@@ -27,6 +27,9 @@
 5. `image_path` always real `.npy`; SHA reload-checked.  
 
 Preflight20 audit (train-eligible): **passed=true**, clear/blocked ~53/47, unique SHA, no conflicts, `discriminable_hint=true`.
+
+Viewpoint completeness fix (`2333fc9`): legal unreachable + collocated A/B skip; regress 96029/36/43/50 **OK**; gate50 unexpected incomplete **0/50**; audit passed. Full resume at **12 workers** on `vision-dataset-v2-full` (keep prior COMPLETE worlds).
+Eval order: train→val→cal→24 smoke (non-locked)→freeze→locked test once→120 matrix.
 
 ## Freeze policy (do not overwrite)
 
