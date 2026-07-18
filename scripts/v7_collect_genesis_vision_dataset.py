@@ -26,6 +26,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
@@ -187,20 +188,90 @@ def world_complete_path(out_dir: Path, split: str, seed: int) -> Path:
     return out_dir / split / f"_COMPLETE__{seed}.json"
 
 
-def expected_train_viewpoints(public: dict) -> list[tuple[str, str, tuple[float, float], float]]:
-    """Return list of (corridor_id, viewpoint_name, xy, coverage) for train-eligible side views."""
-    out = []
+def expected_train_viewpoints(
+    public: dict,
+) -> tuple[
+    list[tuple[str, str, tuple[float, float], float]],
+    list[dict],
+]:
+    """Return (reachable side plans, legal_unavailable records).
+
+    Legal unavailable = scenario reachable=False (e.g. seed%7==3 far view).
+    These must not make a world incomplete.
+    """
+    reachable: list[tuple[str, str, tuple[float, float], float]] = []
+    legal_unavail: list[dict] = []
     for vp in public.get("candidate_viewpoints") or []:
-        if not vp.get("reachable", True):
-            continue
         cid = str(vp.get("corridor_id") or "")
         if cid not in ("corridor_a", "corridor_b"):
             continue
         name = str(vp["name"])
         xy = (float(vp["xy"][0]), float(vp["xy"][1]))
         cov = float(vp.get("predicted_coverage") or 0.75)
-        out.append((cid, name, xy, cov))
-    return out
+        if not vp.get("reachable", True):
+            legal_unavail.append(
+                {
+                    "corridor_id": cid,
+                    "viewpoint": name,
+                    "target_xy": list(xy),
+                    "reason": "scenario_reachable_false",
+                    "legal_unavailable": True,
+                }
+            )
+            continue
+        reachable.append((cid, name, xy, cov))
+    return reachable, legal_unavail
+
+
+def _move_scout_with_retry(
+    runtime: Any,
+    *,
+    target_xy: tuple[float, float],
+    agent_id: str,
+) -> dict:
+    """Deterministic move + one retry with safe lateral detour.
+
+    Collection-only helper — does not change main episode motion semantics.
+    Obstacle contact often kills straight-line kinematic paths through corridors;
+    retry via a high-|y| staging point outside the slab.
+    """
+    attempts: list[dict] = []
+
+    def _one(target: tuple[float, float], tag: str) -> dict:
+        before = runtime.pose_of(agent_id)
+        res = runtime.move_agent_to(
+            agent_id, target, allow_without_admit=True, admitted=False, risk_gated=False
+        )
+        after = runtime.pose_of(agent_id)
+        dist_to_target = float(np.hypot(after.x - target[0], after.y - target[1]))
+        dist_moved = float(np.hypot(after.x - before.x, after.y - before.y))
+        rec = {
+            "tag": tag,
+            "target_xy": [float(target[0]), float(target[1])],
+            "before_xy": [float(before.x), float(before.y)],
+            "actual_xy": [float(after.x), float(after.y)],
+            "reached": bool(res.reached),
+            "reason": str(res.reason),
+            "distance_to_target": dist_to_target,
+            "distance_moved": dist_moved,
+            "collision_count": int(res.collision_count),
+        }
+        attempts.append(rec)
+        ok = bool(res.reached) and dist_to_target <= 0.22
+        return {"ok": ok, **rec}
+
+    first = _one(target_xy, "try0")
+    if first["ok"]:
+        return {"ok": True, "attempts": attempts, "final": first}
+
+    # Staging outside obstacle band (|y| large), then to target.
+    stage_y = 1.35 if target_xy[1] >= 0 else -1.35
+    stage = (-1.1, stage_y)
+    _one(stage, "retry_stage")
+    second = _one(target_xy, "retry1")
+    if second["ok"]:
+        return {"ok": True, "attempts": attempts, "final": second}
+    return {"ok": False, "attempts": attempts, "final": second}
 
 
 def collect_world(
@@ -243,27 +314,46 @@ def collect_world(
         oracle_pose = audit.get("oracle_obstacle_pose")
 
         # --- Train-eligible: scout side views only (one viewpoint → one label) ---
-        side_plan = expected_train_viewpoints(public)
+        side_plan, legal_unavail = expected_train_viewpoints(public)
         seen_raw_sha: dict[str, str] = {}  # raw_sha -> offline_label
         seen_img_sha: dict[str, str] = {}
         last_pose: tuple[float, float] | None = None
-        move_fail = 0
+        control_fail = 0
         dup_skip = 0
+        move_log: list[dict] = list(legal_unavail)
         for cid, name, xy, cov in side_plan:
-            res = runtime.move_agent_to(
-                SCOUT_ID, xy, allow_without_admit=True, admitted=False
-            )
+            mv = _move_scout_with_retry(runtime, target_xy=xy, agent_id=SCOUT_ID)
             pose = runtime.pose_of(SCOUT_ID)
-            if not res.reached:
-                move_fail += 1
+            move_rec = {
+                "corridor_id": cid,
+                "viewpoint": name,
+                "target_xy": [float(xy[0]), float(xy[1])],
+                "actual_xy": [float(pose.x), float(pose.y)],
+                "distance_to_target": float(
+                    np.hypot(pose.x - xy[0], pose.y - xy[1])
+                ),
+                "move_ok": bool(mv["ok"]),
+                "attempts": mv["attempts"],
+                "legal_unavailable": False,
+            }
+            if not mv["ok"]:
+                control_fail += 1
+                move_rec["fail_class"] = "control_fail_reachable"
+                move_log.append(move_rec)
                 continue
             if last_pose is not None:
                 dist = float(np.hypot(pose.x - last_pose[0], pose.y - last_pose[1]))
-                # Must have actually relocated between distinct viewpoints.
-                if dist < 0.08:
-                    move_fail += 1
+                if dist < 0.05:
+                    # Reached target numerically but didn't relocate vs previous view.
+                    control_fail += 1
+                    move_rec["fail_class"] = "no_relocation"
+                    move_rec["distance_from_prev"] = dist
+                    move_log.append(move_rec)
                     continue
             last_pose = (float(pose.x), float(pose.y))
+            move_rec["fail_class"] = None
+            move_log.append(move_rec)
+
             raw = runtime.capture_raw(
                 agent_id=SCOUT_ID,
                 viewpoint=name,
@@ -271,29 +361,36 @@ def collect_world(
                 predicted_coverage=cov,
             )
             rgb = np.asarray(raw.rgb)
-            # Reject near-blank frames (common when camera/pose desync).
             if float(np.asarray(rgb, dtype=np.float32).std()) < 1e-3:
+                control_fail += 1
+                move_rec["fail_class"] = "blank_frame"
                 dup_skip += 1
                 continue
             frac = _side_roi_frac()
             crop = _crop_roi(rgb, frac)
             small = _resize_96(crop)
             if float(small.std()) < 1e-3:
+                control_fail += 1
+                move_rec["fail_class"] = "blank_crop"
                 dup_skip += 1
                 continue
             raw_sha = _sha256_bytes(np.ascontiguousarray(rgb).tobytes())
             img_sha = _sha256_bytes(np.ascontiguousarray(small).tobytes())
             lab = labels[cid]
-            # Hard reject: same pixels already labeled differently (corruption).
             if raw_sha in seen_raw_sha and seen_raw_sha[raw_sha] != lab:
+                control_fail += 1
+                move_rec["fail_class"] = "conflict_raw_sha"
                 dup_skip += 1
                 continue
             if img_sha in seen_img_sha and seen_img_sha[img_sha] != lab:
+                control_fail += 1
+                move_rec["fail_class"] = "conflict_img_sha"
                 dup_skip += 1
                 continue
-            # Same pixels same label: still skip second copy (no duplicate training).
+            # Same pixels same label: skip second copy (view was still successfully visited).
             if raw_sha in seen_raw_sha or img_sha in seen_img_sha:
                 dup_skip += 1
+                move_rec["fail_class"] = "duplicate_same_label"
                 continue
             seen_raw_sha[raw_sha] = lab
             seen_img_sha[img_sha] = lab
@@ -316,7 +413,6 @@ def collect_world(
             )
             meta["capture_pose_xy"] = [float(pose.x), float(pose.y)]
             meta["target_xy"] = [float(xy[0]), float(xy[1])]
-            # rewrite meta with pose fields
             (out_dir / split / f"{meta['sample_id']}.json").write_text(
                 json.dumps(meta, indent=2) + "\n", encoding="utf-8"
             )
@@ -371,23 +467,17 @@ def collect_world(
                 samples_meta.append(meta)
 
         train_n = sum(1 for m in samples_meta if m.get("train_eligible"))
-        # Complete only if enough unique train samples and both labels present when world has both.
-        need = max(4, min(EXPECTED_SIDE_VIEWS, len(side_plan)))
-        complete = train_n >= need and move_fail < len(side_plan)
-        if labels["corridor_a"] != labels["corridor_b"]:
-            # Mixed world: need at least one clear and one blocked train sample.
-            tr_clear = sum(
-                1
-                for m in samples_meta
-                if m.get("train_eligible") and m["offline_label"] == "clear"
-            )
-            tr_blk = sum(
-                1
-                for m in samples_meta
-                if m.get("train_eligible") and m["offline_label"] == "blocked"
-            )
-            if tr_clear < 1 or tr_blk < 1:
-                complete = False
+        # Complete iff every theoretically reachable viewpoint was controlled OK.
+        # Legal scenario unreachables never fail the world.
+        same_label_dups = sum(
+            1 for r in move_log if r.get("fail_class") == "duplicate_same_label"
+        )
+        complete = (
+            control_fail == 0
+            and len(side_plan) > 0
+            and train_n >= 4
+            and (train_n + same_label_dups) >= len(side_plan)
+        )
 
         result = {
             "seed": seed,
@@ -396,8 +486,12 @@ def collect_world(
             "n_samples": len(samples_meta),
             "n_train_eligible": train_n,
             "n_side_planned": len(side_plan),
-            "move_fail": move_fail,
+            "n_legal_unavailable": len(legal_unavail),
+            "control_fail": control_fail,
+            "move_fail": control_fail,  # backward-compatible alias
             "dup_skip": dup_skip,
+            "same_label_dups": same_label_dups,
+            "move_log": move_log,
             "label_counts": {
                 "clear": sum(1 for m in samples_meta if m["offline_label"] == "clear"),
                 "blocked": sum(1 for m in samples_meta if m["offline_label"] == "blocked"),
@@ -418,12 +512,27 @@ def collect_world(
             "complete": complete,
             "schema_version": SCHEMA,
         }
+        # Always keep move diagnostics (even when incomplete).
+        (out_dir / split / f"_MOVELOG__{seed}.json").write_text(
+            json.dumps(
+                {
+                    "seed": seed,
+                    "split": split,
+                    "complete": complete,
+                    "control_fail": control_fail,
+                    "move_log": move_log,
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         if complete:
             world_complete_path(out_dir, split, seed).write_text(
                 json.dumps(result, indent=2) + "\n", encoding="utf-8"
             )
         else:
-            # Do not leave partial worlds that resume/audit would mis-count.
+            # Do not leave partial train samples; keep MOVELOG.
             _purge_seed_samples(out_dir, split, seed)
         return result
     finally:
@@ -475,11 +584,17 @@ def _run_one_world(
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT / "src")
     env.setdefault("PYOPENGL_PLATFORM", "egl")
+    env["PYTHONUNBUFFERED"] = "1"
     log = out_dir / split / f"_world_{seed}.log"
     log.parent.mkdir(parents=True, exist_ok=True)
-    with log.open("w", encoding="utf-8") as handle:
+    with log.open("w", encoding="utf-8", buffering=1) as handle:
         proc = subprocess.run(
-            cmd, cwd=str(ROOT), env=env, stdout=handle, stderr=subprocess.STDOUT, check=False
+            cmd,
+            cwd=str(ROOT),
+            env=env,
+            stdout=handle,
+            stderr=subprocess.STDOUT,
+            check=False,
         )
     text = log.read_text(encoding="utf-8", errors="replace")
     line = ""
@@ -508,6 +623,11 @@ def _run_one_world(
 
 
 def main() -> int:
+    # Force line-buffered stdout for live orchestrator logs under nohup/tee.
+    try:
+        sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+    except Exception:
+        pass
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
@@ -519,6 +639,8 @@ def main() -> int:
         default=["train", "validation", "calibration", "locked_test"],
     )
     parser.add_argument("--max-worlds-per-split", type=int, default=0, help="0=all")
+    parser.add_argument("--seed-start", type=int, default=None, help="override split start")
+    parser.add_argument("--seed-end", type=int, default=None, help="override split end inclusive")
     parser.add_argument("--workers", type=int, default=1, help="parallel world processes")
     parser.add_argument("--worker-seed", type=int, default=None)
     parser.add_argument("--worker-split", default=None)
@@ -555,6 +677,10 @@ def main() -> int:
         if split not in DEFAULT_SPLITS:
             raise SystemExit(f"unknown split: {split}")
         lo, hi = DEFAULT_SPLITS[split]
+        if args.seed_start is not None:
+            lo = int(args.seed_start)
+        if args.seed_end is not None:
+            hi = int(args.seed_end)
         seeds = list(range(lo, hi + 1))
         if args.max_worlds_per_split > 0:
             seeds = seeds[: args.max_worlds_per_split]
@@ -595,8 +721,19 @@ def main() -> int:
                 print(f"RESUME {stem} n={result.get('n_samples')}", flush=True)
             elif result.get("skipped") or not result.get("complete"):
                 skipped += 1
+                # Summarize first control-fail viewpoint for live ops.
+                bad = None
+                for r in result.get("move_log") or []:
+                    if r.get("fail_class") and r.get("fail_class") not in (
+                        "duplicate_same_label",
+                    ):
+                        bad = r
+                        break
                 print(
-                    f"FAIL {stem} reason={result.get('reason')} complete={result.get('complete')}",
+                    f"FAIL {stem} control_fail={result.get('control_fail')} "
+                    f"train={result.get('n_train_eligible')}/plan={result.get('n_side_planned')} "
+                    f"legal_unavail={result.get('n_legal_unavailable')} "
+                    f"bad={None if not bad else {k: bad.get(k) for k in ('viewpoint','distance_to_target','fail_class','actual_xy','target_xy')}}",
                     flush=True,
                 )
             else:
@@ -605,6 +742,7 @@ def main() -> int:
                 n_train += int(result.get("n_train_eligible") or 0)
                 print(
                     f"OK {stem} n={result.get('n_samples')} train={result.get('n_train_eligible')} "
+                    f"legal_unavail={result.get('n_legal_unavailable')} "
                     f"labels={result.get('train_label_counts')}",
                     flush=True,
                 )

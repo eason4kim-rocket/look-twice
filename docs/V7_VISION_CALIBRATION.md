@@ -103,4 +103,16 @@ max 2 corridors × 2 side obs; else safe detour
 2. Images saved as real `.npy`; `image_path` must exist; SHA256 reloads must match.
 3. Resume only via `_COMPLETE__{seed}.json` after full world collection.
 4. Polluted preflight: GPU `outputs/v7/vision-dataset-invalid-preflight` — **do not train**.
-5. Preflight gate: 20 worlds → audit pass → full collect with `--workers 8` (then 12–16).
+5. Preflight gate: 20 worlds → audit pass → full collect with `--workers 8` (then **12**, not 16 yet).
+6. **Viewpoint completeness:** `seed%7==3` marks one far view `reachable=false` → **legal unavailable**. Control fail on a *reachable* view is unexpected incomplete; collection uses move+retry via staging pose. Target unexpected incomplete **&lt;2%** on 50-world gate.
+7. Live logs: `PYTHONUNBUFFERED=1` + line-buffered orchestrator prints.
+
+## Formal evaluation order (anti leakage)
+
+```text
+train → validation (model select) → calibration (thresholds)
+→ 24-ep smoke on non-locked seeds
+→ freeze model + contract + params
+→ locked vision test once → freeze vision conclusion
+→ 120 closed-loop matrix → formal_result_eligible
+```
