@@ -1,22 +1,32 @@
 # V7 Genesis Repair-Required — STATUS (honest)
 
-**Branch tip:** `4409b45` on `v7-vision-evidence-contracts`  
+**Branch tip:** `b2b3f68` on `v7-vision-evidence-contracts`  
 **Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
 **Phase lock:** world homology **closed**. Active phase = **Genesis RGB vision calibration only**  
-(no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).
+(no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).  
+**Closed-loop chain 32/60 (53%) remains the honest freeze** until a clean vision dataset is trained.
 
 ### Vision-cal phase assets
 
 | Item | Path |
 | --- | --- |
 | Plan | `docs/V7_VISION_CALIBRATION.md` |
-| Collect | `scripts/v7_collect_genesis_vision_dataset.py` |
-| Train | `scripts/v7_train_genesis_vision_head.py` |
+| Collect **v2** | `scripts/v7_collect_genesis_vision_dataset.py` |
+| Audit | `scripts/v7_audit_vision_dataset.py` |
+| Train | `scripts/v7_train_genesis_vision_head.py` (train_eligible only) |
 | Conformal | `scripts/v7_calibrate_vision_conformal.py` |
-| Pilot data (4 worlds/split) | GPU `outputs/v7/vision-dataset-pilot` |
-| Full collect (running) | GPU `outputs/v7/vision-dataset-full` + `logs/vision-dataset-full.log` |
+| **Invalid preflight (do not train)** | GPU `outputs/v7/vision-dataset-invalid-preflight` |
+| Preflight20 (audit **passed**) | GPU `outputs/v7/vision-dataset-preflight20` |
 
-Full collect seed ranges: train 96000–96999, val 97000–97199, cal 97200–97499, locked 98000–98299.
+### Collect integrity (v2) — enforced
+
+1. No dual-label of one carrier_front RGB as A/B (front = audit-only, distinct pose/ROI).  
+2. Scout side views only for `train_eligible=true`; require real relocation (pose Δ≥8cm).  
+3. Reject blank / duplicate / conflicting SHA within world; purge incomplete worlds.  
+4. Resume only via `_COMPLETE__{seed}.json`.  
+5. `image_path` always real `.npy`; SHA reload-checked.  
+
+Preflight20 audit (train-eligible): **passed=true**, clear/blocked ~53/47, unique SHA, no conflicts, `discriminable_hint=true`.
 
 ## Freeze policy (do not overwrite)
 
