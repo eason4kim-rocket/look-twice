@@ -1,10 +1,43 @@
 # V7 Genesis Repair-Required — STATUS (honest)
 
-**Branch tip:** `2333fc9` on `v7-vision-evidence-contracts`  
+**Branch tip:** `7574548` on `v7-vision-evidence-contracts`  
 **Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
 **Phase lock:** world homology **closed**. Active phase = **Genesis RGB vision calibration only**  
 (no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).  
-**Closed-loop chain 32/60 (53%) remains the honest freeze** until a clean vision dataset is trained.
+**Closed-loop chain 32/60 (53%) remains the honest freeze** until a clean vision dataset is trained **and** the post-collect gate passes.
+
+### Full collect ops lock (do not change)
+
+| Item | Decision |
+| --- | --- |
+| Workers | **12** (healthy ~75% GPU) — **do not raise to 16** |
+| Output | `outputs/v7/vision-dataset-v2-full` |
+| Orchestrator | PID may change on resume; check `pgrep -af v7_collect` |
+| Live monitor | `find ... -name '_COMPLETE__*.json' \| wc -l` (main log may stay empty) |
+| Expected total | **1800** worlds (1000+200+300+300) |
+| Train before gate | **Forbidden** |
+
+### Post-collect gate (mandatory before train)
+
+```bash
+# 1–6 in one shot:
+python scripts/v7_finalize_vision_dataset.py \
+  --data-dir /workspace/look-twice-v6/outputs/v7/vision-dataset-v2-full
+# require finalize_report.json passed=true
+```
+
+Must verify: complete==1800, `audit --fix` passed, per-split clear/blocked ≥20%, no conflict SHA / bad paths / incomplete, immutable manifests + dataset SHA256, **record all collector git commits** on samples (early COMPLETE worlds may predate later collector commits — keep if audit passes, do not hide provenance).
+
+Then:
+
+```text
+train → validation → calibration
+→ 24-smoke (non-locked seeds)
+→ freeze model + thresholds + contract + SHA
+→ locked vision test once
+→ 120 closed-loop matrix
+→ formal_result_eligible
+```
 
 ### Vision-cal phase assets
 
@@ -13,23 +46,23 @@
 | Plan | `docs/V7_VISION_CALIBRATION.md` |
 | Collect **v2** | `scripts/v7_collect_genesis_vision_dataset.py` |
 | Audit | `scripts/v7_audit_vision_dataset.py` |
+| **Finalize gate** | `scripts/v7_finalize_vision_dataset.py` |
 | Train | `scripts/v7_train_genesis_vision_head.py` (train_eligible only) |
 | Conformal | `scripts/v7_calibrate_vision_conformal.py` |
 | **Invalid preflight (do not train)** | GPU `outputs/v7/vision-dataset-invalid-preflight` |
-| Preflight20 (audit **passed**) | GPU `outputs/v7/vision-dataset-preflight20` |
+| Preflight20 / gate50 | GPU `vision-dataset-preflight20`, `vision-dataset-gate50` |
+| Full (in progress) | GPU `vision-dataset-v2-full` |
 
 ### Collect integrity (v2) — enforced
 
 1. No dual-label of one carrier_front RGB as A/B (front = audit-only, distinct pose/ROI).  
-2. Scout side views only for `train_eligible=true`; require real relocation (pose Δ≥8cm).  
-3. Reject blank / duplicate / conflicting SHA within world; purge incomplete worlds.  
-4. Resume only via `_COMPLETE__{seed}.json`.  
-5. `image_path` always real `.npy`; SHA reload-checked.  
+2. Scout side views only for `train_eligible=true`.  
+3. Legal unreachable (`seed%7==3`) + collocated A/B targets → not incomplete.  
+4. Reachable control fails: move_log + staging retry; incomplete only if control_fail>0.  
+5. Resume only via `_COMPLETE__{seed}.json`; purge incomplete samples.  
+6. `image_path` real `.npy`; SHA reload-checked.  
 
-Preflight20 audit (train-eligible): **passed=true**, clear/blocked ~53/47, unique SHA, no conflicts, `discriminable_hint=true`.
-
-Viewpoint completeness fix (`2333fc9`): legal unreachable + collocated A/B skip; regress 96029/36/43/50 **OK**; gate50 unexpected incomplete **0/50**; audit passed. Full resume at **12 workers** on `vision-dataset-v2-full` (keep prior COMPLETE worlds).
-Eval order: train→val→cal→24 smoke (non-locked)→freeze→locked test once→120 matrix.
+Preflight20 + gate50: audit **passed**, unexpected incomplete **0/50**.
 
 ## Freeze policy (do not overwrite)
 
