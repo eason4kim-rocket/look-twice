@@ -208,6 +208,12 @@ def score_action(
                     base += 0.55
                 else:
                     base -= 0.25
+            if str(r).startswith("confirmed_blocked:") and action.corridor_id:
+                blocked_cid = str(r).split(":", 1)[1]
+                if action.corridor_id == blocked_cid:
+                    base -= 0.80  # do not re-scout confirmed blocked lane
+                else:
+                    base += 0.40  # switch to the other corridor
     elif action.kind == "same_view":
         base = 0.35
         if "time_skew" in reasons or "stale" in reasons:

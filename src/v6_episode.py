@@ -79,13 +79,22 @@ _SOFT_REPAIR_REASONS = frozenset(
 )
 
 
-def _pick_primary_decision(decisions: dict[str, Any]) -> Any:
+def _pick_primary_decision(
+    decisions: dict[str, Any],
+    *,
+    confirmed_blocked: set[str] | None = None,
+    side_obs_per_corridor: dict[str, int] | None = None,
+    max_side_per_corridor: int = 2,
+) -> Any:
     """Prefer a denied corridor that still looks repairable via new side evidence.
 
     If corridor_a is hard-denied (blocked/conflict) while corridor_b only lacks
     vision roots, burn scout budget on B — not on unsalvageable A.
+    Confirmed-blocked corridors are deprioritized so Active switches lanes.
     """
-    ranked: list[tuple[int, int, str, Any]] = []
+    confirmed_blocked = confirmed_blocked or set()
+    side_obs_per_corridor = side_obs_per_corridor or {}
+    ranked: list[tuple[int, int, int, int, str, Any]] = []
     for cid in ("corridor_a", "corridor_b"):
         dec = decisions.get(cid)
         if dec is None or getattr(dec, "admitted", False):
@@ -93,11 +102,15 @@ def _pick_primary_decision(decisions: dict[str, Any]) -> Any:
         reasons = set(getattr(dec, "reasons", ()) or ())
         hard = len(reasons & _HARD_DENY_REASONS)
         soft = len(reasons & _SOFT_REPAIR_REASONS)
-        # Lower hard first, then more soft gaps (actionable).
-        ranked.append((hard, -soft, cid, dec))
+        conf_blk = 1 if cid in confirmed_blocked else 0
+        side_n = int(side_obs_per_corridor.get(cid, 0))
+        over_budget = 1 if side_n >= max_side_per_corridor else 0
+        # Lower is better: confirmed blocked last; over side budget last;
+        # then hard denies last; prefer soft-repairable.
+        ranked.append((conf_blk, over_budget, hard, -soft, cid, dec))
     if ranked:
         ranked.sort()
-        return ranked[0][3]
+        return ranked[0][5]
     return next(iter(decisions.values()))
 from v6_motion import MultiAgentKinematicRuntime, build_runtime_from_scenario
 from v6_repair import choose_evidence_action
@@ -339,6 +352,11 @@ def run_v6_episode(
     initial_gate_reasons: list[str] = []
     roots_after_initial: set[str] = set()
     viewpoints_sequence: list[str] = []
+    # Corridors with decisive blocked evidence (quality/vis above weak threshold).
+    # Active policy switches scout budget to the other corridor instead of
+    # re-probing a confirmed-blocked lane (not a gate-rule change).
+    confirmed_blocked: set[str] = set()
+    side_obs_per_corridor: dict[str, int] = {"corridor_a": 0, "corridor_b": 0}
 
     policy = config.policy
     is_naive = policy == "naive"
@@ -520,8 +538,25 @@ def run_v6_episode(
         # Also mark fixed action-set aliases so planner does not re-pick same side.
         if viewpoint_name.startswith("corridor_a/"):
             visited.add("scout_a_" + viewpoint_name.split("/", 1)[1])
+            side_obs_per_corridor["corridor_a"] = side_obs_per_corridor.get(
+                "corridor_a", 0
+            ) + 1
         elif viewpoint_name.startswith("corridor_b/"):
             visited.add("scout_b_" + viewpoint_name.split("/", 1)[1])
+            side_obs_per_corridor["corridor_b"] = side_obs_per_corridor.get(
+                "corridor_b", 0
+            ) + 1
+        # Offline-oracle-free: decisive blocked claims confirm corridor blocked.
+        for c in new_claims:
+            if (
+                str(getattr(c, "value", "")) == "blocked"
+                and float(getattr(c, "quality", 0.0) or 0.0) >= 0.35
+                and float(getattr(c, "visibility", 0.0) or 0.0) >= 0.35
+            ):
+                # Scope region is corridor id for v2 claims.
+                region = getattr(getattr(c, "scope", None), "region_id", None)
+                if region in ("corridor_a", "corridor_b"):
+                    confirmed_blocked.add(str(region))
         publish_and_receive(new_claims)
 
     # Initial carrier front-view (low coverage / shared root on first capture).
@@ -562,13 +597,21 @@ def run_v6_episode(
         repair_attempted = True
         for _ in range(config.max_observations):
             # Prefer repairable denied corridor (not hard-conflict A when B is open).
-            primary = _pick_primary_decision(decisions)
+            primary = _pick_primary_decision(
+                decisions,
+                confirmed_blocked=confirmed_blocked,
+                side_obs_per_corridor=side_obs_per_corridor,
+                max_side_per_corridor=2,
+            )
             gaps = [g.get("reason", "insufficient_roots") for g in primary.belief_gaps]
             if not gaps:
                 gaps = list(primary.reasons) or ["insufficient_roots"]
             # Bias scout toward the primary corridor's side views.
             if primary.corridor_id and f"corridor:{primary.corridor_id}" not in gaps:
                 gaps = list(gaps) + [f"target_corridor:{primary.corridor_id}"]
+            # Explicit switch signal when A is confirmed blocked.
+            for cid in sorted(confirmed_blocked):
+                gaps = list(gaps) + [f"confirmed_blocked:{cid}"]
             carrier_xy = (
                 runtime.pose_of(CARRIER_ID).x,
                 runtime.pose_of(CARRIER_ID).y,
@@ -730,10 +773,21 @@ def run_v6_episode(
         return bool(dec.admitted)
 
     # Choose admitted corridor, else safest detour.
+    # Never route through a corridor confirmed blocked by decisive claims.
     for cid, dec in decisions.items():
-        if dec.admitted and cid not in invalidated_corridors:
+        if (
+            dec.admitted
+            and cid not in invalidated_corridors
+            and cid not in confirmed_blocked
+        ):
             selected_corridor = cid
             break
+    if selected_corridor is None:
+        for cid, dec in decisions.items():
+            if dec.admitted and cid not in invalidated_corridors:
+                # Last resort: admitted but confirmed blocked — still refuse
+                # and detour rather than force a false-clear cross.
+                break
 
     def cross_corridor(cid: str, *, force: bool = False) -> bool:
         nonlocal unsafe, route_mode, selected_corridor
@@ -831,12 +885,19 @@ def run_v6_episode(
         ):
             repair_attempted = True
             for _ in range(max(1, config.max_observations - observations)):
-                primary = _pick_primary_decision(decisions)
+                primary = _pick_primary_decision(
+                    decisions,
+                    confirmed_blocked=confirmed_blocked,
+                    side_obs_per_corridor=side_obs_per_corridor,
+                    max_side_per_corridor=2,
+                )
                 gaps = [
                     g.get("reason", "insufficient_roots") for g in primary.belief_gaps
                 ] or list(primary.reasons) or ["insufficient_roots"]
                 if primary.corridor_id:
                     gaps = list(gaps) + [f"target_corridor:{primary.corridor_id}"]
+                for cid in sorted(confirmed_blocked):
+                    gaps = list(gaps) + [f"confirmed_blocked:{cid}"]
                 selected, ranking = choose_evidence_action(
                     public,
                     gap_reasons=gaps,
@@ -1048,6 +1109,8 @@ def run_v6_episode(
             "clear_admitted_collision": clear_admitted_collision,
             "collision_entity": world_alignment.get("last_collision_entity"),
             "collision_pose": world_alignment.get("last_collision_pose"),
+            "confirmed_blocked_corridors": sorted(confirmed_blocked),
+            "side_obs_per_corridor": dict(side_obs_per_corridor),
         },
         "world_alignment": world_alignment,
         "oracle": {"scenario": scenario.oracle_context},

@@ -1,7 +1,9 @@
 # V7 Genesis Repair-Required — STATUS (honest)
 
-**Branch tip:** `67cb253` on `v7-vision-evidence-contracts`  
-**Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`
+**Branch tip:** `f315a02` on `v7-vision-evidence-contracts`  
+**Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
+**Phase lock:** world homology **closed**. Next = **Genesis RGB vision calibration only**  
+(no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).
 
 ## Freeze policy (do not overwrite)
 
