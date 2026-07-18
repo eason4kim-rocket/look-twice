@@ -2,7 +2,7 @@
 
 Backends:
   - heuristic_rgb_proxy: deterministic, CI-safe, honestly a proxy
-  - torch_corridor_head: optional tiny network on ROCm/CUDA
+  - torch_corridor_head: GenesisCorridorHead + conformal (fail-closed)
 """
 
 from __future__ import annotations
@@ -17,9 +17,7 @@ from v4_claims import ClaimScope, canonical_sha256
 from v6_claims import SENSOR_VERSION_V6, build_robot_claim_v2
 
 VISION_MODALITY = "vision_semantic_v7"
-# Shared bundle with geometry so exact-calibration filter does not false-deny.
 SENSOR_BUNDLE_V7 = "look-twice-rgbd-multi-agent-v7/1"
-# Keep v6 id accepted when contract still on v6 calibration during migration.
 SENSOR_BUNDLE_COMPAT = SENSOR_VERSION_V6
 MODEL_PREFIX = "look-twice-v7-vision"
 
@@ -34,6 +32,15 @@ class VisionProposal:
     input_sha256: str
     backend: str
     features: dict[str, float]
+    # Runtime integration audit (torch path fills these; heuristic leaves defaults)
+    tensor_device: str = "cpu"
+    checkpoint_sha256: str | None = None
+    conformal_artifact_sha256: str | None = None
+    preprocessing_version: str | None = None
+    fallback_used: bool = False
+    p_blocked: float | None = None
+    prediction_set: tuple[str, ...] = ()
+    checkpoint_loaded: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -45,6 +52,14 @@ class VisionProposal:
             "input_sha256": self.input_sha256,
             "backend": self.backend,
             "features": dict(self.features),
+            "tensor_device": self.tensor_device,
+            "checkpoint_sha256": self.checkpoint_sha256,
+            "conformal_artifact_sha256": self.conformal_artifact_sha256,
+            "preprocessing_version": self.preprocessing_version,
+            "fallback_used": bool(self.fallback_used),
+            "p_blocked": self.p_blocked,
+            "prediction_set": list(self.prediction_set),
+            "checkpoint_loaded": bool(self.checkpoint_loaded),
         }
 
 
@@ -76,12 +91,7 @@ def propose_vision_heuristic(
     depth: Any | None = None,
     meta: Mapping[str, Any] | None = None,
 ) -> VisionProposal:
-    """Deterministic ROI proxy.
-
-    Prefer free-space depth structure over raw darkness (Genesis warehouse
-    frames are often dark but traversable). Darkness alone is inconclusive,
-    not blocked. Not a foundation VLM.
-    """
+    """Deterministic ROI proxy (not the formal Genesis vision model)."""
     meta = dict(meta or {})
     arr = _rgb_to_array(rgb)
     h, w = arr.shape[:2]
@@ -108,11 +118,9 @@ def propose_vision_heuristic(
         if finite.size:
             depth_available = 1.0
             med = float(np.median(finite))
-            # Near cluster relative to median → occlusion; mid/far → free.
             depth_block = float((finite < med * 0.55).mean())
             depth_free = float((finite > med * 0.75).mean())
 
-    # Darkness is weak evidence of blockage in sim; free depth is strong clear.
     block_score = 0.55 * depth_block + 0.25 * max(0.0, dark_frac - 0.85) + 0.10 * max(
         0.0, 0.12 - mean_luma
     )
@@ -120,7 +128,6 @@ def propose_vision_heuristic(
         1.0, std_luma * 4.0
     )
     if depth_available < 0.5:
-        # RGB-only: require structured mid-tone free corridor, not pure black.
         block_score = 0.45 * dark_frac + 0.20 * max(0.0, 0.15 - mean_luma)
         clear_score = 0.50 * (1.0 - dark_frac) + 0.30 * min(1.0, mean_luma / 0.35)
 
@@ -134,8 +141,17 @@ def propose_vision_heuristic(
         value = "inconclusive"
         confidence = 0.45 + 0.2 * (1.0 - abs(block_score - clear_score))
 
-    quality = float(np.clip(0.45 + 0.4 * (0.5 * depth_available + 0.5 * (1.0 - abs(0.5 - std_luma))), 0.25, 0.95))
-    visibility = float(np.clip(0.40 + 0.5 * max(mean_luma, 0.5 * depth_free), 0.25, 0.95))
+    quality = float(
+        np.clip(
+            0.45
+            + 0.4 * (0.5 * depth_available + 0.5 * (1.0 - abs(0.5 - std_luma))),
+            0.25,
+            0.95,
+        )
+    )
+    visibility = float(
+        np.clip(0.40 + 0.5 * max(mean_luma, 0.5 * depth_free), 0.25, 0.95)
+    )
     sha = _input_sha(arr, meta)
     return VisionProposal(
         value=value,
@@ -153,8 +169,49 @@ def propose_vision_heuristic(
             "depth_free": depth_free,
             "block_score": block_score,
             "clear_score": clear_score,
+            "fallback_used": 0.0,
         },
+        tensor_device="cpu",
+        fallback_used=False,
+        checkpoint_loaded=False,
+        prediction_set=(value,) if value in ("clear", "blocked") else ("clear", "blocked"),
     )
+
+
+# Module-level cache: (ckpt, device, conformal_path) → loaded objects
+_TORCH_CACHE: dict[tuple[str, str, str], dict[str, Any]] = {}
+
+
+def _load_torch_runtime(
+    *,
+    checkpoint: str,
+    conformal_artifact: str,
+    device: str,
+) -> dict[str, Any]:
+    key = (str(checkpoint), str(device), str(conformal_artifact))
+    if key in _TORCH_CACHE:
+        return _TORCH_CACHE[key]
+    from v7_vision_model import (
+        MODEL_ID,
+        PREPROCESSING_VERSION,
+        load_conformal_artifact,
+        load_genesis_corridor_head,
+    )
+
+    model, ckpt_sha, meta = load_genesis_corridor_head(checkpoint, device=device)
+    conformal = load_conformal_artifact(conformal_artifact)
+    bundle = {
+        "model": model,
+        "checkpoint_sha256": ckpt_sha,
+        "conformal": conformal,
+        "conformal_artifact_sha256": conformal.artifact_sha256,
+        "checkpoint_meta": meta,
+        "model_id": MODEL_ID,
+        "preprocessing_version": PREPROCESSING_VERSION,
+        "device": device,
+    }
+    _TORCH_CACHE[key] = bundle
+    return bundle
 
 
 def propose_vision_torch(
@@ -163,68 +220,87 @@ def propose_vision_torch(
     depth: Any | None = None,
     meta: Mapping[str, Any] | None = None,
     checkpoint: str | None = None,
+    conformal_artifact: str | None = None,
     device: str = "cpu",
+    allow_fallback: bool = False,
 ) -> VisionProposal:
-    """Optional tiny torch head; falls back to heuristic if torch/ckpt unavailable."""
+    """GenesisCorridorHead + conformal. Fail-closed unless allow_fallback=True.
+
+    Formal / torch mode must set allow_fallback=False (default for torch backend
+    entry via propose_vision).
+    """
     meta = dict(meta or {})
-    try:
-        import torch
-        import torch.nn as nn
-    except Exception:
-        return propose_vision_heuristic(rgb, depth=depth, meta=meta)
-
-    arr = _rgb_to_array(rgb)
-    # Resize-ish via simple stride sample to 32x32.
-    ys = np.linspace(0, arr.shape[0] - 1, 32).astype(int)
-    xs = np.linspace(0, arr.shape[1] - 1, 32).astype(int)
-    small = arr[ys][:, xs]
-    x = torch.tensor(small.transpose(2, 0, 1), dtype=torch.float32, device=device).unsqueeze(0)
-
-    class Tiny(nn.Module):
-        def __init__(self) -> None:
-            super().__init__()
-            self.net = nn.Sequential(
-                nn.Conv2d(3, 8, 3, stride=2, padding=1),
-                nn.ReLU(),
-                nn.Conv2d(8, 16, 3, stride=2, padding=1),
-                nn.ReLU(),
-                nn.AdaptiveAvgPool2d(1),
-            )
-            self.fc = nn.Linear(16, 3)  # clear, blocked, inconclusive
-
-        def forward(self, t: torch.Tensor) -> torch.Tensor:
-            h = self.net(t).flatten(1)
-            return self.fc(h)
-
-    model = Tiny().to(device)
-    if checkpoint:
-        try:
-            payload = torch.load(checkpoint, map_location=device, weights_only=False)
-            model.load_state_dict(payload["state_dict"])
-        except Exception:
+    if not checkpoint:
+        if allow_fallback:
             return propose_vision_heuristic(rgb, depth=depth, meta=meta)
-    model.eval()
-    with torch.no_grad():
-        logits = model(x)[0]
-        probs = torch.softmax(logits, dim=0).cpu().numpy()
-    labels = ("clear", "blocked", "inconclusive")
-    idx = int(probs.argmax())
-    value = labels[idx]
-    conf = float(probs[idx])
-    sha = _input_sha(arr, meta)
+        raise FileNotFoundError(
+            "torch_corridor_head requires --vision-checkpoint (fail-closed)"
+        )
+    if not conformal_artifact:
+        if allow_fallback:
+            return propose_vision_heuristic(rgb, depth=depth, meta=meta)
+        raise FileNotFoundError(
+            "torch_corridor_head requires --vision-conformal-artifact (fail-closed)"
+        )
+
+    try:
+        bundle = _load_torch_runtime(
+            checkpoint=checkpoint,
+            conformal_artifact=conformal_artifact,
+            device=device,
+        )
+    except Exception:
+        if allow_fallback:
+            return propose_vision_heuristic(rgb, depth=depth, meta=meta)
+        raise
+
+    from v7_vision_model import predict_label, preprocess_rgb_for_model
+
+    already_96 = bool(meta.get("already_96"))
+    pred = predict_label(
+        bundle["model"],
+        rgb,
+        bundle["conformal"],
+        device=device,
+        already_96=already_96,
+    )
+    small = preprocess_rgb_for_model(rgb, already_96=already_96)
+    sha = _input_sha(small, meta)
+    value = pred["value"]
+    p_blocked = float(pred["p_blocked"])
+    pred_set = tuple(pred["prediction_set"])
+    conf = p_blocked if value == "blocked" else (1.0 - p_blocked if value == "clear" else 0.5)
+    conf = float(np.clip(max(conf, 0.05), 0.05, 0.99))
     return VisionProposal(
         value=value,
-        confidence=float(np.clip(conf, 0.05, 0.99)),
-        quality=0.7,
-        visibility=0.7,
-        model_id=f"{MODEL_PREFIX}/torch_corridor_head/1",
+        confidence=conf,
+        quality=0.85 if value != "inconclusive" else 0.55,
+        visibility=0.80 if value != "inconclusive" else 0.50,
+        model_id=str(bundle["model_id"]),
         input_sha256=sha,
         backend="torch_corridor_head",
         features={
-            "p_clear": float(probs[0]),
-            "p_blocked": float(probs[1]),
-            "p_inconclusive": float(probs[2]),
+            "p_blocked": p_blocked,
+            "p_clear": float(pred["p_clear"]),
+            "prediction_set_clear": 1.0 if "clear" in pred_set else 0.0,
+            "prediction_set_blocked": 1.0 if "blocked" in pred_set else 0.0,
+            "fallback_used": 0.0,
+            "checkpoint_loaded": 1.0,
+            "include_blocked_if_p_blocked_ge": bundle[
+                "conformal"
+            ].include_blocked_if_p_blocked_ge,
+            "include_clear_if_p_blocked_le": bundle[
+                "conformal"
+            ].include_clear_if_p_blocked_le,
         },
+        tensor_device=str(device),
+        checkpoint_sha256=str(bundle["checkpoint_sha256"]),
+        conformal_artifact_sha256=str(bundle["conformal_artifact_sha256"]),
+        preprocessing_version=str(bundle["preprocessing_version"]),
+        fallback_used=False,
+        p_blocked=p_blocked,
+        prediction_set=pred_set,
+        checkpoint_loaded=True,
     )
 
 
@@ -235,12 +311,26 @@ def propose_vision(
     meta: Mapping[str, Any] | None = None,
     backend: str = "heuristic_rgb_proxy",
     checkpoint: str | None = None,
+    conformal_artifact: str | None = None,
     device: str = "cpu",
+    allow_heuristic_fallback: bool = False,
 ) -> VisionProposal:
+    """Dispatch vision backend.
+
+    torch_corridor_head is fail-closed by default (no silent heuristic fallback).
+    """
     if backend == "torch_corridor_head":
         return propose_vision_torch(
-            rgb, depth=depth, meta=meta, checkpoint=checkpoint, device=device
+            rgb,
+            depth=depth,
+            meta=meta,
+            checkpoint=checkpoint,
+            conformal_artifact=conformal_artifact,
+            device=device,
+            allow_fallback=bool(allow_heuristic_fallback),
         )
+    if backend != "heuristic_rgb_proxy":
+        raise ValueError(f"unknown vision backend: {backend}")
     return propose_vision_heuristic(rgb, depth=depth, meta=meta)
 
 
@@ -281,7 +371,6 @@ def vision_proposal_to_claim_v2(
     )
 
 
-
 def viewpoint_vision_cue(
     *,
     viewpoint_name: str,
@@ -289,18 +378,16 @@ def viewpoint_vision_cue(
     seed: int,
     profile: str = "",
 ) -> str:
-    """Public, oracle-free cue for synthetic RGB when no camera pixels exist.
-
-    Initial / same-view captures stay weak so the gate starts denied; scout
-    side_view paths produce clear so active repair can complete independent
-    vision roots without reading world blocked flags.
-    """
+    """Public, oracle-free cue for synthetic RGB when no camera pixels exist."""
     name = str(viewpoint_name or "")
     if capture_index <= 0 or "initial" in name or name.endswith("_front"):
         return "inconclusive"
-    if "corridor_" in name or name.startswith("scout_") or "/left" in name or "/right" in name:
-        # Heavy profiles still allow clear from independent side roots so repair
-        # can succeed; geometry path carries true blocked labels separately.
+    if (
+        "corridor_" in name
+        or name.startswith("scout_")
+        or "/left" in name
+        or "/right" in name
+    ):
         return "clear"
     if "recapture" in name or "same" in name:
         return "inconclusive"
@@ -310,17 +397,16 @@ def viewpoint_vision_cue(
 def synthetic_rgb_for_label(label: str, seed: int = 0, size: int = 64) -> np.ndarray:
     """Test helper: build RGB that heuristic maps toward a label."""
     rng = np.random.default_rng(seed)
-    # Domain-randomize mean luminance toward Genesis-like darkness (~0.15–0.35).
     floor = float(rng.uniform(0.12, 0.28))
     if label == "clear":
         base = np.full((size, size, 3), floor, dtype=np.float32)
-        # Free corridor band with mild texture (not pure black blob).
         base[:, size // 4 : 3 * size // 4] = floor + 0.12
         base += rng.normal(0, 0.03, base.shape).astype(np.float32)
     elif label == "blocked":
         base = np.full((size, size, 3), floor * 0.7, dtype=np.float32)
-        # Near obstacle blob in center band.
-        base[size // 3 : 2 * size // 3, size // 3 : 2 * size // 3] = max(0.02, floor * 0.25)
+        base[size // 3 : 2 * size // 3, size // 3 : 2 * size // 3] = max(
+            0.02, floor * 0.25
+        )
         base += rng.normal(0, 0.02, base.shape).astype(np.float32)
     else:
         base = np.full((size, size, 3), floor + 0.05, dtype=np.float32)

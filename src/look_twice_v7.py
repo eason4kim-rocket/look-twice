@@ -31,6 +31,12 @@ def main(argv: list[str] | None = None) -> int:
         default="heuristic_rgb_proxy",
     )
     parser.add_argument("--vision-checkpoint", type=Path, default=None)
+    parser.add_argument(
+        "--vision-conformal-artifact",
+        type=Path,
+        default=None,
+        help="Path to conformal_artifact.json (required for torch_corridor_head).",
+    )
     parser.add_argument("--no-rgbd-claims", action="store_true")
     parser.add_argument(
         "--repair-required",
@@ -46,12 +52,26 @@ def main(argv: list[str] | None = None) -> int:
 
     scenario = sample_v6_scenario(args.profile, args.seed)
     device = args.device or ("cuda:0" if args.runtime == "genesis" else "cpu")
+    if args.vision_backend == "torch_corridor_head":
+        if not args.vision_checkpoint:
+            raise SystemExit(
+                "torch_corridor_head requires --vision-checkpoint (fail-closed)"
+            )
+        if not args.vision_conformal_artifact:
+            raise SystemExit(
+                "torch_corridor_head requires --vision-conformal-artifact (fail-closed)"
+            )
     config = V7EpisodeConfig(
         policy=args.policy,
         device=device,
         prefer_rgbd_claims=not args.no_rgbd_claims,
         vision_backend=args.vision_backend,
         vision_checkpoint=str(args.vision_checkpoint) if args.vision_checkpoint else None,
+        vision_conformal_artifact=(
+            str(args.vision_conformal_artifact)
+            if args.vision_conformal_artifact
+            else None
+        ),
         repair_required=bool(args.repair_required),
     )
 
@@ -91,6 +111,8 @@ def main(argv: list[str] | None = None) -> int:
         f"init_deny={m.get('initial_gate_denied')} chain={m.get('repair_chain_complete')} "
         f"vision={m.get('vision_backend')} v_clear={m.get('vision_clear_proposals')} "
         f"v_blocked={m.get('vision_blocked_proposals')} "
+        f"ckpt_loaded={m.get('checkpoint_loaded')} fallback={m.get('fallback_used')} "
+        f"device={m.get('tensor_device') or m.get('device')} "
         f"tension={m.get('modality_tension_hint')} "
         + (f"output={args.json_output}" if args.json_output else "")
     )

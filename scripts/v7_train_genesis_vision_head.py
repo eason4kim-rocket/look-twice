@@ -21,6 +21,12 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys
+
+sys.path.insert(0, str(ROOT / "src"))
+
+# Single architecture source of truth (also used by runtime + calibration).
+from v7_vision_model import GenesisCorridorHead  # noqa: E402
 
 
 class CorridorRGBDataset(Dataset):
@@ -79,31 +85,6 @@ class CorridorRGBDataset(Dataset):
         x = torch.from_numpy(arr.transpose(2, 0, 1).copy())
         y = torch.tensor(1.0 if meta["offline_label"] == "blocked" else 0.0)
         return x, y
-
-
-class GenesisCorridorHead(nn.Module):
-    """96×96 RGB → blocked logit (user-spec light head)."""
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 32, 3, stride=2, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(32, 64, 3, stride=2, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(64, 128, 3, stride=2, padding=1),
-            nn.ReLU(inplace=True),
-            nn.AdaptiveAvgPool2d(1),
-        )
-        self.head = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(128, 64),
-            nn.ReLU(inplace=True),
-            nn.Linear(64, 1),
-        )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.head(self.features(x)).squeeze(-1)
 
 
 def balanced_accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:

@@ -56,6 +56,12 @@ def _run_one(payload: dict[str, Any]) -> dict[str, Any]:
     ]
     if payload.get("vision_checkpoint"):
         cmd.extend(["--vision-checkpoint", str(payload["vision_checkpoint"])])
+    if payload.get("vision_conformal_artifact"):
+        cmd.extend(
+            ["--vision-conformal-artifact", str(payload["vision_conformal_artifact"])]
+        )
+    if payload.get("repair_required"):
+        cmd.append("--repair-required")
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT / "src")
     env.setdefault("PYOPENGL_PLATFORM", "egl")
@@ -107,6 +113,16 @@ def main() -> int:
         choices=("heuristic_rgb_proxy", "torch_corridor_head"),
     )
     parser.add_argument("--vision-checkpoint", default="")
+    parser.add_argument(
+        "--vision-conformal-artifact",
+        default="",
+        help="conformal_artifact.json (required for torch_corridor_head)",
+    )
+    parser.add_argument(
+        "--repair-required",
+        action="store_true",
+        help="Pass --repair-required to look_twice_v7 (paired passive contract).",
+    )
     args = parser.parse_args()
 
     out = args.output_dir
@@ -131,6 +147,8 @@ def main() -> int:
                         "device": args.device,
                         "vision_backend": args.vision_backend,
                         "vision_checkpoint": args.vision_checkpoint or "",
+                        "vision_conformal_artifact": args.vision_conformal_artifact or "",
+                        "repair_required": bool(args.repair_required),
                         "output": str(out / f"{stem}.json"),
                         "log": str(log_dir / f"{stem}.log"),
                     }
@@ -164,6 +182,9 @@ def main() -> int:
         "runtime": args.runtime,
         "device": args.device,
         "vision_backend": args.vision_backend,
+        "vision_checkpoint": args.vision_checkpoint or None,
+        "vision_conformal_artifact": args.vision_conformal_artifact or None,
+        "repair_required": bool(args.repair_required),
         "results": sorted(results, key=lambda r: r["stem"]),
     }
     (out / "parallel_summary.json").write_text(

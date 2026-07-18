@@ -29,6 +29,7 @@ class V7EpisodeConfig(V6EpisodeConfig):
     policy: str = "purify-active-vision"
     vision_backend: str = "heuristic_rgb_proxy"
     vision_checkpoint: str | None = None
+    vision_conformal_artifact: str | None = None
     require_vision_clear_root: bool = False
     require_side_view_vision_root: bool = False
     enforce_modality_conflict: bool = True
@@ -81,7 +82,9 @@ def attach_synthetic_vision_claims(
         rgb,
         backend=config.vision_backend,
         checkpoint=config.vision_checkpoint,
+        conformal_artifact=config.vision_conformal_artifact,
         device=config.device if str(config.device).startswith("cuda") else "cpu",
+        allow_heuristic_fallback=False,
         meta={"corridor_id": corridor_id, "agent_id": agent_id, "step": step},
     )
     claim = vision_proposal_to_claim_v2(
@@ -121,6 +124,7 @@ def run_v7_episode(
         vision_enabled=inject,
         vision_backend=config.vision_backend,
         vision_checkpoint=config.vision_checkpoint,
+        vision_conformal_artifact=config.vision_conformal_artifact,
         require_vision_clear_root=require_vis,
         require_side_view_vision_root=require_side,
         enforce_modality_conflict=config.enforce_modality_conflict,
@@ -138,6 +142,8 @@ def run_v7_episode(
         **result.get("configuration", {}),
         "policy": config.policy,
         "vision_backend": config.vision_backend,
+        "vision_checkpoint": config.vision_checkpoint,
+        "vision_conformal_artifact": config.vision_conformal_artifact,
         "require_vision_clear_root": require_vis,
         "require_side_view_vision_root": require_side,
         "repair_required": bool(config.repair_required),
@@ -155,6 +161,39 @@ def run_v7_episode(
     )
     m["vision_clear_proposals"] = sum(
         1 for v in vision_audits if v.get("value") == "clear"
+    )
+    # Surface model/calibration provenance for runtime-integration gates.
+    ckpt_shas = sorted(
+        {str(v.get("checkpoint_sha256")) for v in vision_audits if v.get("checkpoint_sha256")}
+    )
+    conf_shas = sorted(
+        {
+            str(v.get("conformal_artifact_sha256"))
+            for v in vision_audits
+            if v.get("conformal_artifact_sha256")
+        }
+    )
+    m["checkpoint_sha256"] = ckpt_shas[0] if len(ckpt_shas) == 1 else (ckpt_shas or None)
+    m["conformal_artifact_sha256"] = (
+        conf_shas[0] if len(conf_shas) == 1 else (conf_shas or None)
+    )
+    m["fallback_used"] = any(bool(v.get("fallback_used")) for v in vision_audits)
+    m["checkpoint_loaded"] = (
+        all(bool(v.get("checkpoint_loaded")) for v in vision_audits)
+        if vision_audits and config.vision_backend == "torch_corridor_head"
+        else False
+    )
+    m["tensor_device"] = next(
+        (v.get("tensor_device") for v in vision_audits if v.get("tensor_device")),
+        config.device,
+    )
+    m["preprocessing_version"] = next(
+        (
+            v.get("preprocessing_version")
+            for v in vision_audits
+            if v.get("preprocessing_version")
+        ),
+        None,
     )
     m["vision_side_clear_proposals"] = sum(
         1

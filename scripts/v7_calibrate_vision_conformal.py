@@ -20,11 +20,12 @@ ROOT = Path(__file__).resolve().parents[1]
 import sys
 
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from v7_train_genesis_vision_head import (  # type: ignore
+from v7_vision_model import GenesisCorridorHead  # noqa: E402
+from v7_train_genesis_vision_head import (  # type: ignore  # noqa: E402
     CorridorRGBDataset,
-    GenesisCorridorHead,
     balanced_accuracy,
 )
 

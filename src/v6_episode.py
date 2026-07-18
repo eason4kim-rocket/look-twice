@@ -159,6 +159,7 @@ class V6EpisodeConfig:
     vision_enabled: bool = False
     vision_backend: str = "heuristic_rgb_proxy"
     vision_checkpoint: str | None = None
+    vision_conformal_artifact: str | None = None
     require_vision_clear_root: bool = False
     require_side_view_vision_root: bool = False
     enforce_modality_conflict: bool = True
@@ -493,12 +494,19 @@ def run_v6_episode(
                 rgb = synthetic_rgb_for_label(
                     cue, seed=scenario.seed * 17 + capture_index + hash(viewpoint_name) % 97
                 )
+            vision_device = (
+                config.device if str(config.device).startswith("cuda") else "cpu"
+            )
+            # Formal torch mode is fail-closed: missing ckpt/conformal or load
+            # mismatch raises and fails the episode (no silent heuristic).
             prop = propose_vision(
                 rgb,
                 depth=depth,
                 backend=config.vision_backend,
                 checkpoint=config.vision_checkpoint,
-                device=config.device if str(config.device).startswith("cuda") else "cpu",
+                conformal_artifact=config.vision_conformal_artifact,
+                device=vision_device,
+                allow_heuristic_fallback=False,
                 meta={
                     "agent_id": agent_id,
                     "corridor_id": corridor_id,
@@ -520,17 +528,31 @@ def run_v6_episode(
                 ),
             )
             new_claims = list(new_claims) + [vclaim]
-            rgbd_audits.append(
-                {
-                    "kind": "vision_proposal_v7",
-                    "vision_source": vision_source,
-                    "observer_agent_id": agent_id,
-                    "corridor_id": corridor_id,
-                    "viewpoint": viewpoint_name,
-                    "vision_root_kind": root_kind,
-                    **prop.to_dict(),
-                }
+            audit = {
+                "kind": "vision_proposal_v7",
+                "vision_source": vision_source,
+                "vision_backend": prop.backend,
+                "observer_agent_id": agent_id,
+                "corridor_id": corridor_id,
+                "viewpoint": viewpoint_name,
+                "vision_root_kind": root_kind,
+                "tensor_device": prop.tensor_device or vision_device,
+                **prop.to_dict(),
+            }
+            # Ensure required runtime-integration keys are always present.
+            audit.setdefault("fallback_used", bool(prop.fallback_used))
+            audit.setdefault("checkpoint_loaded", bool(prop.checkpoint_loaded))
+            audit.setdefault("checkpoint_sha256", prop.checkpoint_sha256)
+            audit.setdefault(
+                "conformal_artifact_sha256", prop.conformal_artifact_sha256
             )
+            audit.setdefault("preprocessing_version", prop.preprocessing_version)
+            audit.setdefault("p_blocked", prop.p_blocked)
+            audit.setdefault(
+                "prediction_set",
+                list(prop.prediction_set) if prop.prediction_set else [],
+            )
+            rgbd_audits.append(audit)
         capture_index += 1
         observations += 1
         visited.add(viewpoint_name)
@@ -1025,6 +1047,27 @@ def run_v6_episode(
             if a.get("kind") == "vision_proposal_v7" and a.get("vision_source")
         }
     )
+    vision_audits_only = [
+        a for a in rgbd_audits if a.get("kind") == "vision_proposal_v7"
+    ]
+    vision_ckpt_shas = sorted(
+        {
+            str(a.get("checkpoint_sha256"))
+            for a in vision_audits_only
+            if a.get("checkpoint_sha256")
+        }
+    )
+    vision_conf_shas = sorted(
+        {
+            str(a.get("conformal_artifact_sha256"))
+            for a in vision_audits_only
+            if a.get("conformal_artifact_sha256")
+        }
+    )
+    vision_fallback_used = any(bool(a.get("fallback_used")) for a in vision_audits_only)
+    vision_checkpoint_loaded = all(
+        bool(a.get("checkpoint_loaded")) for a in vision_audits_only
+    ) if vision_audits_only and config.vision_backend == "torch_corridor_head" else False
     # World homology audit (Genesis); synthetic returns synthetic-ok defaults.
     world_alignment: dict[str, Any] = {}
     if callable(getattr(runtime, "world_alignment_audit", None)):
@@ -1098,6 +1141,20 @@ def run_v6_episode(
             "viewpoints_sequence": list(viewpoints_sequence),
             "new_capture_root_added": new_capture_root_added,
             "vision_sources": vision_sources,
+            "vision_backend": config.vision_backend,
+            "vision_checkpoint_sha256": (
+                vision_ckpt_shas[0] if len(vision_ckpt_shas) == 1 else (
+                    vision_ckpt_shas or None
+                )
+            ),
+            "vision_conformal_artifact_sha256": (
+                vision_conf_shas[0] if len(vision_conf_shas) == 1 else (
+                    vision_conf_shas or None
+                )
+            ),
+            "vision_fallback_used": vision_fallback_used,
+            "vision_checkpoint_loaded": vision_checkpoint_loaded,
+            "vision_proposal_count": len(vision_audits_only),
             "world_alignment_passed": bool(
                 world_alignment.get("world_alignment_passed")
             ),

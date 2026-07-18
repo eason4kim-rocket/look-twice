@@ -1,0 +1,69 @@
+{
+  "schema_version": "look-twice.v7-vision-artifact-bundle/v1",
+  "attestation": {
+    "source_commit_attestation": "9e4c67be6cd8dbb4a7ab7298ec3bb99c5f4abcf5",
+    "attestation_method": "exact_script_sha256_match",
+    "sample_embedded_commit": "unknown",
+    "note": "Cloud GPU tree has no .git; sample meta git_commit remains unknown. External attestation matches local commit 9e4c67b script digests exactly — do not rewrite sample git_commit."
+  },
+  "dataset": {
+    "path_gpu": "/workspace/look-twice-v6/outputs/v7/vision-dataset-v2-full",
+    "manifest_all_sha256": "abfa99c309e03a009256da5fb1e6265a71eaf5508a6d3160fe5c3c1c87cb270e",
+    "manifest_train_paths_sha256": "649481b0fad0abb9ee250b2083cd245b9740b2d8507231f9726060fc448215cc",
+    "manifest_train_image_sha256": "98aac0050c81b76494be7aada595640dbc258cced247b91b80188e834576d3fa",
+    "n_all_meta": 17248,
+    "n_train_eligible_meta": 13648,
+    "schema_version": "look-twice.v7-genesis-vision-dataset/v2"
+  },
+  "model": {
+    "path_gpu": "/workspace/look-twice-v6/outputs/v7/vision-head-genesis-v2/best.pt",
+    "path_local": "results/v7-vision-devices-v2/model/best.pt",
+    "checkpoint_sha256": "385aa7b78197909e548cd39907bb21c3059987a4465c1d366ab221968636bcc9",
+    "architecture": "GenesisCorridorHead",
+    "input_size": 96,
+    "label": "blocked_logit",
+    "best_val_balanced_accuracy": 0.9868683510638299,
+    "preprocessing_version": "v7-genesis-roi-side-0.30-0.75-0.28-0.72-resize96-v1"
+  },
+  "calibration": {
+    "path_gpu": "/workspace/look-twice-v6/outputs/v7/vision-conformal-v2/conformal_artifact.json",
+    "path_local": "results/v7-vision-devices-v2/conformal/conformal_artifact.json",
+    "conformal_artifact_sha256": "44f564633b6e2a303dd796380d8c300f41f0abce60124ee7f36f48feec0e7333",
+    "thresholds": {
+      "include_clear_if_p_blocked_le": 0.2635742992162704,
+      "include_blocked_if_p_blocked_ge": 0.8950414955615998,
+      "coverage_target": 0.95
+    },
+    "calibration_metrics": {
+      "balanced_accuracy_decisive": 0.990449034598327,
+      "blocked_recall": 0.9499553172475425,
+      "false_clear_rate": 0.005361930294906166,
+      "coverage": 0.9907651715039578
+    }
+  },
+  "scripts": {
+    "v7_collect_genesis_vision_dataset.py": "1cc0d3a955bb3b7fc66e64b953aac26e2f46e0158b88eaa53b43fb29c2f3e2c2",
+    "v7_train_genesis_vision_head.py": "24179ef0a1d7193bd4b9a61f62f67546a57a55621051d4ac670797da2e348cf1",
+    "v7_calibrate_vision_conformal.py": "0567bebaa1db49ab005e8ffd2eb96acb763ba54b1aa6d9200765e3f72c45cb1b",
+    "note": "SHA256 of script files at attestation time; local and GPU digests matched exactly against commit 9e4c67b."
+  },
+  "environment_gpu": {
+    "pytorch": "2.9.1+gitff65f5b",
+    "rocm_hip": "7.2.53211-e1a6bc5663",
+    "genesis": "1.1.2",
+    "gpu": "AMD Radeon Graphics",
+    "python": "3.12.3",
+    "device": "cuda:0"
+  },
+  "runtime_integration": {
+    "shared_module": "src/v7_vision_model.py",
+    "backend": "torch_corridor_head",
+    "fail_closed": true,
+    "silent_heuristic_fallback": false,
+    "cli_flags": [
+      "--vision-backend torch_corridor_head",
+      "--vision-checkpoint PATH",
+      "--vision-conformal-artifact PATH"
+    ]
+  }
+}

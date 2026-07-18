@@ -32,6 +32,7 @@ def run_one(
     device: str,
     vision_backend: str,
     vision_checkpoint: str,
+    vision_conformal_artifact: str,
     out: Path,
     repair_required: bool,
 ) -> dict:
@@ -62,6 +63,8 @@ def run_one(
     ]
     if vision_checkpoint:
         cmd.extend(["--vision-checkpoint", vision_checkpoint])
+    if vision_conformal_artifact:
+        cmd.extend(["--vision-conformal-artifact", vision_conformal_artifact])
     if repair_required:
         cmd.append("--repair-required")
     env = os.environ.copy()
@@ -147,6 +150,11 @@ def main() -> int:
     )
     parser.add_argument("--vision-checkpoint", default="")
     parser.add_argument(
+        "--vision-conformal-artifact",
+        default="",
+        help="conformal_artifact.json path (required for torch_corridor_head)",
+    )
+    parser.add_argument(
         "--profiles",
         nargs="+",
         default=["independent-noise", "shared-occlusion", "evidence-echo"],
@@ -211,6 +219,7 @@ def main() -> int:
                     device=args.device,
                     vision_backend=args.vision_backend,
                     vision_checkpoint=args.vision_checkpoint,
+                    vision_conformal_artifact=args.vision_conformal_artifact,
                     out=out,
                     repair_required=bool(repair_required),
                 )
@@ -292,6 +301,8 @@ def main() -> int:
         "runtime": args.runtime,
         "device": args.device,
         "vision_backend": args.vision_backend,
+        "vision_checkpoint": args.vision_checkpoint or None,
+        "vision_conformal_artifact": args.vision_conformal_artifact or None,
         "repair_required": bool(repair_required),
         "strict_genesis": bool(args.strict_genesis or args.runtime == "genesis"),
         "n_pairs": n_pairs,
