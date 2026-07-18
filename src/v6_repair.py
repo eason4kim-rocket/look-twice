@@ -200,6 +200,14 @@ def score_action(
             base += 0.45
         if action.observer == "scout":
             base += 0.20  # independence preference
+        # Prefer the corridor the gate currently wants repaired.
+        for r in reasons:
+            if str(r).startswith("target_corridor:") and action.corridor_id:
+                target = str(r).split(":", 1)[1]
+                if action.corridor_id == target:
+                    base += 0.55
+                else:
+                    base -= 0.25
     elif action.kind == "same_view":
         base = 0.35
         if "time_skew" in reasons or "stale" in reasons:

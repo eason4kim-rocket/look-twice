@@ -58,6 +58,47 @@ def _vision_root_kind(agent_id: str, viewpoint_name: str, capture_index: int) ->
     if agent_id == "scout" or name.startswith("corridor_") or name.startswith("scout_"):
         return "side"
     return "side" if capture_index > 0 else "initial"
+
+
+_HARD_DENY_REASONS = frozenset(
+    {
+        "modality_conflict",
+        "prediction_blocked",
+        "prediction_not_clear",
+        "evidence_conflict",
+    }
+)
+_SOFT_REPAIR_REASONS = frozenset(
+    {
+        "missing_side_view_vision_root",
+        "missing_vision_root",
+        "insufficient_roots",
+        "low_coverage",
+        "shared_root",
+    }
+)
+
+
+def _pick_primary_decision(decisions: dict[str, Any]) -> Any:
+    """Prefer a denied corridor that still looks repairable via new side evidence.
+
+    If corridor_a is hard-denied (blocked/conflict) while corridor_b only lacks
+    vision roots, burn scout budget on B — not on unsalvageable A.
+    """
+    ranked: list[tuple[int, int, str, Any]] = []
+    for cid in ("corridor_a", "corridor_b"):
+        dec = decisions.get(cid)
+        if dec is None or getattr(dec, "admitted", False):
+            continue
+        reasons = set(getattr(dec, "reasons", ()) or ())
+        hard = len(reasons & _HARD_DENY_REASONS)
+        soft = len(reasons & _SOFT_REPAIR_REASONS)
+        # Lower hard first, then more soft gaps (actionable).
+        ranked.append((hard, -soft, cid, dec))
+    if ranked:
+        ranked.sort()
+        return ranked[0][3]
+    return next(iter(decisions.values()))
 from v6_motion import MultiAgentKinematicRuntime, build_runtime_from_scenario
 from v6_repair import choose_evidence_action
 from v6_scenario import CARRIER_ID, PAYLOAD_ID, SCOUT_ID, V6ScenarioSample
@@ -520,11 +561,14 @@ def run_v6_episode(
     if requires_gate and not admitted_any and allows_repair:
         repair_attempted = True
         for _ in range(config.max_observations):
-            # Prefer the best denied corridor's gaps (corridor_a first).
-            primary = decisions.get("corridor_a") or next(iter(decisions.values()))
+            # Prefer repairable denied corridor (not hard-conflict A when B is open).
+            primary = _pick_primary_decision(decisions)
             gaps = [g.get("reason", "insufficient_roots") for g in primary.belief_gaps]
             if not gaps:
                 gaps = list(primary.reasons) or ["insufficient_roots"]
+            # Bias scout toward the primary corridor's side views.
+            if primary.corridor_id and f"corridor:{primary.corridor_id}" not in gaps:
+                gaps = list(gaps) + [f"target_corridor:{primary.corridor_id}"]
             carrier_xy = (
                 runtime.pose_of(CARRIER_ID).x,
                 runtime.pose_of(CARRIER_ID).y,
@@ -773,10 +817,12 @@ def run_v6_episode(
         ):
             repair_attempted = True
             for _ in range(max(1, config.max_observations - observations)):
-                primary = next(iter(decisions.values()))
+                primary = _pick_primary_decision(decisions)
                 gaps = [
                     g.get("reason", "insufficient_roots") for g in primary.belief_gaps
                 ] or list(primary.reasons) or ["insufficient_roots"]
+                if primary.corridor_id:
+                    gaps = list(gaps) + [f"target_corridor:{primary.corridor_id}"]
                 selected, ranking = choose_evidence_action(
                     public,
                     gap_reasons=gaps,
