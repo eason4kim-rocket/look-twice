@@ -244,8 +244,26 @@ def collect_world(
 
         # --- Train-eligible: scout side views only (one viewpoint → one label) ---
         side_plan = expected_train_viewpoints(public)
+        seen_raw_sha: dict[str, str] = {}  # raw_sha -> offline_label
+        seen_img_sha: dict[str, str] = {}
+        last_pose: tuple[float, float] | None = None
+        move_fail = 0
+        dup_skip = 0
         for cid, name, xy, cov in side_plan:
-            runtime.move_agent_to(SCOUT_ID, xy, allow_without_admit=True, admitted=False)
+            res = runtime.move_agent_to(
+                SCOUT_ID, xy, allow_without_admit=True, admitted=False
+            )
+            pose = runtime.pose_of(SCOUT_ID)
+            if not res.reached:
+                move_fail += 1
+                continue
+            if last_pose is not None:
+                dist = float(np.hypot(pose.x - last_pose[0], pose.y - last_pose[1]))
+                # Must have actually relocated between distinct viewpoints.
+                if dist < 0.08:
+                    move_fail += 1
+                    continue
+            last_pose = (float(pose.x), float(pose.y))
             raw = runtime.capture_raw(
                 agent_id=SCOUT_ID,
                 viewpoint=name,
@@ -253,9 +271,32 @@ def collect_world(
                 predicted_coverage=cov,
             )
             rgb = np.asarray(raw.rgb)
+            # Reject near-blank frames (common when camera/pose desync).
+            if float(np.asarray(rgb, dtype=np.float32).std()) < 1e-3:
+                dup_skip += 1
+                continue
             frac = _side_roi_frac()
             crop = _crop_roi(rgb, frac)
             small = _resize_96(crop)
+            if float(small.std()) < 1e-3:
+                dup_skip += 1
+                continue
+            raw_sha = _sha256_bytes(np.ascontiguousarray(rgb).tobytes())
+            img_sha = _sha256_bytes(np.ascontiguousarray(small).tobytes())
+            lab = labels[cid]
+            # Hard reject: same pixels already labeled differently (corruption).
+            if raw_sha in seen_raw_sha and seen_raw_sha[raw_sha] != lab:
+                dup_skip += 1
+                continue
+            if img_sha in seen_img_sha and seen_img_sha[img_sha] != lab:
+                dup_skip += 1
+                continue
+            # Same pixels same label: still skip second copy (no duplicate training).
+            if raw_sha in seen_raw_sha or img_sha in seen_img_sha:
+                dup_skip += 1
+                continue
+            seen_raw_sha[raw_sha] = lab
+            seen_img_sha[img_sha] = lab
             meta = _write_sample(
                 out_dir=out_dir,
                 split=split,
@@ -264,7 +305,7 @@ def collect_world(
                 corridor_id=cid,
                 viewpoint=name,
                 agent_id=SCOUT_ID,
-                offline_label=labels[cid],
+                offline_label=lab,
                 small=small,
                 raw_rgb=rgb,
                 git_commit=git_commit,
@@ -273,16 +314,24 @@ def collect_world(
                 roi_desc=f"side_y{frac[0]}-{frac[1]}_x{frac[2]}-{frac[3]}",
                 train_eligible=True,
             )
+            meta["capture_pose_xy"] = [float(pose.x), float(pose.y)]
+            meta["target_xy"] = [float(xy[0]), float(xy[1])]
+            # rewrite meta with pose fields
+            (out_dir / split / f"{meta['sample_id']}.json").write_text(
+                json.dumps(meta, indent=2) + "\n", encoding="utf-8"
+            )
             samples_meta.append(meta)
 
         # --- Audit-only carrier front: independent pose + independent ROI per corridor ---
-        # Pose is offset in map-y toward the corridor centerline so views differ.
         if include_front_audit:
             for cid, y_off in (("corridor_a", -0.30), ("corridor_b", 0.30)):
                 front_xy = (-0.5, y_off)
-                runtime.move_agent_to(
+                res = runtime.move_agent_to(
                     CARRIER_ID, front_xy, allow_without_admit=True, admitted=False
                 )
+                if not res.reached:
+                    continue
+                pose = runtime.pose_of(CARRIER_ID)
                 raw = runtime.capture_raw(
                     agent_id=CARRIER_ID,
                     viewpoint=f"carrier_front_{cid}",
@@ -293,6 +342,11 @@ def collect_world(
                 frac = _corridor_roi_frac(cid)
                 crop = _crop_roi(rgb, frac)
                 small = _resize_96(crop)
+                # Front is audit-only; still avoid writing conflict sha into dataset.
+                img_sha = _sha256_bytes(np.ascontiguousarray(small).tobytes())
+                lab = labels[cid]
+                if img_sha in seen_img_sha and seen_img_sha[img_sha] != lab:
+                    continue
                 meta = _write_sample(
                     out_dir=out_dir,
                     split=split,
@@ -301,22 +355,39 @@ def collect_world(
                     corridor_id=cid,
                     viewpoint=f"carrier_front_{cid}",
                     agent_id=CARRIER_ID,
-                    offline_label=labels[cid],
+                    offline_label=lab,
                     small=small,
                     raw_rgb=rgb,
                     git_commit=git_commit,
                     phys=phys,
                     oracle_pose=oracle_pose,
                     roi_desc=f"front_{cid}_y{frac[0]}-{frac[1]}_x{frac[2]}-{frac[3]}",
-                    train_eligible=False,  # audit-only by default
+                    train_eligible=False,
+                )
+                meta["capture_pose_xy"] = [float(pose.x), float(pose.y)]
+                (out_dir / split / f"{meta['sample_id']}.json").write_text(
+                    json.dumps(meta, indent=2) + "\n", encoding="utf-8"
                 )
                 samples_meta.append(meta)
 
         train_n = sum(1 for m in samples_meta if m.get("train_eligible"))
-        complete = train_n >= min(EXPECTED_SIDE_VIEWS, len(side_plan)) and train_n > 0
-        if len(side_plan) < EXPECTED_SIDE_VIEWS:
-            # Some unreachable views: still complete if we got all reachable.
-            complete = train_n == len(side_plan) and train_n > 0
+        # Complete only if enough unique train samples and both labels present when world has both.
+        need = max(4, min(EXPECTED_SIDE_VIEWS, len(side_plan)))
+        complete = train_n >= need and move_fail < len(side_plan)
+        if labels["corridor_a"] != labels["corridor_b"]:
+            # Mixed world: need at least one clear and one blocked train sample.
+            tr_clear = sum(
+                1
+                for m in samples_meta
+                if m.get("train_eligible") and m["offline_label"] == "clear"
+            )
+            tr_blk = sum(
+                1
+                for m in samples_meta
+                if m.get("train_eligible") and m["offline_label"] == "blocked"
+            )
+            if tr_clear < 1 or tr_blk < 1:
+                complete = False
 
         result = {
             "seed": seed,
@@ -325,6 +396,8 @@ def collect_world(
             "n_samples": len(samples_meta),
             "n_train_eligible": train_n,
             "n_side_planned": len(side_plan),
+            "move_fail": move_fail,
+            "dup_skip": dup_skip,
             "label_counts": {
                 "clear": sum(1 for m in samples_meta if m["offline_label"] == "clear"),
                 "blocked": sum(1 for m in samples_meta if m["offline_label"] == "blocked"),
