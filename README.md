@@ -1,5 +1,12 @@
 # Look Twice
 
+Version index for reviewers: **[VERSIONS.md](VERSIONS.md)**  
+(Branches/tags `v1`–`v6` (+ v5-learned, v7 scaffold). `main` tip is still the v2 publish; use the version branches for later work.)
+
+---
+
+# Look Twice
+
 **Temporal evidence-gated next-best-view navigation on AMD GPU.**
 
 Look Twice is a Physical AI project for the AMD AI DevMaster Hackathon. It
