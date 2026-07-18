@@ -1,0 +1,30 @@
+{
+  "ts": "2026-07-18T02:55:01.922207+00:00",
+  "status": {
+    "physics-180": {
+      "n": 180,
+      "target": 180,
+      "summary": true,
+      "done": true
+    },
+    "formal-locked-3x6x100": {
+      "n": 1800,
+      "target": 1800,
+      "summary": true,
+      "done": true
+    },
+    "formal-learned-3x6x100": {
+      "n": 1800,
+      "target": 1800,
+      "summary": true,
+      "done": true
+    },
+    "ood-3x2x500": {
+      "n": 3000,
+      "target": 3000,
+      "summary": true,
+      "done": true
+    }
+  },
+  "all_done": true
+}

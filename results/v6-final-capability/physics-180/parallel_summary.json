@@ -1,0 +1,1253 @@
+{
+  "schema_version": "look-twice.v6-parallel-matrix/v1",
+  "workers": 3,
+  "jobs": 180,
+  "ok": 160,
+  "skipped": 20,
+  "fail": 0,
+  "wall_seconds": 4729.267754918896,
+  "runtime": "genesis",
+  "device": "cuda:0",
+  "results": [
+    {
+      "stem": "naive__comm-fault__150000",
+      "status": "ok",
+      "seconds": 55.92221661587246,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150000.log"
+    },
+    {
+      "stem": "naive__comm-fault__150001",
+      "status": "ok",
+      "seconds": 46.07668209588155,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150001.log"
+    },
+    {
+      "stem": "naive__comm-fault__150002",
+      "status": "ok",
+      "seconds": 50.99189923098311,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150002.log"
+    },
+    {
+      "stem": "naive__comm-fault__150003",
+      "status": "ok",
+      "seconds": 47.86163756297901,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150003.log"
+    },
+    {
+      "stem": "naive__comm-fault__150004",
+      "status": "ok",
+      "seconds": 51.425011372892186,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150004.log"
+    },
+    {
+      "stem": "naive__comm-fault__150005",
+      "status": "ok",
+      "seconds": 41.30225252895616,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150005.log"
+    },
+    {
+      "stem": "naive__comm-fault__150006",
+      "status": "ok",
+      "seconds": 62.84371520811692,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150006.log"
+    },
+    {
+      "stem": "naive__comm-fault__150007",
+      "status": "ok",
+      "seconds": 50.90291924402118,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150007.log"
+    },
+    {
+      "stem": "naive__comm-fault__150008",
+      "status": "ok",
+      "seconds": 61.79469404392876,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150008.log"
+    },
+    {
+      "stem": "naive__comm-fault__150009",
+      "status": "ok",
+      "seconds": 50.29032166302204,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__comm-fault__150009.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150000",
+      "status": "ok",
+      "seconds": 46.396575663937256,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150000.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150001",
+      "status": "ok",
+      "seconds": 42.78408382390626,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150001.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150002",
+      "status": "ok",
+      "seconds": 51.8010593529325,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150002.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150003",
+      "status": "ok",
+      "seconds": 53.90780627611093,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150003.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150004",
+      "status": "ok",
+      "seconds": 47.76898661907762,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150004.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150005",
+      "status": "ok",
+      "seconds": 39.605968381045386,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150005.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150006",
+      "status": "ok",
+      "seconds": 40.5135953288991,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150006.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150007",
+      "status": "ok",
+      "seconds": 44.199643411906436,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150007.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150008",
+      "status": "ok",
+      "seconds": 45.87937450106256,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150008.log"
+    },
+    {
+      "stem": "naive__dynamic-change__150009",
+      "status": "ok",
+      "seconds": 50.00552979693748,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__dynamic-change__150009.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150000",
+      "status": "ok",
+      "seconds": 61.83571883384138,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150000.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150001",
+      "status": "ok",
+      "seconds": 55.971101267961785,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150001.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150002",
+      "status": "ok",
+      "seconds": 62.681227513123304,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150002.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150003",
+      "status": "ok",
+      "seconds": 41.55489989509806,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150003.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150004",
+      "status": "ok",
+      "seconds": 46.68655566312373,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150004.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150005",
+      "status": "ok",
+      "seconds": 42.649521918036044,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150005.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150006",
+      "status": "ok",
+      "seconds": 62.61004691384733,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150006.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150007",
+      "status": "ok",
+      "seconds": 54.44763025199063,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150007.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150008",
+      "status": "ok",
+      "seconds": 59.404930520104244,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150008.log"
+    },
+    {
+      "stem": "naive__evidence-echo__150009",
+      "status": "ok",
+      "seconds": 42.4426479190588,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__evidence-echo__150009.log"
+    },
+    {
+      "stem": "naive__independent-noise__150000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__150009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__150009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__150000",
+      "status": "ok",
+      "seconds": 56.5385587150231,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150000.log"
+    },
+    {
+      "stem": "naive__time-skew__150001",
+      "status": "ok",
+      "seconds": 52.60146356909536,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150001.log"
+    },
+    {
+      "stem": "naive__time-skew__150002",
+      "status": "ok",
+      "seconds": 67.13379396195523,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150002.log"
+    },
+    {
+      "stem": "naive__time-skew__150003",
+      "status": "ok",
+      "seconds": 52.598763374146074,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150003.log"
+    },
+    {
+      "stem": "naive__time-skew__150004",
+      "status": "ok",
+      "seconds": 58.09000219893642,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150004.log"
+    },
+    {
+      "stem": "naive__time-skew__150005",
+      "status": "ok",
+      "seconds": 42.221813919954,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150005.log"
+    },
+    {
+      "stem": "naive__time-skew__150006",
+      "status": "ok",
+      "seconds": 52.470587776973844,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150006.log"
+    },
+    {
+      "stem": "naive__time-skew__150007",
+      "status": "ok",
+      "seconds": 49.794508185004815,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150007.log"
+    },
+    {
+      "stem": "naive__time-skew__150008",
+      "status": "ok",
+      "seconds": 57.483134055975825,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150008.log"
+    },
+    {
+      "stem": "naive__time-skew__150009",
+      "status": "ok",
+      "seconds": 52.427907281089574,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/naive__time-skew__150009.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150000",
+      "status": "ok",
+      "seconds": 198.47960051405244,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150000.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150001",
+      "status": "ok",
+      "seconds": 148.94259865791537,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150001.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150002",
+      "status": "ok",
+      "seconds": 174.0076901249122,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150002.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150003",
+      "status": "ok",
+      "seconds": 176.71620949311182,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150003.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150004",
+      "status": "ok",
+      "seconds": 109.58114161388949,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150004.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150005",
+      "status": "ok",
+      "seconds": 169.97693800996058,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150005.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150006",
+      "status": "ok",
+      "seconds": 184.77446914906614,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150006.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150007",
+      "status": "ok",
+      "seconds": 171.31459194491617,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150007.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150008",
+      "status": "ok",
+      "seconds": 167.84680342697538,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150008.log"
+    },
+    {
+      "stem": "purify-active__comm-fault__150009",
+      "status": "ok",
+      "seconds": 149.02507125213742,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__comm-fault__150009.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150000",
+      "status": "ok",
+      "seconds": 202.97049015411176,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150000.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150001",
+      "status": "ok",
+      "seconds": 191.05249959486537,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150001.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150002",
+      "status": "ok",
+      "seconds": 193.32025476987474,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150002.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150003",
+      "status": "ok",
+      "seconds": 190.13316011591814,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150003.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150004",
+      "status": "ok",
+      "seconds": 187.5411164071411,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150004.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150005",
+      "status": "ok",
+      "seconds": 150.6738115469925,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150005.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150006",
+      "status": "ok",
+      "seconds": 143.51750902202912,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150006.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150007",
+      "status": "ok",
+      "seconds": 155.06289062509313,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150007.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150008",
+      "status": "ok",
+      "seconds": 206.47302782116458,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150008.log"
+    },
+    {
+      "stem": "purify-active__dynamic-change__150009",
+      "status": "ok",
+      "seconds": 187.26513720303774,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__dynamic-change__150009.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150000",
+      "status": "ok",
+      "seconds": 117.8090660481248,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150000.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150001",
+      "status": "ok",
+      "seconds": 110.63381930207834,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150001.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150002",
+      "status": "ok",
+      "seconds": 95.8582295239903,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150002.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150003",
+      "status": "ok",
+      "seconds": 94.44533848296851,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150003.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150004",
+      "status": "ok",
+      "seconds": 105.8209233051166,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150004.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150005",
+      "status": "ok",
+      "seconds": 90.02567541319877,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150005.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150006",
+      "status": "ok",
+      "seconds": 96.91622850904241,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150006.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150007",
+      "status": "ok",
+      "seconds": 117.05647527100518,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150007.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150008",
+      "status": "ok",
+      "seconds": 94.67069382499903,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150008.log"
+    },
+    {
+      "stem": "purify-active__evidence-echo__150009",
+      "status": "ok",
+      "seconds": 95.89571769186296,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__evidence-echo__150009.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150000",
+      "status": "ok",
+      "seconds": 88.6273316689767,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150000.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150001",
+      "status": "ok",
+      "seconds": 116.90706194005907,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150001.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150002",
+      "status": "ok",
+      "seconds": 65.59985118405893,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150002.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150003",
+      "status": "ok",
+      "seconds": 87.36741815088317,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150003.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150004",
+      "status": "ok",
+      "seconds": 85.51142270304263,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150004.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150005",
+      "status": "ok",
+      "seconds": 95.39522628113627,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150005.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150006",
+      "status": "ok",
+      "seconds": 58.16313310107216,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150006.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150007",
+      "status": "ok",
+      "seconds": 126.95574120804667,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150007.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150008",
+      "status": "ok",
+      "seconds": 111.36156646395102,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150008.log"
+    },
+    {
+      "stem": "purify-active__independent-noise__150009",
+      "status": "ok",
+      "seconds": 115.39059744193219,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__independent-noise__150009.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150000",
+      "status": "ok",
+      "seconds": 81.94812074699439,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150000.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150001",
+      "status": "ok",
+      "seconds": 95.2948920740746,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150001.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150002",
+      "status": "ok",
+      "seconds": 88.47044373303652,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150002.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150003",
+      "status": "ok",
+      "seconds": 120.4419235389214,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150003.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150004",
+      "status": "ok",
+      "seconds": 92.16438107797876,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150004.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150005",
+      "status": "ok",
+      "seconds": 120.3799184660893,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150005.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150006",
+      "status": "ok",
+      "seconds": 132.4902503399644,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150006.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150007",
+      "status": "ok",
+      "seconds": 128.11017025308684,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150007.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150008",
+      "status": "ok",
+      "seconds": 109.29119787481613,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150008.log"
+    },
+    {
+      "stem": "purify-active__shared-occlusion__150009",
+      "status": "ok",
+      "seconds": 110.23737242608331,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__shared-occlusion__150009.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150000",
+      "status": "ok",
+      "seconds": 108.18595362501219,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150000.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150001",
+      "status": "ok",
+      "seconds": 148.0300480031874,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150001.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150002",
+      "status": "ok",
+      "seconds": 154.17783321090974,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150002.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150003",
+      "status": "ok",
+      "seconds": 175.16402717283927,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150003.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150004",
+      "status": "ok",
+      "seconds": 173.40244961506687,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150004.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150005",
+      "status": "ok",
+      "seconds": 178.19604055699892,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150005.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150006",
+      "status": "ok",
+      "seconds": 156.45290534198284,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150006.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150007",
+      "status": "ok",
+      "seconds": 87.94350887089968,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150007.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150008",
+      "status": "ok",
+      "seconds": 78.34018745203502,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150008.log"
+    },
+    {
+      "stem": "purify-active__time-skew__150009",
+      "status": "ok",
+      "seconds": 202.3174571529962,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-active__time-skew__150009.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150000",
+      "status": "ok",
+      "seconds": 56.211048003984615,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150000.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150001",
+      "status": "ok",
+      "seconds": 69.97546002897434,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150001.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150002",
+      "status": "ok",
+      "seconds": 72.81802519015037,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150002.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150003",
+      "status": "ok",
+      "seconds": 79.77534265699796,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150003.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150004",
+      "status": "ok",
+      "seconds": 53.70257821911946,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150004.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150005",
+      "status": "ok",
+      "seconds": 61.9576188379433,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150005.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150006",
+      "status": "ok",
+      "seconds": 82.47068838006817,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150006.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150007",
+      "status": "ok",
+      "seconds": 78.28886954812333,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150007.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150008",
+      "status": "ok",
+      "seconds": 52.863539949059486,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150008.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__150009",
+      "status": "ok",
+      "seconds": 72.29618586110882,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__comm-fault__150009.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150000",
+      "status": "ok",
+      "seconds": 67.66533809597604,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150000.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150001",
+      "status": "ok",
+      "seconds": 67.30753407697193,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150001.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150002",
+      "status": "ok",
+      "seconds": 60.50968381296843,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150002.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150003",
+      "status": "ok",
+      "seconds": 62.60873212781735,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150003.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150004",
+      "status": "ok",
+      "seconds": 71.52129458892159,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150004.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150005",
+      "status": "ok",
+      "seconds": 57.841379028977826,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150005.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150006",
+      "status": "ok",
+      "seconds": 59.21575961308554,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150006.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150007",
+      "status": "ok",
+      "seconds": 64.18644787603989,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150007.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150008",
+      "status": "ok",
+      "seconds": 61.25944832991809,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150008.log"
+    },
+    {
+      "stem": "purify-passive__dynamic-change__150009",
+      "status": "ok",
+      "seconds": 58.31882196990773,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__dynamic-change__150009.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150000",
+      "status": "ok",
+      "seconds": 57.79898758698255,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150000.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150001",
+      "status": "ok",
+      "seconds": 65.97773473197594,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150001.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150002",
+      "status": "ok",
+      "seconds": 69.20204803883098,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150002.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150003",
+      "status": "ok",
+      "seconds": 61.929121846100315,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150003.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150004",
+      "status": "ok",
+      "seconds": 74.10491336300038,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150004.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150005",
+      "status": "ok",
+      "seconds": 73.39636141806841,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150005.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150006",
+      "status": "ok",
+      "seconds": 71.92728740512393,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150006.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150007",
+      "status": "ok",
+      "seconds": 64.96444765105844,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150007.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150008",
+      "status": "ok",
+      "seconds": 94.32241322193295,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150008.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__150009",
+      "status": "ok",
+      "seconds": 92.56194703304209,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__evidence-echo__150009.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150000",
+      "status": "ok",
+      "seconds": 66.69092104909942,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150000.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150001",
+      "status": "ok",
+      "seconds": 85.11400445085019,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150001.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150002",
+      "status": "ok",
+      "seconds": 68.57740913401358,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150002.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150003",
+      "status": "ok",
+      "seconds": 73.20340472995304,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150003.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150004",
+      "status": "ok",
+      "seconds": 65.78762038401328,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150004.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150005",
+      "status": "ok",
+      "seconds": 71.23296728613786,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150005.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150006",
+      "status": "ok",
+      "seconds": 64.38246185099706,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150006.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150007",
+      "status": "ok",
+      "seconds": 59.03189610503614,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150007.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150008",
+      "status": "ok",
+      "seconds": 67.25897822296247,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150008.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__150009",
+      "status": "ok",
+      "seconds": 78.63038636511192,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__independent-noise__150009.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150000",
+      "status": "ok",
+      "seconds": 84.24154090485536,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150000.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150001",
+      "status": "ok",
+      "seconds": 63.04138536006212,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150001.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150002",
+      "status": "ok",
+      "seconds": 74.57652593892999,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150002.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150003",
+      "status": "ok",
+      "seconds": 73.39199641579762,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150003.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150004",
+      "status": "ok",
+      "seconds": 75.1919520420488,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150004.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150005",
+      "status": "ok",
+      "seconds": 57.320634386036545,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150005.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150006",
+      "status": "ok",
+      "seconds": 59.62380353407934,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150006.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150007",
+      "status": "ok",
+      "seconds": 62.638024154119194,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150007.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150008",
+      "status": "ok",
+      "seconds": 74.07795538497157,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150008.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__150009",
+      "status": "ok",
+      "seconds": 65.00091766379774,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__shared-occlusion__150009.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150000",
+      "status": "ok",
+      "seconds": 62.577940919902176,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150000.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150001",
+      "status": "ok",
+      "seconds": 57.0890627161134,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150001.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150002",
+      "status": "ok",
+      "seconds": 56.62610141886398,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150002.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150003",
+      "status": "ok",
+      "seconds": 76.94058786309324,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150003.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150004",
+      "status": "ok",
+      "seconds": 64.68027818202972,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150004.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150005",
+      "status": "ok",
+      "seconds": 63.55593001609668,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150005.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150006",
+      "status": "ok",
+      "seconds": 58.234986474970356,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150006.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150007",
+      "status": "ok",
+      "seconds": 59.574092399096116,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150007.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150008",
+      "status": "ok",
+      "seconds": 57.8119450181257,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150008.log"
+    },
+    {
+      "stem": "purify-passive__time-skew__150009",
+      "status": "ok",
+      "seconds": 68.47154569718987,
+      "returncode": 0,
+      "log": "outputs/v6/physics-180/logs/purify-passive__time-skew__150009.log"
+    }
+  ]
+}

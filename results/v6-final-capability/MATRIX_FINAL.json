@@ -1,0 +1,202 @@
+{
+  "schema_version": "look-twice.v6-complete-handoff/v1",
+  "completed_at": "2026-07-18T02:55:16.949812+00:00",
+  "quality_lock": {
+    "runtime": "genesis",
+    "no_seed_cut": true,
+    "no_synthetic_downgrade": true
+  },
+  "matrices": {
+    "physics-180": {
+      "n_episodes": 180,
+      "bad_json": 0,
+      "target": 180,
+      "by_policy": {
+        "purify-passive": {
+          "n": 60,
+          "mission": 60,
+          "unsafe": 0,
+          "repair_success": 0,
+          "direct": 0,
+          "detour": 60
+        },
+        "purify-active": {
+          "n": 60,
+          "mission": 60,
+          "unsafe": 0,
+          "repair_success": 10,
+          "direct": 9,
+          "detour": 51
+        },
+        "naive": {
+          "n": 60,
+          "mission": 25,
+          "unsafe": 15,
+          "repair_success": 0,
+          "direct": 25,
+          "detour": 0
+        }
+      },
+      "claims_modes": {
+        "genesis_rgbd_multi_agent_v6": 180
+      },
+      "parallel_summary": {
+        "schema_version": "look-twice.v6-parallel-matrix/v1",
+        "workers": 3,
+        "jobs": 180,
+        "ok": 160,
+        "skipped": 20,
+        "fail": 0,
+        "wall_seconds": 4729.267754918896,
+        "runtime": "genesis",
+        "device": "cuda:0"
+      }
+    },
+    "formal-locked-3x6x100": {
+      "n_episodes": 1800,
+      "bad_json": 0,
+      "target": 1800,
+      "by_policy": {
+        "naive": {
+          "n": 600,
+          "mission": 250,
+          "unsafe": 198,
+          "repair_success": 0,
+          "direct": 250,
+          "detour": 0
+        },
+        "purify-passive": {
+          "n": 600,
+          "mission": 600,
+          "unsafe": 0,
+          "repair_success": 0,
+          "direct": 0,
+          "detour": 600
+        },
+        "purify-active": {
+          "n": 600,
+          "mission": 600,
+          "unsafe": 0,
+          "repair_success": 100,
+          "direct": 94,
+          "detour": 506
+        }
+      },
+      "claims_modes": {
+        "genesis_rgbd_multi_agent_v6": 1800
+      },
+      "parallel_summary": {
+        "schema_version": "look-twice.v6-parallel-matrix/v1",
+        "workers": 12,
+        "jobs": 1800,
+        "ok": 1041,
+        "skipped": 759,
+        "fail": 0,
+        "wall_seconds": 32121.51283057523,
+        "runtime": "genesis",
+        "device": "cuda:0"
+      }
+    },
+    "formal-learned-3x6x100": {
+      "n_episodes": 1800,
+      "bad_json": 0,
+      "target": 1800,
+      "by_policy": {
+        "purify-active-dagger": {
+          "n": 600,
+          "mission": 600,
+          "unsafe": 0,
+          "repair_success": 100,
+          "direct": 100,
+          "detour": 500
+        },
+        "purify-active-learned": {
+          "n": 600,
+          "mission": 600,
+          "unsafe": 0,
+          "repair_success": 100,
+          "direct": 100,
+          "detour": 500
+        },
+        "purify-random": {
+          "n": 600,
+          "mission": 470,
+          "unsafe": 0,
+          "repair_success": 68,
+          "direct": 51,
+          "detour": 549
+        }
+      },
+      "claims_modes": {
+        "genesis_rgbd_multi_agent_v6": 1800
+      },
+      "parallel_summary": {
+        "schema_version": "look-twice.v6-parallel-matrix/v1",
+        "workers": 8,
+        "jobs": 1800,
+        "ok": 1604,
+        "skipped": 196,
+        "fail": 0,
+        "wall_seconds": 60059.86593062105,
+        "runtime": "genesis",
+        "device": "cuda:0"
+      }
+    },
+    "ood-3x2x500": {
+      "n_episodes": 3000,
+      "bad_json": 0,
+      "target": 3000,
+      "by_policy": {
+        "purify-passive": {
+          "n": 1000,
+          "mission": 1000,
+          "unsafe": 0,
+          "repair_success": 0,
+          "direct": 0,
+          "detour": 1000
+        },
+        "naive": {
+          "n": 1000,
+          "mission": 250,
+          "unsafe": 425,
+          "repair_success": 0,
+          "direct": 250,
+          "detour": 0
+        },
+        "purify-active": {
+          "n": 1000,
+          "mission": 1000,
+          "unsafe": 0,
+          "repair_success": 250,
+          "direct": 250,
+          "detour": 750
+        }
+      },
+      "claims_modes": {
+        "genesis_rgbd_multi_agent_v6": 3000
+      },
+      "parallel_summary": {
+        "schema_version": "look-twice.v6-parallel-matrix/v1",
+        "workers": 10,
+        "jobs": 3000,
+        "ok": 2662,
+        "skipped": 338,
+        "fail": 0,
+        "wall_seconds": 59428.48437752598,
+        "runtime": "genesis",
+        "device": "cuda:0"
+      }
+    }
+  },
+  "next": {
+    "v7_theme": "Vision-Grounded Evidence Contracts",
+    "v7_priority": [
+      "RGB/VLM or lightweight vision head -> Claim v2",
+      "geometry vs vision conflict => fail-closed deny",
+      "Scout repair targets high visual uncertainty",
+      "Keep Purify gate as authorizer; model is proposer only",
+      "Do NOT replace v6 gate with end-to-end VLA"
+    ],
+    "agent_instructions": "Archive GPU finals to results/; update STATUS.md; scaffold docs/V7_DESIGN.md + minimal vision claim adapter; do not open contest PR yet."
+  }
+}

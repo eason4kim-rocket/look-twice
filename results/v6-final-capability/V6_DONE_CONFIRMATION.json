@@ -1,0 +1,14 @@
+{
+  "checked_at_beijing": "2026-07-18T12:03:51.455275+08:00",
+  "all_v6_done": true,
+  "instance_alive": true,
+  "matrices": {
+    "physics-180": "180/180",
+    "formal-locked-3x6x100": "1800/1800",
+    "formal-learned-3x6x100": "1800/1800",
+    "ood-3x2x500": "3000/3000"
+  },
+  "fail_counts": "all parallel_summary fail=0",
+  "local_emergency": "results/gpu-emergency-2026-07-17",
+  "local_final_meta": "results/v6-final-capability"
+}

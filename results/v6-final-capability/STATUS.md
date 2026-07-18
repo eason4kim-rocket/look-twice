@@ -1,75 +1,76 @@
-# Look Twice v6 — capability completion STATUS
+# Look Twice v6 — final capability STATUS
 
 Branch: `v6-collaborative-evidence-repair`  
-Remote: `root@36.150.116.206:31128` `/workspace/look-twice-v6`  
-GPU: AMD Radeon · `cuda:0` · Genesis 1.1.2 · `gs.amdgpu`
+GPU archive: AMD Genesis RGB-D (`genesis_rgbd_multi_agent_v6`), resume-safe matrices  
+Completed: 2026-07-18 (handoff `V6_COMPLETE_HANDOFF.json`)
 
-## Delivered
+## What v6 is
 
-### 1. GPU active `repair_success` + clear `direct`
-- Gate fix: usable-set-only deny reasons; `evidence_age_limit=2000`.
-- Repair-fix matrix **75/75**: active mission 25/25, unsafe 0, **repair_success=6**, **direct=5**.
-- Proof episode: `purify-active__shared-occlusion__90000` — repair=True, route=direct, genesis RGB-D.
+Multi-agent collaborative evidence repair: carrier does not cross without Purify admit; scout collects independent views; gated direct when clear roots admit, else fail-closed detour.
 
-### 2. Learned repair + DAgger ×3 + promotion
-| Stage | Path | Result |
-| --- | --- | --- |
-| Pilot BC | `results/v6-learned-pilot/` | 256 worlds, 40 ep, `best.pt` |
-| DAgger ×3 | `results/v6-learned-dagger/` | BC 256 + 3×96 rollouts → **1120** aggregate samples |
-| Teacher agree | dagger probe | **85.4%** top-1 vs heuristic |
-| Synthetic promote | `results/v6-promotion-synthetic/` | n=120: H repair **26** / L **46**; unsafe 0/0; **promote=true** |
+## Matrices (all `fail=0`)
 
-**Online primary after synthetic promotion:** `purify-active-dagger` (checkpoint `outputs/v6/learned-dagger/best.pt`).  
-Genesis paired promotion matrix is running/queued on GPU for confirmation; fail-closed rule remains if GPU pair worsens unsafe.
+| Matrix | Jobs | parallel_summary |
+| --- | ---: | --- |
+| physics-180 | 180 | ok=160 skipped=20 |
+| formal-locked-3x6x100 | 1800 | ok=1041 skipped=759 |
+| formal-learned-3x6x100 | 1800 | ok=1604 skipped=196 |
+| ood-3x2x500 | 3000 | ok=2662 skipped=338 |
 
-Policies now supported: `naive`, `purify-passive`, `purify-active`, `purify-active-learned`, `purify-active-dagger`, `purify-random`.
+`skipped` = valid episode JSON already present on resume (not failures).
 
-### 3. Physics diff-drive URDF acceptance
-Path: `results/v6-physics-urdf/smoke.json` (GPU mirror `outputs/v6/physics-urdf/smoke.json`)
+### formal-locked (3 policies × 6 profiles × 100)
 
-| Check | Status |
-| --- | --- |
-| URDF parse + continuous wheels | **pass** (carrier + scout) |
-| Genesis load+build (AMD) | **pass** |
-| 20-seed waypoint PD bar | **pass 20/20** (skid-steer PD proxy, URDF track width) |
+| policy | n | mission | unsafe | repair_success | direct |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| naive | 600 | 250 | 198 | 0 | 250 |
+| purify-passive | 600 | 600 | 0 | 0 | 0 |
+| purify-active | 600 | 600 | 0 | 100 | 94 |
 
-Honest note: waypoint bar certifies **URDF geometry + diff-drive kinematics**, not full rigid-body wheel-torque dynamics in Genesis.
+### formal-learned
 
-### 4. Contest video
-Path: `results/v6-demo-video/`
-- `demo.mp4` (real GPU episode trajectories)
-- `STORYBOARD.md`, `beats.json`, `trajectory_panel.png`
-- Source includes active repair_success direct + passive + naive clips
+| policy | n | mission | unsafe | repair_success | direct |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| purify-active-learned | 600 | 600 | 0 | 100 | 100 |
+| purify-active-dagger | 600 | 600 | 0 | 100 | 100 |
+| purify-random | 600 | 470 | 0 | 68 | 51 |
 
-### 5. Upstream Genesis PR material
-- `docs/genesis-amd-multi-agent-rgbd.md` (technical note)
-- `docs/genesis-upstream-pr.md` (PR title/body + file path suggestion)
-- Not auto-filed (needs maintainer `gh` auth on Genesis fork)
+### OOD (heavy-occlusion, multi-fault × 500 seeds)
 
-### 6. Formal / OOD / physics-180 matrices (GPU, resume-safe)
+| policy | n | mission | unsafe | repair_success | direct |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| naive | 1000 | 250 | 425 | 0 | 250 |
+| purify-passive | 1000 | 1000 | 0 | 0 | 0 |
+| purify-active | 1000 | 1000 | 0 | 250 | 250 |
 
-| Matrix | Design | Status |
-| --- | --- | --- |
-| Formal locked | 3×6×100 = **1800** | **Running** (`outputs/v6/formal-locked-3x6x100`, workers=4, resume-safe) |
-| Formal learned | 3×6×100 = **1800** | **Running** (`purify-active-learned/dagger/random`, workers=2) |
-| Formal total toward 4800 | 6 policies × 6 locked profiles × 100 = 3600; + 6×2 OOD×100 = **4800** design | locked+learned=3600 in flight; OOD profile fill follows |
-| OOD | 3×2×500 = **3000** | **Running** (`heavy-occlusion`, `multi-fault`, seeds 200000–200499) |
-| Physics-180 | 3×6×10 = **180** | **Running** (genesis kinematic; URDF acceptance separate) |
+### physics-180
 
-Profiles (8): locked 6 + OOD `heavy-occlusion`, `multi-fault`.
+| policy | n | mission | unsafe | repair_success | direct |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| naive | 60 | 25 | 15 | 0 | 25 |
+| purify-passive | 60 | 60 | 0 | 0 | 0 |
+| purify-active | 60 | 60 | 0 | 10 | 9 |
 
-## Formal narrative
+## Other delivered pieces
 
-> On AMD GPU Genesis RGB-D, active pays observation cost to collect independent scout views; when two clear roots admit, carrier takes a **gated direct** corridor; otherwise Purify fail-closes to safe detour. Passive always detours when denied. Naive can go unsafe. Learned/DAgger ranker improves repair_success on synthetic promotion (46 vs 26 /120) with unsafe=0.
+- Gate fix: usable-set deny reasons; `evidence_age_limit=2000` (repair_success + clear direct non-zero)
+- DAgger×3 + synthetic promotion summary under `results/v6-learned-dagger/`, `results/v6-promotion-synthetic/`
+- Diff-drive URDF + Genesis load + 20-seed waypoint bar: `results/v6-physics-urdf/`
+- Demo assets: `results/v6-demo-video/`
+- Genesis AMD note: `docs/genesis-amd-multi-agent-rgbd.md`
+
+## Artifacts in this archive (repo)
+
+- `V6_COMPLETE_HANDOFF.json`, `MATRIX_FINAL.json`, `V6_MATRIX_FINAL_STATUS.md`
+- Per-matrix `*/parallel_summary.json`
+- Full per-episode JSON is large; kept on the evaluation machine / local emergency mirror, not all committed
 
 ## Non-claims
-- Not real-robot / Gate B product.
-- Not full rigid-body wheel torque certification (waypoint = PD proxy).
-- Mega-matrices still **in progress** on GPU (resume-safe); do not claim 4800/3000/180 complete until `parallel_summary.json` exists for each.
-- Genesis upstream PR is content-ready, not necessarily merged.
 
-## Key commits (this completion push)
-- Learned/DAgger policies + promotion eval
-- Physics waypoint acceptance
-- Demo MP4 + Genesis PR draft
-- OOD profiles + formal/OOD/physics matrix launches
+- Not real-robot Gate B
+- Not full rigid-body wheel-torque dynamics
+- Not end-to-end VLA control
+
+## Next
+
+- v7: vision-grounded evidence contracts (separate branch `v7-vision-evidence-contracts`)
