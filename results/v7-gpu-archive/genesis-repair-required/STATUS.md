@@ -1,9 +1,22 @@
 # V7 Genesis Repair-Required — STATUS (honest)
 
-**Branch tip:** `f315a02` on `v7-vision-evidence-contracts`  
+**Branch tip:** `4409b45` on `v7-vision-evidence-contracts`  
 **Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
-**Phase lock:** world homology **closed**. Next = **Genesis RGB vision calibration only**  
+**Phase lock:** world homology **closed**. Active phase = **Genesis RGB vision calibration only**  
 (no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).
+
+### Vision-cal phase assets
+
+| Item | Path |
+| --- | --- |
+| Plan | `docs/V7_VISION_CALIBRATION.md` |
+| Collect | `scripts/v7_collect_genesis_vision_dataset.py` |
+| Train | `scripts/v7_train_genesis_vision_head.py` |
+| Conformal | `scripts/v7_calibrate_vision_conformal.py` |
+| Pilot data (4 worlds/split) | GPU `outputs/v7/vision-dataset-pilot` |
+| Full collect (running) | GPU `outputs/v7/vision-dataset-full` + `logs/vision-dataset-full.log` |
+
+Full collect seed ranges: train 96000–96999, val 97000–97199, cal 97200–97499, locked 98000–98299.
 
 ## Freeze policy (do not overwrite)
 
