@@ -100,6 +100,9 @@ class GenesisEpisodeRuntime:
         video_output: Path | None = None,
         video_stride: int = 4,
         maximum_motion_steps: int = 2400,
+        secondary_obstacle_xy: tuple[float, float] | None = None,
+        secondary_obstacle_size: tuple[float, float, float] | None = None,
+        secondary_obstacle_active: bool = False,
     ) -> None:
         import genesis as gs
         import torch
@@ -178,6 +181,27 @@ class GenesisEpisodeRuntime:
                 color=tuple(colour_rng.uniform(0.08, 0.92) for _ in range(3))
             ),
         )
+        # Optional second blocker (v6 dual-corridor). Created before scene.build().
+        self.secondary_blocking_obstacle = None
+        if secondary_obstacle_xy is not None:
+            sec_size = secondary_obstacle_size or scenario.obstacle_size
+            sec_z = float(sec_size[2]) / 2.0
+            sec_active = (
+                float(secondary_obstacle_xy[0]),
+                float(secondary_obstacle_xy[1]),
+                sec_z,
+            )
+            sec_inactive = (-10.0, -2.0, sec_z)
+            self.secondary_blocking_obstacle = scene.add_entity(
+                gs.morphs.Box(
+                    size=sec_size,
+                    pos=sec_active if secondary_obstacle_active else sec_inactive,
+                    fixed=True,
+                ),
+                surface=gs.surfaces.Default(color=(0.55, 0.18, 0.18)),
+            )
+            self._secondary_active_position = sec_active
+            self._secondary_inactive_position = sec_inactive
         self.sensor_camera = scene.add_camera(
             res=self.SENSOR_RESOLUTION,
             pos=(-1.8, 0.0, 0.48),
@@ -222,10 +246,13 @@ class GenesisEpisodeRuntime:
                 return math.atan2(-ty, 0.8 - tx)
             return 0.0
         if motion_backend == "skid-steer":
+            collision_entities = [self.blocking_obstacle, self.occluder]
+            if self.secondary_blocking_obstacle is not None:
+                collision_entities.append(self.secondary_blocking_obstacle)
             self._skid = GenesisSkidSteerAdapter(
                 robot=self.robot,
                 scene=self.scene,
-                collision_entities=(self.blocking_obstacle, self.occluder),
+                collision_entities=tuple(collision_entities),
                 after_step=self._after_scene_step,
                 maximum_steps=maximum_motion_steps,
                 final_heading_provider=heading_provider,
@@ -324,6 +351,10 @@ class GenesisEpisodeRuntime:
         contacts = _contact_rows(
             self.robot.get_contacts(with_entity=self.blocking_obstacle)
         )
+        if self.secondary_blocking_obstacle is not None:
+            contacts += _contact_rows(
+                self.robot.get_contacts(with_entity=self.secondary_blocking_obstacle)
+            )
         contacting = contacts > 0
         if contacting and not self._last_contacting:
             self._kinematic_contacts += 1

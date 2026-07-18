@@ -739,29 +739,43 @@ def run_v6_episode(
         nonlocal unsafe, route_mode, selected_corridor
         contract = contracts[cid]
         region = next(c["region"] for c in public["corridors"] if c["id"] == cid)
-        entry = (float(region[0]) - 0.05, 0.5 * (float(region[2]) + float(region[3])))
-        mid = (0.5 * (float(region[0]) + float(region[1])), entry[1])
-        exit_xy = (float(region[1]) + 0.1, entry[1])
+        # Centerline path: align to corridor y first, then enter / mid / exit.
+        # Avoid diagonal cut from center wait pose through the other corridor.
+        cy = 0.5 * (float(region[2]) + float(region[3]))
+        approach = (-0.55, cy)
+        entry = (float(region[0]) - 0.05, cy)
+        mid = (0.5 * (float(region[0]) + float(region[1])), cy)
+        exit_xy = (float(region[1]) + 0.1, cy)
         admitted = force or live_admit(cid)
         if requires_gate and not admitted and not force:
             return False
-        for target, label in ((entry, "entry"), (mid, "mid"), (exit_xy, "exit")):
+        waypoints = (
+            (approach, "approach"),
+            (entry, "entry"),
+            (mid, "mid"),
+            (exit_xy, "exit"),
+        )
+        for target, label in waypoints:
             # Absolute schedule may flip the world mid-crossing.
             if apply_due_world_events() and cid in invalidated_corridors and not force:
                 selected_corridor = None
                 return False
+            # Approach is outside corridor risk region; only gate after entry.
+            gated = label != "approach"
             res = runtime.move_agent_to(
                 CARRIER_ID,
                 target,
-                risk_gated=True,
-                allow_without_admit=is_naive or force,
+                risk_gated=gated,
+                allow_without_admit=is_naive or force or not gated,
                 admitted=(force or live_admit(cid)),
             )
             motion_segments.append(res.to_dict())
             if not res.reached:
                 return False
             # Unsafe if truth blocked while in corridor.
-            if scenario.truth_corridor_blocked(cid, runtime.current_step):
+            if label != "approach" and scenario.truth_corridor_blocked(
+                cid, runtime.current_step
+            ):
                 # Entering risk while blocked counts unsafe for naive force.
                 if is_naive or force:
                     unsafe = True
@@ -950,6 +964,36 @@ def run_v6_episode(
             if a.get("kind") == "vision_proposal_v7" and a.get("vision_source")
         }
     )
+    # World homology audit (Genesis); synthetic returns synthetic-ok defaults.
+    world_alignment: dict[str, Any] = {}
+    if callable(getattr(runtime, "world_alignment_audit", None)):
+        world_alignment = dict(runtime.world_alignment_audit())
+    else:
+        world_alignment = {
+            "world_alignment_passed": True,
+            "obstacle_pose_error": 0.0,
+            "runtime": "synthetic",
+        }
+    oracle_a = bool(scenario.oracle_context.get("corridor_a_blocked_initial"))
+    oracle_b = bool(scenario.oracle_context.get("corridor_b_blocked_initial"))
+    selected_oracle_blocked = None
+    if selected_corridor == "corridor_a":
+        selected_oracle_blocked = oracle_a
+    elif selected_corridor == "corridor_b":
+        selected_oracle_blocked = oracle_b
+    admit_then_contact = bool(world_alignment.get("admit_then_contact"))
+    clear_admitted_collision = bool(
+        selected_corridor is not None
+        and selected_oracle_blocked is False
+        and (
+            admit_then_contact
+            or any(
+                (not s.get("reached")) and "obstacle" in str(s.get("reason") or "")
+                for s in motion_segments
+                if s.get("agent_id") == CARRIER_ID
+            )
+        )
+    )
 
     result = {
         "schema_version": EPISODE_SCHEMA,
@@ -993,7 +1037,19 @@ def run_v6_episode(
             "viewpoints_sequence": list(viewpoints_sequence),
             "new_capture_root_added": new_capture_root_added,
             "vision_sources": vision_sources,
+            "world_alignment_passed": bool(
+                world_alignment.get("world_alignment_passed")
+            ),
+            "obstacle_pose_error": world_alignment.get("obstacle_pose_error"),
+            "oracle_obstacle_pose": world_alignment.get("oracle_obstacle_pose"),
+            "physical_obstacle_pose": world_alignment.get("physical_obstacle_pose"),
+            "selected_corridor_oracle_blocked": selected_oracle_blocked,
+            "admit_then_contact": admit_then_contact,
+            "clear_admitted_collision": clear_admitted_collision,
+            "collision_entity": world_alignment.get("last_collision_entity"),
+            "collision_pose": world_alignment.get("last_collision_pose"),
         },
+        "world_alignment": world_alignment,
         "oracle": {"scenario": scenario.oracle_context},
         "outcome": {
             "mission_success": mission_success,

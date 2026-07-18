@@ -229,6 +229,12 @@ def sample_v6_scenario(profile: str, seed: int) -> V6ScenarioSample:
             "sensor_version": "look-twice-rgbd-multi-agent-v6/1",
         },
     }
+    # Oracle obstacle anchors — must match Genesis / synthetic placement.
+    true_obstacles: list[list[float]] = []
+    if a_blocked:
+        true_obstacles.append([1.0, -0.3])
+    if b_blocked:
+        true_obstacles.append([1.0, 0.3])
     oracle = {
         "corridor_a_blocked_initial": a_blocked,
         "corridor_b_blocked_initial": b_blocked,
@@ -236,8 +242,11 @@ def sample_v6_scenario(profile: str, seed: int) -> V6ScenarioSample:
         "true_noise_realization": noise,
         "profile": profile,
         "seed": seed,
-        # Oracle only — never online.
-        "true_obstacle_xy": [1.0, -0.3 if a_blocked else 0.3],
+        # Oracle only — never online. Primary xy kept for back-compat.
+        "true_obstacle_xy": (
+            true_obstacles[0] if true_obstacles else [1.0, 0.0]
+        ),
+        "true_obstacle_xy_list": true_obstacles,
     }
     return V6ScenarioSample(profile, seed, public, oracle)
 
