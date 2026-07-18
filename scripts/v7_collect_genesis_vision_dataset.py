@@ -422,9 +422,25 @@ def collect_world(
             world_complete_path(out_dir, split, seed).write_text(
                 json.dumps(result, indent=2) + "\n", encoding="utf-8"
             )
+        else:
+            # Do not leave partial worlds that resume/audit would mis-count.
+            _purge_seed_samples(out_dir, split, seed)
         return result
     finally:
         runtime.close()
+
+
+def _purge_seed_samples(out_dir: Path, split: str, seed: int) -> int:
+    """Remove all sample artifacts for a seed (incomplete/conflict cleanup)."""
+    n = 0
+    d = out_dir / split
+    if not d.is_dir():
+        return 0
+    for p in list(d.glob(f"{split}__{seed}__*")):
+        p.unlink(missing_ok=True)
+        n += 1
+    world_complete_path(out_dir, split, seed).unlink(missing_ok=True)
+    return n
 
 
 def _run_one_world(

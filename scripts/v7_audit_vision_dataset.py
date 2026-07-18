@@ -36,12 +36,73 @@ def _sha(arr: np.ndarray) -> str:
     return hashlib.sha256(np.ascontiguousarray(arr).tobytes()).hexdigest()
 
 
+def _purge_conflict_and_orphan(root: Path) -> dict:
+    """Remove incomplete-world orphans and any SHA with conflicting labels."""
+    by_sha: dict[str, list[Path]] = defaultdict(list)
+    metas: list[tuple[Path, dict]] = []
+    for jp in root.rglob("*.json"):
+        if jp.name.startswith("_") or jp.name.count("__") < 2:
+            continue
+        try:
+            meta = json.loads(jp.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        metas.append((jp, meta))
+        by_sha[str(meta.get("image_sha256") or "")].append(jp)
+
+    removed = 0
+    # Conflict SHAs
+    bad_sha = set()
+    for sha, paths in by_sha.items():
+        if not sha:
+            continue
+        labels = set()
+        for p in paths:
+            try:
+                labels.add(json.loads(p.read_text(encoding="utf-8")).get("offline_label"))
+            except Exception:
+                pass
+        if len(labels) > 1:
+            bad_sha.add(sha)
+    for sha in bad_sha:
+        for jp in by_sha[sha]:
+            meta = json.loads(jp.read_text(encoding="utf-8"))
+            img = root / meta.get("image_path", "")
+            if img.is_file():
+                img.unlink(missing_ok=True)
+            jp.unlink(missing_ok=True)
+            removed += 1
+
+    # Orphans: samples for seed without COMPLETE
+    for jp, meta in list(metas):
+        if not jp.is_file():
+            continue
+        split = str(meta.get("split") or "")
+        seed = int(meta.get("seed") or -1)
+        if not (root / split / f"_COMPLETE__{seed}.json").is_file():
+            img = root / meta.get("image_path", "")
+            if img.is_file():
+                img.unlink(missing_ok=True)
+            jp.unlink(missing_ok=True)
+            removed += 1
+    return {"removed_files": removed, "conflict_shas": len(bad_sha)}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--train-eligible-only", action="store_true")
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Remove conflict-SHA samples and incomplete-world orphans, then re-audit",
+    )
     args = parser.parse_args()
     root = args.data_dir
+
+    fix_report = None
+    if args.fix:
+        fix_report = _purge_conflict_and_orphan(root)
 
     errors: list[str] = []
     warnings: list[str] = []
@@ -170,7 +231,7 @@ def main() -> int:
         "data_dir": str(root),
         "n_samples": len(samples),
         "n_train_eligible": n_train,
-        "n_unique_sha": len(by_sha),
+        "n_unique_sha": len([s for s in by_sha if s]),
         "label_counts_train": {"clear": n_clear, "blocked": n_blocked},
         "frac_clear": frac_c,
         "frac_blocked": frac_b,
@@ -183,8 +244,10 @@ def main() -> int:
         "n_warnings": len(warnings),
         "errors": errors[:50],
         "warnings": warnings[:20],
+        "fix_report": fix_report,
         "passed": len(errors) == 0 and conflict_pairs == 0 and incomplete_worlds == 0,
         "discriminable_hint": bool(sep is not None and sep > 0.01),
+        "balance_ok": bool(frac_c >= 0.2 and frac_b >= 0.2 and n_train >= 20),
     }
     out = root / "audit_report.json"
     out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
