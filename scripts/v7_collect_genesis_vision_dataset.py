@@ -320,8 +320,32 @@ def collect_world(
         last_pose: tuple[float, float] | None = None
         control_fail = 0
         dup_skip = 0
+        collocated_skip = 0
         move_log: list[dict] = list(legal_unavail)
+        last_target: tuple[float, float] | None = None
         for cid, name, xy, cov in side_plan:
+            # Scenario degeneracy: A right_near ≈ B left_near (same map pose).
+            # Treat as legal skip when targets are effectively collocated.
+            if last_target is not None:
+                tsep = float(np.hypot(xy[0] - last_target[0], xy[1] - last_target[1]))
+                if tsep < 0.12:
+                    collocated_skip += 1
+                    move_log.append(
+                        {
+                            "corridor_id": cid,
+                            "viewpoint": name,
+                            "target_xy": [float(xy[0]), float(xy[1])],
+                            "actual_xy": None,
+                            "distance_to_target": None,
+                            "move_ok": False,
+                            "legal_unavailable": True,
+                            "fail_class": "collocated_target_skip",
+                            "target_sep_from_prev": tsep,
+                            "reason": "scenario_collocated_with_previous_viewpoint",
+                        }
+                    )
+                    continue
+
             mv = _move_scout_with_retry(runtime, target_xy=xy, agent_id=SCOUT_ID)
             pose = runtime.pose_of(SCOUT_ID)
             move_rec = {
@@ -341,16 +365,21 @@ def collect_world(
                 move_rec["fail_class"] = "control_fail_reachable"
                 move_log.append(move_rec)
                 continue
-            if last_pose is not None:
+            if last_pose is not None and last_target is not None:
+                tsep = float(
+                    np.hypot(xy[0] - last_target[0], xy[1] - last_target[1])
+                )
                 dist = float(np.hypot(pose.x - last_pose[0], pose.y - last_pose[1]))
-                if dist < 0.05:
-                    # Reached target numerically but didn't relocate vs previous view.
+                # Only demand relocation when targets themselves are distinct.
+                if tsep >= 0.20 and dist < 0.08:
                     control_fail += 1
                     move_rec["fail_class"] = "no_relocation"
                     move_rec["distance_from_prev"] = dist
+                    move_rec["target_sep_from_prev"] = tsep
                     move_log.append(move_rec)
                     continue
             last_pose = (float(pose.x), float(pose.y))
+            last_target = (float(xy[0]), float(xy[1]))
             move_rec["fail_class"] = None
             move_log.append(move_rec)
 
@@ -472,11 +501,13 @@ def collect_world(
         same_label_dups = sum(
             1 for r in move_log if r.get("fail_class") == "duplicate_same_label"
         )
+        # Covered = unique captures + same-label dups + collocated legal skips.
+        covered = train_n + same_label_dups + collocated_skip
         complete = (
             control_fail == 0
             and len(side_plan) > 0
             and train_n >= 4
-            and (train_n + same_label_dups) >= len(side_plan)
+            and covered >= len(side_plan)
         )
 
         result = {
@@ -486,7 +517,9 @@ def collect_world(
             "n_samples": len(samples_meta),
             "n_train_eligible": train_n,
             "n_side_planned": len(side_plan),
-            "n_legal_unavailable": len(legal_unavail),
+            "n_legal_unavailable": len(legal_unavail) + collocated_skip,
+            "n_scenario_unreachable": len(legal_unavail),
+            "n_collocated_skip": collocated_skip,
             "control_fail": control_fail,
             "move_fail": control_fail,  # backward-compatible alias
             "dup_skip": dup_skip,
