@@ -138,6 +138,15 @@ def run_v7_episode(
         if a.get("kind") == "vision_proposal_v7"
     ]
     result["schema_version"] = EPISODE_SCHEMA_V7
+    # Episode JSON must never self-declare formal eligibility (matrix-only).
+    env = dict(result.get("environment") or {})
+    if "artifact_inputs_eligible" not in env:
+        env["artifact_inputs_eligible"] = bool(
+            (result.get("metrics") or {}).get("world_alignment_passed")
+            or (result.get("world_alignment") or {}).get("world_alignment_passed")
+        )
+    env["formal_result_eligible"] = False
+    result["environment"] = env
     result["configuration"] = {
         **result.get("configuration", {}),
         "policy": config.policy,

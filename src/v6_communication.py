@@ -83,7 +83,16 @@ class CommunicationQueue:
         return accepted
 
     def poll(self, current_step: int) -> list[RobotClaimV2]:
-        """Deliver due messages with received_step stamped at delivery."""
+        """Deliver due messages; stamp received_step with network arrival time.
+
+        Semantics (fail-closed contracts depend on this):
+          - A message is only due when current_step >= deliver_at_step.
+          - received_step is the network arrival clock:
+                max(deliver_at_step, observed_step)
+            Late *polling* must not invent a larger communication delay.
+            Example: observed=100, delay=5 → deliver_at=105; if poll happens at
+            step 500, received_step remains 105 (not 500).
+        """
         due: list[PendingMessage] = []
         remain: list[PendingMessage] = []
         for item in self._pending:
@@ -95,9 +104,8 @@ class CommunicationQueue:
         out: list[RobotClaimV2] = []
         for item in due:
             claim = item.claim
-            # Stamp receive time without altering observed_step.
-            # received_step cannot precede observed_step even if the queue is polled early.
-            recv = max(int(current_step), int(claim.observed_step))
+            # Network arrival, not consumer poll time.
+            recv = max(int(item.deliver_at_step), int(claim.observed_step))
             delivered = build_robot_claim_v2(
                 fact_id=claim.fact_id,
                 predicate=claim.predicate,

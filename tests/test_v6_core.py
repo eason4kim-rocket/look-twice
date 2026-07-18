@@ -314,6 +314,59 @@ class V6CommAndPlannerTests(unittest.TestCase):
         collapsed = collapse_echo_claims(delivered)
         self.assertEqual(len(distinct_capture_roots(collapsed)), 1)
 
+    def test_late_poll_does_not_inflate_received_step(self) -> None:
+        """observed=100, delay=5 → deliver_at=105; poll at 500 keeps received=105."""
+        q = CommunicationQueue(delay_steps=5, echo_fanout=1, drop_rate=0.0, seed=0)
+        claim = _claim(
+            capture_root="late-cap",
+            comm_root="late-comm",
+            observed=100,
+            received=100,
+            artifact_salt="late",
+        )
+        self.assertEqual(q.publish(claim, current_step=100), 1)
+        # Not due yet at observed + delay - 1
+        early = q.poll(104)
+        self.assertEqual(early, [])
+        # Due at 105
+        on_time = q.poll(105)
+        self.assertEqual(len(on_time), 1)
+        self.assertEqual(on_time[0].received_step, 105)
+        self.assertEqual(on_time[0].observed_step, 100)
+        # Publish again and poll very late: still network arrival, not poll time.
+        claim2 = _claim(
+            capture_root="late-cap-2",
+            comm_root="late-comm-2",
+            observed=100,
+            received=100,
+            artifact_salt="late2",
+        )
+        q2 = CommunicationQueue(delay_steps=5, echo_fanout=1, drop_rate=0.0, seed=0)
+        q2.publish(claim2, current_step=100)
+        self.assertEqual(q2.poll(104), [])
+        late = q2.poll(500)
+        self.assertEqual(len(late), 1)
+        self.assertEqual(late[0].received_step, 105)
+        self.assertEqual(late[0].observed_step, 100)
+        # Delay under contract limit of 40
+        self.assertEqual(late[0].received_step - late[0].observed_step, 5)
+
+    def test_echo_copies_keep_same_physical_root(self) -> None:
+        q = CommunicationQueue(delay_steps=5, echo_fanout=3, drop_rate=0.0, seed=2)
+        claim = _claim(
+            capture_root="phys-root",
+            comm_root="phys-comm",
+            observed=50,
+            received=50,
+            artifact_salt="echo-root",
+        )
+        self.assertEqual(q.publish(claim, current_step=50), 3)
+        delivered = q.poll(55)
+        self.assertEqual(len(delivered), 3)
+        self.assertEqual({c.capture_root_id for c in delivered}, {"phys-root"})
+        self.assertEqual({c.communication_root_id for c in delivered}, {"phys-comm"})
+        self.assertTrue(all(c.received_step == 55 for c in delivered))
+
     def test_planner_rejects_oracle_fields(self) -> None:
         with self.assertRaises(ValueError):
             assert_public_planner_context({"oracle": {"blocked": True}})

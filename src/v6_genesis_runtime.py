@@ -385,11 +385,13 @@ class V6GenesisRuntime:
         env["dual_agent"] = True
         env["world_homology"] = "v6_oracle_obstacles"
         env["world_alignment"] = self.world_alignment_audit()
-        # Eligible once homology is enforced; formal matrices may still gate
-        # separately on calibration.
-        env["formal_result_eligible"] = bool(
+        # Per-episode: inputs/homology can be marked eligible, but a single
+        # episode must never self-declare formal_result_eligible=true.
+        # Only locked-test / matrix aggregators may promote formal eligibility.
+        env["artifact_inputs_eligible"] = bool(
             env["world_alignment"].get("world_alignment_passed")
         )
+        env["formal_result_eligible"] = False
         return env
 
     def wait_steps(self, count: int) -> None:
