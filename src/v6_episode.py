@@ -335,17 +335,18 @@ def run_v6_episode(
         if not result.reached:
             return
         runtime.wait_steps(3)
+        raw_frame = None
         if use_rgbd:
             from v5_rgbd_claims import process_genesis_observation
 
-            raw = runtime.capture_raw(
+            raw_frame = runtime.capture_raw(
                 agent_id=agent_id,
                 viewpoint=viewpoint_name,
                 viewpoint_xy=target_xy,
                 predicted_coverage=predicted_coverage,
             )
             v1_claims, audit = process_genesis_observation(
-                raw,
+                raw_frame,
                 runtime.evidence_scenario,
                 observation_index=capture_index,
                 repair_action_kind=action_kind,
@@ -386,21 +387,26 @@ def run_v6_episode(
                 vision_proposal_to_claim_v2,
             )
 
-            # Prefer real RGB if runtime exposed it on last audit; else synthetic proxy RGB.
             rgb = None
             depth = None
-            if rgbd_audits:
-                # No raw pixels in audit by default — synthetic labeled by public profile cue.
-                rgb = None
+            vision_source = "synthetic_rgb_proxy"
+            if raw_frame is not None:
+                rgb = getattr(raw_frame, "rgb", None)
+                depth = getattr(raw_frame, "depth", None)
+                if rgb is not None:
+                    vision_source = "genesis_rgb"
             if rgb is None:
-                # Public proxy label (not oracle blocked flag).
-                cue = "inconclusive"
+                # Public proxy label (not oracle blocked flag) for synthetic runtime.
                 if "heavy" in str(scenario.profile) or "shared-occlusion" in str(
                     scenario.profile
                 ):
                     cue = "blocked" if (scenario.seed + capture_index) % 3 == 0 else "clear"
                 else:
-                    cue = "clear" if (scenario.seed + capture_index) % 2 == 0 else "inconclusive"
+                    cue = (
+                        "clear"
+                        if (scenario.seed + capture_index) % 2 == 0
+                        else "inconclusive"
+                    )
                 rgb = synthetic_rgb_for_label(
                     cue, seed=scenario.seed * 17 + capture_index
                 )
@@ -415,6 +421,7 @@ def run_v6_episode(
                     "corridor_id": corridor_id,
                     "viewpoint": viewpoint_name,
                     "step": runtime.current_step,
+                    "vision_source": vision_source,
                 },
             )
             vclaim = vision_proposal_to_claim_v2(
@@ -429,6 +436,7 @@ def run_v6_episode(
             rgbd_audits.append(
                 {
                     "kind": "vision_proposal_v7",
+                    "vision_source": vision_source,
                     "observer_agent_id": agent_id,
                     "corridor_id": corridor_id,
                     "viewpoint": viewpoint_name,
