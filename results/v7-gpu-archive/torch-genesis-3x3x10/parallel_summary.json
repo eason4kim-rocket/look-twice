@@ -1,0 +1,644 @@
+{
+  "schema_version": "look-twice.v7-parallel-matrix/v1",
+  "workers": 16,
+  "jobs": 90,
+  "ok": 90,
+  "skipped": 0,
+  "fail": 0,
+  "wall_seconds": 305.1461356249638,
+  "runtime": "genesis",
+  "device": "cuda:0",
+  "vision_backend": "torch_corridor_head",
+  "results": [
+    {
+      "stem": "naive__evidence-echo__94000",
+      "status": "ok",
+      "seconds": 38.73823172901757,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94000.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94001",
+      "status": "ok",
+      "seconds": 35.67672209604643,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94001.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94002",
+      "status": "ok",
+      "seconds": 38.37745157512836,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94002.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94003",
+      "status": "ok",
+      "seconds": 38.36827928200364,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94003.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94004",
+      "status": "ok",
+      "seconds": 42.35326641215943,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94004.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94005",
+      "status": "ok",
+      "seconds": 37.66222852212377,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94005.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94006",
+      "status": "ok",
+      "seconds": 42.430312352022156,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94006.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94007",
+      "status": "ok",
+      "seconds": 39.49919060920365,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94007.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94008",
+      "status": "ok",
+      "seconds": 43.70110517810099,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94008.log"
+    },
+    {
+      "stem": "naive__evidence-echo__94009",
+      "status": "ok",
+      "seconds": 40.64603531593457,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__evidence-echo__94009.log"
+    },
+    {
+      "stem": "naive__independent-noise__94000",
+      "status": "ok",
+      "seconds": 45.36730992002413,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94000.log"
+    },
+    {
+      "stem": "naive__independent-noise__94001",
+      "status": "ok",
+      "seconds": 41.32810371206142,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94001.log"
+    },
+    {
+      "stem": "naive__independent-noise__94002",
+      "status": "ok",
+      "seconds": 44.70395143516362,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94002.log"
+    },
+    {
+      "stem": "naive__independent-noise__94003",
+      "status": "ok",
+      "seconds": 36.607076443964615,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94003.log"
+    },
+    {
+      "stem": "naive__independent-noise__94004",
+      "status": "ok",
+      "seconds": 40.25950404885225,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94004.log"
+    },
+    {
+      "stem": "naive__independent-noise__94005",
+      "status": "ok",
+      "seconds": 40.2713294220157,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94005.log"
+    },
+    {
+      "stem": "naive__independent-noise__94006",
+      "status": "ok",
+      "seconds": 46.12805690080859,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94006.log"
+    },
+    {
+      "stem": "naive__independent-noise__94007",
+      "status": "ok",
+      "seconds": 42.38721305294894,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94007.log"
+    },
+    {
+      "stem": "naive__independent-noise__94008",
+      "status": "ok",
+      "seconds": 45.26019332301803,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94008.log"
+    },
+    {
+      "stem": "naive__independent-noise__94009",
+      "status": "ok",
+      "seconds": 41.620463089086115,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__independent-noise__94009.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94000",
+      "status": "ok",
+      "seconds": 44.17188023892231,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94000.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94001",
+      "status": "ok",
+      "seconds": 41.65291087795049,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94001.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94002",
+      "status": "ok",
+      "seconds": 45.794347951887175,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94002.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94003",
+      "status": "ok",
+      "seconds": 42.33772638393566,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94003.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94004",
+      "status": "ok",
+      "seconds": 40.96155090699904,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94004.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94005",
+      "status": "ok",
+      "seconds": 35.5661619710736,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94005.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94006",
+      "status": "ok",
+      "seconds": 40.83343853894621,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94006.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94007",
+      "status": "ok",
+      "seconds": 37.2643183991313,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94007.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94008",
+      "status": "ok",
+      "seconds": 37.40943060792051,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94008.log"
+    },
+    {
+      "stem": "naive__shared-occlusion__94009",
+      "status": "ok",
+      "seconds": 35.4883805999998,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/naive__shared-occlusion__94009.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94000",
+      "status": "ok",
+      "seconds": 58.14383879909292,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94000.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94001",
+      "status": "ok",
+      "seconds": 57.193726856959984,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94001.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94002",
+      "status": "ok",
+      "seconds": 56.98955805110745,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94002.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94003",
+      "status": "ok",
+      "seconds": 56.39431553403847,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94003.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94004",
+      "status": "ok",
+      "seconds": 56.001394314924255,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94004.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94005",
+      "status": "ok",
+      "seconds": 56.3502615459729,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94005.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94006",
+      "status": "ok",
+      "seconds": 54.37548501719721,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94006.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94007",
+      "status": "ok",
+      "seconds": 53.40491187083535,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94007.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94008",
+      "status": "ok",
+      "seconds": 54.11954176099971,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94008.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__94009",
+      "status": "ok",
+      "seconds": 52.89874250488356,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__evidence-echo__94009.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94000",
+      "status": "ok",
+      "seconds": 55.529867314966395,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94000.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94001",
+      "status": "ok",
+      "seconds": 53.66916711907834,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94001.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94002",
+      "status": "ok",
+      "seconds": 61.612119138007984,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94002.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94003",
+      "status": "ok",
+      "seconds": 53.96575129101984,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94003.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94004",
+      "status": "ok",
+      "seconds": 75.22560740006156,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94004.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94005",
+      "status": "ok",
+      "seconds": 73.58645535400137,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94005.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94006",
+      "status": "ok",
+      "seconds": 72.6522996169515,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94006.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94007",
+      "status": "ok",
+      "seconds": 74.02232221001759,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94007.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94008",
+      "status": "ok",
+      "seconds": 75.57425096794032,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94008.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__94009",
+      "status": "ok",
+      "seconds": 72.562817057129,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__independent-noise__94009.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94000",
+      "status": "ok",
+      "seconds": 73.55829691211693,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94000.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94001",
+      "status": "ok",
+      "seconds": 75.82990260887891,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94001.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94002",
+      "status": "ok",
+      "seconds": 76.85016518109478,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94002.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94003",
+      "status": "ok",
+      "seconds": 74.60264675412327,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94003.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94004",
+      "status": "ok",
+      "seconds": 73.99220959516242,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94004.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94005",
+      "status": "ok",
+      "seconds": 72.47970129316673,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94005.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94006",
+      "status": "ok",
+      "seconds": 65.86110256798565,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94006.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94007",
+      "status": "ok",
+      "seconds": 64.19301103102043,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94007.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94008",
+      "status": "ok",
+      "seconds": 64.4102032550145,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94008.log"
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__94009",
+      "status": "ok",
+      "seconds": 59.08078400604427,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-active-vision__shared-occlusion__94009.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94000",
+      "status": "ok",
+      "seconds": 49.934120015008375,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94000.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94001",
+      "status": "ok",
+      "seconds": 48.30195421609096,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94001.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94002",
+      "status": "ok",
+      "seconds": 48.87188901891932,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94002.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94003",
+      "status": "ok",
+      "seconds": 47.63362421491183,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94003.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94004",
+      "status": "ok",
+      "seconds": 47.99945762893185,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94004.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94005",
+      "status": "ok",
+      "seconds": 46.923869604012,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94005.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94006",
+      "status": "ok",
+      "seconds": 47.831626683007926,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94006.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94007",
+      "status": "ok",
+      "seconds": 46.297962460899726,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94007.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94008",
+      "status": "ok",
+      "seconds": 45.67544607305899,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94008.log"
+    },
+    {
+      "stem": "purify-passive__evidence-echo__94009",
+      "status": "ok",
+      "seconds": 46.80130622908473,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__evidence-echo__94009.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94000",
+      "status": "ok",
+      "seconds": 44.687089503975585,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94000.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94001",
+      "status": "ok",
+      "seconds": 43.92210897291079,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94001.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94002",
+      "status": "ok",
+      "seconds": 45.723140076966956,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94002.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94003",
+      "status": "ok",
+      "seconds": 45.86022055801004,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94003.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94004",
+      "status": "ok",
+      "seconds": 45.75944824400358,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94004.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94005",
+      "status": "ok",
+      "seconds": 43.62052437895909,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94005.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94006",
+      "status": "ok",
+      "seconds": 45.36210760194808,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94006.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94007",
+      "status": "ok",
+      "seconds": 44.01707270904444,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94007.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94008",
+      "status": "ok",
+      "seconds": 44.19773169676773,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94008.log"
+    },
+    {
+      "stem": "purify-passive__independent-noise__94009",
+      "status": "ok",
+      "seconds": 44.22526302700862,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__independent-noise__94009.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94000",
+      "status": "ok",
+      "seconds": 44.30670654098503,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94000.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94001",
+      "status": "ok",
+      "seconds": 48.6762456218712,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94001.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94002",
+      "status": "ok",
+      "seconds": 48.23986964300275,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94002.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94003",
+      "status": "ok",
+      "seconds": 46.817537636030465,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94003.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94004",
+      "status": "ok",
+      "seconds": 46.349918633000925,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94004.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94005",
+      "status": "ok",
+      "seconds": 45.94059652485885,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94005.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94006",
+      "status": "ok",
+      "seconds": 43.51337602594867,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94006.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94007",
+      "status": "ok",
+      "seconds": 42.890809091040865,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94007.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94008",
+      "status": "ok",
+      "seconds": 50.60943449800834,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94008.log"
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__94009",
+      "status": "ok",
+      "seconds": 49.063164283987135,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/torch-genesis-3x3x10/logs/purify-passive__shared-occlusion__94009.log"
+    }
+  ]
+}

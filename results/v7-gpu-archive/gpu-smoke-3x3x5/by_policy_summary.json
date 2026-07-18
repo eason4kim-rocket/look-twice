@@ -1,0 +1,49 @@
+{
+  "schema_version": "look-twice.v7-matrix-summary/v1",
+  "n_episodes": 45,
+  "by_policy": {
+    "naive": {
+      "n": 15,
+      "mission": 9,
+      "unsafe": 3,
+      "repair_success": 0,
+      "direct": 9,
+      "detour": 0,
+      "vision_clear": 0,
+      "vision_blocked": 0,
+      "modality_conflict_events": 0,
+      "vision_sources": {
+        "genesis_rgb": 15
+      }
+    },
+    "purify-active-vision": {
+      "n": 15,
+      "mission": 15,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 15,
+      "vision_clear": 0,
+      "vision_blocked": 27,
+      "modality_conflict_events": 30,
+      "vision_sources": {
+        "genesis_rgb": 60
+      }
+    },
+    "purify-passive": {
+      "n": 15,
+      "mission": 15,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 15,
+      "vision_clear": 0,
+      "vision_blocked": 0,
+      "modality_conflict_events": 0,
+      "vision_sources": {
+        "genesis_rgb": 15
+      }
+    }
+  },
+  "input_dir": "outputs/v7/gpu-smoke-3x3x5"
+}

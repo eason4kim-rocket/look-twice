@@ -1,0 +1,50 @@
+{
+  "schema_version": "look-twice.v7-matrix-summary/v1",
+  "n_episodes": 90,
+  "skipped_non_episode_json": 0,
+  "by_policy": {
+    "naive": {
+      "n": 30,
+      "mission": 15,
+      "unsafe": 12,
+      "repair_success": 0,
+      "direct": 15,
+      "detour": 0,
+      "vision_clear": 0,
+      "vision_blocked": 30,
+      "modality_conflict_events": 5,
+      "vision_sources": {
+        "genesis_rgb": 30
+      }
+    },
+    "purify-active-vision": {
+      "n": 30,
+      "mission": 30,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 30,
+      "vision_clear": 0,
+      "vision_blocked": 120,
+      "modality_conflict_events": 58,
+      "vision_sources": {
+        "genesis_rgb": 120
+      }
+    },
+    "purify-passive": {
+      "n": 30,
+      "mission": 30,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 30,
+      "vision_clear": 0,
+      "vision_blocked": 30,
+      "modality_conflict_events": 5,
+      "vision_sources": {
+        "genesis_rgb": 30
+      }
+    }
+  },
+  "input_dir": "results/v7-gpu-archive/torch-genesis-3x3x10"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "look-twice.v7-matrix-summary/v1",
+  "n_episodes": 360,
+  "skipped_non_episode_json": 0,
+  "by_policy": {
+    "naive": {
+      "n": 120,
+      "mission": 50,
+      "unsafe": 36,
+      "repair_success": 0,
+      "direct": 50,
+      "detour": 0,
+      "vision_clear": 7,
+      "vision_blocked": 8,
+      "modality_conflict_events": 5,
+      "vision_sources": {
+        "genesis_rgb": 120
+      }
+    },
+    "purify-active-vision": {
+      "n": 120,
+      "mission": 120,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 120,
+      "vision_clear": 7,
+      "vision_blocked": 171,
+      "modality_conflict_events": 159,
+      "vision_sources": {
+        "genesis_rgb": 480
+      }
+    },
+    "purify-passive": {
+      "n": 120,
+      "mission": 120,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 120,
+      "vision_clear": 7,
+      "vision_blocked": 8,
+      "modality_conflict_events": 5,
+      "vision_sources": {
+        "genesis_rgb": 120
+      }
+    }
+  },
+  "input_dir": "results/v7-gpu-archive/formal-genesis-3x6x20"
+}

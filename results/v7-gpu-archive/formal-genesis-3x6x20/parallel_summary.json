@@ -1,0 +1,2255 @@
+{
+  "schema_version": "look-twice.v7-parallel-matrix/v1",
+  "workers": 16,
+  "jobs": 360,
+  "ok": 81,
+  "skipped": 279,
+  "fail": 0,
+  "wall_seconds": 388.10585966682993,
+  "runtime": "genesis",
+  "device": "cuda:0",
+  "vision_backend": "heuristic_rgb_proxy",
+  "results": [
+    {
+      "stem": "naive__comm-fault__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__comm-fault__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__dynamic-change__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__evidence-echo__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__independent-noise__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__shared-occlusion__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "naive__time-skew__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92000",
+      "status": "ok",
+      "seconds": 74.29477930581197,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92000.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92001",
+      "status": "ok",
+      "seconds": 72.48615668085404,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92001.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92002",
+      "status": "ok",
+      "seconds": 74.19164117099717,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92002.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92003",
+      "status": "ok",
+      "seconds": 69.20995253883302,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92003.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92004",
+      "status": "ok",
+      "seconds": 63.10658959695138,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92004.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92005",
+      "status": "ok",
+      "seconds": 40.43256903300062,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92005.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92006",
+      "status": "ok",
+      "seconds": 40.4828423790168,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92006.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92007",
+      "status": "ok",
+      "seconds": 62.51642744312994,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92007.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92008",
+      "status": "ok",
+      "seconds": 61.08329655486159,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92008.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92009",
+      "status": "ok",
+      "seconds": 63.291733814869076,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92009.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92010",
+      "status": "ok",
+      "seconds": 60.52967403503135,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92010.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92011",
+      "status": "ok",
+      "seconds": 60.93224477302283,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92011.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92012",
+      "status": "ok",
+      "seconds": 59.03916738810949,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92012.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92013",
+      "status": "ok",
+      "seconds": 59.3966623719316,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92013.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92014",
+      "status": "ok",
+      "seconds": 59.350289007183164,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92014.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92015",
+      "status": "ok",
+      "seconds": 59.05071138497442,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92015.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92016",
+      "status": "ok",
+      "seconds": 57.42550238315016,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92016.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92017",
+      "status": "ok",
+      "seconds": 58.98292857082561,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92017.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92018",
+      "status": "ok",
+      "seconds": 58.70995468599722,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92018.log"
+    },
+    {
+      "stem": "purify-active-vision__comm-fault__92019",
+      "status": "ok",
+      "seconds": 58.07351743103936,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__comm-fault__92019.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92000",
+      "status": "ok",
+      "seconds": 85.76416742685251,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92000.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92001",
+      "status": "ok",
+      "seconds": 83.60706734401174,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92001.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92002",
+      "status": "ok",
+      "seconds": 84.21087755891494,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92002.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92003",
+      "status": "ok",
+      "seconds": 83.90282432292588,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92003.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92004",
+      "status": "ok",
+      "seconds": 82.9302723039873,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92004.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92005",
+      "status": "ok",
+      "seconds": 83.14283512206748,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92005.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92006",
+      "status": "ok",
+      "seconds": 82.01459794398397,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92006.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92007",
+      "status": "ok",
+      "seconds": 45.40173496189527,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92007.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92008",
+      "status": "ok",
+      "seconds": 42.2089399008546,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92008.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92009",
+      "status": "ok",
+      "seconds": 66.03377686208114,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92009.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92010",
+      "status": "ok",
+      "seconds": 66.75217687990516,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92010.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92011",
+      "status": "ok",
+      "seconds": 75.11399722099304,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92011.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92012",
+      "status": "ok",
+      "seconds": 73.79595583095215,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92012.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92013",
+      "status": "ok",
+      "seconds": 75.79260859382339,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92013.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92014",
+      "status": "ok",
+      "seconds": 72.84180167899467,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92014.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92015",
+      "status": "ok",
+      "seconds": 75.39290343900211,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92015.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92016",
+      "status": "ok",
+      "seconds": 76.74073607102036,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92016.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92017",
+      "status": "ok",
+      "seconds": 75.30269859894179,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92017.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92018",
+      "status": "ok",
+      "seconds": 76.01238061510958,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92018.log"
+    },
+    {
+      "stem": "purify-active-vision__dynamic-change__92019",
+      "status": "ok",
+      "seconds": 75.84496526396833,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__dynamic-change__92019.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92000",
+      "status": "ok",
+      "seconds": 83.44598998595029,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92000.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92001",
+      "status": "ok",
+      "seconds": 87.17393804201856,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92001.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92002",
+      "status": "ok",
+      "seconds": 87.60962890996598,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92002.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92003",
+      "status": "ok",
+      "seconds": 87.12587190815248,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92003.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92004",
+      "status": "ok",
+      "seconds": 86.21081705787219,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92004.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92005",
+      "status": "ok",
+      "seconds": 86.16580355004407,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92005.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92006",
+      "status": "ok",
+      "seconds": 85.8125288898591,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92006.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92007",
+      "status": "ok",
+      "seconds": 78.4828474749811,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92007.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92008",
+      "status": "ok",
+      "seconds": 82.53098671813495,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92008.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92009",
+      "status": "ok",
+      "seconds": 87.5140578688588,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92009.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92010",
+      "status": "ok",
+      "seconds": 86.22084690490738,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92010.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92011",
+      "status": "ok",
+      "seconds": 86.43720447109081,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92011.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92012",
+      "status": "ok",
+      "seconds": 87.40391171001829,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92012.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92013",
+      "status": "ok",
+      "seconds": 86.8825098471716,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92013.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92014",
+      "status": "ok",
+      "seconds": 86.14501402992755,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92014.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92015",
+      "status": "ok",
+      "seconds": 74.97928582481109,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92015.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92016",
+      "status": "ok",
+      "seconds": 73.3153646721039,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92016.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92017",
+      "status": "ok",
+      "seconds": 76.4961001938209,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92017.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92018",
+      "status": "ok",
+      "seconds": 76.6958317370154,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92018.log"
+    },
+    {
+      "stem": "purify-active-vision__evidence-echo__92019",
+      "status": "ok",
+      "seconds": 80.8121575161349,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__evidence-echo__92019.log"
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__independent-noise__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-active-vision__shared-occlusion__92019",
+      "status": "ok",
+      "seconds": 81.28710070694797,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__shared-occlusion__92019.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92000",
+      "status": "ok",
+      "seconds": 81.65835795481689,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92000.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92001",
+      "status": "ok",
+      "seconds": 82.57342457585037,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92001.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92002",
+      "status": "ok",
+      "seconds": 82.79013480711728,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92002.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92003",
+      "status": "ok",
+      "seconds": 80.7312755570747,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92003.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92004",
+      "status": "ok",
+      "seconds": 82.81198882916942,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92004.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92005",
+      "status": "ok",
+      "seconds": 82.34214265597984,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92005.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92006",
+      "status": "ok",
+      "seconds": 78.70532100903802,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92006.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92007",
+      "status": "ok",
+      "seconds": 82.92480152309872,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92007.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92008",
+      "status": "ok",
+      "seconds": 78.93610477400944,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92008.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92009",
+      "status": "ok",
+      "seconds": 79.43236998305656,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92009.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92010",
+      "status": "ok",
+      "seconds": 80.0330110900104,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92010.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92011",
+      "status": "ok",
+      "seconds": 61.881458713905886,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92011.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92012",
+      "status": "ok",
+      "seconds": 71.0735745811835,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92012.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92013",
+      "status": "ok",
+      "seconds": 77.78052774909884,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92013.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92014",
+      "status": "ok",
+      "seconds": 77.42148754210211,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92014.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92015",
+      "status": "ok",
+      "seconds": 82.78093023505062,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92015.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92016",
+      "status": "ok",
+      "seconds": 81.05015152483247,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92016.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92017",
+      "status": "ok",
+      "seconds": 81.69667864404619,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92017.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92018",
+      "status": "ok",
+      "seconds": 81.90985343581997,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92018.log"
+    },
+    {
+      "stem": "purify-active-vision__time-skew__92019",
+      "status": "ok",
+      "seconds": 84.80355188506655,
+      "returncode": 0,
+      "log": "/workspace/look-twice-v6/outputs/v7/formal-genesis-3x6x20/logs/purify-active-vision__time-skew__92019.log"
+    },
+    {
+      "stem": "purify-passive__comm-fault__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__comm-fault__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__dynamic-change__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__evidence-echo__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__independent-noise__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__shared-occlusion__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92000",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92001",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92002",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92003",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92004",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92005",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92006",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92007",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92008",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92009",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92010",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92011",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92012",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92013",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92014",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92015",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92016",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92017",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92018",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "stem": "purify-passive__time-skew__92019",
+      "status": "skipped",
+      "seconds": 0.0,
+      "returncode": 0
+    }
+  ]
+}

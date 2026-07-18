@@ -29,16 +29,30 @@ def main() -> int:
         }
     )
     n = 0
+    skipped_non_episode = 0
     for p in sorted(args.input_dir.glob("*.json")):
-        if p.name.startswith("parallel") or p.name.endswith("summary.json"):
+        name = p.name
+        if (
+            name.startswith("parallel")
+            or name.endswith("summary.json")
+            or name in {"LAUNCH.json", "VERIFICATION.json"}
+            or name.startswith("by_policy")
+        ):
+            skipped_non_episode += 1
             continue
         try:
             d = json.loads(p.read_text(encoding="utf-8"))
-            m = d.get("metrics") or {}
         except Exception:
+            skipped_non_episode += 1
+            continue
+        # Only count real episode payloads (schema look-twice.episode/v*).
+        schema = str(d.get("schema_version") or "")
+        m = d.get("metrics")
+        if "episode/" not in schema or not isinstance(m, dict):
+            skipped_non_episode += 1
             continue
         n += 1
-        pol = str(m.get("policy") or "?")
+        pol = str(m.get("policy") or "unknown")
         b = by[pol]
         b["n"] += 1
         b["mission"] += int(bool(m.get("mission_success")))
@@ -64,6 +78,7 @@ def main() -> int:
     payload = {
         "schema_version": "look-twice.v7-matrix-summary/v1",
         "n_episodes": n,
+        "skipped_non_episode_json": skipped_non_episode,
         "by_policy": out_by,
         "input_dir": str(args.input_dir),
     }

@@ -5,3 +5,14 @@ outputs/
 bin/
 *.test
 .DS_Store
+
+# V7 full episode dumps (local archive; keep summaries/status in git)
+results/v7-gpu-archive/**/*.json
+!results/v7-gpu-archive/**/by_policy_summary.json
+!results/v7-gpu-archive/**/parallel_summary.json
+!results/v7-gpu-archive/**/train_summary.json
+!results/v7-gpu-archive/**/VERIFICATION.json
+!results/v7-gpu-archive/**/LAUNCH.json
+results/v7-gpu-archive/**/logs/
+results/v7-gpu-archive/**/*.log
+results/v7-gpu-archive/**/best.pt

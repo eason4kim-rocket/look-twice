@@ -1,0 +1,7 @@
+{
+  "checkpoint": "outputs/v7/vision-head/best.pt",
+  "device": "cuda:0",
+  "epochs": 40,
+  "final_acc": 1.0,
+  "final_loss": 0.00028135291449871147
+}
