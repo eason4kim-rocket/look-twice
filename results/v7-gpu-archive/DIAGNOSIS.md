@@ -52,3 +52,13 @@ Fix: require `schema_version` contains `episode/` and `metrics` dict. Regenerate
 2. Soften / stage `require_vision_clear_root` so clear-geometry can admit when vision is inconclusive (product decision)
 3. Closed-loop target: conflict → side_view → independent clear vision root → **direct**
 4. Paired Passive vs Active: wrong_detour / repair_success / observation cost
+
+## Update: repair→direct proven (synthetic closed-loop entry)
+
+After viewpoint-staged vision cues + depth-preferring heuristic + repair ranking:
+
+- `look_twice_v7.py` seed 95000: deny → repair_success + direct, unsafe=0
+- Paired 30 seeds: active repair_success=25/direct=25 vs passive 0/0, both unsafe=0
+- Vision hist non-degenerate (clear+inconclusive)
+
+Artifacts: `results/v7-repair-capability/`

@@ -1,0 +1,633 @@
+{
+  "schema_version": "look-twice.v7-paired-passive-active/v1",
+  "runtime": "synthetic",
+  "vision_backend": "heuristic_rgb_proxy",
+  "n_pairs": 30,
+  "by_policy": {
+    "purify-passive": {
+      "n": 30,
+      "mission": 30,
+      "unsafe": 0,
+      "repair_success": 0,
+      "direct": 0,
+      "detour": 30
+    },
+    "purify-active-vision": {
+      "n": 30,
+      "mission": 30,
+      "unsafe": 0,
+      "repair_success": 25,
+      "direct": 25,
+      "detour": 5
+    }
+  },
+  "improves_active_over_passive": true,
+  "vision_label_hist": {
+    "clear": 87,
+    "inconclusive": 34
+  },
+  "vision_dominant_frac": 0.71900826446281,
+  "vision_non_degenerate": true,
+  "rows": [
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95000,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95000,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95001,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95001,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95002,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95002,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95003,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95003,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95004,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95004,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95005,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95005,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95006,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95006,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95007,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95007,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95008,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95008,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "independent-noise",
+      "seed": 95009,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "independent-noise",
+      "seed": 95009,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95000,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95000,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95001,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95001,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95002,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95002,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95003,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95003,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95004,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95004,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95005,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95005,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95006,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95006,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95007,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95007,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95008,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95008,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 2
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "shared-occlusion",
+      "seed": 95009,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "shared-occlusion",
+      "seed": 95009,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95000,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95000,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 3
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95001,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95001,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95002,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95002,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95003,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95003,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95004,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95004,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 3
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95005,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95005,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 4
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95006,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95006,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 3
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95007,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95007,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 3
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95008,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95008,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": true,
+      "route_mode": "direct",
+      "vision_claim_count": 3
+    },
+    {
+      "policy": "purify-passive",
+      "profile": "evidence-echo",
+      "seed": 95009,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 1
+    },
+    {
+      "policy": "purify-active-vision",
+      "profile": "evidence-echo",
+      "seed": 95009,
+      "mission": true,
+      "unsafe": false,
+      "repair_success": false,
+      "route_mode": "detour",
+      "vision_claim_count": 4
+    }
+  ]
+}

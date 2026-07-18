@@ -149,6 +149,55 @@ class V7VisionGateTests(unittest.TestCase):
         self.assertEqual(claim.modality, VISION_MODALITY)
         self.assertEqual(claim.intended_actor_id, "carrier")
 
+    def test_viewpoint_cue_stages_repair(self) -> None:
+        from v7_vision_claims import viewpoint_vision_cue
+
+        self.assertEqual(
+            viewpoint_vision_cue(
+                viewpoint_name="carrier_initial_front",
+                capture_index=0,
+                seed=1,
+            ),
+            "inconclusive",
+        )
+        self.assertEqual(
+            viewpoint_vision_cue(
+                viewpoint_name="corridor_a/left_near",
+                capture_index=2,
+                seed=1,
+            ),
+            "clear",
+        )
+
+    def test_dark_structured_clear_not_forced_blocked(self) -> None:
+        rgb = synthetic_rgb_for_label("clear", seed=42)
+        prop = propose_vision(rgb, backend="heuristic_rgb_proxy")
+        self.assertIn(prop.value, ("clear", "inconclusive"))
+
+
+class V7ActiveRepairEpisodeTests(unittest.TestCase):
+    def test_active_vision_can_repair_to_direct(self) -> None:
+        from v6_scenario import sample_v6_scenario
+        from v7_episode import V7EpisodeConfig, run_v7_episode
+
+        scenario = sample_v6_scenario("independent-noise", 95000)
+        result = run_v7_episode(
+            scenario=scenario,
+            config=V7EpisodeConfig(
+                policy="purify-active-vision",
+                vision_backend="heuristic_rgb_proxy",
+                inject_vision=True,
+            ),
+            runtime=None,
+        )
+        m = result["metrics"]
+        self.assertEqual(result["schema_version"], "look-twice.episode/v7")
+        self.assertFalse(m["unsafe_crossing"])
+        self.assertTrue(m["mission_success"])
+        self.assertTrue(m["repair_success"])
+        self.assertEqual(m["route_mode"], "direct")
+        self.assertGreaterEqual(int(m.get("vision_claim_count") or 0), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

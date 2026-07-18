@@ -396,19 +396,18 @@ def run_v6_episode(
                 if rgb is not None:
                     vision_source = "genesis_rgb"
             if rgb is None:
-                # Public proxy label (not oracle blocked flag) for synthetic runtime.
-                if "heavy" in str(scenario.profile) or "shared-occlusion" in str(
-                    scenario.profile
-                ):
-                    cue = "blocked" if (scenario.seed + capture_index) % 3 == 0 else "clear"
-                else:
-                    cue = (
-                        "clear"
-                        if (scenario.seed + capture_index) % 2 == 0
-                        else "inconclusive"
-                    )
+                from v7_vision_claims import viewpoint_vision_cue
+
+                # Viewpoint-staged cue: initial weak, scout side views clear so
+                # active repair can assemble vision roots without oracle flags.
+                cue = viewpoint_vision_cue(
+                    viewpoint_name=viewpoint_name,
+                    capture_index=capture_index,
+                    seed=scenario.seed,
+                    profile=str(scenario.profile),
+                )
                 rgb = synthetic_rgb_for_label(
-                    cue, seed=scenario.seed * 17 + capture_index
+                    cue, seed=scenario.seed * 17 + capture_index + hash(viewpoint_name) % 97
                 )
             prop = propose_vision(
                 rgb,

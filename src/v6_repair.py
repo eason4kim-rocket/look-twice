@@ -191,6 +191,9 @@ def score_action(
             base += 0.35
         if "low_coverage" in reasons:
             base += 0.15 * action.predicted_coverage
+        # v7 vision gaps: prefer independent scout views to repair vision roots.
+        if "missing_vision_root" in reasons or "modality_conflict" in reasons:
+            base += 0.45
         if action.observer == "scout":
             base += 0.20  # independence preference
     elif action.kind == "same_view":
