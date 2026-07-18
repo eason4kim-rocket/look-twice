@@ -29,19 +29,40 @@ class CorridorContractV7(CorridorContract):
     """Extends v6 contract with vision requirements."""
 
     require_vision_clear_root: bool = False
+    # Deny until a scout/side-view vision clear root exists — forces active
+    # repair after the carrier's initial front capture (Genesis + synthetic).
+    require_side_view_vision_root: bool = False
     enforce_modality_conflict: bool = True
+
+
+def _is_side_view_vision_claim(claim: RobotClaimV2) -> bool:
+    """True when the vision claim came from an independent scout/side capture.
+
+    Capture roots are tagged at proposal time as vision-side-* (scout side
+    views) vs vision-initial-* (carrier first look / recapture).
+    """
+    root = str(getattr(claim, "capture_root_id", "") or "")
+    if "vision-side-" in root or root.startswith("side-"):
+        return True
+    if "vision-initial-" in root or "initial" in root:
+        return False
+    # Fallback: scout observer counts as independent side evidence.
+    return str(getattr(claim, "observer_agent_id", "")) == "scout"
 
 
 def _values_by_class(
     claims: Sequence[RobotClaimV2],
-) -> tuple[set[str], set[str], tuple[str, ...], tuple[str, ...]]:
+) -> tuple[set[str], set[str], tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     geo = [c for c in claims if c.modality in GEOMETRY_MODALITIES]
     vis = [c for c in claims if c.modality in VISION_MODALITIES]
     geo_vals = {c.value for c in geo if c.value != "inconclusive"}
     vis_vals = {c.value for c in vis if c.value != "inconclusive"}
     geo_clear_roots = distinct_capture_roots([c for c in geo if c.value == "clear"])
     vis_clear_roots = distinct_capture_roots([c for c in vis if c.value == "clear"])
-    return geo_vals, vis_vals, geo_clear_roots, vis_clear_roots
+    side_vis_clear_roots = distinct_capture_roots(
+        [c for c in vis if c.value == "clear" and _is_side_view_vision_claim(c)]
+    )
+    return geo_vals, vis_vals, geo_clear_roots, vis_clear_roots, side_vis_clear_roots
 
 
 def evaluate_corridor_contract_v7(
@@ -53,10 +74,13 @@ def evaluate_corridor_contract_v7(
     """v6 evaluation plus modality conflict and optional vision root."""
     base = evaluate_corridor_contract(claims, contract, current_step=current_step)
     require_vision = bool(getattr(contract, "require_vision_clear_root", False))
+    require_side = bool(getattr(contract, "require_side_view_vision_root", False))
     enforce_conflict = bool(getattr(contract, "enforce_modality_conflict", True))
 
     usable, _ = filter_contract_claims(claims, contract, current_step=current_step)
-    geo_vals, vis_vals, _geo_roots, vis_clear_roots = _values_by_class(usable)
+    geo_vals, vis_vals, _geo_roots, vis_clear_roots, side_vis_clear_roots = _values_by_class(
+        usable
+    )
 
     gaps = list(base.belief_gaps)
     reasons = list(base.reasons)
@@ -88,6 +112,20 @@ def evaluate_corridor_contract_v7(
                 "schema_version": "purify.robotics.belief-gap/v1",
                 "reason": "missing_vision_root",
                 "detail": "policy requires at least one vision clear capture root",
+            }
+        )
+
+    if require_side and len(side_vis_clear_roots) < 1:
+        admitted = False
+        reasons.append("missing_side_view_vision_root")
+        gaps.append(
+            {
+                "schema_version": "purify.robotics.belief-gap/v1",
+                "reason": "missing_side_view_vision_root",
+                "detail": (
+                    "policy requires an independent scout/side-view vision clear "
+                    "root (carrier initial front alone is not enough)"
+                ),
             }
         )
 

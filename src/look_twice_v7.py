@@ -32,6 +32,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--vision-checkpoint", type=Path, default=None)
     parser.add_argument("--no-rgbd-claims", action="store_true")
+    parser.add_argument(
+        "--repair-required",
+        action="store_true",
+        help=(
+            "Capability mode: require independent scout/side-view vision clear "
+            "root so initial carrier front alone cannot admit (both active and "
+            "passive). Default on for purify-active-vision; use this flag to "
+            "apply the same contract to purify-passive for paired matrices."
+        ),
+    )
     args = parser.parse_args(argv)
 
     scenario = sample_v6_scenario(args.profile, args.seed)
@@ -42,6 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         prefer_rgbd_claims=not args.no_rgbd_claims,
         vision_backend=args.vision_backend,
         vision_checkpoint=str(args.vision_checkpoint) if args.vision_checkpoint else None,
+        repair_required=bool(args.repair_required),
     )
 
     if args.runtime == "synthetic":
@@ -77,6 +88,7 @@ def main(argv: list[str] | None = None) -> int:
         f"v7 finished policy={args.policy} profile={args.profile} seed={args.seed} "
         f"mission={m['mission_success']} unsafe={m['unsafe_crossing']} "
         f"route={m.get('route_mode')} repair_ok={m.get('repair_success')} "
+        f"init_deny={m.get('initial_gate_denied')} chain={m.get('repair_chain_complete')} "
         f"vision={m.get('vision_backend')} v_clear={m.get('vision_clear_proposals')} "
         f"v_blocked={m.get('vision_blocked_proposals')} "
         f"tension={m.get('modality_tension_hint')} "

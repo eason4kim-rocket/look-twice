@@ -132,6 +132,47 @@ class V7VisionGateTests(unittest.TestCase):
         self.assertFalse(dec.admitted)
         self.assertIn("missing_vision_root", dec.reasons)
 
+    def test_initial_vision_alone_not_side_root(self) -> None:
+        contract = CorridorContractV7(
+            corridor_id="corridor_a",
+            evidence_age_limit=2000,
+            min_distinct_capture_roots=2,
+            require_vision_clear_root=True,
+            require_side_view_vision_root=True,
+        )
+        claims = [
+            _geo(value="clear", capture="g1"),
+            _geo(value="clear", capture="g2"),
+            _vis(
+                value="clear",
+                capture="vision-initial-carrier-0-abcd",
+                observer="carrier",
+            ),
+        ]
+        dec = evaluate_corridor_contract_v7(claims, contract, current_step=20)
+        self.assertFalse(dec.admitted)
+        self.assertIn("missing_side_view_vision_root", dec.reasons)
+
+    def test_side_view_vision_root_can_admit(self) -> None:
+        contract = CorridorContractV7(
+            corridor_id="corridor_a",
+            evidence_age_limit=2000,
+            min_distinct_capture_roots=2,
+            require_vision_clear_root=True,
+            require_side_view_vision_root=True,
+        )
+        claims = [
+            _geo(value="clear", capture="g1"),
+            _geo(value="clear", capture="g2"),
+            _vis(
+                value="clear",
+                capture="vision-side-scout-1-efgh",
+                observer="scout",
+            ),
+        ]
+        dec = evaluate_corridor_contract_v7(claims, contract, current_step=20)
+        self.assertTrue(dec.admitted)
+
     def test_proxy_deterministic(self) -> None:
         rgb = synthetic_rgb_for_label("blocked", seed=7)
         a = propose_vision(rgb, backend="heuristic_rgb_proxy")
@@ -197,6 +238,32 @@ class V7ActiveRepairEpisodeTests(unittest.TestCase):
         self.assertTrue(m["repair_success"])
         self.assertEqual(m["route_mode"], "direct")
         self.assertGreaterEqual(int(m.get("vision_claim_count") or 0), 1)
+        self.assertTrue(m.get("initial_gate_denied"))
+        self.assertTrue(m.get("scout_viewpoint_changed"))
+        self.assertTrue(m.get("new_capture_root_added"))
+        self.assertTrue(m.get("repair_chain_complete"))
+
+    def test_passive_repair_required_detours_after_deny(self) -> None:
+        from v6_scenario import sample_v6_scenario
+        from v7_episode import V7EpisodeConfig, run_v7_episode
+
+        scenario = sample_v6_scenario("independent-noise", 95000)
+        result = run_v7_episode(
+            scenario=scenario,
+            config=V7EpisodeConfig(
+                policy="purify-passive",
+                vision_backend="heuristic_rgb_proxy",
+                inject_vision=True,
+                repair_required=True,
+            ),
+            runtime=None,
+        )
+        m = result["metrics"]
+        self.assertFalse(m["unsafe_crossing"])
+        self.assertTrue(m.get("initial_gate_denied"))
+        self.assertFalse(m.get("repair_attempted"))
+        self.assertEqual(m["route_mode"], "detour")
+        self.assertFalse(m.get("repair_success"))
 
 
 if __name__ == "__main__":

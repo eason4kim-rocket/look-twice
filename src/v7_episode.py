@@ -30,17 +30,26 @@ class V7EpisodeConfig(V6EpisodeConfig):
     vision_backend: str = "heuristic_rgb_proxy"
     vision_checkpoint: str | None = None
     require_vision_clear_root: bool = False
+    require_side_view_vision_root: bool = False
     enforce_modality_conflict: bool = True
     inject_vision: bool = True
+    # Capability mode: initial carrier front alone cannot admit; scout side
+    # vision required. Enable for both active and passive in paired matrices.
+    repair_required: bool = False
 
     def __post_init__(self) -> None:
         # Allow v7 policy before parent check.
         if self.policy == "purify-active-vision":
             self.require_vision_clear_root = True
+            self.require_side_view_vision_root = True
             # Temporarily map to purify-active for v6 runner fields.
             object.__setattr__(self, "_v6_policy", "purify-active")
         else:
             object.__setattr__(self, "_v6_policy", self.policy)
+        if self.repair_required:
+            self.require_vision_clear_root = True
+            self.require_side_view_vision_root = True
+            self.inject_vision = True
         if self.policy not in V7_POLICIES:
             raise ValueError(f"unsupported v7 policy: {self.policy}")
 
@@ -96,7 +105,11 @@ def run_v7_episode(
     v6_policy = "purify-active" if config.policy == "purify-active-vision" else config.policy
     require_vis = config.require_vision_clear_root or (
         config.policy == "purify-active-vision"
-    )
+    ) or bool(config.repair_required)
+    require_side = config.require_side_view_vision_root or (
+        config.policy == "purify-active-vision"
+    ) or bool(config.repair_required)
+    inject = config.inject_vision or bool(config.repair_required)
     v6_cfg = V6EpisodeConfig(
         policy=v6_policy,
         ttl_steps=config.ttl_steps,
@@ -105,10 +118,11 @@ def run_v7_episode(
         device=config.device,
         prefer_rgbd_claims=config.prefer_rgbd_claims,
         learned_checkpoint=config.learned_checkpoint,
-        vision_enabled=config.inject_vision,
+        vision_enabled=inject,
         vision_backend=config.vision_backend,
         vision_checkpoint=config.vision_checkpoint,
         require_vision_clear_root=require_vis,
+        require_side_view_vision_root=require_side,
         enforce_modality_conflict=config.enforce_modality_conflict,
         use_v7_contract=True,
     )
@@ -125,6 +139,8 @@ def run_v7_episode(
         "policy": config.policy,
         "vision_backend": config.vision_backend,
         "require_vision_clear_root": require_vis,
+        "require_side_view_vision_root": require_side,
+        "repair_required": bool(config.repair_required),
         "enforce_modality_conflict": config.enforce_modality_conflict,
         "use_v7_contract": True,
     }
@@ -132,12 +148,18 @@ def run_v7_episode(
     m = result["metrics"]
     m["policy"] = config.policy
     m["vision_backend"] = config.vision_backend
+    m["repair_required"] = bool(config.repair_required or require_side)
     m["vision_claim_count"] = len(vision_audits)
     m["vision_blocked_proposals"] = sum(
         1 for v in vision_audits if v.get("value") == "blocked"
     )
     m["vision_clear_proposals"] = sum(
         1 for v in vision_audits if v.get("value") == "clear"
+    )
+    m["vision_side_clear_proposals"] = sum(
+        1
+        for v in vision_audits
+        if v.get("value") == "clear" and v.get("vision_root_kind") == "side"
     )
     m["modality_conflict_events"] = sum(
         1
@@ -146,6 +168,16 @@ def run_v7_episode(
     )
     m["modality_tension_hint"] = bool(
         m.get("route_mode") == "direct" and m["vision_blocked_proposals"] > 0
+    )
+    # Capability chain flag: deny → viewpoint change → new root → repair → direct.
+    m["repair_chain_complete"] = bool(
+        m.get("initial_gate_denied")
+        and m.get("repair_attempted")
+        and m.get("scout_viewpoint_changed")
+        and m.get("new_capture_root_added")
+        and m.get("repair_success")
+        and m.get("route_mode") == "direct"
+        and not m.get("unsafe_crossing")
     )
     return result
 

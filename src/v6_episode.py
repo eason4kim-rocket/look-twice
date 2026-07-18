@@ -32,12 +32,32 @@ def _evaluate_gate(claims, contract, *, current_step: int, config: "V6EpisodeCon
                 communication_delay_limit=contract.communication_delay_limit,
                 calibration_id=contract.calibration_id,
                 require_vision_clear_root=config.require_vision_clear_root,
+                require_side_view_vision_root=config.require_side_view_vision_root,
                 enforce_modality_conflict=config.enforce_modality_conflict,
             )
         return evaluate_corridor_contract_v7(
             claims, contract, current_step=current_step
         )
     return evaluate_corridor_contract(claims, contract, current_step=current_step)
+
+
+def _vision_root_kind(agent_id: str, viewpoint_name: str, capture_index: int) -> str:
+    """Tag vision capture roots as initial vs side for repair-required contracts."""
+    name = str(viewpoint_name or "")
+    if (
+        capture_index <= 0
+        or "initial" in name
+        or name.endswith("_front")
+        or "recapture" in name
+        or name.startswith("carrier_")
+    ):
+        # Carrier first look / same-view recapture is not independent side evidence.
+        if agent_id == "scout" or name.startswith("corridor_") or "/left" in name or "/right" in name:
+            return "side"
+        return "initial"
+    if agent_id == "scout" or name.startswith("corridor_") or name.startswith("scout_"):
+        return "side"
+    return "side" if capture_index > 0 else "initial"
 from v6_motion import MultiAgentKinematicRuntime, build_runtime_from_scenario
 from v6_repair import choose_evidence_action
 from v6_scenario import CARRIER_ID, PAYLOAD_ID, SCOUT_ID, V6ScenarioSample
@@ -86,6 +106,7 @@ class V6EpisodeConfig:
     vision_backend: str = "heuristic_rgb_proxy"
     vision_checkpoint: str | None = None
     require_vision_clear_root: bool = False
+    require_side_view_vision_root: bool = False
     enforce_modality_conflict: bool = True
     use_v7_contract: bool = False
 
@@ -273,6 +294,10 @@ def run_v6_episode(
     route_mode = "none"
     repair_attempted = False
     repair_success = False
+    initial_gate_denied = False
+    initial_gate_reasons: list[str] = []
+    roots_after_initial: set[str] = set()
+    viewpoints_sequence: list[str] = []
 
     policy = config.policy
     is_naive = policy == "naive"
@@ -423,13 +448,17 @@ def run_v6_episode(
                     "vision_source": vision_source,
                 },
             )
+            root_kind = _vision_root_kind(agent_id, viewpoint_name, capture_index)
             vclaim = vision_proposal_to_claim_v2(
                 prop,
                 agent_id=agent_id,
                 corridor_id=corridor_id,
                 step=runtime.current_step,
                 ttl=config.ttl_steps,
-                capture_root_id=f"vision-{agent_id}-{capture_index}-{prop.input_sha256[:10]}",
+                capture_root_id=(
+                    f"vision-{root_kind}-{agent_id}-{capture_index}-"
+                    f"{prop.input_sha256[:10]}"
+                ),
             )
             new_claims = list(new_claims) + [vclaim]
             rgbd_audits.append(
@@ -439,12 +468,14 @@ def run_v6_episode(
                     "observer_agent_id": agent_id,
                     "corridor_id": corridor_id,
                     "viewpoint": viewpoint_name,
+                    "vision_root_kind": root_kind,
                     **prop.to_dict(),
                 }
             )
         capture_index += 1
         observations += 1
         visited.add(viewpoint_name)
+        viewpoints_sequence.append(str(viewpoint_name))
         # Also mark fixed action-set aliases so planner does not re-pick same side.
         if viewpoint_name.startswith("corridor_a/"):
             visited.add("scout_a_" + viewpoint_name.split("/", 1)[1])
@@ -462,6 +493,9 @@ def run_v6_episode(
         0.55,
         action_kind="initial",
     )
+    roots_after_initial = {
+        c.capture_root_id for c in claims if c.has_known_measurement_root
+    }
 
     def evaluate_all() -> dict[str, Any]:
         decisions = {}
@@ -475,6 +509,12 @@ def run_v6_episode(
 
     decisions = evaluate_all()
     admitted_any = any(d.admitted for d in decisions.values())
+    initial_gate_denied = bool(requires_gate and not admitted_any)
+    if initial_gate_denied:
+        # Union of deny reasons on the first post-initial evaluation.
+        for d in decisions.values():
+            initial_gate_reasons.extend(list(d.reasons))
+        initial_gate_reasons = list(dict.fromkeys(initial_gate_reasons))
 
     # Active repair loop
     if requires_gate and not admitted_any and allows_repair:
@@ -841,6 +881,30 @@ def run_v6_episode(
     env["communication"] = inbox.stats()
     env["device"] = config.device
 
+    final_roots = {
+        c.capture_root_id for c in claims if c.has_known_measurement_root
+    }
+    new_capture_root_added = bool(final_roots - roots_after_initial)
+    scout_viewpoints = [
+        v
+        for v in viewpoints_sequence
+        if v != "carrier_initial_front"
+        and (
+            v.startswith("corridor_")
+            or v.startswith("scout_")
+            or "/left" in v
+            or "/right" in v
+        )
+    ]
+    scout_viewpoint_changed = len(scout_viewpoints) >= 1
+    vision_sources = sorted(
+        {
+            str(a.get("vision_source"))
+            for a in rgbd_audits
+            if a.get("kind") == "vision_proposal_v7" and a.get("vision_source")
+        }
+    )
+
     result = {
         "schema_version": EPISODE_SCHEMA,
         "configuration": {**asdict(config), "sensor_version": SENSOR_VERSION_V6},
@@ -869,14 +933,20 @@ def run_v6_episode(
             "observation_count": observations,
             "replan_count": replan_count,
             "claim_count": len(claims),
-            "distinct_capture_roots": len(
-                {c.capture_root_id for c in claims if c.has_known_measurement_root}
-            ),
+            "distinct_capture_roots": len(final_roots),
             "elapsed_seconds": elapsed,
             "outcome": outcome,
             "policy": policy,
             "claims_mode": claims_mode,
             "device": config.device,
+            # Repair-required capability telemetry (v7 Genesis paired).
+            "initial_gate_denied": initial_gate_denied,
+            "initial_gate_reasons": list(initial_gate_reasons),
+            "scout_viewpoint_changed": scout_viewpoint_changed,
+            "scout_viewpoints": scout_viewpoints,
+            "viewpoints_sequence": list(viewpoints_sequence),
+            "new_capture_root_added": new_capture_root_added,
+            "vision_sources": vision_sources,
         },
         "oracle": {"scenario": scenario.oracle_context},
         "outcome": {
