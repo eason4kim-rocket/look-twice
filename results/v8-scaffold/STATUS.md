@@ -2,18 +2,30 @@
 
 **Started:** 2026-07-19  
 **Role:** Independent Challenger — V7 remains frozen submission baseline  
-**Branch tip at scaffold:** `87e54be` (+ V8 commits)
+**Scaffold commits:** `bdd93a0` (scaffold), `9f48acb` (ROCm feasibility fix)
 
 ## Day 1 checklist
 
 - [x] V7 freeze pointer (`docs/V7_BASELINE_FREEZE.md`)
 - [x] V8 design lock (`docs/V8_DESIGN.md`)
-- [x] `SpatialRGBDModel` DeepLabV3-R50 dual-stream skeleton
+- [x] `SpatialRGBDModel` DeepLabV3-R50 multi-task skeleton
 - [x] ROCm feasibility script
 - [x] 50-world preflight collector (seeds 100000–100049)
 - [x] Unit tests (CPU)
-- [ ] ROCm feasibility report on W7900D
-- [ ] 50-world preflight complete + summary
+- [x] ROCm feasibility report (`results/v8-scaffold/feasibility_report.json`)
+- [ ] 50-world preflight complete (GPU job running: `logs/v8-preflight50.pid`)
+
+### ROCm feasibility notes
+
+| Metric | Value |
+|--------|------:|
+| backend | deeplabv3_resnet50 |
+| params | ~39.8M |
+| train bs=8 | ~1.5 img/s |
+| eval bs=1 p95 | ~195 ms |
+| p95 &lt; 50 ms goal | **not yet** (smaller input / AMP export later) |
+
+DeepLab forward+backward works on ROCm 7.2 / Torch 2.9. Train uses bs≥2 (ASPP BN).
 
 ## Non-negotiables
 
