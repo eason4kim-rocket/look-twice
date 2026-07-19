@@ -80,45 +80,57 @@ def main() -> int:
         blocked = (torch.rand(bs, device=device) > 0.5).float()
         vis = torch.rand(bs, device=device)
 
+        # DeepLab ASPP BatchNorm requires N>1 in train mode — train only for bs>=2.
+        do_train = bs >= 2
+        if do_train:
+            model.train()
+        else:
+            model.eval()
+
         # Warmup
         for _ in range(3):
             with torch.autocast(device_type="cuda" if amp else "cpu", enabled=amp):
                 out = model(x, geom)
-                loss, _ = multitask_loss(
-                    out,
-                    seg_target=seg_t,
-                    blocked_target=blocked,
-                    visibility_target=vis,
-                )
-            opt.zero_grad(set_to_none=True)
-            if amp:
-                scaler.scale(loss).backward()
-                scaler.step(opt)
-                scaler.update()
-            else:
-                loss.backward()
-                opt.step()
+                if do_train:
+                    loss, _ = multitask_loss(
+                        out,
+                        seg_target=seg_t,
+                        blocked_target=blocked,
+                        visibility_target=vis,
+                    )
+            if do_train:
+                opt.zero_grad(set_to_none=True)
+                if amp:
+                    scaler.scale(loss).backward()
+                    scaler.step(opt)
+                    scaler.update()
+                else:
+                    loss.backward()
+                    opt.step()
 
         if str(device).startswith("cuda"):
             torch.cuda.synchronize()
+        parts = {}
         t0 = time.perf_counter()
         for _ in range(args.batches):
             with torch.autocast(device_type="cuda" if amp else "cpu", enabled=amp):
                 out = model(x, geom)
-                loss, parts = multitask_loss(
-                    out,
-                    seg_target=seg_t,
-                    blocked_target=blocked,
-                    visibility_target=vis,
-                )
-            opt.zero_grad(set_to_none=True)
-            if amp:
-                scaler.scale(loss).backward()
-                scaler.step(opt)
-                scaler.update()
-            else:
-                loss.backward()
-                opt.step()
+                if do_train:
+                    loss, parts = multitask_loss(
+                        out,
+                        seg_target=seg_t,
+                        blocked_target=blocked,
+                        visibility_target=vis,
+                    )
+            if do_train:
+                opt.zero_grad(set_to_none=True)
+                if amp:
+                    scaler.scale(loss).backward()
+                    scaler.step(opt)
+                    scaler.update()
+                else:
+                    loss.backward()
+                    opt.step()
         if str(device).startswith("cuda"):
             torch.cuda.synchronize()
         elapsed = time.perf_counter() - t0
@@ -127,11 +139,13 @@ def main() -> int:
         row = {
             "batch_size": bs,
             "batches": args.batches,
+            "mode": "train" if do_train else "eval_forward",
             "elapsed_s": elapsed,
             "images_per_s": ips,
             "ms_per_batch": ms_per,
             "last_loss": parts,
             "seg_out_shape": list(out["seg_logits"].shape),
+            "backend": getattr(model, "backend", "unknown"),
         }
         report["batch_results"].append(row)
         print(json.dumps(row), flush=True)
