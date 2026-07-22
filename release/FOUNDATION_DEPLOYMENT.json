@@ -1,0 +1,15 @@
+{
+  "schema_version": "look-twice.foundation-deployment/v1",
+  "status": "PRIVATE_PREVIEW_DEPLOYED",
+  "site_project_id": "appgprj_6a606597840c81918d8a1f915c6e9a29",
+  "site_version_id": "appgprj_6a606597840c81918d8a1f915c6e9a29~appgver_06bd69925f548191bb6cf18a31b44fd7",
+  "site_version_number": 1,
+  "deployment_id": "appgdep_6a6066fe5e90819192a8445b68466db0",
+  "source_commit": "2ec7ff5483882a227bd896c100a860079c946644",
+  "archive_sha256": "275595ace2a7cbc178fa49e6efe666ef81aae6c41cb05647553fa14940099a25",
+  "url": "https://look-twice-evidence.jason-tuantuan1319.chatgpt.site",
+  "access": "owner-only private preview",
+  "gpu_required": false,
+  "genesis_required": false,
+  "purify_live_required": false
+}
