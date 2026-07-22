@@ -1,0 +1,34 @@
+{
+  "schema_version": "look-twice.recorded-media/v1",
+  "frame_count": 1,
+  "frames": [
+    {
+      "frame_id": "frame-1",
+      "viewpoint": "carrier_initial_front",
+      "corridor_id": "corridor_a",
+      "capture_step": 167,
+      "rgb_array_sha256": "50a4887bb68f20e70fa75348ac4d1e05b31288e680dd7975d0e9d940a45748cc",
+      "depth_array_sha256": "90223dbf2de5c3a3386832a1ded0394ebbc01a22c036e3e8da6285dab286f912",
+      "media_sha256": {
+        "rgb": "3bb392a127486e36211f6a852e3577c5358aace1eecb8fcf17969cc4b59960a7",
+        "depth": "3da99bf78d7a8483a49c98bfc140ae4c5f5826eaadb3148174c8f87a65ac763f",
+        "corridor_mask": "1587b1926d000469db8e106da9229daf3cd0f6844e59e8898c6bf0e264352ab9"
+      }
+    }
+  ],
+  "behavior_signature": {
+    "route_mode": "detour",
+    "repair_success": false,
+    "unsafe_crossing": false,
+    "selected_corridor": null,
+    "vision_values": [
+      "clear"
+    ],
+    "vision_viewpoints": [
+      "carrier_initial_front"
+    ],
+    "effective_admit_count": 0
+  },
+  "reference_behavior_match": true,
+  "runtime_inputs_unchanged": true
+}

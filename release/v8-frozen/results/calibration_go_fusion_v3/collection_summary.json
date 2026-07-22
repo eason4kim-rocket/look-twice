@@ -1,0 +1,18 @@
+{
+  "schema": "go-fusion-v3-cal-collection/v1",
+  "at_utc": "2026-07-22T03:37:12.872690+00:00",
+  "seed_range": [
+    105000,
+    105199
+  ],
+  "n_corridor_rows": 400,
+  "n_hard_ok": 400,
+  "n_blocked": 203,
+  "n_clear": 197,
+  "empty_used_claim_ids": 0,
+  "need_each": 150,
+  "passed_coverage_floor": true,
+  "passed_empty_eq_0": true,
+  "no_v2_reuse": true,
+  "no_default_0_5": true
+}

@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "bilingual_keys_present": true,
+    "candidate_driven_manifest": true,
+    "cpu_replay_runtime": true,
+    "docker_files_present": true,
+    "docker_running": true,
+    "four_routes_built": true,
+    "frozen_sha_guard": true,
+    "neutral_schemas_present": true,
+    "public_data_scrubbed": true,
+    "recorded_rgb_depth_mask": true,
+    "recording_preserved_behavior": true,
+    "two_replays": true
+  },
+  "default_candidate_id": "v8-frozen",
+  "errors": [],
+  "frozen_import_manifest_sha256": "ec071dc90bf706eaec13671d44bbd63f204c32935d3a5ff0906e641fc223e5f2",
+  "passed": true,
+  "replay_manifest_sha256": "5b886291ab4977d5df08c24b4be898b4baacd361fb2bcb6333686f0f0608b829",
+  "schema_version": "look-twice.competition-foundation-ready/v1",
+  "status": "COMPETITION_FOUNDATION_READY",
+  "v9_integration_boundary": "add ReleaseProfile + EpisodeBundle adapter only"
+}

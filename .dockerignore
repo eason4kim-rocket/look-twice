@@ -1,0 +1,12 @@
+.git
+**/.DS_Store
+showcase/node_modules
+showcase/.next
+showcase/.vinext
+showcase/dist
+showcase/.wrangler
+results
+outputs
+release/v8-frozen/episodes
+release/v8-frozen/results
+release/v8-frozen/artifacts

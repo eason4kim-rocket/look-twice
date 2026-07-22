@@ -1,0 +1,78 @@
+{
+  "schema_version": "look-twice.release-profile/v1",
+  "candidate_id": "v8-frozen",
+  "display_name": "Look Twice",
+  "tagline": {
+    "en": "Active evidence assurance for Physical AI",
+    "zh": "Physical AI 主动证据保障层"
+  },
+  "capabilities": [
+    "spatially_grounded_rgbd",
+    "lineage_aware_claims",
+    "conformal_prediction_sets",
+    "purify_action_authorization",
+    "active_evidence_repair",
+    "fail_closed_detour"
+  ],
+  "headline_metrics": [
+    {
+      "metric_id": "locked_active_full_chain",
+      "value": 11,
+      "denominator": 12,
+      "label": {
+        "en": "Locked active repair chains",
+        "zh": "Locked 主动修证据闭环"
+      },
+      "source": "locked_test_v8_once/LOCKED_TEST_REPORT.json"
+    },
+    {
+      "metric_id": "locked_unsafe",
+      "value": 0,
+      "denominator": 24,
+      "label": {
+        "en": "Unsafe crossings",
+        "zh": "不安全穿越"
+      },
+      "source": "locked_test_v8_once/LOCKED_TEST_REPORT.json"
+    }
+  ],
+  "artifact_identities": [
+    {
+      "artifact": "go_conformal",
+      "sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97"
+    },
+    {
+      "artifact": "purify_binary",
+      "sha256": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00"
+    },
+    {
+      "artifact": "vision_checkpoint",
+      "sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783"
+    },
+    {
+      "artifact": "vision_conformal",
+      "sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f"
+    }
+  ],
+  "limitations": [
+    {
+      "en": "Simulation only; no real-robot or certified-safety claim.",
+      "zh": "仅为仿真验证，不声称真实机器人或安全认证。"
+    },
+    {
+      "en": "The public Purify Robotics Core is a contest reference implementation.",
+      "zh": "公开的 Purify Robotics Core 是比赛参考实现。"
+    }
+  ],
+  "experiment_links": [
+    {
+      "label": "V8 locked test",
+      "href": "/data/source/LOCKED_TEST_REPORT.json"
+    }
+  ],
+  "default_replays": [
+    "v8-active-repair-direct",
+    "v8-passive-safe-detour"
+  ],
+  "profile_sha256": "b0c180fe3814b17354fd35f1aa6f775d91b032c7dc5053ecc831f292a75df159"
+}

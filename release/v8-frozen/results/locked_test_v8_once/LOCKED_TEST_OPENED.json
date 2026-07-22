@@ -1,0 +1,22 @@
+{
+  "tag": "LOCKED_TEST_OPENED",
+  "schema_version": "look-twice.v8-locked-test-opened/v1",
+  "opened_at_utc": "2026-07-22T04:50:58.716504+00:00",
+  "opened_unix": 1784695858.716526,
+  "policy": "one_shot_no_retune_no_refit",
+  "offline_split": "locked_test",
+  "offline_seed_range": [
+    102100,
+    102499
+  ],
+  "live_seed_range": [
+    102100,
+    102111
+  ],
+  "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "vision_conformal_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+  "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+  "purify_binary_sha256": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00",
+  "V8_RUNTIME_FROZEN_ref": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/V8_RUNTIME_FROZEN.json",
+  "note": "First and only V8 locked evaluation under freeze discipline."
+}

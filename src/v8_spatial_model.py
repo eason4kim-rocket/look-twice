@@ -17,8 +17,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-PREPROCESSING_VERSION = "v8-spatial-rgbd-deeplabv3r50-v1"
-MODEL_ID = "look-twice-v8-vision/spatial_rgbd_deeplabv3_r50/1"
+PREPROCESSING_VERSION = "v8-spatial-rgbd-deeplabv3r50-maskedpool-v2"
+MODEL_ID = "look-twice-v8-vision/spatial_rgbd_deeplabv3_r50_masked/2"
 INPUT_SIZE = 256
 GEOM_DIM = 12  # xyz(3)+yaw_sin_cos(2)+range(1)+corridor_onehot(2)+pad
 
@@ -136,9 +136,102 @@ class _LightweightRGBSeg(nn.Module):
         return F.interpolate(logits, size=(h, w), mode="bilinear", align_corners=False)
 
 
-class SpatialRGBDModel(nn.Module):
-    """DeepLabV3-R50 RGB + depth/mask fusion multi-task head.
+class SpatialRGBDModelGlobalPool(nn.Module):
+    """LEGACY Day3 global-pool model (NO-GO). Kept only to load frozen best.pt for RCA.
 
+    Do not train new models with this class.
+    """
+
+    def __init__(
+        self,
+        *,
+        pretrained_backbone: bool = False,
+        force_lightweight: bool = False,
+    ) -> None:
+        super().__init__()
+        self.backend = "lightweight"
+        self.rgb_seg = None
+        self.rgb_light: nn.Module | None = None
+        self.uses_masked_pooling_only = False
+        if not force_lightweight:
+            try:
+                from torchvision.models.segmentation import deeplabv3_resnet50
+
+                weights = "DEFAULT" if pretrained_backbone else None
+                try:
+                    self.rgb_seg = deeplabv3_resnet50(weights=weights, num_classes=21)
+                except Exception:
+                    self.rgb_seg = deeplabv3_resnet50(weights=None, num_classes=21)
+                self.rgb_seg.classifier = nn.Sequential(
+                    self.rgb_seg.classifier[0],
+                    self.rgb_seg.classifier[1],
+                    self.rgb_seg.classifier[2],
+                    self.rgb_seg.classifier[3],
+                    nn.Conv2d(256, 1, 1),
+                )
+                if (
+                    hasattr(self.rgb_seg, "aux_classifier")
+                    and self.rgb_seg.aux_classifier is not None
+                ):
+                    self.rgb_seg.aux_classifier = None
+                self.backend = "deeplabv3_resnet50"
+            except Exception:
+                self.rgb_seg = None
+        if self.rgb_seg is None:
+            self.rgb_light = _LightweightRGBSeg()
+            self.backend = "lightweight"
+        self.depth_enc = DepthEncoder(in_ch=2)
+        self.geom_mlp = nn.Sequential(
+            nn.Linear(GEOM_DIM, 64),
+            nn.ReLU(inplace=True),
+            nn.Linear(64, 64),
+            nn.ReLU(inplace=True),
+        )
+        self.global_pool = nn.AdaptiveAvgPool2d(1)
+        self.fuse = nn.Sequential(
+            nn.Linear(256 + 128 + 64, 256),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.1),
+        )
+        self.head_blocked = nn.Linear(256, 1)
+        self.head_visibility = nn.Linear(256, 1)
+        self.head_quality = nn.Linear(256, 1)
+        self.head_uncertainty = nn.Linear(256, 1)
+        self._feat_proj = nn.Conv2d(1, 256, 1)
+
+    def _rgb_seg_logits(self, rgb: torch.Tensor) -> torch.Tensor:
+        if self.rgb_seg is not None:
+            return self.rgb_seg(rgb)["out"]
+        assert self.rgb_light is not None
+        return self.rgb_light(rgb)
+
+    def forward(
+        self, x5: torch.Tensor, geom: torch.Tensor
+    ) -> dict[str, torch.Tensor]:
+        rgb = x5[:, 0:3]
+        depth_mask = x5[:, 3:5]
+        seg_out = self._rgb_seg_logits(rgb)
+        depth_feat = self.depth_enc(depth_mask)
+        depth_g = self.global_pool(depth_feat).flatten(1)
+        seg_g = self.global_pool(self._feat_proj(torch.sigmoid(seg_out))).flatten(1)
+        g = self.geom_mlp(geom)
+        fused = self.fuse(torch.cat([seg_g, depth_g, g], dim=1))
+        p_logit = self.head_blocked(fused).squeeze(-1)
+        return {
+            "seg_logits": seg_out,
+            "p_blocked_logit": p_logit,
+            "p_blocked": torch.sigmoid(p_logit),
+            "visibility": torch.sigmoid(self.head_visibility(fused)).squeeze(-1),
+            "quality": torch.sigmoid(self.head_quality(fused)).squeeze(-1),
+            "uncertainty": torch.sigmoid(self.head_uncertainty(fused)).squeeze(-1),
+            "backend": self.backend,
+        }
+
+
+class SpatialRGBDModel(nn.Module):
+    """DeepLabV3-R50 RGB-D with explicit corridor masked pooling for traversability.
+
+    p_blocked reads only target-region features (no whole-image global shortcut).
     Falls back to a small conv encoder if torchvision is not installed (unit tests).
     """
 
@@ -180,30 +273,50 @@ class SpatialRGBDModel(nn.Module):
             self.rgb_light = _LightweightRGBSeg()
             self.backend = "lightweight"
 
-        self.depth_enc = DepthEncoder(in_ch=2)  # depth + corridor mask
+        # Depth encoder sees depth only (mask applied via explicit masked pooling).
+        self.depth_enc = DepthEncoder(in_ch=1)
         self.geom_mlp = nn.Sequential(
-            nn.Linear(GEOM_DIM, 64),
+            nn.Linear(GEOM_DIM, 32),
             nn.ReLU(inplace=True),
-            nn.Linear(64, 64),
+            nn.Linear(32, 32),
             nn.ReLU(inplace=True),
         )
-        self.global_pool = nn.AdaptiveAvgPool2d(1)
-        self.fuse = nn.Sequential(
-            nn.Linear(256 + 128 + 64, 256),
+        # Feature proj on obstacle probability map (still masked-pooled, never global).
+        self._feat_proj = nn.Conv2d(1, 128, 1)
+        # Traversability reads ONLY region-conditioned features:
+        #   masked RGB-seg feat (128) + depth_feat masked (128) + region scalars (4) + geom (32)
+        trav_in = 128 + 128 + 4 + 32
+        self.trav_fuse = nn.Sequential(
+            nn.Linear(trav_in, 128),
             nn.ReLU(inplace=True),
             nn.Dropout(0.1),
+            nn.Linear(128, 64),
+            nn.ReLU(inplace=True),
         )
-        self.head_blocked = nn.Linear(256, 1)
-        self.head_visibility = nn.Linear(256, 1)
-        self.head_quality = nn.Linear(256, 1)
-        self.head_uncertainty = nn.Linear(256, 1)
-        self._feat_proj = nn.Conv2d(1, 256, 1)
+        self.head_blocked = nn.Linear(64, 1)
+        self.head_visibility = nn.Linear(64, 1)
+        self.head_quality = nn.Linear(64, 1)
+        self.head_uncertainty = nn.Linear(64, 1)
+        # Explicitly no whole-image global path for p_blocked.
+        self.uses_masked_pooling_only = True
 
     def _rgb_seg_logits(self, rgb: torch.Tensor) -> torch.Tensor:
         if self.rgb_seg is not None:
             return self.rgb_seg(rgb)["out"]
         assert self.rgb_light is not None
         return self.rgb_light(rgb)
+
+    @staticmethod
+    def _masked_mean(
+        feat: torch.Tensor, mask: torch.Tensor, eps: float = 1e-6
+    ) -> torch.Tensor:
+        """feat (B,C,H,W), mask (B,1,H,W) → (B,C) mean over masked pixels."""
+        if mask.shape[-2:] != feat.shape[-2:]:
+            mask = F.interpolate(mask, size=feat.shape[-2:], mode="nearest")
+        w = mask.clamp(0, 1)
+        num = (feat * w).sum(dim=(2, 3))
+        den = w.sum(dim=(2, 3)).clamp_min(eps)
+        return num / den
 
     def forward(
         self,
@@ -213,15 +326,46 @@ class SpatialRGBDModel(nn.Module):
         """
         x5: (B,5,H,W) = RGB(3)+depth(1)+mask(1)
         geom: (B,GEOM_DIM)
+
+        p_blocked is computed from target-corridor masked features only.
         """
         rgb = x5[:, 0:3]
-        depth_mask = x5[:, 3:5]
+        depth = x5[:, 3:4]
+        mask = x5[:, 4:5]
         seg_out = self._rgb_seg_logits(rgb)
-        depth_feat = self.depth_enc(depth_mask)
-        depth_g = self.global_pool(depth_feat).flatten(1)
-        seg_g = self.global_pool(self._feat_proj(torch.sigmoid(seg_out))).flatten(1)
+        if seg_out.shape[-2:] != mask.shape[-2:]:
+            mask_s = F.interpolate(mask, size=seg_out.shape[-2:], mode="nearest")
+            depth_s = F.interpolate(
+                depth, size=seg_out.shape[-2:], mode="bilinear", align_corners=False
+            )
+        else:
+            mask_s = mask
+            depth_s = depth
+
+        seg_prob = torch.sigmoid(seg_out)
+        # Mask obstacle logits/probs to target corridor only (for pooling).
+        seg_masked = seg_prob * mask_s
+        feat = self._feat_proj(seg_masked)
+        feat_m = self._masked_mean(feat, mask_s)
+
+        depth_feat = self.depth_enc(depth)  # (B,128,16,16) typically
+        # resize mask to depth_feat grid
+        depth_m = self._masked_mean(depth_feat, mask)
+
+        # Region scalars: obstacle mass, mean depth, mask coverage, depth-valid proxy
+        denom = mask_s.sum(dim=(2, 3)).clamp_min(1e-6)
+        region_obst = (seg_prob * mask_s).sum(dim=(2, 3)) / denom  # (B,1)
+        region_depth = (depth_s * mask_s).sum(dim=(2, 3)) / denom
+        mask_frac = mask_s.mean(dim=(2, 3))  # (B,1)
+        # depth validity ≈ fraction of mask with depth > small threshold
+        valid = ((depth_s > 1e-3).float() * mask_s).sum(dim=(2, 3)) / denom
+        scalars = torch.cat(
+            [region_obst, region_depth, mask_frac, valid], dim=1
+        )  # (B,4)
+
         g = self.geom_mlp(geom)
-        fused = self.fuse(torch.cat([seg_g, depth_g, g], dim=1))
+        trav_in = torch.cat([feat_m, depth_m, scalars, g], dim=1)
+        fused = self.trav_fuse(trav_in)
         p_logit = self.head_blocked(fused).squeeze(-1)
         vis = torch.sigmoid(self.head_visibility(fused)).squeeze(-1)
         quality = torch.sigmoid(self.head_quality(fused)).squeeze(-1)
@@ -234,6 +378,11 @@ class SpatialRGBDModel(nn.Module):
             "quality": quality,
             "uncertainty": unc,
             "backend": self.backend,
+            "region_obst": region_obst.squeeze(-1),
+            "mask_frac": mask_frac.squeeze(-1),
+            "uses_masked_pooling_only": torch.ones(
+                p_logit.shape[0], device=p_logit.device
+            ),
         }
 
 
@@ -318,6 +467,7 @@ __all__ = (
     "INPUT_SIZE",
     "GEOM_DIM",
     "SpatialRGBDModel",
+    "SpatialRGBDModelGlobalPool",
     "rgb_depth_mask_to_tensor",
     "geometry_vector",
     "dice_bce_loss",

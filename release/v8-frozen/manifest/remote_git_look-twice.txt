@@ -1,0 +1,2 @@
+1d02da7371a478ef04fc70f6af447f203bd99490
+1d02da7371a478ef04fc70f6af447f203bd99490 2026-07-16 20:04:27 +0800 Archive v5 paired RGB-D capability evaluation

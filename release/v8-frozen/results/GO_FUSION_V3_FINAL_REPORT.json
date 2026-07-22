@@ -1,0 +1,72 @@
+{
+  "schema_version": "look-twice.v8-go-fusion-v3-final/v1",
+  "at_utc": "2026-07-22T04:26:18.884012+00:00",
+  "prior_v2_status": "INVALID_CLASS_COVERAGE_EMPTY_USED_CLAIMS",
+  "go_fusion_v3_conformal": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/calibration_go_fusion_v3/conformal_artifact.json",
+  "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+  "collection": {
+    "schema": "go-fusion-v3-cal-collection/v1",
+    "at_utc": "2026-07-22T03:37:12.872690+00:00",
+    "seed_range": [
+      105000,
+      105199
+    ],
+    "n_corridor_rows": 400,
+    "n_hard_ok": 400,
+    "n_blocked": 203,
+    "n_clear": 197,
+    "empty_used_claim_ids": 0,
+    "need_each": 150,
+    "passed_coverage_floor": true,
+    "passed_empty_eq_0": true,
+    "no_v2_reuse": true,
+    "no_default_0_5": true
+  },
+  "gate_validation_passed": true,
+  "dev_smoke_passed": true,
+  "dev_smoke_gates": {
+    "active_effective_admit_ge_9_12": true,
+    "active_full_chain_direct_ge_9_12": true,
+    "unsafe_eq_0": true,
+    "fallback_eq_0": true,
+    "passive_repair_eq_0": true,
+    "n_active": 12,
+    "n_passive": 12,
+    "active_effective_admit": 10,
+    "active_full_chain_direct": 10,
+    "passive_deny": 12,
+    "passive_detour": 12,
+    "passive_repair": 0,
+    "unsafe_total": 0,
+    "fallback_total": 0,
+    "passive_policy_shape_ok": true
+  },
+  "confirmatory_passed": true,
+  "confirmatory_gates": {
+    "active_effective_admit_ge_9_12": true,
+    "active_full_chain_direct_ge_9_12": true,
+    "unsafe_eq_0": true,
+    "fallback_eq_0": true,
+    "passive_repair_eq_0": true,
+    "n_active": 12,
+    "n_passive": 12,
+    "active_effective_admit": 9,
+    "active_full_chain_direct": 9,
+    "passive_deny": 12,
+    "passive_detour": 12,
+    "passive_repair": 0,
+    "unsafe_total": 0,
+    "fallback_total": 0,
+    "passive_policy_shape_ok": true
+  },
+  "locked_test_opened": false,
+  "V8_RUNTIME_FROZEN": true,
+  "status": "V8_RUNTIME_FROZEN",
+  "live_wiring_fixes": [
+    "go_cal sensor_versions includes vision+go ids",
+    "seed_ranges widened for runtime partitions",
+    "Go evaluate vision-only claims (cal-matched)",
+    "raw vision p_blocked map (not 1-confidence)",
+    "unique device_root per capture"
+  ]
+}

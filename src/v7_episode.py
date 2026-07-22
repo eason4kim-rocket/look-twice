@@ -37,6 +37,9 @@ class V7EpisodeConfig(V6EpisodeConfig):
     # Capability mode: initial carrier front alone cannot admit; scout side
     # vision required. Enable for both active and passive in paired matrices.
     repair_required: bool = False
+    use_purify_go_gate: bool = False
+    purify_binary: str | None = None
+    go_conformal_artifact: str | None = None
 
     def __post_init__(self) -> None:
         # Allow v7 policy before parent check.
@@ -129,6 +132,9 @@ def run_v7_episode(
         require_side_view_vision_root=require_side,
         enforce_modality_conflict=config.enforce_modality_conflict,
         use_v7_contract=True,
+        use_purify_go_gate=bool(config.use_purify_go_gate),
+        purify_binary=config.purify_binary,
+        go_conformal_artifact=config.go_conformal_artifact,
     )
     result = run_v6_episode(scenario=scenario, config=v6_cfg, runtime=runtime)
 
@@ -189,7 +195,8 @@ def run_v7_episode(
     m["fallback_used"] = any(bool(v.get("fallback_used")) for v in vision_audits)
     m["checkpoint_loaded"] = (
         all(bool(v.get("checkpoint_loaded")) for v in vision_audits)
-        if vision_audits and config.vision_backend == "torch_corridor_head"
+        if vision_audits
+        and config.vision_backend in ("torch_corridor_head", "torch_spatial_rgbd")
         else False
     )
     m["tensor_device"] = next(

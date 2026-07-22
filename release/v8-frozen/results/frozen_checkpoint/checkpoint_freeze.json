@@ -1,0 +1,40 @@
+{
+  "schema_version": "look-twice.v8-seg-v3-checkpoint-freeze/v1",
+  "path": "results/v8-seg-v3-full-paired-v2-fast-promote/frozen_checkpoint/v8_seg_v3_selected_ep22_7b158726f9c0.pt",
+  "source": "outputs/v8/seg-v3-full-paired-v2-fast/last.pt",
+  "sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "epoch": 22,
+  "metrics": {
+    "roi_iou": 0.999951454472548,
+    "blocked_roi_iou": 0.9999248127084568,
+    "pixel_obstacle_recall": 1.0,
+    "ba": 1.0,
+    "blocked_recall": 1.0,
+    "false_clear": 0.0,
+    "ab_both_correct": 1.0,
+    "n_discordant": 2152,
+    "mean_abs_dp": 0.999999896910554,
+    "n": 4800,
+    "nll": 1.0153312293561544e-06,
+    "ece": 7.539636186592575e-08
+  },
+  "hard_gates": {
+    "roi_iou_ge_0.80": true,
+    "blocked_roi_iou_ge_0.80": true,
+    "pixel_obstacle_recall_ge_0.90": true,
+    "ba_ge_0.90": true,
+    "blocked_recall_ge_0.90": true,
+    "false_clear_le_0.05": true,
+    "ab_both_correct_ge_0.80": true
+  },
+  "slice_gates": {
+    "slice_a_camera_ok": true,
+    "slice_b_camera_ok": true,
+    "slice_a_blocked_b_clear_ok": true,
+    "slice_a_clear_b_blocked_ok": true
+  },
+  "selection_split": "validation",
+  "locked_test_opened": false,
+  "model_id": "look-twice-v8-vision/spatial_rgbd_seg_v3/3",
+  "preprocessing_version": "v8-spatial-rgbd-seg-v3-roi-gated/v1"
+}

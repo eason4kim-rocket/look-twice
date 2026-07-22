@@ -1,0 +1,10 @@
+{
+  "errors": [],
+  "guarded_file_count": 21,
+  "locked_test_runs": 1,
+  "passed": true,
+  "public_replay_gpu_dependency": false,
+  "replay_count": 2,
+  "schema_version": "look-twice.foundation-source-ready/v1",
+  "v8_runtime_frozen": true
+}

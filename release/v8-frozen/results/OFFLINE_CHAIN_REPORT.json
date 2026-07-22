@@ -1,0 +1,21 @@
+{
+  "schema_version": "look-twice.v8-seg-v3-post-full-offline/v1",
+  "status": "OFFLINE_READY_FOR_GO_FUSION_AND_LIVE",
+  "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "frozen_path": "results/v8-seg-v3-full-paired-v2-fast-promote/frozen_checkpoint/v8_seg_v3_selected_ep22_7b158726f9c0.pt",
+  "vision_conformal_path": "results/v8-seg-v3-full-paired-v2-fast-promote/calibration_vision/conformal_artifact.json",
+  "vision_conformal_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+  "selection": {
+    "name": "last.pt",
+    "epoch": 22
+  },
+  "slice_reval_passed": true,
+  "anti_shortcut_passed": true,
+  "locked_test_opened": false,
+  "elapsed_s": 916.4,
+  "next_steps": [
+    "Go fusion Gate calibration on seeds 104100-104199 (fused p + oracle)",
+    "development smoke 104300-104311 with effective_admit=Py AND Go",
+    "confirmatory 104400-104411"
+  ]
+}

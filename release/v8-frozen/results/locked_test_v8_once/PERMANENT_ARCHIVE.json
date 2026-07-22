@@ -1,0 +1,19 @@
+{
+  "tag": "V8_LOCKED_TEST_PERMANENT_ARCHIVE",
+  "archived_at_utc": "2026-07-22T05:10:53.689276+00:00",
+  "passed": true,
+  "report_sha256": "5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb",
+  "open_seal_sha256": "7bfe13d0d7e117f76286cb094711322b810dc44d40ddbd149bf1304713baba14",
+  "report_path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/LOCKED_TEST_REPORT.json",
+  "open_seal_path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/LOCKED_TEST_OPENED.json",
+  "identity": {
+    "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+    "vision_conformal_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+    "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+    "purify_binary_sha256": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00"
+  },
+  "offline_passed": true,
+  "live_passed": true,
+  "immutable": true,
+  "note": "Do not overwrite. Competition formal locked evaluation archive."
+}

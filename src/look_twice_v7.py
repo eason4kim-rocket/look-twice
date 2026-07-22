@@ -27,7 +27,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--device", default=None)
     parser.add_argument(
         "--vision-backend",
-        choices=("heuristic_rgb_proxy", "torch_corridor_head"),
+        choices=("heuristic_rgb_proxy", "torch_corridor_head", "torch_spatial_rgbd"),
         default="heuristic_rgb_proxy",
     )
     parser.add_argument("--vision-checkpoint", type=Path, default=None)
@@ -35,7 +35,7 @@ def main(argv: list[str] | None = None) -> int:
         "--vision-conformal-artifact",
         type=Path,
         default=None,
-        help="Path to conformal_artifact.json (required for torch_corridor_head).",
+        help="Path to conformal_artifact.json (required for torch_* backends).",
     )
     parser.add_argument("--no-rgbd-claims", action="store_true")
     parser.add_argument(
@@ -48,18 +48,35 @@ def main(argv: list[str] | None = None) -> int:
             "apply the same contract to purify-passive for paired matrices."
         ),
     )
+    parser.add_argument(
+        "--use-purify-go-gate",
+        action="store_true",
+        help="Invoke real purify-robotics-core for GateReceipt on every evaluate.",
+    )
+    parser.add_argument(
+        "--purify-binary",
+        type=Path,
+        default=None,
+        help="Path to purify-robotics-core binary (default: purify_robotics/bin/...).",
+    )
+    parser.add_argument(
+        "--go-conformal-artifact",
+        type=Path,
+        default=None,
+        help="Optional Go fusion Gate conformal (separate from Vision). Fitted on Go fused p.",
+    )
     args = parser.parse_args(argv)
 
     scenario = sample_v6_scenario(args.profile, args.seed)
     device = args.device or ("cuda:0" if args.runtime == "genesis" else "cpu")
-    if args.vision_backend == "torch_corridor_head":
+    if args.vision_backend in ("torch_corridor_head", "torch_spatial_rgbd"):
         if not args.vision_checkpoint:
             raise SystemExit(
-                "torch_corridor_head requires --vision-checkpoint (fail-closed)"
+                f"{args.vision_backend} requires --vision-checkpoint (fail-closed)"
             )
         if not args.vision_conformal_artifact:
             raise SystemExit(
-                "torch_corridor_head requires --vision-conformal-artifact (fail-closed)"
+                f"{args.vision_backend} requires --vision-conformal-artifact (fail-closed)"
             )
     config = V7EpisodeConfig(
         policy=args.policy,
@@ -73,6 +90,11 @@ def main(argv: list[str] | None = None) -> int:
             else None
         ),
         repair_required=bool(args.repair_required),
+        use_purify_go_gate=bool(args.use_purify_go_gate),
+        purify_binary=str(args.purify_binary) if args.purify_binary else None,
+        go_conformal_artifact=(
+            str(args.go_conformal_artifact) if args.go_conformal_artifact else None
+        ),
     )
 
     if args.runtime == "synthetic":

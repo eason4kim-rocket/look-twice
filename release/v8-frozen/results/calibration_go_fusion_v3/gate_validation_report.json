@@ -1,0 +1,19 @@
+{
+  "n": 100,
+  "n_blocked": 52,
+  "n_clear": 48,
+  "coverage": 1.0,
+  "blocked_recall": 1.0,
+  "false_clear": 0.0,
+  "clear_singleton_rate": 1.0,
+  "gates": {
+    "coverage_ge_0.95": true,
+    "blocked_recall_ge_0.90": true,
+    "false_clear_le_0.05": true,
+    "both_classes_present": true,
+    "clear_singleton_actionable": true,
+    "n_blocked": 52,
+    "n_clear": 48
+  },
+  "passed": true
+}

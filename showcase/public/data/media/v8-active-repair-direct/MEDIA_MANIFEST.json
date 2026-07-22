@@ -1,0 +1,64 @@
+{
+  "schema_version": "look-twice.recorded-media/v1",
+  "frame_count": 3,
+  "frames": [
+    {
+      "frame_id": "frame-1",
+      "viewpoint": "carrier_initial_front",
+      "corridor_id": "corridor_a",
+      "capture_step": 167,
+      "rgb_array_sha256": "50a4887bb68f20e70fa75348ac4d1e05b31288e680dd7975d0e9d940a45748cc",
+      "depth_array_sha256": "90223dbf2de5c3a3386832a1ded0394ebbc01a22c036e3e8da6285dab286f912",
+      "media_sha256": {
+        "rgb": "3bb392a127486e36211f6a852e3577c5358aace1eecb8fcf17969cc4b59960a7",
+        "depth": "3da99bf78d7a8483a49c98bfc140ae4c5f5826eaadb3148174c8f87a65ac763f",
+        "corridor_mask": "1587b1926d000469db8e106da9229daf3cd0f6844e59e8898c6bf0e264352ab9"
+      }
+    },
+    {
+      "frame_id": "frame-2",
+      "viewpoint": "corridor_b/left_near",
+      "corridor_id": "corridor_b",
+      "capture_step": 699,
+      "rgb_array_sha256": "01b0e4e6e0135de0b69421d791888f821d5a4fa6fccc4af229d47d66d4345bfa",
+      "depth_array_sha256": "251dc666c4e02012d19078dfea08043082f5b97005071bf9e9ff2bd61daa4578",
+      "media_sha256": {
+        "rgb": "25d5780fdb3c969982fa64720203eed242e5e0edd0950729dcb03909e0ab048f",
+        "depth": "e5ca8debf7b19ae145e9c350e1e9212789804eef406d85c4cb1837da8503ee02",
+        "corridor_mask": "b235d04acda0d42b4f97d80886f6fa978165b668b77a5ed136deb6e7adc6c19e"
+      }
+    },
+    {
+      "frame_id": "frame-3",
+      "viewpoint": "corridor_a/left_near",
+      "corridor_id": "corridor_a",
+      "capture_step": 1011,
+      "rgb_array_sha256": "84b0af306d3047405241616de36dce032c2d1093828a29e3885a56f248e22b67",
+      "depth_array_sha256": "648890d506fa75f9e20b238af6aba81f1bae71400d456e616f12cc6739ed5df6",
+      "media_sha256": {
+        "rgb": "1f6e7716d9bbb38dda64fa1317cb6fe0793fe5d7b0ec45137b1cba7e4a929d06",
+        "depth": "ef82c6646b28613a3ea532e3c800220b0bbc0c70c24522246c47509c230a440d",
+        "corridor_mask": "1587b1926d000469db8e106da9229daf3cd0f6844e59e8898c6bf0e264352ab9"
+      }
+    }
+  ],
+  "behavior_signature": {
+    "route_mode": "direct",
+    "repair_success": true,
+    "unsafe_crossing": false,
+    "selected_corridor": "corridor_a",
+    "vision_values": [
+      "clear",
+      "clear",
+      "clear"
+    ],
+    "vision_viewpoints": [
+      "carrier_initial_front",
+      "corridor_b/left_near",
+      "corridor_a/left_near"
+    ],
+    "effective_admit_count": 1
+  },
+  "reference_behavior_match": true,
+  "runtime_inputs_unchanged": true
+}

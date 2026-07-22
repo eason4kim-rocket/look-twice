@@ -164,6 +164,11 @@ class V6EpisodeConfig:
     require_side_view_vision_root: bool = False
     enforce_modality_conflict: bool = True
     use_v7_contract: bool = False
+    # Dual-track: keep Python control gate, also invoke real Purify Go core.
+    use_purify_go_gate: bool = False
+    purify_binary: str | None = None
+    # Optional separate Go fusion Gate conformal (never copy Vision thresholds).
+    go_conformal_artifact: str | None = None
 
     def __post_init__(self) -> None:
         if self.policy not in POLICIES:
@@ -183,6 +188,7 @@ def _v1_claims_to_v2(
     corridor_id: str,
     step: int,
     ttl: int,
+    calibration_id: str = SENSOR_VERSION_V6,
 ) -> list[RobotClaimV2]:
     """Project Genesis RGB-D Claims into multi-agent v2 carrier contracts."""
     out: list[RobotClaimV2] = []
@@ -203,9 +209,9 @@ def _v1_claims_to_v2(
                     getattr(claim, "valid_until_step", step + ttl)
                 ),
                 modality=modality or "depth_geometry",
-                device_root_id=f"rgbd-{agent_id}-01",
+                device_root_id=f"rgbd-{agent_id}-{str(claim.capture_root_id)[-16:]}",
                 capture_root_id=str(claim.capture_root_id),
-                calibration_id=SENSOR_VERSION_V6,
+                calibration_id=calibration_id,
                 pose_version="base-link-v6",
                 model_id=str(getattr(claim, "model_id", "genesis-rgbd-v6")),
                 artifact_sha256=str(claim.artifact_sha256),
@@ -231,6 +237,7 @@ def _synthetic_observation(
     viewpoint_name: str,
     predicted_coverage: float,
     ttl: int,
+    calibration_id: str = SENSOR_VERSION_V6,
 ) -> list[RobotClaimV2]:
     """Oracle-informed synthetic measurement for CI only.
 
@@ -278,7 +285,7 @@ def _synthetic_observation(
                 modality=modality,
                 device_root_id=device,
                 capture_root_id=capture_root,
-                calibration_id=SENSOR_VERSION_V6,
+                calibration_id=calibration_id,
                 pose_version="base-link-v6",
                 model_id=model,
                 artifact_sha256=canonical_sha256(
@@ -320,18 +327,68 @@ def run_v6_episode(
         seed=scenario.seed,
     )
 
+    # --- V8 runtime calibration identity (when spatial + real conformal) ---
+    from pathlib import Path as _Path
+
+    repo_root = _Path(__file__).resolve().parents[1]
+    runtime_calibration_id = SENSOR_VERSION_V6
+    go_calibration_wire: dict[str, Any] | None = None
+    v8_conformal_raw: dict[str, Any] | None = None
+    v8_spatial_active = bool(
+        config.vision_enabled
+        and str(config.vision_backend) == "torch_spatial_rgbd"
+        and config.vision_conformal_artifact
+    )
+    if v8_spatial_active:
+        from v8_runtime_calibration import go_calibration_from_v8_artifact
+
+        # Vision identity always from vision conformal.
+        runtime_calibration_id, go_calibration_wire, v8_conformal_raw = (
+            go_calibration_from_v8_artifact(
+                config.vision_conformal_artifact,
+                profile=str(scenario.profile),
+                repo_root=repo_root,
+            )
+        )
+        # If a dedicated Go fusion conformal exists, use it for Purify Go only.
+        go_conf = getattr(config, "go_conformal_artifact", None)
+        if go_conf:
+            go_rid, go_wire_only, _ = go_calibration_from_v8_artifact(
+                go_conf,
+                profile=str(scenario.profile),
+                repo_root=repo_root,
+            )
+            # Keep Python runtime_calibration_id from Vision (claims stamp).
+            # Go CalibrationArtifact MUST accept the vision sensor version used on
+            # claims, plus the Go fusion artifact id. Otherwise every live receipt
+            # is calibration_not_applicable and effective_admit stays 0.
+            go_calibration_wire = dict(go_wire_only)
+            svs = list(go_calibration_wire.get("sensor_versions") or [])
+            for sid in (runtime_calibration_id, go_rid):
+                if sid and sid not in svs:
+                    svs.append(sid)
+            go_calibration_wire["sensor_versions"] = svs
+            # Runtime smoke/val seeds are intentionally outside the calibration
+            # seed band; widen applicability so sensor binding is the gate, not
+            # an accidental seed-range deny on confirmatory partitions.
+            go_calibration_wire["seed_ranges"] = [{"start": 0, "end": 200000}]
+            # Keep quantiles/thresholds from Go fusion artifact (go_wire_only).
+
     contracts = {
         c["id"]: CorridorContract(
             corridor_id=c["id"],
             evidence_age_limit=int(public.get("evidence_age_limit") or 80),
             min_distinct_capture_roots=int(public.get("min_distinct_capture_roots") or 2),
             communication_delay_limit=int(public.get("communication_delay_limit") or 40),
+            calibration_id=runtime_calibration_id,
         )
         for c in public["corridors"]
     }
 
     claims: list[RobotClaimV2] = []
+    vision_p_blocked: dict[str, float] = {}
     gate_receipts: list[dict[str, Any]] = []
+    purify_go_receipts: list[dict[str, Any]] = []
     evidence_requests: list[dict[str, Any]] = []
     repair_decisions: list[dict[str, Any]] = []
     motion_segments: list[dict[str, Any]] = []
@@ -344,6 +401,22 @@ def run_v6_episode(
     outcome = "running"
     selected_corridor: str | None = None
     carrier_reached_goal = False
+    purify_bridge = None
+    purify_binary_sha256: str | None = None
+    purify_invoked_count = 0
+    if config.use_purify_go_gate:
+        from purify_bridge import PurifyBridge
+
+        import hashlib as _hashlib
+
+        bin_path = config.purify_binary or str(
+            repo_root / "purify_robotics" / "bin" / "purify-robotics-core"
+        )
+        purify_binary_sha256 = _hashlib.sha256(
+            _Path(bin_path).read_bytes()
+        ).hexdigest()
+        purify_bridge = PurifyBridge(command=(bin_path,), timeout_seconds=5.0)
+        purify_bridge.start()
     payload_delivered = False
     used_detour = False
     route_mode = "none"
@@ -452,6 +525,7 @@ def run_v6_episode(
                 corridor_id=corridor_id,
                 step=runtime.current_step,
                 ttl=config.ttl_steps,
+                calibration_id=runtime_calibration_id,
             )
         else:
             new_claims = _synthetic_observation(
@@ -463,6 +537,7 @@ def run_v6_episode(
                 viewpoint_name=viewpoint_name,
                 predicted_coverage=predicted_coverage,
                 ttl=config.ttl_steps,
+                calibration_id=runtime_calibration_id,
             )
         # Optional v7 vision proposer (appends; does not replace geometry claims).
         if config.vision_enabled:
@@ -474,10 +549,14 @@ def run_v6_episode(
 
             rgb = None
             depth = None
+            corridor_mask = None
             vision_source = "synthetic_rgb_proxy"
             if raw_frame is not None:
                 rgb = getattr(raw_frame, "rgb", None)
                 depth = getattr(raw_frame, "depth", None)
+                corridor_mask = getattr(raw_frame, "corridor_mask", None)
+                if corridor_mask is None:
+                    corridor_mask = getattr(raw_frame, "target_corridor_mask", None)
                 if rgb is not None:
                     vision_source = "genesis_rgb"
             if rgb is None:
@@ -494,6 +573,21 @@ def run_v6_episode(
                 rgb = synthetic_rgb_for_label(
                     cue, seed=scenario.seed * 17 + capture_index + hash(viewpoint_name) % 97
                 )
+            # Target-corridor ROI must match V8 train collection geometry projection.
+            # Never use A=left/B=right half-frame fallback (that inverted live polarity).
+            if corridor_mask is None and rgb is not None:
+                import numpy as np
+
+                from v8_corridor_projection import corridor_mask_from_geometry
+
+                arr = np.asarray(rgb)
+                h, w = arr.shape[:2]
+                corridor_mask = corridor_mask_from_geometry(
+                    h,
+                    w,
+                    corridor_id=str(corridor_id),
+                    public=public,
+                )
             vision_device = (
                 config.device if str(config.device).startswith("cuda") else "cpu"
             )
@@ -502,6 +596,7 @@ def run_v6_episode(
             prop = propose_vision(
                 rgb,
                 depth=depth,
+                corridor_mask=corridor_mask,
                 backend=config.vision_backend,
                 checkpoint=config.vision_checkpoint,
                 conformal_artifact=config.vision_conformal_artifact,
@@ -513,9 +608,13 @@ def run_v6_episode(
                     "viewpoint": viewpoint_name,
                     "step": runtime.current_step,
                     "vision_source": vision_source,
+                    "genesis_live_rgbd": vision_source == "genesis_rgb",
                 },
             )
             root_kind = _vision_root_kind(agent_id, viewpoint_name, capture_index)
+            # V8 spatial: stamp claims with unified runtime calibration ID.
+            # V7/heuristic: keep SENSOR_VERSION_V6 / default unless V8 mode active.
+            vision_cal_id = runtime_calibration_id
             vclaim = vision_proposal_to_claim_v2(
                 prop,
                 agent_id=agent_id,
@@ -526,7 +625,10 @@ def run_v6_episode(
                     f"vision-{root_kind}-{agent_id}-{capture_index}-"
                     f"{prop.input_sha256[:10]}"
                 ),
+                calibration_id=vision_cal_id,
             )
+            if prop.p_blocked is not None:
+                vision_p_blocked[str(vclaim.claim_id)] = float(prop.p_blocked)
             new_claims = list(new_claims) + [vclaim]
             audit = {
                 "kind": "vision_proposal_v7",
@@ -595,14 +697,212 @@ def run_v6_episode(
         c.capture_root_id for c in claims if c.has_known_measurement_root
     }
 
+    def _invoke_purify_go(corridor_id: str, contract: Any) -> dict[str, Any] | None:
+        nonlocal purify_invoked_count
+        if purify_bridge is None:
+            return None
+        from v8_runtime_calibration import filter_claims_for_corridor_go
+        from v8_go_fusion_claims import (
+            patch_claim_wire_for_go,
+            strip_claim_wire_for_go,
+            decisive_value_from_p,
+        )
+
+        # Go fusion v3 was calibrated on vision-only dual side-view claims
+        # (see collect_world). Sending geometry/simulated_semantic mixes causes
+        # modality_conflict + soft p_blocked vs binary cal quantiles → permanent deny.
+        VISION_MOD = "vision_semantic_v7"
+        go_claims_all: list[dict[str, Any]] = []
+        for c in claims:
+            mod = str(getattr(c, "modality", "") or "")
+            if mod and mod != VISION_MOD:
+                continue
+            if hasattr(c, "to_v1_robot_claim"):
+                v1w = c.to_v1_robot_claim().to_wire()
+            else:
+                v1w = c.to_wire() if hasattr(c, "to_wire") else dict(c)
+            # Prefer raw vision p_blocked recorded at proposal time (cal-aligned).
+            # Do NOT reconstruct as 1-confidence — that destroys ~1e-12 clear scores.
+            cid = str(v1w.get("claim_id") or getattr(c, "claim_id", "") or "")
+            val = str(v1w.get("value") or "")
+            conf = float(v1w.get("confidence") or 0.5)
+            if cid in vision_p_blocked:
+                p_b = float(vision_p_blocked[cid])
+            elif val == "blocked":
+                p_b = conf
+            elif val == "clear":
+                p_b = max(0.0, 1.0 - conf)
+            else:
+                p_b = conf if conf != 0.5 else 0.5
+            root = str(v1w.get("capture_root_id") or getattr(c, "capture_root_id", "") or "")
+            dev = str(v1w.get("device_root_id") or getattr(c, "device_root_id", "") or root)
+            v1w = patch_claim_wire_for_go(
+                v1w, p_blocked=p_b, capture_root_id=root, device_root_id=dev
+            )
+            go_claims_all.append(strip_claim_wire_for_go(v1w))
+        # Corridor-scoped filter; keep intra-corridor conflicts (clear vs blocked).
+        go_claims = filter_claims_for_corridor_go(
+            go_claims_all, corridor_id=corridor_id, predicate="carrier_traversable"
+        )
+        scope = {
+            "robot_id": "carrier",
+            "payload_id": "payload_loaded",
+            "region_id": corridor_id,
+        }
+        go_contract = {
+            "schema_version": "purify.robotics.action-contract/v1",
+            "contract_id": f"cross-{corridor_id}",
+            "action": "cross_corridor",
+            "fact_id": f"region:{corridor_id}",
+            "predicate": "carrier_traversable",
+            "scope": scope,
+            "required_prediction_set": ["clear"],
+            "max_evidence_age": int(getattr(contract, "evidence_age_limit", 80) or 80),
+            "min_distinct_measurement_roots": int(
+                getattr(contract, "min_distinct_capture_roots", 2) or 2
+            ),
+            "max_modality_skew": 40,
+            "max_unresolved_conflicts": int(
+                getattr(contract, "max_unresolved_conflicts", 0) or 0
+            ),
+            "require_calibration_applicable": True,
+        }
+        # Real V8 conformal → Go CalibrationArtifact (no smoke placeholders).
+        if go_calibration_wire is not None:
+            cal = dict(go_calibration_wire)
+            svs = list(cal.get("sensor_versions") or [])
+            if runtime_calibration_id in svs:
+                sensor_version = runtime_calibration_id
+            elif svs:
+                sensor_version = str(svs[0])
+            else:
+                sensor_version = runtime_calibration_id
+        else:
+            # Non-V8 path: legacy compatible bundle (not used for formal V8 smoke).
+            cal = {
+                "schema_version": "purify.robotics.calibration.v1",
+                "artifact_id": "v6-runtime-cal",
+                "alpha": 0.05,
+                "class_quantiles": {"clear": 0.1, "blocked": 0.1},
+                "applicable_profiles": [str(scenario.profile)],
+                "min_noise_intensity": 0.0,
+                "max_noise_intensity": 1.0,
+                "sensor_versions": [SENSOR_VERSION_V6, "sensors-v1"],
+                "git_commit": "v6-runtime",
+                "dataset_sha256": "b" * 64,
+                "seed_ranges": [{"start": 0, "end": 200000}],
+            }
+            sensor_version = SENSOR_VERSION_V6
+        pub = scenario.public_context if isinstance(scenario.public_context, dict) else {}
+        ora = scenario.oracle_context if isinstance(getattr(scenario, "oracle_context", None), dict) else {}
+        noise = float(
+            pub.get("declared_noise_intensity")
+            or ora.get("true_noise_realization")
+            or 0.03
+        )
+        try:
+            receipt = purify_bridge.evaluate_action(
+                claims=go_claims,
+                contract=go_contract,
+                calibration=cal,
+                current_step=int(runtime.current_step),
+                profile=str(scenario.profile),
+                noise_intensity=noise,
+                sensor_version=sensor_version,
+            )
+            purify_invoked_count += 1
+            receipt = dict(receipt)
+            receipt["_purify_binary_sha256"] = purify_binary_sha256
+            receipt["_purify_invoked"] = True
+            receipt["_runtime_calibration_id"] = sensor_version
+            receipt["_go_calibration_artifact_id"] = cal.get("artifact_id")
+            receipt["_n_claims_sent"] = len(go_claims)
+            purify_go_receipts.append(receipt)
+            return receipt
+        except Exception as exc:  # record failure; do not crash Python control path
+            purify_go_receipts.append(
+                {
+                    "schema_version": "purify.robotics.gate-receipt/v1",
+                    "admitted": False,
+                    "decision": "error",
+                    "error": str(exc),
+                    "_purify_invoked": False,
+                    "_purify_binary_sha256": purify_binary_sha256,
+                    "_runtime_calibration_id": sensor_version,
+                }
+            )
+            return None
+
     def evaluate_all() -> dict[str, Any]:
+        """Evaluate Python + optional Purify Go gates.
+
+        When use_purify_go_gate is True, **effective admit** requires:
+            python_gate.admitted AND purify_go_gate.admitted
+        Go deny always blocks direct; Python deny + Go admit is fail-closed (deny).
+        """
+        from v6_contracts import GateDecision
+
         decisions = {}
         for cid, contract in contracts.items():
-            dec = _evaluate_gate(
+            py_dec = _evaluate_gate(
                 claims, contract, current_step=runtime.current_step, config=config
             )
+            go_rec = _invoke_purify_go(cid, contract) if config.use_purify_go_gate else None
+            go_admitted = bool(go_rec is not None and go_rec.get("admitted"))
+            py_admitted = bool(py_dec.admitted)
+
+            if config.use_purify_go_gate:
+                if go_rec is None:
+                    effective = False
+                    extra_reasons = ("purify_go_missing",)
+                elif py_admitted and go_admitted:
+                    effective = True
+                    extra_reasons = ()
+                elif py_admitted and not go_admitted:
+                    effective = False
+                    extra_reasons = ("purify_go_denied",)
+                elif (not py_admitted) and go_admitted:
+                    # Fail-closed: Go alone cannot authorize motion.
+                    effective = False
+                    extra_reasons = ("python_gate_denied_go_admitted_fail_closed",)
+                else:
+                    effective = False
+                    extra_reasons = ()
+                reasons = tuple(dict.fromkeys(list(py_dec.reasons) + list(extra_reasons)))
+                dec = GateDecision(
+                    admitted=effective,
+                    corridor_id=py_dec.corridor_id,
+                    reasons=reasons,
+                    belief_gaps=py_dec.belief_gaps,
+                    measurement_root_ids=py_dec.measurement_root_ids,
+                    claim_count=py_dec.claim_count,
+                    distinct_capture_roots=py_dec.distinct_capture_roots,
+                    p_blocked=py_dec.p_blocked,
+                    receipt_sha256=py_dec.receipt_sha256,
+                    valid_until_step=py_dec.valid_until_step,
+                    current_step=py_dec.current_step,
+                )
+            else:
+                dec = py_dec
+                py_admitted = dec.admitted
+                go_admitted = False
+
             decisions[cid] = dec
-            gate_receipts.append(dec.to_wire())
+            wire = dec.to_wire()
+            wire["python_admitted"] = py_admitted
+            wire["purify_go_admitted"] = go_admitted if config.use_purify_go_gate else None
+            wire["effective_admit"] = bool(dec.admitted)
+            if go_rec is not None:
+                wire["purify_go_receipt"] = {
+                    "schema_version": go_rec.get("schema_version"),
+                    "receipt_id": go_rec.get("receipt_id"),
+                    "receipt_sha256": go_rec.get("receipt_sha256"),
+                    "admitted": go_rec.get("admitted"),
+                    "decision": go_rec.get("decision"),
+                    "_purify_invoked": go_rec.get("_purify_invoked", True),
+                    "_purify_binary_sha256": go_rec.get("_purify_binary_sha256"),
+                }
+            gate_receipts.append(wire)
         return decisions
 
     decisions = evaluate_all()
@@ -1037,11 +1337,20 @@ def run_v6_episode(
         outcome = "deadline_exceeded"
 
     elapsed = time.perf_counter() - started
+    if purify_bridge is not None:
+        try:
+            purify_bridge.close()
+        except Exception:
+            pass
     env = dict(runtime.environment())
     env["claims_mode"] = claims_mode
     env["rgbd_observation_count"] = len(rgbd_audits)
     env["communication"] = inbox.stats()
     env["device"] = config.device
+    env["purify_invoked"] = bool(purify_invoked_count > 0)
+    env["purify_invoked_count"] = int(purify_invoked_count)
+    env["purify_binary_sha256"] = purify_binary_sha256
+    env["genesis_live_rgbd"] = bool(use_rgbd and claims_mode == CLAIMS_MODE_GENESIS)
 
     final_roots = {
         c.capture_root_id for c in claims if c.has_known_measurement_root
@@ -1086,7 +1395,10 @@ def run_v6_episode(
     vision_fallback_used = any(bool(a.get("fallback_used")) for a in vision_audits_only)
     vision_checkpoint_loaded = all(
         bool(a.get("checkpoint_loaded")) for a in vision_audits_only
-    ) if vision_audits_only and config.vision_backend == "torch_corridor_head" else False
+    ) if vision_audits_only and config.vision_backend in (
+        "torch_corridor_head",
+        "torch_spatial_rgbd",
+    ) else False
     # World homology audit (Genesis); synthetic returns synthetic-ok defaults.
     world_alignment: dict[str, Any] = {}
     if callable(getattr(runtime, "world_alignment_audit", None)):
@@ -1126,6 +1438,7 @@ def run_v6_episode(
         "claims": [c.to_wire() for c in claims],
         "rgbd_observation_audits": rgbd_audits,
         "gate_receipts": gate_receipts,
+        "purify_go_receipts": purify_go_receipts,
         "evidence_request_receipts": evidence_requests,
         "repair_decisions": repair_decisions,
         "plan_invalidation_receipts": invalidations,
@@ -1174,6 +1487,19 @@ def run_v6_episode(
             "vision_fallback_used": vision_fallback_used,
             "vision_checkpoint_loaded": vision_checkpoint_loaded,
             "vision_proposal_count": len(vision_audits_only),
+            "purify_invoked": bool(purify_invoked_count > 0),
+            "purify_invoked_count": int(purify_invoked_count),
+            "purify_binary_sha256": purify_binary_sha256,
+            "purify_go_receipt_count": len(purify_go_receipts),
+            "purify_go_receipts_ok": all(
+                bool(r.get("_purify_invoked", r.get("receipt_sha256")))
+                for r in purify_go_receipts
+            )
+            if purify_go_receipts
+            else False,
+            "genesis_live_rgbd": bool(
+                use_rgbd and "genesis_rgb" in vision_sources
+            ),
             "world_alignment_passed": bool(
                 world_alignment.get("world_alignment_passed")
             ),

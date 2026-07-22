@@ -1,0 +1,513 @@
+{
+  "schema": "v8-locked-live-fullchain/v1",
+  "seeds": [
+    102100,
+    102111
+  ],
+  "passed": true,
+  "gates": {
+    "active_effective_admit_ge_9_12": true,
+    "active_full_chain_direct_ge_9_12": true,
+    "unsafe_eq_0": true,
+    "fallback_eq_0": true,
+    "passive_repair_eq_0": true,
+    "n_active": 12,
+    "n_passive": 12,
+    "active_effective_admit": 11,
+    "active_full_chain_direct": 11,
+    "passive_deny": 12,
+    "passive_detour": 12,
+    "passive_repair": 0,
+    "unsafe_total": 0,
+    "fallback_total": 0,
+    "passive_policy_shape_ok": true
+  },
+  "rows": [
+    {
+      "seed": 102100,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102100.json"
+    },
+    {
+      "seed": 102100,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102100.json"
+    },
+    {
+      "seed": 102101,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102101.json"
+    },
+    {
+      "seed": 102101,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102101.json"
+    },
+    {
+      "seed": 102102,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102102.json"
+    },
+    {
+      "seed": 102102,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102102.json"
+    },
+    {
+      "seed": 102103,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102103.json"
+    },
+    {
+      "seed": 102103,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102103.json"
+    },
+    {
+      "seed": 102104,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102104.json"
+    },
+    {
+      "seed": 102104,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102104.json"
+    },
+    {
+      "seed": 102105,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102105.json"
+    },
+    {
+      "seed": 102105,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102105.json"
+    },
+    {
+      "seed": 102106,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102106.json"
+    },
+    {
+      "seed": 102106,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102106.json"
+    },
+    {
+      "seed": 102107,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102107.json"
+    },
+    {
+      "seed": 102107,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102107.json"
+    },
+    {
+      "seed": 102108,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102108.json"
+    },
+    {
+      "seed": 102108,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102108.json"
+    },
+    {
+      "seed": 102109,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102109.json"
+    },
+    {
+      "seed": 102109,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102109.json"
+    },
+    {
+      "seed": 102110,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102110.json"
+    },
+    {
+      "seed": 102110,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102110.json"
+    },
+    {
+      "seed": 102111,
+      "policy": "purify-passive",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "detour",
+        "used_detour": true,
+        "repair_attempted": false,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": false,
+        "python_admit": false,
+        "go_admit": false
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/passive__independent-noise__102111.json"
+    },
+    {
+      "seed": 102111,
+      "policy": "purify-active-vision",
+      "flags": {
+        "mission": true,
+        "unsafe": 0,
+        "route_mode": "direct",
+        "used_detour": false,
+        "repair_attempted": true,
+        "initial_gate_denied": true,
+        "purify_invoked": true,
+        "purify_go_ok": true,
+        "fallback": false,
+        "genesis": true,
+        "effective_admit": true,
+        "python_admit": true,
+        "go_admit": true
+      },
+      "path": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once/live_fullchain_102100_102111/active__independent-noise__102111.json"
+    }
+  ],
+  "vision_ckpt_sha": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "vision_conf_sha": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+  "go_conf_sha": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+  "go_binary_sha": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00",
+  "no_retune": true,
+  "no_refit": true
+}

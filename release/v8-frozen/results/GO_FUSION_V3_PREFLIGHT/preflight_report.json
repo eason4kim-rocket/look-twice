@@ -1,0 +1,41 @@
+{
+  "schema": "go-fusion-v3-preflight/v1",
+  "seeds": [
+    105000,
+    105019
+  ],
+  "n_corridor_rows": 40,
+  "n_hard_ok": 40,
+  "empty_used_claim_ids": 0,
+  "calibration_mismatch": 0,
+  "n_blocked": 21,
+  "n_clear": 19,
+  "blocked_A_with_used": 10,
+  "blocked_B_with_used": 11,
+  "python_go_claim_ids_consistent": true,
+  "errors": [],
+  "gates": {
+    "rows_eq_40": true,
+    "empty_used_eq_0": true,
+    "mismatch_eq_0": true,
+    "both_classes": true,
+    "blocked_A_used_gt0": true,
+    "blocked_B_used_gt0": true,
+    "claim_ids_consistent": true,
+    "no_errors": true
+  },
+  "passed": true,
+  "fix_notes": {
+    "claim_polarity_for_go": true,
+    "unique_device_root": true,
+    "no_setattr_on_frozen_claim": true,
+    "strip_audit_keys_before_go": true,
+    "no_vision_retrain": true,
+    "no_fit_conformal": true,
+    "no_seed_expand_beyond_preflight": true,
+    "locked_closed": true
+  },
+  "vision_ckpt_sha": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "vision_conf_sha": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+  "go_binary_sha": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00"
+}

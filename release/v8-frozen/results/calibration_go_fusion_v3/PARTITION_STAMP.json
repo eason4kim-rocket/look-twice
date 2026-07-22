@@ -1,0 +1,27 @@
+{
+  "tag": "V8_SEED_FREEZE_GO_FUSION_V3",
+  "at_utc": "2026-07-22T03:23:14.150448+00:00",
+  "calibration": [
+    105000,
+    105199
+  ],
+  "validation": [
+    105200,
+    105249
+  ],
+  "dev_smoke": [
+    105300,
+    105311
+  ],
+  "confirmatory": [
+    105400,
+    105411
+  ],
+  "no_v2_reuse": true,
+  "preflight_passed": true,
+  "preflight_seeds": [
+    105000,
+    105019
+  ],
+  "locked_test_opened": false
+}

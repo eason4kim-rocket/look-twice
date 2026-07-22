@@ -1,0 +1,233 @@
+{
+  "schema_version": "look-twice.v8-identity-freeze-manifest/v1",
+  "tag": "V8_IDENTITY_FREEZE_PRE_LOCKED",
+  "env": {
+    "hostname": "u-7749-4ed3e710",
+    "platform": "Linux-6.8.0-79-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "captured_utc": "2026-07-22T04:45:56.616490+00:00",
+    "torch": "2.9.1+gitff65f5b",
+    "cuda_available": true,
+    "gpu_name": "AMD Radeon Graphics",
+    "hip": "7.2.53211-e1a6bc5663"
+  },
+  "git": {
+    "repo_root": "/workspace/look-twice",
+    "head": "1d02da7371a478ef04fc70f6af447f203bd99490",
+    "status_lines": [
+      "## v5-embodied-evidence...origin/v5-embodied-evidence",
+      " M .git_commit",
+      " M src/v4_evidence.py",
+      "?? scripts/calibrate_v5_learned_rgbd.py",
+      "?? scripts/collect_v5_learned_rgbd_scene.py",
+      "?? scripts/evaluate_v5_learned_rgbd_gate.py",
+      "?? scripts/run_v5_learned_rgbd_collection.py",
+      "?? scripts/run_v5_learned_rgbd_split.py",
+      "?? scripts/train_v5_learned_rgbd.py",
+      "?? src/learned_rgbd.py",
+      "?? src/learned_rgbd_conformal.py"
+    ],
+    "dirty_file_count": 10
+  },
+  "V8_RUNTIME_FROZEN": {
+    "tag": "V8_RUNTIME_FROZEN",
+    "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+    "vision_conformal_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+    "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+    "dev_smoke": "105300-105311",
+    "confirmatory_smoke": "105400-105411",
+    "locked_test_opened": false,
+    "note": "action authorization validated via effective_admit full-chain gates"
+  },
+  "identity_checks": {
+    "ckpt_matches_frozen": true,
+    "vision_artifact_matches_frozen": true,
+    "go_artifact_matches_frozen": true,
+    "locked_still_closed": true
+  },
+  "all_identity_checks_pass": true,
+  "critical_source_files": [
+    {
+      "path": "src/v6_episode.py",
+      "bytes": 62856,
+      "sha256": "3259bff66582cb34d98a70307b79084f0af89b48a64320fdd0bad71d16c2120f",
+      "mtime_utc": "2026-07-22T04:02:34.226445+00:00"
+    },
+    {
+      "path": "src/v7_episode.py",
+      "bytes": 9349,
+      "sha256": "9a83b0b15e1625159189b82f48f38b0f087957c2bc9f4f70a9376f2ef6b0ae3e",
+      "mtime_utc": "2026-07-21T09:32:20.160466+00:00"
+    },
+    {
+      "path": "src/v7_vision_claims.py",
+      "bytes": 18171,
+      "sha256": "929034e3dabdb820523a0719729dc77e85ec89934c68712f574232385c23cfe8",
+      "mtime_utc": "2026-07-22T03:59:22.014305+00:00"
+    },
+    {
+      "path": "src/v8_go_fusion_claims.py",
+      "bytes": 2324,
+      "sha256": "ffecd808b2b1feec30f94d5d9085c0b9dc173d535d0efa724ea1b5bc23bfd18e",
+      "mtime_utc": "2026-07-22T03:15:22.830354+00:00"
+    },
+    {
+      "path": "src/v8_runtime_calibration.py",
+      "bytes": 7564,
+      "sha256": "300286d56c24f7377a87add86a6ecdd64c3f02025f80acbb2ff819bc46648d14",
+      "mtime_utc": "2026-07-20T12:43:39+00:00"
+    },
+    {
+      "path": "src/v8_seg_v3_model.py",
+      "bytes": 15999,
+      "sha256": "30892e644dcdffafc3bd0e928653b74d29a7724d0844ce0284b1448b9cbda649",
+      "mtime_utc": "2026-07-21T03:19:58.697276+00:00"
+    },
+    {
+      "path": "src/v8_spatial_runtime.py",
+      "bytes": 9058,
+      "sha256": "095956aa68ccbf8d2c62c47c216be113c89366dfdd86099031a506b66b0d71b2",
+      "mtime_utc": "2026-07-20T10:29:48+00:00"
+    },
+    {
+      "path": "src/look_twice_v7.py",
+      "bytes": 5786,
+      "sha256": "09013bcea0c200c87c6bf8c40d1d78a300cafbbdc26807ba8fb9137c6ebb8754",
+      "mtime_utc": "2026-07-21T09:30:42.819864+00:00"
+    },
+    {
+      "path": "src/purify_bridge.py",
+      "bytes": 9411,
+      "sha256": "2224f75ed49346741ddbebcac64187a7dd72710e9b73468de78938bce3752700",
+      "mtime_utc": "2026-07-20T03:47:06.371044+00:00"
+    },
+    {
+      "path": "scripts/v8_go_fusion_v2_pipeline.py",
+      "bytes": 40643,
+      "sha256": "4e25d7aa7e6e8d96b341308f414129aa90b12283319977e7cd5dbd18b1f896b6",
+      "mtime_utc": "2026-07-22T03:15:22.830354+00:00"
+    },
+    {
+      "path": "scripts/v8_go_fusion_v3_pipeline.py",
+      "bytes": 13598,
+      "sha256": "d360a3f29393350607e616ebc73077ecdc38872aedaf2ba3a92c54f4cb1f4524",
+      "mtime_utc": "2026-07-22T03:23:12.043346+00:00"
+    },
+    {
+      "path": "scripts/v8_go_fusion_v3_rerun_smokes.py",
+      "bytes": 6687,
+      "sha256": "076b59941ffb028a4bed303a1b090a4a1f5ad744848f99e0e6b9d5dba17f0a3a",
+      "mtime_utc": "2026-07-22T04:03:33.694180+00:00"
+    },
+    {
+      "path": "scripts/v8_go_fusion_v3_preflight.py",
+      "bytes": 6555,
+      "sha256": "b5562cd24f9f41688eb71f3ac8aedf3b7644971bebde4d7952cfbfcf3e82a55d",
+      "mtime_utc": "2026-07-22T03:16:20.732104+00:00"
+    }
+  ],
+  "source_tree_fingerprint_sha256": "983d7d373a3eedc6f6204e91d2d63b95a7e563506add24d37ee5a30c95aa71a9",
+  "frozen_assets": {
+    "checkpoint": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/frozen_checkpoint/v8_seg_v3_selected_ep22_7b158726f9c0.pt",
+      "exists": true,
+      "bytes": 159592901,
+      "file_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783"
+    },
+    "vision_conformal": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/calibration_vision/conformal_artifact.json",
+      "exists": true,
+      "bytes": 1093,
+      "file_sha256": "8ccce120c2321582d4c9ad6ead90bcd55c562f9808db105f79ae7a76b46aa213",
+      "artifact_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+      "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783"
+    },
+    "go_fusion_v3_conformal": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/calibration_go_fusion_v3/conformal_artifact.json",
+      "exists": true,
+      "bytes": 1148,
+      "file_sha256": "128d2c1a7c814b2f82f1bb660289026ae27f876434ae0c2add4a223242f59eac",
+      "artifact_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+      "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783"
+    },
+    "purify_binary": {
+      "path": "purify_robotics/bin/purify-robotics-core-linux",
+      "exists": true,
+      "bytes": 3410024,
+      "file_sha256": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00"
+    },
+    "V8_RUNTIME_FROZEN": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/V8_RUNTIME_FROZEN.json",
+      "exists": true,
+      "bytes": 499,
+      "file_sha256": "be309c6f18a9c7dcfff16aa64ad29d3271a14752d58eea1025569c15bd864e4c",
+      "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+      "vision_conformal_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+      "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97"
+    },
+    "GO_FUSION_V3_FINAL_REPORT": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/GO_FUSION_V3_FINAL_REPORT.json",
+      "exists": true,
+      "bytes": 2263,
+      "file_sha256": "348cb7e2bb262be1f7eeeb2fc8a6f7cc706d93210cfbcfab66812f4eeb83d69e",
+      "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97"
+    },
+    "dev_smoke_report": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/dev_smoke_105300_105311/smoke_report.json",
+      "exists": true,
+      "bytes": 16289,
+      "file_sha256": "6f80525ff003406b38dda19cf1d331492174703b099f01d06164627e9a7937f9"
+    },
+    "confirmatory_smoke_report": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/confirmatory_105400_105411/smoke_report.json",
+      "exists": true,
+      "bytes": 16363,
+      "file_sha256": "6b5e0f52c164e8699d622015b1ebd221a7191f71147f57f615b17128e1de480f"
+    },
+    "seed_freeze_v3": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/V8_SEED_FREEZE_GO_FUSION_V3.json",
+      "exists": true,
+      "bytes": 410,
+      "file_sha256": "2e1b027f1b9c8f7eb7b54326ef2c08e65ee9b9104ffbdc20590407d67a8b0e1f"
+    },
+    "preflight_report": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/GO_FUSION_V3_PREFLIGHT/preflight_report.json",
+      "exists": true,
+      "bytes": 1167,
+      "file_sha256": "3d16c02c95311a845b433ad701ec4f5a154092da0466d06f6fab61e73842881f"
+    },
+    "collection_summary": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/calibration_go_fusion_v3/collection_summary.json",
+      "exists": true,
+      "bytes": 387,
+      "file_sha256": "df40ae1840b2bdc4230573e5789e4fee1f8a67aef6196b977662b39784cde19e"
+    },
+    "gate_validation": {
+      "path": "results/v8-seg-v3-full-paired-v2-fast-promote/calibration_go_fusion_v3/gate_validation_report.json",
+      "exists": true,
+      "bytes": 396,
+      "file_sha256": "77d28589436b0d54a2d745961f0718b56bf8b8566c43cedc62191bebef1a006a"
+    }
+  },
+  "locked_plan_not_yet_opened": {
+    "offline_split": "locked_test",
+    "offline_seed_range": [
+      102100,
+      102499
+    ],
+    "offline_data_dir": "outputs/v8/spatial-dataset-v1",
+    "live_fullchain_seed_range": [
+      102100,
+      102111
+    ],
+    "policy": "one_shot_no_retune_no_refit",
+    "gates_live": {
+      "active_full_chain_ge": "9/12",
+      "passive_deny_detour": "12/12",
+      "unsafe": 0,
+      "fallback": 0,
+      "purify_invoked": true
+    }
+  },
+  "note": "Locked test not opened. Manifest only."
+}

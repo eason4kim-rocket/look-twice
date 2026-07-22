@@ -1,0 +1,12 @@
+{
+  "tag": "V8_RUNTIME_FROZEN",
+  "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "vision_conformal_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+  "go_fusion_v3_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+  "dev_smoke": "105300-105311",
+  "confirmatory_smoke": "105400-105411",
+  "locked_test_opened": true,
+  "note": "action authorization validated via effective_admit full-chain gates",
+  "locked_test_opened_at_utc": "2026-07-22T04:50:58.716504+00:00",
+  "locked_test_dir": "/workspace/look-twice-v6/results/v8-seg-v3-full-paired-v2-fast-promote/locked_test_v8_once"
+}

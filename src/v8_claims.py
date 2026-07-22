@@ -5,9 +5,12 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from v4_claims import ClaimScope
-from v6_claims import SENSOR_VERSION_V6, build_robot_claim_v2
+from v6_claims import build_robot_claim_v2
 from v7_vision_claims import VISION_MODALITY
+from v8_runtime_calibration import v8_runtime_calibration_id
 
+# Legacy static bundle label (tests / docs). Runtime must use
+# v8_runtime_calibration_id(conformal_artifact_sha256) instead.
 SENSOR_BUNDLE_V8 = "look-twice-rgbd-spatial-v8/1"
 MODEL_PREFIX = "look-twice-v8-vision"
 
@@ -27,9 +30,16 @@ def spatial_proposal_to_claim_v2(
     capture_root_id: str | None = None,
     p_blocked: float | None = None,
     uncertainty: float | None = None,
+    calibration_id: str | None = None,
+    conformal_artifact_sha256: str | None = None,
 ) -> Any:
     """Build RobotClaimV2; RGB-D same capture → single measurement root."""
     root = capture_root_id or f"spatial-v8-{agent_id}-{artifact_sha256[:12]}"
+    if calibration_id is None:
+        if conformal_artifact_sha256:
+            calibration_id = v8_runtime_calibration_id(conformal_artifact_sha256)
+        else:
+            calibration_id = SENSOR_BUNDLE_V8
     claim = build_robot_claim_v2(
         fact_id=f"region:{corridor_id}",
         predicate="carrier_traversable",
@@ -40,7 +50,7 @@ def spatial_proposal_to_claim_v2(
         modality="vision_spatial_rgbd_v8",
         device_root_id=f"rgbd-{agent_id}-01",
         capture_root_id=root,
-        calibration_id=SENSOR_BUNDLE_V8,
+        calibration_id=calibration_id,
         pose_version="base-link-v8",
         model_id=model_id,
         artifact_sha256=artifact_sha256,
@@ -83,4 +93,5 @@ __all__ = (
     "VISION_MODALITY",
     "spatial_proposal_to_claim_v2",
     "runtime_meta_from_prediction",
+    "v8_runtime_calibration_id",
 )

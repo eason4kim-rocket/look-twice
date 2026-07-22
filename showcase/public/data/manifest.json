@@ -1,0 +1,32 @@
+{
+  "schema_version": "look-twice.replay-manifest/v1",
+  "default_candidate_id": "v8-frozen",
+  "profiles": [
+    {
+      "candidate_id": "v8-frozen",
+      "href": "/data/profiles/v8-frozen.json",
+      "profile_sha256": "b0c180fe3814b17354fd35f1aa6f775d91b032c7dc5053ecc831f292a75df159"
+    }
+  ],
+  "replays": [
+    {
+      "replay_id": "v8-active-repair-direct",
+      "candidate_id": "v8-frozen",
+      "policy": "purify-active-vision",
+      "route_mode": "direct",
+      "repair_success": true,
+      "href": "/data/replays/v8-active-repair-direct.json",
+      "bundle_sha256": "627faf79f50b95bcb04a70797c876e58d16818fa964c8ec4dbf39acc59a772a1"
+    },
+    {
+      "replay_id": "v8-passive-safe-detour",
+      "candidate_id": "v8-frozen",
+      "policy": "purify-passive",
+      "route_mode": "detour",
+      "repair_success": false,
+      "href": "/data/replays/v8-passive-safe-detour.json",
+      "bundle_sha256": "8649dab606d0da4dead5288a2e9e83c6d0aa3e04ebf6fc7834c403f942475666"
+    }
+  ],
+  "manifest_sha256": "5b886291ab4977d5df08c24b4be898b4baacd361fb2bcb6333686f0f0608b829"
+}

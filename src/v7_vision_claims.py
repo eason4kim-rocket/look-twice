@@ -304,10 +304,108 @@ def propose_vision_torch(
     )
 
 
+def propose_vision_spatial_rgbd(
+    rgb: Any,
+    *,
+    depth: Any | None = None,
+    corridor_mask: Any | None = None,
+    meta: Mapping[str, Any] | None = None,
+    checkpoint: str | None = None,
+    conformal_artifact: str | None = None,
+    device: str = "cuda:0",
+    allow_fallback: bool = False,
+) -> VisionProposal:
+    """V8 SpatialRGBD (masked-pooling) + conformal. Fail-closed unless allow_fallback."""
+    import numpy as np
+
+    meta = dict(meta or {})
+    if not checkpoint or not conformal_artifact:
+        if allow_fallback:
+            return propose_vision_heuristic(rgb, depth=depth, meta=meta)
+        raise FileNotFoundError(
+            "torch_spatial_rgbd requires checkpoint and conformal artifact (fail-closed)"
+        )
+    if depth is None:
+        if allow_fallback:
+            return propose_vision_heuristic(rgb, depth=depth, meta=meta)
+        raise ValueError("torch_spatial_rgbd requires depth")
+    try:
+        from v8_spatial_runtime import load_spatial_runtime, predict_spatial
+    except Exception:
+        if allow_fallback:
+            return propose_vision_heuristic(rgb, depth=depth, meta=meta)
+        raise
+
+    try:
+        bundle = load_spatial_runtime(
+            checkpoint=checkpoint,
+            conformal_artifact=conformal_artifact,
+            device=device,
+        )
+    except Exception:
+        if allow_fallback:
+            return propose_vision_heuristic(rgb, depth=depth, meta=meta)
+        raise
+
+    # Corridor mask: prefer explicit, else meta array path, else full-frame (weak)
+    if corridor_mask is None:
+        corridor_mask = meta.get("corridor_mask")
+    if corridor_mask is None:
+        arr = np.asarray(rgb)
+        h, w = arr.shape[:2]
+        corridor_mask = np.ones((h, w), dtype=np.float32)
+
+    corridor_id = str(meta.get("corridor_id") or "corridor_a")
+    pose = meta.get("pose") or {}
+    pred = predict_spatial(
+        bundle,
+        rgb=rgb,
+        depth=depth,
+        corridor_mask=corridor_mask,
+        pose=pose if isinstance(pose, dict) else {},
+        corridor_id=corridor_id,
+    )
+    value = str(pred["value"])
+    p_blocked = float(pred["p_blocked"])
+    pred_set = tuple(pred.get("prediction_set") or ())
+    conf = (
+        p_blocked
+        if value == "blocked"
+        else (1.0 - p_blocked if value == "clear" else 0.5)
+    )
+    conf = float(np.clip(max(conf, 0.05), 0.05, 0.99))
+    rgb_a = _rgb_to_array(rgb)
+    sha = _input_sha(rgb_a, {**meta, "backend": "torch_spatial_rgbd"})
+    return VisionProposal(
+        value=value,
+        confidence=conf,
+        quality=float(pred.get("quality") or 0.8),
+        visibility=float(pred.get("visibility") or 0.8),
+        model_id=str(pred.get("model_id") or bundle["model_id"]),
+        input_sha256=sha,
+        backend="torch_spatial_rgbd",
+        features={
+            "p_blocked": p_blocked,
+            "fallback_used": 0.0,
+            "checkpoint_loaded": 1.0,
+            "uses_masked_pooling": 1.0,
+        },
+        tensor_device=str(pred.get("tensor_device") or device),
+        checkpoint_sha256=str(pred.get("checkpoint_sha256")),
+        conformal_artifact_sha256=str(pred.get("conformal_artifact_sha256")),
+        preprocessing_version=str(pred.get("preprocessing_version")),
+        fallback_used=False,
+        p_blocked=p_blocked,
+        prediction_set=pred_set,
+        checkpoint_loaded=True,
+    )
+
+
 def propose_vision(
     rgb: Any,
     *,
     depth: Any | None = None,
+    corridor_mask: Any | None = None,
     meta: Mapping[str, Any] | None = None,
     backend: str = "heuristic_rgb_proxy",
     checkpoint: str | None = None,
@@ -317,12 +415,23 @@ def propose_vision(
 ) -> VisionProposal:
     """Dispatch vision backend.
 
-    torch_corridor_head is fail-closed by default (no silent heuristic fallback).
+    torch_corridor_head / torch_spatial_rgbd are fail-closed by default.
     """
     if backend == "torch_corridor_head":
         return propose_vision_torch(
             rgb,
             depth=depth,
+            meta=meta,
+            checkpoint=checkpoint,
+            conformal_artifact=conformal_artifact,
+            device=device,
+            allow_fallback=bool(allow_heuristic_fallback),
+        )
+    if backend == "torch_spatial_rgbd":
+        return propose_vision_spatial_rgbd(
+            rgb,
+            depth=depth,
+            corridor_mask=corridor_mask,
             meta=meta,
             checkpoint=checkpoint,
             conformal_artifact=conformal_artifact,
@@ -347,6 +456,9 @@ def vision_proposal_to_claim_v2(
 ) -> Any:
     """Build RobotClaimV2 from a vision proposal."""
     root = capture_root_id or f"vision-{agent_id}-{proposal.input_sha256[:12]}"
+    # Unique device root per capture — shared rgb-{agent}-01 collapses Go
+    # measurement roots (shared_root / insufficient_roots).
+    device_root = f"rgb-{agent_id}-{proposal.input_sha256[:12]}"
     return build_robot_claim_v2(
         fact_id=f"region:{corridor_id}",
         predicate="carrier_traversable",
@@ -355,7 +467,7 @@ def vision_proposal_to_claim_v2(
         observed_step=step,
         valid_until_step=step + ttl,
         modality=VISION_MODALITY,
-        device_root_id=f"rgb-{agent_id}-01",
+        device_root_id=device_root,
         capture_root_id=root,
         calibration_id=calibration_id,
         pose_version="base-link-v7",

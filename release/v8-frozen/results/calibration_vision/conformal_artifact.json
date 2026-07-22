@@ -1,0 +1,29 @@
+{
+  "schema_version": "look-twice.v8-spatial-conformal/v1",
+  "model_id": "look-twice-v8-vision/spatial_rgbd_seg_v3/3",
+  "preprocessing_version": "v8-spatial-rgbd-seg-v3-roi-gated/v1",
+  "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "calibration_split": "calibration",
+  "calibration_seed_range": [
+    101800,
+    102099
+  ],
+  "n_calibration_worlds": 300,
+  "n_calibration_samples": 4800,
+  "coverage_target": 0.95,
+  "thresholds": {
+    "coverage_target": 0.95,
+    "q_blocked": 5.960464477539062e-07,
+    "q_clear": 9.674008150106777e-10,
+    "include_blocked_if_p_blocked_ge": 0.9999994039535522,
+    "include_clear_if_p_clear_ge": 0.9999999990325992,
+    "include_clear_if_p_blocked_le": 9.674008150106777e-10,
+    "n_cal_blocked": 2352,
+    "n_cal_clear": 2448
+  },
+  "locked_test_used": false,
+  "variant": "seg-v3-vision",
+  "go_fusion_separate": true,
+  "note": "Vision conformal only; Go fusion Gate cal must use seeds 104100-104199 on fused p",
+  "artifact_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f"
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "look-twice.v8-spatial-conformal/v1",
+  "model_id": "look-twice-v8-vision/spatial_rgbd_seg_v3/3",
+  "preprocessing_version": "v8-spatial-rgbd-seg-v3-roi-gated/v1",
+  "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+  "calibration_split": "live_go_fusion_v3",
+  "calibration_seed_range": [
+    105000,
+    105199
+  ],
+  "n_calibration_samples": 400,
+  "coverage_target": 0.95,
+  "thresholds": {
+    "coverage_target": 0.95,
+    "q_blocked": 8.252946659403904e-09,
+    "q_clear": 1.0000020000020012e-12,
+    "include_blocked_if_p_blocked_ge": 0.9999999917470533,
+    "include_clear_if_p_clear_ge": 0.999999999999,
+    "include_clear_if_p_blocked_le": 1.0000020000020012e-12,
+    "n_cal_blocked": 203,
+    "n_cal_clear": 197
+  },
+  "locked_test_used": false,
+  "variant": "seg-v3-go-fusion-v2",
+  "p_source": "purify_go_receipt.p_blocked",
+  "y_source": "oracle_after_receipt_only",
+  "independent_of_vision_thresholds": true,
+  "forced_dual_corridor_side_views": true,
+  "min_roots_per_sample": 2,
+  "artifact_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97"
+}
