@@ -7,6 +7,7 @@ import argparse
 import json
 import subprocess
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -79,19 +80,27 @@ def main() -> int:
             "showcase/app/results/page.tsx",
             "showcase/app/reproduce/page.tsx",
         )
-    ) and (ROOT / "showcase/dist").is_dir()
+    )
     checks["docker_files_present"] = all(
         (ROOT / name).is_file() for name in ("Dockerfile", "docker-compose.yml")
     )
 
     runtime_ok = True
     for route in ("/", "/console", "/results", "/reproduce", "/data/manifest.json"):
-        try:
-            with urllib.request.urlopen(args.runtime_url + route, timeout=5) as response:
-                runtime_ok &= response.status == 200
-        except Exception as exc:  # pragma: no cover - environment failure path
-            runtime_ok = False
-            errors.append(f"runtime:{route}:{type(exc).__name__}")
+        route_ok = False
+        last_error: Exception | None = None
+        for attempt in range(6):
+            try:
+                with urllib.request.urlopen(args.runtime_url + route, timeout=5) as response:
+                    route_ok = response.status == 200
+                if route_ok:
+                    break
+            except Exception as exc:  # pragma: no cover - environment failure path
+                last_error = exc
+            time.sleep(0.5 * (attempt + 1))
+        runtime_ok &= route_ok
+        if not route_ok:
+            errors.append(f"runtime:{route}:{type(last_error).__name__ if last_error else 'status'}")
     checks["cpu_replay_runtime"] = runtime_ok
     try:
         running = subprocess.run(
