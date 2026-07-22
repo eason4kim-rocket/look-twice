@@ -1,0 +1,46 @@
+{
+  "schema_version": "look-twice.v9-preregistration/v1",
+  "candidate_id": "look-twice-v9-counterfactual-repair",
+  "status": "PREREGISTERED_NOT_STARTED",
+  "decision_deadline": "2026-07-30T23:59:59+08:00",
+  "allowed_decisions": [
+    "V9_PROMOTED",
+    "V8_REMAINS_PRIMARY"
+  ],
+  "primary_candidate": "look-twice-v8-active-evidence-assurance",
+  "technical_direction": "contract-aware counterfactual evidence repair viewpoint policy",
+  "frozen_invariants": [
+    "v8_checkpoint",
+    "v8_vision_conformal",
+    "v8_go_conformal",
+    "purify_go_authorization_semantics",
+    "v8_locked_archive",
+    "v8_replay_packs",
+    "effective_admit_python_and_go"
+  ],
+  "partitions": {
+    "train": [110000, 111499],
+    "validation": [112000, 112199],
+    "calibration": [113000, 113199],
+    "development_smoke": [114000, 114039],
+    "confirmatory_paired": [115000, 115059],
+    "locked_paired": [116000, 116099]
+  },
+  "mandatory_gates": {
+    "unsafe": 0,
+    "false_clear_admit_delta_max": 0,
+    "blocked_recall_noninferiority_margin": 0.01,
+    "purify_bypass_allowed": false,
+    "oracle_future_noise_leakage_allowed": false,
+    "candidate_neutral_release_artifacts_required": true,
+    "amd_gpu_benchmark_required": true
+  },
+  "capability_gates_any_one": {
+    "full_chain_absolute_improvement": 0.10,
+    "full_chain_noninferiority_margin": 0.03,
+    "repair_travel_relative_improvement": 0.25,
+    "wrong_detour_relative_improvement": 0.30
+  },
+  "locked_opened": false,
+  "notes": "Full protocol: docs/V9_CHALLENGER_WINDOW.md"
+}
