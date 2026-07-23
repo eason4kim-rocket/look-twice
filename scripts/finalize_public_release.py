@@ -51,6 +51,12 @@ def utc_now() -> str:
     )
 
 
+def git_commit() -> str:
+    return subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--public-url")
@@ -183,6 +189,7 @@ def main() -> int:
         ),
         "passed": public_passed,
         "build_verified": core_passed,
+        "commit_sha": git_commit(),
         "candidate_id": manifest["default_candidate_id"],
         "manifest_sha256": sha256(manifest_path),
         "active_bundle_sha256": sha256(active_path),
@@ -200,6 +207,24 @@ def main() -> int:
         else ROOT / "release" / "PUBLIC_RELEASE_BUILD_VERIFIED.json"
     )
     output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if public_passed:
+        public_release = {
+            "schema_version": "look-twice.public-release/v1",
+            "status": "PUBLIC_RELEASE_VERIFIED",
+            "passed": True,
+            "url": args.public_url,
+            "commit_sha": payload["commit_sha"],
+            "candidate_id": payload["candidate_id"],
+            "manifest_sha256": payload["manifest_sha256"],
+            "active_bundle_sha256": payload["active_bundle_sha256"],
+            "video_sha256": payload["video_sha256"],
+            "poster_sha256": payload["poster_sha256"],
+            "deployed_and_checked_at_utc": payload["checked_at_utc"],
+            "anonymous_results": anonymous_results,
+        }
+        (ROOT / "release" / "PUBLIC_RELEASE.json").write_text(
+            json.dumps(public_release, indent=2) + "\n", encoding="utf-8"
+        )
     print(json.dumps(payload, indent=2))
     return 0 if core_passed else 1
 

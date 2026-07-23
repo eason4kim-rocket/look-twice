@@ -1,0 +1,52 @@
+{
+  "schema_version": "look-twice.replay-presentation-ready/v1",
+  "status": "REPLAY_PRESENTATION_READY",
+  "passed": true,
+  "build_verified": true,
+  "commit_sha": "ba60d589eeb80a1310a583a8cf65d8caa905e840",
+  "candidate_id": "v8-frozen",
+  "manifest_sha256": "48a823d68e15e313592d87ad7e8fc772a30921799fec43157bb55ddf0ec87d72",
+  "active_bundle_sha256": "6ef15e101341fce09094cce00acd039bbea7fe456cf88b044cc1689ce7bb74c1",
+  "video_sha256": "551d0393a74f13e9a58bcdbcd6516e6ffe863e47ec225fecd162b169f57d700c",
+  "poster_sha256": "9500677c4250e2eca761d4d552148df3bf167b5f0977d1b5d0c25270ca3fef69",
+  "public_url": "https://look-twice-evidence-console.eason1319.workers.dev",
+  "checked_at_utc": "2026-07-23T05:45:32Z",
+  "checks": {
+    "episode_bundle_v1_1": true,
+    "active_and_passive_replays": true,
+    "frozen_v8_guard": true,
+    "media_sha_recomputed": true,
+    "video_spec": true,
+    "docker_fresh_build": true,
+    "browser_state_and_responsive": true,
+    "anonymous_public_routes": true
+  },
+  "anonymous_results": [
+    {
+      "route": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "route": "/console",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "route": "/results",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "route": "/reproduce",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "route": "/media/look-twice-replay-30s.mp4",
+      "status": 200,
+      "content_type": "video/mp4"
+    }
+  ],
+  "errors": []
+}

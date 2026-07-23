@@ -15,7 +15,7 @@ npm run build
   --config dist/server/wrangler.json | tee "$DEPLOY_LOG"
 
 PUBLIC_URL="$(
-  grep -Eo 'https://[A-Za-z0-9.-]+\\.workers\\.dev' "$DEPLOY_LOG" | tail -1
+  grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev' "$DEPLOY_LOG" | tail -1
 )"
 if [[ -z "$PUBLIC_URL" ]]; then
   echo "Deployment completed but no workers.dev URL was found in Wrangler output." >&2
