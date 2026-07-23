@@ -1,0 +1,37 @@
+{
+  "schema_version": "look-twice.snapshot-layout-build-verified/v1",
+  "status": "BUILD_VERIFIED_AWAITING_CLOUDFLARE_DEPLOY",
+  "passed": true,
+  "commit_sha": "bb6fbb9ee544b07c35be804373f2f4d19e1bbd32",
+  "candidate_id": "v8-frozen",
+  "active_bundle_sha256": "94ced30ae38249a06ffd5e843bd9a890e3e6e35a2fc15611ca1feaa156b70c12",
+  "video_sha256": "d502fc0e352e254dbceb5ba86d6a1913cd9afadf3ca6eb70e16c4d7f25d260dc",
+  "poster_sha256": "ab25351ce832e8e84fbc35c6afce7b8ff37cb8d99cf20246ff9c8fdc539be4c3",
+  "media_manifest_sha256": "39914f965d6990d79c4232f93ae584f72512deccc5314fc31603544e825754d7",
+  "verified_at_utc": "2026-07-23T10:18:44Z",
+  "checks": {
+    "v8_frozen_sha_guard": true,
+    "gpu_started": false,
+    "snapshot_static_not_video_copy": true,
+    "snapshot_actor_step_viewpoint_claim": true,
+    "snapshot_aspect_ratio_4_3_contain": true,
+    "move_retains_root_01": true,
+    "repair_compares_root_01_to_root_02": true,
+    "root_progress_1_of_2_to_2_of_2": true,
+    "recorded_yaw_view_direction": true,
+    "compact_1366_layout": true,
+    "stack_below_900_only": true,
+    "duplicate_timeline_removed": true,
+    "production_build": true,
+    "automated_tests_20_of_20": true,
+    "docker_fresh_build": true,
+    "docker_routes_5_of_5_http_200": true,
+    "video_1920x1080_30fps_30s_no_audio": true,
+    "browser_console_errors": 0
+  },
+  "public_deployment": {
+    "status": "NOT_RUN_CREDENTIALS_MISSING",
+    "target": "https://look-twice-evidence-console.eason1319.workers.dev",
+    "private_openai_site_changed": false
+  }
+}
