@@ -3,13 +3,13 @@
   "status": "PUBLIC_RELEASE_VERIFIED",
   "passed": true,
   "url": "https://look-twice-evidence-console.eason1319.workers.dev",
-  "commit_sha": "dfbb665e0df4d526cbe34aaa6275962e9bc80aff",
+  "commit_sha": "636594e7707f7370af3e73dbef3aa0bed3a3b323",
   "candidate_id": "v8-frozen",
   "manifest_sha256": "75135582802f91e1e5badab161871a44b36677957098a0c2f66e961c17b4f9b0",
   "active_bundle_sha256": "94ced30ae38249a06ffd5e843bd9a890e3e6e35a2fc15611ca1feaa156b70c12",
   "video_sha256": "2c653ffa521b8f4ccedd223afdddcfb27be1a0802c84bf5a897081b26071ff5f",
   "poster_sha256": "51948088d1f70a83169cbe05017d294de2ddd3e366f51b3f59c960c1dfee3c94",
-  "deployed_and_checked_at_utc": "2026-07-23T09:04:43Z",
+  "deployed_and_checked_at_utc": "2026-07-23T09:29:42Z",
   "anonymous_results": [
     {
       "route": "/",
