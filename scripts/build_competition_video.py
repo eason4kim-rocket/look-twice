@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import math
 import subprocess
 import tempfile
 from pathlib import Path
@@ -30,6 +31,8 @@ def run(command: list[str]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--frames-dir", type=Path, required=True)
+    parser.add_argument("--timed-capture-dir", type=Path)
+    parser.add_argument("--capture-fps", type=float, default=136 / 30)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument(
         "--bundle",
@@ -39,9 +42,24 @@ def main() -> int:
     args = parser.parse_args()
 
     frames = [args.frames_dir / f"frame-{index:02d}.png" for index in range(1, 7)]
-    missing = [str(path) for path in frames if not path.is_file()]
-    if missing:
-        raise SystemExit(f"missing captured Cinematic frames: {missing}")
+    timed_capture = args.timed_capture_dir is not None
+    if timed_capture:
+        required_capture_frames = math.ceil(30 * args.capture_fps)
+        captured = [
+            args.timed_capture_dir / f"capture-{index:03d}.png"
+            for index in range(required_capture_frames)
+        ]
+        missing = [str(path) for path in captured if not path.is_file()]
+        if missing:
+            raise SystemExit(
+                f"timed Cinematic capture is incomplete: {len(missing)} missing frames"
+            )
+        poster_source = captured[min(len(captured) - 1, round(args.capture_fps * 20))]
+    else:
+        missing = [str(path) for path in frames if not path.is_file()]
+        if missing:
+            raise SystemExit(f"missing captured Cinematic frames: {missing}")
+        poster_source = frames[4]
     if sum(DURATIONS) != 30:
         raise SystemExit("chapter durations must total exactly 30 seconds")
 
@@ -56,15 +74,7 @@ def main() -> int:
         "fps=30,format=yuv420p"
     )
 
-    with tempfile.TemporaryDirectory(prefix="look-twice-video-") as temp_dir:
-        concat = Path(temp_dir) / "frames.txt"
-        lines: list[str] = []
-        for frame, duration in zip(frames, DURATIONS, strict=True):
-            escaped = str(frame.resolve()).replace("'", r"'\''")
-            lines.extend((f"file '{escaped}'", f"duration {duration}"))
-        escaped_last = str(frames[-1].resolve()).replace("'", r"'\''")
-        lines.append(f"file '{escaped_last}'")
-        concat.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if timed_capture:
         run(
             [
                 "ffmpeg",
@@ -72,12 +82,14 @@ def main() -> int:
                 "-loglevel",
                 "error",
                 "-y",
-                "-f",
-                "concat",
-                "-safe",
+                "-framerate",
+                str(args.capture_fps),
+                "-c:v",
+                "mjpeg",
+                "-start_number",
                 "0",
                 "-i",
-                str(concat),
+                str(args.timed_capture_dir / "capture-%03d.png"),
                 "-vf",
                 video_filter,
                 "-t",
@@ -98,6 +110,49 @@ def main() -> int:
                 str(video),
             ]
         )
+    else:
+        with tempfile.TemporaryDirectory(prefix="look-twice-video-") as temp_dir:
+            concat = Path(temp_dir) / "frames.txt"
+            lines: list[str] = []
+            for frame, duration in zip(frames, DURATIONS, strict=True):
+                escaped = str(frame.resolve()).replace("'", r"'\''")
+                lines.extend((f"file '{escaped}'", f"duration {duration}"))
+            escaped_last = str(frames[-1].resolve()).replace("'", r"'\''")
+            lines.append(f"file '{escaped_last}'")
+            concat.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            run(
+                [
+                    "ffmpeg",
+                    "-hide_banner",
+                    "-loglevel",
+                    "error",
+                    "-y",
+                    "-f",
+                    "concat",
+                    "-safe",
+                    "0",
+                    "-i",
+                    str(concat),
+                    "-vf",
+                    video_filter,
+                    "-t",
+                    "30",
+                    "-an",
+                    "-c:v",
+                    "libx264",
+                    "-preset",
+                    "medium",
+                    "-crf",
+                    "21",
+                    "-pix_fmt",
+                    "yuv420p",
+                    "-color_range",
+                    "tv",
+                    "-movflags",
+                    "+faststart",
+                    str(video),
+                ]
+            )
 
     run(
         [
@@ -108,7 +163,7 @@ def main() -> int:
             "-resize",
             "1920",
             "1080",
-            str(frames[4]),
+            str(poster_source),
             "-o",
             str(poster),
         ]
@@ -158,7 +213,12 @@ def main() -> int:
         .replace(microsecond=0)
         .isoformat()
         .replace("+00:00", "Z"),
-        "recording_method": "cinematic_replay_frame_capture",
+        "recording_method": (
+            "cinematic_replay_timed_capture"
+            if timed_capture
+            else "cinematic_replay_frame_capture"
+        ),
+        "capture_fps": args.capture_fps if timed_capture else None,
         "chapter_durations_seconds": list(DURATIONS),
         "video": {
             "path": video.name,

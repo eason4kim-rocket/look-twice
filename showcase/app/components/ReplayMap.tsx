@@ -7,10 +7,17 @@ type Props = {
   bundle: EpisodeBundle;
   motion?: MotionSegment;
   animate: boolean;
+  durationMs?: number;
   label: string;
 };
 
-export function ReplayMap({ bundle, motion, animate, label }: Props) {
+export function ReplayMap({
+  bundle,
+  motion,
+  animate,
+  durationMs = 5200,
+  label,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -21,7 +28,7 @@ export function ReplayMap({ bundle, motion, animate, label }: Props) {
     let frame = 0;
     let cancelled = false;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reduced || !animate ? 1 : 2200;
+    const duration = reduced || !animate ? 1 : durationMs;
     const started = performance.now();
     const points = motion?.trajectory_sample || [];
     const corridors = bundle.episode_meta.corridors || [];
@@ -74,7 +81,10 @@ export function ReplayMap({ bundle, motion, animate, label }: Props) {
         context.fillText(corridor.id.toUpperCase(), start.x + 7, end.y + 16);
       });
       if (!points.length) return;
-      const last = Math.max(0, Math.floor((points.length - 1) * progress));
+      const exact = Math.max(0, (points.length - 1) * progress);
+      const last = Math.floor(exact);
+      const nextIndex = Math.min(points.length - 1, last + 1);
+      const fraction = exact - last;
       context.strokeStyle =
         motion?.agent_id === "scout" ? "#f0b44d" : "#15d5d0";
       context.lineWidth = 4;
@@ -86,9 +96,27 @@ export function ReplayMap({ bundle, motion, animate, label }: Props) {
       });
       context.stroke();
       const point = points[last];
-      const marker = scale(point.x, point.y);
+      const nextPoint = points[nextIndex];
+      const marker = scale(
+        point.x + (nextPoint.x - point.x) * fraction,
+        point.y + (nextPoint.y - point.y) * fraction,
+      );
+      const startMarker = scale(points[0].x, points[0].y);
+      context.strokeStyle =
+        motion?.agent_id === "scout"
+          ? "rgba(240,180,77,.65)"
+          : "rgba(21,213,208,.65)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(startMarker.x, startMarker.y, 7, 0, Math.PI * 2);
+      context.stroke();
       context.fillStyle =
         motion?.agent_id === "scout" ? "#f0b44d" : "#15d5d0";
+      context.globalAlpha = 0.18 + 0.12 * Math.sin(progress * Math.PI * 18);
+      context.beginPath();
+      context.arc(marker.x, marker.y, 18, 0, Math.PI * 2);
+      context.fill();
+      context.globalAlpha = 1;
       context.fillRect(marker.x - 8, marker.y - 8, 16, 16);
       context.strokeStyle = "#071012";
       context.lineWidth = 2;
@@ -111,7 +139,7 @@ export function ReplayMap({ bundle, motion, animate, label }: Props) {
       cancelled = true;
       cancelAnimationFrame(frame);
     };
-  }, [animate, bundle, motion]);
+  }, [animate, bundle, durationMs, motion]);
 
   return (
     <div className="replay-map">
@@ -124,6 +152,10 @@ export function ReplayMap({ bundle, motion, animate, label }: Props) {
         <span><i className="carrier" /> CARRIER</span>
         <span><i className="scout" /> SCOUT</span>
         <span>SIMULATION ONLY</span>
+      </div>
+      <div className="motion-status">
+        <i />
+        {motion?.agent_id?.toUpperCase() || "ROBOT"} IN MOTION · RECORDED PATH
       </div>
     </div>
   );

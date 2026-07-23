@@ -317,6 +317,7 @@ export function EvidenceConsole() {
               bundle={bundle}
               motion={state.motion}
               animate={playing || chapter.kind === "move" || chapter.kind === "act"}
+              durationMs={chapter.kind === "move" ? 5600 : 7600}
               label={
                 chapter.kind === "move"
                   ? tx("SCOUT MOVES TO THE DIAGNOSTIC VIEW", "SCOUT 移动到诊断视角")
@@ -331,18 +332,39 @@ export function EvidenceConsole() {
                 frame={frames[0]}
                 mode={sensorMode}
                 label={tx("BEFORE · ROOT 01", "之前 · ROOT 01")}
+                status={tx("HELD FRAME · ORIGINAL ROOT", "停止帧 · 原始证据根")}
+                scanning={playing}
               />
               <div className="compare-arrow">→</div>
               <FrameView
                 frame={frames.at(-1)!}
                 mode={sensorMode}
                 label={tx("AFTER · ROOT 02", "之后 · ROOT 02")}
+                status={tx("NEW CAPTURE · INDEPENDENT ROOT", "新采集 · 独立证据根")}
+                scanning={playing}
               />
             </div>
           ) : (
             <FrameView
               frame={frame}
               mode={sensorMode}
+              status={
+                chapter.kind === "observe"
+                  ? tx(
+                      "ROBOT STOPPED · RECORDED EVIDENCE FRAME",
+                      "机器人已停下 · 录制证据帧",
+                    )
+                  : chapter.kind === "deny"
+                    ? tx(
+                        "ACTION HELD · PURIFY INSPECTING EVIDENCE",
+                        "动作保持停止 · Purify 正在审查证据",
+                      )
+                    : tx(
+                        "FRAME HELD · TARGETING DIAGNOSTIC VIEW",
+                        "画面保持 · 正在选择诊断视角",
+                      )
+              }
+              scanning={playing}
               label={
                 chapter.kind === "observe"
                   ? tx("INITIAL FRONT VIEW · ROOT 01", "初始正面视角 · ROOT 01")
@@ -541,14 +563,18 @@ function FrameView({
   frame,
   mode,
   label,
+  status,
+  scanning,
 }: {
   frame: EpisodeBundle["sensor_frames"][number];
   mode: "rgb" | "depth" | "mask";
   label: string;
+  status: string;
+  scanning: boolean;
 }) {
   const source = frame.media[mode === "mask" ? "corridor_mask" : mode];
   return (
-    <div className="judge-frame">
+    <div className={"judge-frame " + (scanning ? "is-scanning" : "")}>
       <Image
         fill
         unoptimized
@@ -564,6 +590,11 @@ function FrameView({
         <span>{frame.corridor_id} · {frame.viewpoint}</span>
         <b>CLAIM: {frame.value.toUpperCase()}</b>
       </div>
+      <div className="recorded-status">
+        <i />
+        <span>{status}</span>
+      </div>
+      <div className="evidence-scan" aria-hidden="true" />
     </div>
   );
 }
