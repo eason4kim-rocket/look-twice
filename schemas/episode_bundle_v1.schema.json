@@ -6,17 +6,17 @@
   "additionalProperties": false,
   "required": ["schema_version", "candidate_id", "episode_meta", "sensor_frames", "claims", "measurement_roots", "gate_receipts", "repair_requests", "nbv_candidates", "motion_segments", "events", "outcome", "integrity"],
   "properties": {
-    "schema_version": {"const": "look-twice.episode-bundle/v1"},
+    "schema_version": {"const": "look-twice.episode-bundle/v1.1"},
     "candidate_id": {"type": "string", "minLength": 1},
     "episode_meta": {"type": "object", "required": ["replay_id", "policy", "recorded_gpu_evidence", "simulation_only", "frozen_candidate_artifact", "live_gpu_dependency"]},
     "sensor_frames": {"type": "array", "items": {"type": "object", "required": ["frame_id", "step", "media"]}},
     "claims": {"type": "array", "items": {"type": "object", "required": ["claim_id", "capture_root_id"]}},
     "measurement_roots": {"type": "array", "items": {"type": "object", "required": ["measurement_root_id", "claim_ids"]}},
-    "gate_receipts": {"type": "array", "items": {"type": "object", "required": ["evaluated_step", "python_admitted", "purify_go_admitted", "effective_admit"]}},
+    "gate_receipts": {"type": "array", "items": {"type": "object", "required": ["gate_id", "source_receipt_sha256", "evaluated_step", "python_admitted", "purify_go_admitted", "effective_admit"]}},
     "repair_requests": {"type": "array", "items": {"type": "object"}},
     "nbv_candidates": {"type": "array", "items": {"type": "object"}},
-    "motion_segments": {"type": "array", "items": {"type": "object"}},
-    "events": {"type": "array", "items": {"type": "object", "required": ["event_id", "step", "type", "status"]}},
+    "motion_segments": {"type": "array", "items": {"type": "object", "required": ["motion_id", "agent_id", "purpose", "start_step", "end_step", "trajectory_sample"]}},
+    "events": {"type": "array", "items": {"type": "object", "required": ["event_id", "step", "type", "status", "ref_kind", "ref_id"]}},
     "outcome": {"type": "object", "required": ["mission_success", "unsafe_crossing", "route_mode"]},
     "integrity": {"type": "object", "required": ["builder_version", "source_episode_sha256", "frozen_identity", "bundle_sha256"]}
   }

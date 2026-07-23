@@ -76,6 +76,59 @@ class CompetitionReplayTest(unittest.TestCase):
         steps = [event["step"] for event in bundle["events"]]
         self.assertEqual(steps, sorted(steps))
 
+    def test_gate_occurrences_are_unique_and_event_statuses_match(self) -> None:
+        bundle = self.adapt(
+            "active__independent-noise__105400.json", "v8-active-repair-direct"
+        )
+        gates = bundle["gate_receipts"]
+        gate_ids = [gate["gate_id"] for gate in gates]
+        self.assertEqual(len(gate_ids), len(set(gate_ids)))
+        # The frozen runtime legitimately reused one source receipt hash. The
+        # public occurrence identity must remain unique despite that fact.
+        source_hashes = [gate["source_receipt_sha256"] for gate in gates]
+        self.assertLess(len(set(source_hashes)), len(source_hashes))
+        by_id = {gate["gate_id"]: gate for gate in gates}
+        for event in bundle["events"]:
+            if event["ref_kind"] != "gate_receipt":
+                continue
+            receipt = by_id[event["ref_id"]]
+            expected = "admitted" if receipt["effective_admit"] else "denied"
+            self.assertEqual(event["status"], expected)
+
+    def test_active_and_passive_motion_are_public_and_traceable(self) -> None:
+        active = self.adapt(
+            "active__independent-noise__105400.json", "v8-active-repair-direct"
+        )
+        passive = self.adapt(
+            "passive__independent-noise__105400.json", "v8-passive-safe-detour"
+        )
+        self.assertTrue(
+            any(
+                motion["purpose"] == "scout_repair"
+                and motion["trajectory_sample"]
+                for motion in active["motion_segments"]
+            )
+        )
+        self.assertTrue(
+            any(
+                motion["purpose"] == "direct_cross"
+                for motion in active["motion_segments"]
+            )
+        )
+        self.assertTrue(
+            any(
+                motion["purpose"] == "safe_detour"
+                for motion in passive["motion_segments"]
+            )
+        )
+        for bundle in (active, passive):
+            motion_ids = {
+                motion["motion_id"] for motion in bundle["motion_segments"]
+            }
+            for event in bundle["events"]:
+                if event["ref_kind"] == "motion_segment":
+                    self.assertIn(event["ref_id"], motion_ids)
+
 
 if __name__ == "__main__":
     unittest.main()

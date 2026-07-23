@@ -69,6 +69,28 @@ function HomeContent() {
         <div className="flow-grid">{flow.map((item) => <article key={item[0]}><span>{item[0]}</span><h3>{zh ? item[3] : item[1]}</h3><p>{zh ? item[4] : item[2]}</p></article>)}</div>
       </section>
 
+      <section className="section reel-section">
+        <div className="section-heading">
+          <span>03 / 30-SECOND REEL</span>
+          <h2>{zh ? "不需要解释：看机器人为什么停、如何修证、何时获准行动。" : "No explanation required: see why the robot stops, repairs evidence, and earns permission to act."}</h2>
+        </div>
+        <div className="reel-player">
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            poster="/media/look-twice-replay-30s.poster.webp"
+          >
+            <source src="/media/look-twice-replay-30s.mp4" type="video/mp4" />
+          </video>
+          <div>
+            <b>{zh ? "录制的 AMD GPU 证据回放" : "RECORDED AMD GPU EVIDENCE REPLAY"}</b>
+            <p>{zh ? "1920×1080 · 30 FPS · 无旁白 · Simulation only。全部状态来自同一 EpisodeBundle。" : "1920×1080 · 30 FPS · no narration · Simulation only. Every state comes from the same EpisodeBundle."}</p>
+            <a href="/media/look-twice-replay-30s.mp4" download>{zh ? "下载 MP4 ↓" : "DOWNLOAD MP4 ↓"}</a>
+          </div>
+        </div>
+      </section>
+
       <section className="section cta-band">
         <div><span>RECORDED CONFIRMATORY EPISODE</span><h2>{zh ? "看见每一条 Claim 如何改变机器人的行动资格。" : "See exactly how each claim changes what the robot is allowed to do."}</h2></div>
         <Link href="/console" className="button primary">{zh ? "播放闭环" : "Play the evidence loop"}<span>→</span></Link>

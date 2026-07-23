@@ -41,3 +41,22 @@ jobs:
       - name: Record checksum
         working-directory: .
         run: sha256sum purify-robotics-core-linux-amd64
+
+  showcase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: showcase/package-lock.json
+      - name: Install showcase dependencies
+        working-directory: showcase
+        run: npm ci
+      - name: Verify replay data and production build
+        run: |
+          python3 scripts/build_competition_replays.py
+          python3 scripts/verify_frozen_foundation.py
+          cd showcase
+          npm test

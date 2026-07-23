@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 RELEASE_PROFILE_SCHEMA = "look-twice.release-profile/v1"
-EPISODE_BUNDLE_SCHEMA = "look-twice.episode-bundle/v1"
-BUILDER_VERSION = "look-twice.competition-replay-builder/1"
+EPISODE_BUNDLE_SCHEMA = "look-twice.episode-bundle/v1.1"
+BUILDER_VERSION = "look-twice.competition-replay-builder/2"
 
 
 def file_sha256(path: str | Path) -> str:
@@ -90,10 +90,16 @@ def _public_go_receipt(receipt: Mapping[str, Any] | None) -> dict[str, Any] | No
     return {key: receipt.get(key) for key in allowed if key in receipt}
 
 
-def _public_gate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
+def _public_gate_receipt(
+    receipt: Mapping[str, Any], *, gate_id: str
+) -> dict[str, Any]:
     go_receipt = _public_go_receipt(receipt.get("purify_go_receipt"))
     result = {
-        "receipt_sha256": receipt.get("receipt_sha256"),
+        "gate_id": gate_id,
+        # Runtime receipt hashes identify the frozen source receipt. They are
+        # audit identities, not occurrence IDs: the runtime may legitimately
+        # reuse one source receipt while the Python wrapper state changes.
+        "source_receipt_sha256": receipt.get("receipt_sha256"),
         "corridor_id": receipt.get("corridor_id"),
         "action": receipt.get("action"),
         "evaluated_step": int(receipt.get("evaluated_step") or 0),
@@ -111,6 +117,81 @@ def _public_gate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
         "go_receipt": go_receipt,
     }
     return result
+
+
+def _sample_trajectory(
+    trajectory: Iterable[Mapping[str, Any]], *, start_step: int, limit: int = 60
+) -> list[dict[str, Any]]:
+    points = list(trajectory)
+    if not points:
+        return []
+    if len(points) <= limit:
+        selected = points
+    else:
+        indices = {
+            round(index * (len(points) - 1) / (limit - 1))
+            for index in range(limit)
+        }
+        selected = [points[index] for index in sorted(indices)]
+    return [
+        {
+            "step": start_step + int(point.get("step") or 0),
+            "x": float(point.get("x") or 0.0),
+            "y": float(point.get("y") or 0.0),
+            "yaw": float(point.get("yaw") or 0.0),
+        }
+        for point in selected
+    ]
+
+
+def _public_motion_segments(
+    episode: Mapping[str, Any], outcome: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    raw = list(episode.get("motion_segments") or [])
+    last_carrier_index = max(
+        (
+            index
+            for index, item in enumerate(raw)
+            if str(item.get("agent_id") or "") == "carrier"
+        ),
+        default=-1,
+    )
+    current_step = 0
+    results: list[dict[str, Any]] = []
+    for index, item in enumerate(raw):
+        elapsed = max(0, int(item.get("elapsed_steps") or 0))
+        start_step = current_step
+        end_step = start_step + elapsed
+        current_step = end_step
+        agent_id = str(item.get("agent_id") or "unknown")
+        if agent_id == "scout":
+            purpose = "scout_repair"
+        elif index == last_carrier_index:
+            purpose = (
+                "direct_cross"
+                if outcome.get("route_mode") == "direct"
+                else "safe_detour"
+            )
+        else:
+            purpose = "approach"
+        results.append(
+            {
+                "motion_id": f"motion-{index + 1:04d}",
+                "agent_id": agent_id,
+                "purpose": purpose,
+                "start_step": start_step,
+                "end_step": end_step,
+                "reached": bool(item.get("reached")),
+                "collision_count": int(item.get("collision_count") or 0),
+                "path_length": float(item.get("path_length") or 0.0),
+                "target_xy": list(item.get("target_xy") or []),
+                "final_pose": dict(item.get("final_pose") or {}),
+                "trajectory_sample": _sample_trajectory(
+                    item.get("trajectory") or [], start_step=start_step
+                ),
+            }
+        )
+    return results
 
 
 def _observation_step_lookup(episode: Mapping[str, Any]) -> dict[tuple[str, str], int]:
@@ -257,6 +338,7 @@ def _events(
     sensor_frames: list[Mapping[str, Any]],
     gates: list[Mapping[str, Any]],
     requests: list[Mapping[str, Any]],
+    motions: list[Mapping[str, Any]],
     outcome: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
@@ -268,6 +350,7 @@ def _events(
                 "type": "observation",
                 "status": frame.get("value") or "inconclusive",
                 "title_key": "event.observation",
+                "ref_kind": "sensor_frame",
                 "ref_id": frame["frame_id"],
             }
         )
@@ -279,7 +362,8 @@ def _events(
                 "type": "gate_decision",
                 "status": "admitted" if gate.get("effective_admit") else "denied",
                 "title_key": "event.gate",
-                "ref_id": gate.get("receipt_sha256"),
+                "ref_kind": "gate_receipt",
+                "ref_id": gate.get("gate_id"),
             }
         )
     deny_steps: list[int] = [
@@ -296,7 +380,20 @@ def _events(
                 "type": "evidence_request",
                 "status": "authorized" if request.get("authorized") else "denied",
                 "title_key": "event.repair",
+                "ref_kind": "repair_request",
                 "ref_id": request.get("request_id"),
+            }
+        )
+    for motion in motions:
+        events.append(
+            {
+                "event_id": f"move-{motion['motion_id']}",
+                "step": int(motion.get("start_step") or 0),
+                "type": "motion",
+                "status": "reached" if motion.get("reached") else "failed",
+                "title_key": "event.motion",
+                "ref_kind": "motion_segment",
+                "ref_id": motion["motion_id"],
             }
         )
     final_step = max([int(e.get("step") or 0) for e in events] or [0]) + 1
@@ -307,10 +404,17 @@ def _events(
             "type": "outcome",
             "status": outcome.get("route_mode") or "denied",
             "title_key": "event.outcome",
+            "ref_kind": "outcome",
             "ref_id": "outcome",
         }
     )
-    priority = {"observation": 0, "gate_decision": 1, "evidence_request": 2, "outcome": 3}
+    priority = {
+        "motion": 0,
+        "observation": 1,
+        "gate_decision": 2,
+        "evidence_request": 3,
+        "outcome": 4,
+    }
     events.sort(key=lambda item: (item["step"], priority.get(item["type"], 9), item["event_id"]))
     return events
 
@@ -331,7 +435,10 @@ def adapt_v8_episode(
     environment = episode.get("environment") or {}
     metrics = episode.get("metrics") or {}
     claims = [_public_claim(item) for item in episode.get("claims") or []]
-    gates = [_public_gate_receipt(item) for item in episode.get("gate_receipts") or []]
+    gates = [
+        _public_gate_receipt(item, gate_id=f"gate-{index + 1:04d}")
+        for index, item in enumerate(episode.get("gate_receipts") or [])
+    ]
     requests = _repair_requests(episode)
     media_path = Path(media_root) if media_root is not None else None
     media_manifest = (
@@ -352,6 +459,16 @@ def adapt_v8_episode(
         "observation_count": int(metrics.get("observation_count") or 0),
         "replan_count": int(metrics.get("replan_count") or 0),
     }
+    motions = _public_motion_segments(episode, outcome)
+    scout_motions = [
+        item["motion_id"]
+        for item in motions
+        if item.get("purpose") == "scout_repair"
+    ]
+    for index, request in enumerate(requests):
+        request["motion_id"] = (
+            scout_motions[index] if index < len(scout_motions) else None
+        )
     bundle: dict[str, Any] = {
         "schema_version": EPISODE_BUNDLE_SCHEMA,
         "candidate_id": "v8-frozen",
@@ -378,7 +495,7 @@ def adapt_v8_episode(
         "gate_receipts": gates,
         "repair_requests": requests,
         "nbv_candidates": _nbv_candidates(episode),
-        "motion_segments": list(episode.get("motion_segments") or []),
+        "motion_segments": motions,
         "events": [],
         "outcome": outcome,
         "integrity": {
@@ -392,7 +509,7 @@ def adapt_v8_episode(
             ),
         },
     }
-    bundle["events"] = _events(sensor_frames, gates, requests, outcome)
+    bundle["events"] = _events(sensor_frames, gates, requests, motions, outcome)
     bundle["integrity"]["bundle_sha256"] = canonical_sha256(bundle)
     return bundle
 
@@ -480,6 +597,80 @@ def assert_public_bundle(bundle: Mapping[str, Any]) -> None:
     steps = [int(item.get("step") or 0) for item in bundle.get("events") or []]
     if steps != sorted(steps):
         raise ValueError("events are not monotonic")
+    gates = list(bundle.get("gate_receipts") or [])
+    motions = list(bundle.get("motion_segments") or [])
+    events = list(bundle.get("events") or [])
+    gate_by_id = {str(item.get("gate_id")): item for item in gates}
+    motion_by_id = {str(item.get("motion_id")): item for item in motions}
+    frame_by_id = {
+        str(item.get("frame_id")): item for item in bundle.get("sensor_frames") or []
+    }
+    request_by_id = {
+        str(item.get("request_id")): item
+        for item in bundle.get("repair_requests") or []
+    }
+    if len(gate_by_id) != len(gates) or "None" in gate_by_id:
+        raise ValueError("gate_id values must be unique and non-empty")
+    if len(motion_by_id) != len(motions) or "None" in motion_by_id:
+        raise ValueError("motion_id values must be unique and non-empty")
+    event_ids = [str(item.get("event_id")) for item in events]
+    if len(set(event_ids)) != len(event_ids) or "None" in event_ids:
+        raise ValueError("event_id values must be unique and non-empty")
+    lookup = {
+        "gate_receipt": gate_by_id,
+        "motion_segment": motion_by_id,
+        "sensor_frame": frame_by_id,
+        "repair_request": request_by_id,
+        "outcome": {"outcome": bundle.get("outcome")},
+    }
+    for event in events:
+        kind = str(event.get("ref_kind"))
+        reference = str(event.get("ref_id"))
+        if kind not in lookup or reference not in lookup[kind]:
+            raise ValueError(
+                f"event {event.get('event_id')} has unresolved {kind}:{reference}"
+            )
+        if kind == "gate_receipt":
+            receipt = lookup[kind][reference]
+            expected = "admitted" if receipt.get("effective_admit") else "denied"
+            if event.get("status") != expected:
+                raise ValueError(
+                    f"gate event status mismatch for {reference}: "
+                    f"{event.get('status')} != {expected}"
+                )
+    for motion in motions:
+        start = int(motion.get("start_step") or 0)
+        end = int(motion.get("end_step") or 0)
+        if start > end:
+            raise ValueError(f"motion has invalid time range: {motion.get('motion_id')}")
+        points = list(motion.get("trajectory_sample") or [])
+        point_steps = [int(item.get("step") or 0) for item in points]
+        if point_steps != sorted(point_steps):
+            raise ValueError(
+                f"motion trajectory is not monotonic: {motion.get('motion_id')}"
+            )
+    outcome = bundle.get("outcome") or {}
+    if outcome.get("unsafe_crossing"):
+        raise ValueError("competition replay cannot claim a safe outcome when unsafe")
+    if outcome.get("repair_attempted"):
+        if not any(not item.get("effective_admit") for item in gates):
+            raise ValueError("active replay is missing an initial deny")
+        if not any(
+            item.get("python_admitted")
+            and item.get("purify_go_admitted")
+            and item.get("effective_admit")
+            for item in gates
+        ):
+            raise ValueError("active replay is missing Python and Purify admission")
+        if outcome.get("route_mode") != "direct":
+            raise ValueError("active repair replay must end in direct action")
+        if not any(item.get("purpose") == "scout_repair" for item in motions):
+            raise ValueError("active replay is missing scout repair motion")
+    else:
+        if any(item.get("effective_admit") for item in gates):
+            raise ValueError("passive replay unexpectedly contains an admission")
+        if outcome.get("route_mode") != "detour":
+            raise ValueError("passive replay must end in a detour")
 
 
 __all__ = (

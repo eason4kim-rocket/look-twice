@@ -16,7 +16,7 @@
       "route_mode": "direct",
       "repair_success": true,
       "href": "/data/replays/v8-active-repair-direct.json",
-      "bundle_sha256": "627faf79f50b95bcb04a70797c876e58d16818fa964c8ec4dbf39acc59a772a1"
+      "bundle_sha256": "a109458cb1f04aaa15db9c8827f4a6446edf20b90797d55a11c3318b087b12c4"
     },
     {
       "replay_id": "v8-passive-safe-detour",
@@ -25,8 +25,8 @@
       "route_mode": "detour",
       "repair_success": false,
       "href": "/data/replays/v8-passive-safe-detour.json",
-      "bundle_sha256": "8649dab606d0da4dead5288a2e9e83c6d0aa3e04ebf6fc7834c403f942475666"
+      "bundle_sha256": "9cebb3bd1e4f3ec710199afd5568493cb0ee331faf3be984f75624d25b8f1247"
     }
   ],
-  "manifest_sha256": "5b886291ab4977d5df08c24b4be898b4baacd361fb2bcb6333686f0f0608b829"
+  "manifest_sha256": "7fc61c4f26eaa0ff1ab5626b01b0fd22b452338ac024757c855f380570776e91"
 }
