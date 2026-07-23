@@ -8,11 +8,12 @@ import {
   timelineDurations,
 } from "../lib/replayTimeline";
 import type { EpisodeBundle, ReleaseProfile } from "../lib/types";
-import { ReplayMap } from "./ReplayMap";
 import { useLanguage } from "./SiteShell";
+import { WorldReplay3D } from "./WorldReplay3D";
 import "./console.css";
 import "./judge-console.css";
 import "./recorded.css";
+import "./world-replay.css";
 
 type Manifest = {
   default_candidate_id: string;
@@ -176,7 +177,9 @@ export function EvidenceConsole() {
   const denied = state.gate && !state.gate.effective_admit;
   const admitted = Boolean(state.gate?.effective_admit);
   const qualifyingRootCount = admitted ? 2 : 1;
-  const showMap = chapter.kind === "move" || chapter.kind === "act";
+  const chapterDuration =
+    timelineDurations(Boolean(bundle.outcome.repair_attempted))[chapterIndex] ||
+    4000;
   const nextView = String(request?.target_viewpoint || "diagnostic side view")
     .replaceAll("_", " ")
     .toUpperCase();
@@ -312,66 +315,76 @@ export function EvidenceConsole() {
 
       <section className="visual-stage">
         <div className="visual-primary">
-          {showMap ? (
-            <ReplayMap
+          <div className="world-evidence-layout">
+            <WorldReplay3D
               bundle={bundle}
-              motion={state.motion}
-              animate={playing || chapter.kind === "move" || chapter.kind === "act"}
-              durationMs={chapter.kind === "move" ? 5600 : 7600}
+              chapterKind={chapter.kind}
+              chapterStep={state.event?.step || frame.step}
+              animate={playing}
+              durationMs={chapterDuration}
               label={
-                chapter.kind === "move"
-                  ? tx("SCOUT MOVES TO THE DIAGNOSTIC VIEW", "SCOUT 移动到诊断视角")
-                  : state.routeMode === "direct"
-                    ? tx("AUTHORIZED DIRECT CROSSING", "已授权的直接通行")
-                    : tx("SAFE DETOUR", "安全绕行")
-              }
-            />
-          ) : chapter.kind === "repair" && frames.length > 1 ? (
-            <div className="frame-compare">
-              <FrameView
-                frame={frames[0]}
-                mode={sensorMode}
-                label={tx("BEFORE · ROOT 01", "之前 · ROOT 01")}
-                status={tx("HELD FRAME · ORIGINAL ROOT", "停止帧 · 原始证据根")}
-                scanning={playing}
-              />
-              <div className="compare-arrow">→</div>
-              <FrameView
-                frame={frames.at(-1)!}
-                mode={sensorMode}
-                label={tx("AFTER · ROOT 02", "之后 · ROOT 02")}
-                status={tx("NEW CAPTURE · INDEPENDENT ROOT", "新采集 · 独立证据根")}
-                scanning={playing}
-              />
-            </div>
-          ) : (
-            <FrameView
-              frame={frame}
-              mode={sensorMode}
-              status={
                 chapter.kind === "observe"
-                  ? tx(
-                      "ROBOT STOPPED · RECORDED EVIDENCE FRAME",
-                      "机器人已停下 · 录制证据帧",
-                    )
+                  ? tx("GENESIS WORLD · ROBOT HELD", "GENESIS 世界 · 机器人停止")
                   : chapter.kind === "deny"
-                    ? tx(
-                        "ACTION HELD · PURIFY INSPECTING EVIDENCE",
-                        "动作保持停止 · Purify 正在审查证据",
-                      )
-                    : tx(
-                        "FRAME HELD · TARGETING DIAGNOSTIC VIEW",
-                        "画面保持 · 正在选择诊断视角",
-                      )
-              }
-              scanning={playing}
-              label={
-                chapter.kind === "observe"
-                  ? tx("INITIAL FRONT VIEW · ROOT 01", "初始正面视角 · ROOT 01")
-                  : tx("THE CLAIM IS CLEAR; THE CONTRACT IS NOT", "CLAIM 为 CLEAR；合同仍不满足")
+                    ? tx("PURIFY HOLD · ACTION DENIED", "PURIFY 保持停止 · 动作拒绝")
+                    : chapter.kind === "plan"
+                      ? tx("NBV TARGET LOCKED", "NBV 诊断目标已锁定")
+                      : chapter.kind === "move"
+                        ? tx("SCOUT MOVES TO THE DIAGNOSTIC VIEW", "SCOUT 移动到诊断视角")
+                        : chapter.kind === "repair"
+                          ? tx("NEW ROOT · GATE RE-EVALUATION", "新证据根 · GATE 重新评估")
+                          : state.routeMode === "direct"
+                            ? tx("AUTHORIZED DIRECT CROSSING", "已授权的直接通行")
+                            : tx("SAFE DETOUR", "安全绕行")
               }
             />
-          )}
+            <div className="world-evidence-dock">
+              <div className="evidence-dock-title">
+                <span>{tx("RECORDED RGB-D EVIDENCE", "录制的 RGB-D 证据")}</span>
+                <b>{sensorMode === "mask" ? "MASK" : sensorMode.toUpperCase()}</b>
+              </div>
+              {chapter.kind === "repair" && frames.length > 1 ? (
+                <div className="evidence-pair">
+                  <FrameView
+                    frame={frames[0]}
+                    mode={sensorMode}
+                    label={tx("BEFORE · ROOT 01", "之前 · ROOT 01")}
+                    status={tx("ORIGINAL ROOT", "原始证据根")}
+                    scanning={playing}
+                  />
+                  <FrameView
+                    frame={frames.at(-1)!}
+                    mode={sensorMode}
+                    label={tx("AFTER · ROOT 02", "之后 · ROOT 02")}
+                    status={tx("NEW INDEPENDENT ROOT", "新独立证据根")}
+                    scanning={playing}
+                  />
+                </div>
+              ) : (
+                <FrameView
+                  frame={frame}
+                  mode={sensorMode}
+                  status={
+                    chapter.kind === "observe"
+                      ? tx("RECORDED EVIDENCE FRAME", "录制证据帧")
+                      : chapter.kind === "deny"
+                        ? tx("PURIFY INSPECTING EVIDENCE", "Purify 正在审查证据")
+                        : chapter.kind === "move"
+                          ? tx("CAMERA MOVES WITH SCOUT", "相机随 SCOUT 移动")
+                          : chapter.kind === "act"
+                            ? tx("QUALIFIED EVIDENCE RETAINED", "保留已授权证据")
+                            : tx("TARGETING DIAGNOSTIC VIEW", "正在选择诊断视角")
+                  }
+                  scanning={playing}
+                  label={
+                    chapter.kind === "observe"
+                      ? tx("INITIAL FRONT VIEW · ROOT 01", "初始正面视角 · ROOT 01")
+                      : tx("CLAIM EVIDENCE", "CLAIM 证据")
+                  }
+                />
+              )}
+            </div>
+          </div>
         </div>
         <aside className="decision-summary">
           <span>{tx("CURRENT DECISION", "当前决策")}</span>
@@ -451,7 +464,17 @@ export function EvidenceConsole() {
       </section>
 
       {state.revealOutcome && (
-        <section className="comparison-card">
+        <section
+          className={
+            "comparison-card " +
+            (cinematic && playing ? "result-delayed" : "")
+          }
+          style={
+            cinematic && playing
+              ? { animationDelay: `${Math.max(0, chapterDuration - 3000)}ms` }
+              : undefined
+          }
+        >
           <div>
             <span>ACTIVE</span>
             <b>REPAIR EVIDENCE → DIRECT</b>

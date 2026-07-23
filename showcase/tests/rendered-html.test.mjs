@@ -59,6 +59,13 @@ test("publishes candidate-neutral, traceable replay data", async () => {
         assert.equal(event.status, target.effective_admit ? "admitted" : "denied");
       }
     }
+    for (const motion of bundle.motion_segments) {
+      assert.ok(motion.trajectory_sample.length >= 2);
+      const positions = new Set(
+        motion.trajectory_sample.map((point) => `${point.x}:${point.y}:${point.yaw}`),
+      );
+      assert.ok(positions.size >= 2, `${motion.motion_id} must contain real movement`);
+    }
     const serialized = JSON.stringify(bundle);
     assert.doesNotMatch(serialized, /\/workspace\/|\/Users\/|ssh\s|oracle|private purify/i);
   }
@@ -79,6 +86,10 @@ test("publishes a reproducible 30-second media pack", async () => {
   assert.equal(mediaManifest.video.height, 1080);
   assert.equal(mediaManifest.video.fps, 30);
   assert.equal(mediaManifest.video.audio, false);
+  assert.equal(mediaManifest.recording_method, "cinematic_replay_timed_capture");
+  assert.equal(mediaManifest.boundary.recorded_amd_gpu_evidence, true);
+  assert.equal(mediaManifest.boundary.simulation_only, true);
+  assert.equal(mediaManifest.boundary.live_gpu_dependency, false);
   assert.ok(mediaManifest.video.bytes < 50 * 1024 * 1024);
   assert.equal(
     mediaManifest.bundle_sha256,

@@ -3,9 +3,9 @@
   "candidate_id": "v8-frozen",
   "replay_id": "v8-active-repair-direct",
   "bundle_sha256": "6ef15e101341fce09094cce00acd039bbea7fe456cf88b044cc1689ce7bb74c1",
-  "recorded_at_utc": "2026-07-23T05:54:38Z",
+  "recorded_at_utc": "2026-07-23T06:25:58Z",
   "recording_method": "cinematic_replay_timed_capture",
-  "capture_fps": 4.533333333333333,
+  "capture_fps": 5.0,
   "chapter_durations_seconds": [
     3,
     4,
@@ -16,8 +16,8 @@
   ],
   "video": {
     "path": "look-twice-replay-30s.mp4",
-    "sha256": "fad2bfabd120bd417d977f91a4e1c22001e7e8355d993ad21caf9013d73a3097",
-    "bytes": 1076581,
+    "sha256": "22c7619bb06f62a1254a4db8cbfcc4348c9248591faf383fdd8bb5ad8afc5269",
+    "bytes": 891153,
     "codec": "h264",
     "pixel_format": "yuv420p",
     "width": 1920,
@@ -28,8 +28,8 @@
   },
   "poster": {
     "path": "look-twice-replay-30s.poster.webp",
-    "sha256": "079554ecfac91bba96d1d435e2c11b7eeda92f15ed6c98132abd039df92b391f",
-    "bytes": 56210
+    "sha256": "ac65b68003b15fddc1d2c6924e3d983309f51674419a2798c6ff7a4ff5a9dce3",
+    "bytes": 44938
   },
   "boundary": {
     "recorded_amd_gpu_evidence": true,
