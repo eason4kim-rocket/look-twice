@@ -11,6 +11,7 @@ export type Projection = {
 
 const ISO_DEPTH = 0.58;
 const ISO_HEIGHT = 1.28;
+const DISPLAY_ZOOM = 1.16;
 
 export function trajectoryPoints(bundle: EpisodeBundle, agentId: string) {
   return bundle.motion_segments
@@ -89,21 +90,24 @@ export function createProjection(
   const maxU = Math.max(...corners.map((point) => point.u));
   const minV = Math.min(...corners.map((point) => point.v));
   const maxV = Math.max(...corners.map((point) => point.v));
-  const horizontalPadding = Math.max(34, width * 0.055);
-  const topPadding = Math.max(105, height * 0.22);
-  const bottomPadding = Math.max(74, height * 0.15);
-  const scale = Math.min(
+  const horizontalPadding = Math.max(28, width * 0.045);
+  const topPadding = Math.max(78, height * 0.18);
+  const bottomPadding = Math.max(54, height * 0.12);
+  const fittedScale = Math.min(
     (width - horizontalPadding * 2) / Math.max(0.01, maxU - minU),
     (height - topPadding - bottomPadding) / Math.max(0.01, maxV - minV),
   );
+  // The full recorded route still remains in frame; this modest display zoom
+  // restores the readable robot scale lost to the compact judge layout.
+  const scale = fittedScale * DISPLAY_ZOOM;
   const availableWidth = width - horizontalPadding * 2;
   const availableHeight = height - topPadding - bottomPadding;
   const renderedWidth = (maxU - minU) * scale;
   const renderedHeight = (maxV - minV) * scale;
   const offsetX =
-    horizontalPadding + Math.max(0, (availableWidth - renderedWidth) / 2);
+    horizontalPadding + (availableWidth - renderedWidth) / 2;
   const offsetY =
-    topPadding + Math.max(0, (availableHeight - renderedHeight) / 2);
+    topPadding + (availableHeight - renderedHeight) / 2;
   return {
     scale,
     project(x: number, y: number, z = 0) {

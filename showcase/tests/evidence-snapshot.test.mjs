@@ -75,7 +75,7 @@ test("compact layout removes the duplicate timeline and stacks only below 900px"
     /@media \(max-width: 900px\)[\s\S]*?\.world-evidence-layout\s*\{[^}]*grid-template-columns:\s*1fr/s,
   );
   assert.match(consoleCss, /\.console-toolbar\s*\{[^}]*min-height:\s*52px/s);
-  assert.match(consoleCss, /\.judge-stage\s*\{[^}]*min-height:\s*166px/s);
+  assert.match(consoleCss, /\.judge-stage\s*\{[^}]*min-height:\s*156px/s);
 });
 
 test("judge copy does not imply occlusion and names independent verification", () => {
