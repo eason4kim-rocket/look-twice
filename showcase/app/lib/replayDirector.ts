@@ -162,10 +162,12 @@ export function buildReplayChapters(
         id: "move",
         kind: "move",
         label: zh ? "移动" : "MOVE",
-        title: zh ? "Scout 移动到独立侧视位置" : "The scout moves to an independent side view",
+        title: zh
+          ? "机器人协同移动到独立侧视位置"
+          : "The robots reposition for an independent side view",
         body: zh
-          ? "真实轨迹改变了相机位置，并创建新的物理采集根。"
-          : "The recorded trajectory changes the camera pose and creates a new physical capture root.",
+          ? "Scout 获取新物理采集根；Carrier 同时沿记录的接近轨迹连续移动。"
+          : "The scout acquires a new physical capture root while the carrier follows its recorded approach trajectory.",
         eventIndex: Math.max(0, moveIndex),
         frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
         gateId: firstDeny?.gate?.gate_id,

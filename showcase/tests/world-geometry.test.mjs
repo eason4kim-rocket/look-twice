@@ -42,8 +42,21 @@ test("MOVE and ACT map playback progress onto recorded world steps", () => {
   const actStart = chapterStepAtProgress(bundle, "act", 1407, 0);
   const actEnd = chapterStepAtProgress(bundle, "act", 1407, 1);
   assert.equal(moveStart, 164);
-  assert.equal(moveEnd, 662);
+  assert.equal(moveEnd, 1010);
+  assert.equal(actStart, 1011);
   assert.ok(actEnd > actStart);
+});
+
+test("MOVE to REPAIR keeps both recorded robot poses continuous", () => {
+  const moveEnd = chapterStepAtProgress(bundle, "move", 164, 1);
+  const repairStart = 1011;
+  for (const agent of ["carrier", "scout"]) {
+    const points = trajectoryPoints(bundle, agent);
+    const before = interpolatePose(points, moveEnd);
+    const after = interpolatePose(points, repairStart);
+    const distance = Math.hypot(before.x - after.x, before.y - after.y);
+    assert.ok(distance < 0.02, `${agent} jumped ${distance}m at MOVE → REPAIR`);
+  }
 });
 
 test("step 662 keeps recorded separation and avoids projected body overlap", () => {

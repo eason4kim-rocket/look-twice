@@ -119,9 +119,23 @@ function chapterRange(
         motion.agent_id === "scout" && motion.purpose === "scout_repair",
     );
     if (motions.length) {
+      const admittedStep = bundle.gate_receipts.find(
+        (gate) =>
+          gate.corridor_id === bundle.outcome.selected_corridor &&
+          gate.effective_admit,
+      )?.evaluated_step;
       return {
         start: Math.min(...motions.map((motion) => motion.start_step)),
-        end: Math.max(...motions.map((motion) => motion.end_step)),
+        // MOVE owns every recorded physical pose up to the repaired Gate.
+        // Ending at the scout segment used to skip the carrier's recorded
+        // approach and made the blue body jump at MOVE → REPAIR.
+        end:
+          admittedStep !== undefined
+            ? Math.max(
+                Math.min(...motions.map((motion) => motion.start_step)),
+                admittedStep - 1,
+              )
+            : Math.max(...motions.map((motion) => motion.end_step)),
       };
     }
   }
