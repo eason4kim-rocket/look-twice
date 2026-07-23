@@ -20,6 +20,8 @@ type Props = {
   chapterKind: ReplayChapterKind;
   chapterStep: number;
   progress: number;
+  activeFrameStep: number;
+  rootProgress: number;
   label: string;
   language: "en" | "zh";
 };
@@ -297,15 +299,52 @@ function drawCaptureRoot(
   pose: MotionPoint,
   label: string,
   color: string,
+  active: boolean,
 ) {
   const point = projection.project(pose.x, pose.y, 0.025);
+  const direction = projection.project(
+    pose.x + Math.cos(pose.yaw) * 0.65,
+    pose.y + Math.sin(pose.yaw) * 0.65,
+    0.03,
+  );
   context.strokeStyle = color;
-  context.lineWidth = 1.5;
+  context.lineWidth = active ? 2.4 : 1.2;
+  context.setLineDash([4, 4]);
+  context.beginPath();
+  context.moveTo(point.x, point.y);
+  context.lineTo(direction.x, direction.y);
+  context.stroke();
+  context.setLineDash([]);
+  const directionAngle = Math.atan2(
+    direction.y - point.y,
+    direction.x - point.x,
+  );
+  context.fillStyle = color;
+  context.beginPath();
+  context.moveTo(direction.x, direction.y);
+  context.lineTo(
+    direction.x - Math.cos(directionAngle - 0.55) * 7,
+    direction.y - Math.sin(directionAngle - 0.55) * 7,
+  );
+  context.lineTo(
+    direction.x - Math.cos(directionAngle + 0.55) * 7,
+    direction.y - Math.sin(directionAngle + 0.55) * 7,
+  );
+  context.closePath();
+  context.fill();
+  context.strokeStyle = color;
+  context.lineWidth = active ? 2.8 : 1.5;
+  if (active) {
+    context.fillStyle = color.replace("#", "#") + "22";
+    context.beginPath();
+    context.ellipse(point.x, point.y, 22, 13, 0, 0, Math.PI * 2);
+    context.fill();
+  }
   context.beginPath();
   context.ellipse(point.x, point.y, 15, 8, 0, 0, Math.PI * 2);
   context.stroke();
   context.fillStyle = color;
-  context.font = "700 9px IBM Plex Mono, monospace";
+  context.font = `${active ? "700" : "600"} 8px IBM Plex Mono, monospace`;
   context.textAlign = "left";
   context.textBaseline = "alphabetic";
   context.fillText(label, point.x + 18, point.y - 7);
@@ -347,6 +386,8 @@ export function WorldReplay3D({
   chapterKind,
   chapterStep,
   progress,
+  activeFrameStep,
+  rootProgress,
   label,
   language,
 }: Props) {
@@ -437,8 +478,17 @@ export function WorldReplay3D({
             context,
             projection,
             rootPose,
-            `ROOT ${String(index + 1).padStart(2, "0")}`,
+            `ROOT ${String(index + 1).padStart(2, "0")} · ${
+              root.observer_agent_id === "scout"
+                ? language === "zh"
+                  ? "侦察车"
+                  : "SCOUT"
+                : language === "zh"
+                  ? "主车"
+                  : "CARRIER"
+            }`,
             root.observer_agent_id === "scout" ? "#efb34f" : "#26c7c3",
+            root.observed_step === activeFrameStep,
           );
         }
       });
@@ -529,6 +579,7 @@ export function WorldReplay3D({
     chapterKind,
     chapterStep,
     progress,
+    activeFrameStep,
     language,
     size.height,
     size.width,
@@ -553,12 +604,16 @@ export function WorldReplay3D({
           ? "录制轨迹回放 · 仅限仿真"
           : "RECORDED TRAJECTORY REPLAY · SIMULATION ONLY"}
       </div>
+      <div className="root-progress-badge">
+        <span>{language === "zh" ? "独立证据根" : "INDEPENDENT ROOTS"}</span>
+        <b>{rootProgress}/2</b>
+      </div>
       <div className="world-replay-legend">
         <span><i className="carrier" /> {language === "zh" ? "载具" : "CARRIER"}</span>
         <span><i className="scout" /> {language === "zh" ? "侦察车" : "SCOUT"}</span>
         <span>{language === "zh"
-          ? "示意车体 · 录制位姿与碰撞宽度"
-          : "SCHEMATIC BODIES · RECORDED POSE + COLLISION WIDTH"}</span>
+          ? "示意车体与观察方向 · 录制位姿、朝向与碰撞宽度"
+          : "SCHEMATIC BODIES + VIEW DIRECTION · RECORDED POSE, YAW + COLLISION WIDTH"}</span>
       </div>
     </div>
   );

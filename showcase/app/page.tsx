@@ -6,7 +6,7 @@ import { SiteShell, useLanguage } from "./components/SiteShell";
 const flow = [
   ["01", "Observe", "RGB-D claims arrive with time, scope, calibration and capture lineage.", "观察", "RGB-D 证据声明（Claim）携带时间、范围、校准与采集谱系。"],
   ["02", "Qualify", "Purify checks independence, prediction sets and the action contract.", "准入", "Purify 检查独立性、预测集与动作合同。"],
-  ["03", "Repair", "When evidence is insufficient, the robot moves to the best diagnostic viewpoint.", "修证", "证据不足时，机器人移动到最有诊断价值的观察点。"],
+  ["03", "Repair", "When one snapshot is insufficient, the scout moves to an independent verification viewpoint.", "修证", "一张快照不足时，侦察车移动到独立复核视角。"],
   ["04", "Act", "Only Python ∧ Purify Go admission authorizes a direct physical action.", "行动", "只有 Python ∧ Purify Go 双重准入才授权直接物理行动。"],
 ];
 

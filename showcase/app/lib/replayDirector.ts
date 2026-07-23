@@ -120,10 +120,10 @@ export function buildReplayChapters(
       id: "observe",
       kind: "observe",
       label: zh ? "观察" : "OBSERVE",
-      title: zh ? "走廊看起来可以通行" : "The corridor looks clear",
+      title: zh ? "视觉判断走廊畅通" : "Vision says the corridor is clear",
       body: zh
-        ? "但它只来自一个正面采集根，仍不足以授权真实物理动作。"
-        : "But the claim comes from one front capture root—insufficient to authorize physical action.",
+        ? "但一张主车前视快照不足以授权物理动作；这不是连续车载视频。"
+        : "But one carrier-front snapshot is not enough to authorize physical action; this is not continuous onboard video.",
       eventIndex: Math.max(0, initialObservation?.index || 0),
       frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
       motionIds: [],
@@ -134,8 +134,8 @@ export function buildReplayChapters(
       label: zh ? "拒绝" : "DENY",
       title: zh ? "Purify 阻止未经证据支持的动作" : "Purify stops the unsupported action",
       body: zh
-        ? "动作合同缺少独立侧视证据。更多同源证据声明不会增加保障。"
-        : "The action contract lacks independent side-view evidence. More correlated claims would not add assurance.",
+        ? "这不是在声明存在遮挡。动作合同要求第二个独立采集根，同源快照不能替代独立复核。"
+        : "This is not an occlusion finding. The action contract requires a second independent capture root.",
       eventIndex: Math.max(0, firstDeny?.index || 0),
       frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
       gateId: firstDeny?.gate?.gate_id,
@@ -150,8 +150,8 @@ export function buildReplayChapters(
         label: zh ? "规划" : "PLAN",
         title: zh ? "BeliefGap 指出缺少的证据" : "The BeliefGap identifies what is missing",
         body: zh
-          ? "NBV 选择能修复合同缺口的诊断视角，而不是盲目重拍。"
-          : "NBV selects a diagnostic viewpoint that can repair the contract—not a blind retry.",
+          ? "NBV 选择独立复核视角来修复合同缺口，而不是盲目重拍。"
+          : "NBV selects an independent verification viewpoint to repair the contract—not a blind retry.",
         eventIndex: Math.max(0, requestIndex),
         frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
         gateId: firstDeny?.gate?.gate_id,
@@ -163,11 +163,11 @@ export function buildReplayChapters(
         kind: "move",
         label: zh ? "移动" : "MOVE",
         title: zh
-          ? "机器人协同移动到独立侧视位置"
-          : "The robots reposition for an independent side view",
+          ? "侦察车移动到独立复核视角"
+          : "The scout moves to an independent verification view",
         body: zh
-          ? "侦察车获取新物理采集根；载具同时沿记录的接近轨迹连续移动。"
-          : "The scout acquires a new physical capture root while the carrier follows its recorded approach trajectory.",
+          ? "移动期间右侧仍显示 ROOT 01 静态快照；侦察车到位后才采集 ROOT 02。"
+          : "During motion, the panel still shows static ROOT 01. ROOT 02 is captured only after the scout arrives.",
         eventIndex: Math.max(0, moveIndex),
         frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
         gateId: firstDeny?.gate?.gate_id,
@@ -180,8 +180,8 @@ export function buildReplayChapters(
         label: zh ? "修复" : "REPAIR",
         title: zh ? "独立证据修复了动作合同" : "Independent evidence repairs the contract",
         body: zh
-          ? "新的 RGB-D 证据声明已校准并纳入谱系；Python 与 Purify Go 同时准入。"
-          : "The new RGB-D claim is calibrated and lineage-aware; Python and Purify Go both admit.",
+          ? "ROOT 01 → ROOT 02：第二个独立采集根加入后，Purify 重新评估，Python 与 Purify Go 同时准入。"
+          : "ROOT 01 → ROOT 02: after the second independent root arrives, Purify reevaluates and both gates admit.",
         eventIndex: Math.max(0, admit?.index || outcomeIndex),
         frameIds: [
           ...(initialObservation ? [initialObservation.event.ref_id] : []),

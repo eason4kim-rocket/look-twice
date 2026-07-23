@@ -48,7 +48,7 @@ test("localizes all judge-facing route headings and controls", async () => {
     "最终路线",
     "PYTHON 门控",
     "不安全穿越",
-    "原始 JSON",
+    "原始回合 JSON",
   ]) {
     assert.match(consoleSource, new RegExp(expected));
   }

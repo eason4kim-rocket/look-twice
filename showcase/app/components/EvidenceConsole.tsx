@@ -182,7 +182,12 @@ export function EvidenceConsole() {
     : undefined;
   const denied = state.gate && !state.gate.effective_admit;
   const admitted = Boolean(state.gate?.effective_admit);
-  const qualifyingRootCount = admitted ? 2 : 1;
+  const qualifyingRootCount =
+    bundle.outcome.repair_attempted &&
+    (chapter.kind === "repair" || chapter.kind === "act") &&
+    admitted
+      ? 2
+      : 1;
   const playbackProgress = chapterProgress(
     playback,
     timelineDurations(Boolean(bundle.outcome.repair_attempted)),
@@ -268,6 +273,38 @@ export function EvidenceConsole() {
                 </small>
               </span>
             </button>
+            <div className="chapter-controls">
+              <button
+                aria-label={tx("Previous chapter", "上一阶段")}
+                onClick={() =>
+                  setPlayback(
+                    seekPlayback(
+                      chapterIndex - 1,
+                      timelineDurations(Boolean(bundle.outcome.repair_attempted)),
+                    ),
+                  )
+                }
+              >
+                ‹
+              </button>
+              <span>
+                {String(chapterIndex + 1).padStart(2, "0")} /{" "}
+                {String(chapters.length).padStart(2, "0")}
+              </span>
+              <button
+                aria-label={tx("Next chapter", "下一阶段")}
+                onClick={() =>
+                  setPlayback(
+                    seekPlayback(
+                      chapterIndex + 1,
+                      timelineDurations(Boolean(bundle.outcome.repair_attempted)),
+                    ),
+                  )
+                }
+              >
+                ›
+              </button>
+            </div>
             <div className="why-card">
               <span>{tx("WHY DID IT STOP?", "为什么停下？")}</span>
               <b>
@@ -334,6 +371,8 @@ export function EvidenceConsole() {
               chapterKind={chapter.kind}
               chapterStep={state.event?.step || frame.step}
               progress={playbackProgress}
+              activeFrameStep={frame.step}
+              rootProgress={qualifyingRootCount}
               language={language}
               label={
                 chapter.kind === "observe"
@@ -341,9 +380,9 @@ export function EvidenceConsole() {
                   : chapter.kind === "deny"
                     ? tx("PURIFY HOLD · ACTION DENIED", "PURIFY 保持停止 · 动作拒绝")
                     : chapter.kind === "plan"
-                      ? tx("NBV TARGET LOCKED", "NBV 诊断目标已锁定")
+                      ? tx("INDEPENDENT REVIEW VIEW LOCKED", "独立复核视角已锁定")
                       : chapter.kind === "move"
-                        ? tx("SCOUT MOVES TO THE DIAGNOSTIC VIEW", "SCOUT 移动到诊断视角")
+                        ? tx("SCOUT MOVES TO THE REVIEW VIEW", "侦察车移动到独立复核视角")
                         : chapter.kind === "repair"
                           ? tx("NEW ROOT · GATE RE-EVALUATION", "新证据根 · GATE 重新评估")
                           : state.routeMode === "direct"
@@ -353,25 +392,33 @@ export function EvidenceConsole() {
             />
             <div className="world-evidence-dock">
               <div className="evidence-dock-title">
-                <span>{tx("RECORDED RGB-D EVIDENCE", "录制的 RGB-D 证据")}</span>
-                <b>{sensorModeLabel(sensorMode, zh)}</b>
+                <span>{tx("ROBOT-CAPTURED EVIDENCE SNAPSHOT", "机器人采集的证据快照")}</span>
+                <b>{tx("STATIC SNAPSHOT · NOT VIDEO", "静态快照 · 非连续视频")}</b>
               </div>
               {chapter.kind === "repair" && frames.length > 1 ? (
                 <div className="evidence-pair">
                   <FrameView
                     frame={frames[0]}
                     mode={sensorMode}
+                    rootOrdinal={1}
+                    rootTotal={2}
                     label={tx("BEFORE · ROOT 01", "之前 · ROOT 01")}
-                    status={tx("ORIGINAL ROOT", "原始证据根")}
-                    scanning={playing}
+                    status={tx(
+                      "CARRIER SNAPSHOT · INDEPENDENT ROOT 1/2",
+                      "主车快照 · 独立根 1/2",
+                    )}
                     zh={zh}
                   />
                   <FrameView
                     frame={frames.at(-1)!}
                     mode={sensorMode}
+                    rootOrdinal={2}
+                    rootTotal={2}
                     label={tx("AFTER · ROOT 02", "之后 · ROOT 02")}
-                    status={tx("NEW INDEPENDENT ROOT", "新独立证据根")}
-                    scanning={playing}
+                    status={tx(
+                      "SCOUT SNAPSHOT · INDEPENDENT ROOT 2/2",
+                      "侦察车快照 · 独立根 2/2",
+                    )}
                     zh={zh}
                   />
                 </div>
@@ -379,23 +426,38 @@ export function EvidenceConsole() {
                 <FrameView
                   frame={frame}
                   mode={sensorMode}
+                  rootOrdinal={
+                    frame.observer_agent_id === "scout" ? 2 : 1
+                  }
+                  rootTotal={2}
                   status={
                     chapter.kind === "observe"
-                      ? tx("RECORDED EVIDENCE FRAME", "录制证据帧")
+                      ? tx(
+                          "CARRIER SNAPSHOT · INDEPENDENT ROOT 1/2",
+                          "主车快照 · 独立根 1/2",
+                        )
                       : chapter.kind === "deny"
-                        ? tx("PURIFY INSPECTING EVIDENCE", "Purify 正在审查证据")
+                        ? tx(
+                            "PURIFY REVIEWS ROOT 01 · ROBOT HELD",
+                            "Purify 审查 ROOT 01 · 机器人保持停止",
+                          )
                         : chapter.kind === "move"
-                          ? tx("CAMERA MOVES WITH SCOUT", "相机随 SCOUT 移动")
-                          : chapter.kind === "act"
-                            ? tx("QUALIFIED EVIDENCE RETAINED", "保留已授权证据")
-                            : tx("TARGETING DIAGNOSTIC VIEW", "正在选择诊断视角")
+                          ? tx(
+                              "SCOUT IS MOVING · ROOT 01 REMAINS ON SCREEN",
+                              "侦察车移动中 · 当前仍显示 ROOT 01",
+                            )
+                        : chapter.kind === "act"
+                            ? tx("QUALIFIED SNAPSHOT RETAINED", "保留已授权证据快照")
+                            : tx(
+                                "ROOT 01 RETAINED · PLANNING INDEPENDENT REVIEW",
+                                "保留 ROOT 01 · 正在规划独立复核",
+                              )
                   }
-                  scanning={playing}
                   zh={zh}
                   label={
-                    chapter.kind === "observe"
-                      ? tx("INITIAL FRONT VIEW · ROOT 01", "初始正面视角 · ROOT 01")
-                      : tx("CLAIM EVIDENCE", "证据声明")
+                    frame.observer_agent_id === "scout"
+                      ? tx("ROOT 02 · STATIC SNAPSHOT", "ROOT 02 · 静态快照")
+                      : tx("ROOT 01 · STATIC SNAPSHOT", "ROOT 01 · 静态快照")
                   }
                 />
               )}
@@ -505,76 +567,6 @@ export function EvidenceConsole() {
 
       {!cinematic && (
         <>
-          <section className="timeline-panel">
-            <div className="playback">
-              <button
-                aria-label={tx("Previous chapter", "上一章")}
-                onClick={() => {
-                  setPlayback(
-                    seekPlayback(
-                      chapterIndex - 1,
-                      timelineDurations(Boolean(bundle.outcome.repair_attempted)),
-                    ),
-                  );
-                }}
-              >
-                ‹
-              </button>
-              <button className="play" onClick={restartOrToggle}>
-                {playing ? "Ⅱ" : "▶"}
-              </button>
-              <button
-                aria-label={tx("Next chapter", "下一章")}
-                onClick={() => {
-                  setPlayback(
-                    seekPlayback(
-                      chapterIndex + 1,
-                      timelineDurations(Boolean(bundle.outcome.repair_attempted)),
-                    ),
-                  );
-                }}
-              >
-                ›
-              </button>
-              <span>
-                {tx("GUIDED LOOP", "引导回放")} ·{" "}
-                {String(chapterIndex + 1).padStart(2, "0")} /{" "}
-                {String(chapters.length).padStart(2, "0")}
-              </span>
-            </div>
-            <div className="timeline">
-              {chapters.map((item, index) => (
-                <button
-                  key={item.id}
-                  title={item.label}
-                  className={
-                    (index <= chapterIndex ? "seen " : "") +
-                    (index === chapterIndex ? "current" : "")
-                  }
-                  onClick={() => {
-                    setPlayback(
-                      seekPlayback(
-                        index,
-                        timelineDurations(
-                          Boolean(bundle.outcome.repair_attempted),
-                        ),
-                      ),
-                    );
-                  }}
-                >
-                  <i />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-            <a
-              className="raw-link"
-              href={"/data/replays/" + replayId + ".json"}
-              target="_blank"
-            >
-              {tx("RAW JSON ↗", "原始 JSON ↗")}
-            </a>
-          </section>
           <details className="technical-details">
             <summary>{tx("Open evidence audit", "展开证据审计")}</summary>
             <div className="audit-grid">
@@ -600,6 +592,13 @@ export function EvidenceConsole() {
                 <p>{tx("LIVE GPU", "在线 GPU")} <b>{tx("NOT REQUIRED", "无需")}</b></p>
               </section>
             </div>
+            <a
+              className="raw-link"
+              href={"/data/replays/" + replayId + ".json"}
+              target="_blank"
+            >
+              {tx("OPEN SOURCE EPISODE JSON ↗", "打开原始回合 JSON ↗")}
+            </a>
           </details>
         </>
       )}
@@ -618,42 +617,60 @@ function FrameView({
   mode,
   label,
   status,
-  scanning,
+  rootOrdinal,
+  rootTotal,
   zh,
 }: {
   frame: EpisodeBundle["sensor_frames"][number];
   mode: "rgb" | "depth" | "mask";
   label: string;
   status: string;
-  scanning: boolean;
+  rootOrdinal: number;
+  rootTotal: number;
   zh: boolean;
 }) {
   const source = frame.media[mode === "mask" ? "corridor_mask" : mode];
+  const actor = observerLabel(frame.observer_agent_id, zh);
   return (
-    <div className={"judge-frame " + (scanning ? "is-scanning" : "")}>
-      <Image
-        fill
-        unoptimized
-        className="recorded-frame"
-        src={source}
-        alt={zh
-          ? `${sensorModeLabel(mode, true)} 证据，视角 ${viewpointLabel(frame.viewpoint, true)}`
-          : `${sensorModeLabel(mode, false)} evidence at ${viewpointLabel(frame.viewpoint, false)}`}
-      />
+    <article className="judge-frame">
       <div className="frame-top">
         <b>{label}</b>
         <span>{frame.tensor_device}</span>
       </div>
-      <div className="frame-bottom">
-        <span>{corridorLabel(frame.corridor_id, zh)} · {viewpointLabel(frame.viewpoint, zh)}</span>
-        <b>{zh ? "证据声明" : "CLAIM"}: {claimValue(frame.value, zh)}</b>
+      <div className="snapshot-media">
+        <Image
+          fill
+          unoptimized
+          className="recorded-frame"
+          src={source}
+          alt={zh
+            ? `${actor}在 Step ${frame.step} 采集的${sensorModeLabel(mode, true)}静态证据快照`
+            : `${sensorModeLabel(mode, false)} static evidence snapshot captured by ${actor} at step ${frame.step}`}
+        />
+      </div>
+      <div className="snapshot-details">
+        <div>
+          <span>{zh ? "拍摄者" : "CAPTURED BY"}</span>
+          <b>{actor}</b>
+        </div>
+        <div>
+          <span>{zh ? "时刻 / 位置" : "STEP / VIEWPOINT"}</span>
+          <b>STEP {frame.step} · {viewpointLabel(frame.viewpoint, zh)}</b>
+        </div>
+        <div>
+          <span>{zh ? "目标 / 结论" : "TARGET / CLAIM"}</span>
+          <b>{corridorLabel(frame.corridor_id, zh)} · {claimValue(frame.value, zh)}</b>
+        </div>
+        <div>
+          <span>{zh ? "独立根进度" : "INDEPENDENT ROOTS"}</span>
+          <b>{rootOrdinal}/{rootTotal}</b>
+        </div>
       </div>
       <div className="recorded-status">
         <i />
         <span>{status}</span>
       </div>
-      <div className="evidence-scan" aria-hidden="true" />
-    </div>
+    </article>
   );
 }
 
@@ -717,6 +734,11 @@ function sensorModeLabel(mode: "rgb" | "depth" | "mask", zh: boolean) {
   return zh ? "走廊掩码" : "CORRIDOR MASK";
 }
 
+function observerLabel(observer: string, zh: boolean) {
+  if (observer === "scout") return zh ? "侦察车侧视相机" : "Scout side-view camera";
+  return zh ? "主车前视相机" : "Carrier front camera";
+}
+
 function claimValue(value: string | undefined, zh: boolean) {
   if (!value) return "—";
   if (!zh) return value.toUpperCase();
@@ -737,15 +759,25 @@ function corridorLabel(value: string, zh: boolean) {
 }
 
 function viewpointLabel(value: string, zh: boolean) {
-  if (!zh) return value.replaceAll("_", " ").toUpperCase();
+  const [corridor, point] = value.split("/");
+  if (!zh) {
+    if (value === "diagnostic_side_view") return "INDEPENDENT REVIEW VIEW";
+    if (value === "carrier_initial_front") return "CARRIER FRONT CAMERA";
+    return point
+      ? `${corridor.replaceAll("_", " ").toUpperCase()} · ${point.replaceAll("_", " ").toUpperCase()}`
+      : value.replaceAll("_", " ").toUpperCase();
+  }
   const labels: Record<string, string> = {
-    diagnostic_side_view: "诊断侧视点",
-    carrier_initial_front: "载具初始正面视角",
+    diagnostic_side_view: "独立复核视角",
+    carrier_initial_front: "主车前视相机位",
     left_near: "左侧近点",
     left_far: "左侧远点",
     right_near: "右侧近点",
     right_far: "右侧远点",
   };
+  if (point) {
+    return `${corridorLabel(corridor, true)} · ${labels[point] || point.replaceAll("_", " ")}`;
+  }
   return labels[value] || value.replaceAll("_", " ");
 }
 

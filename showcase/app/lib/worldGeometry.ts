@@ -96,13 +96,21 @@ export function createProjection(
     (width - horizontalPadding * 2) / Math.max(0.01, maxU - minU),
     (height - topPadding - bottomPadding) / Math.max(0.01, maxV - minV),
   );
+  const availableWidth = width - horizontalPadding * 2;
+  const availableHeight = height - topPadding - bottomPadding;
+  const renderedWidth = (maxU - minU) * scale;
+  const renderedHeight = (maxV - minV) * scale;
+  const offsetX =
+    horizontalPadding + Math.max(0, (availableWidth - renderedWidth) / 2);
+  const offsetY =
+    topPadding + Math.max(0, (availableHeight - renderedHeight) / 2);
   return {
     scale,
     project(x: number, y: number, z = 0) {
       const point = isoCoordinates(x, y, z);
       return {
-        x: horizontalPadding + (point.u - minU) * scale,
-        y: topPadding + (point.v - minV) * scale,
+        x: offsetX + (point.u - minU) * scale,
+        y: offsetY + (point.v - minV) * scale,
       };
     },
   };
