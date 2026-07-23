@@ -15,7 +15,7 @@ from typing import Any, Iterable, Mapping
 
 RELEASE_PROFILE_SCHEMA = "look-twice.release-profile/v1"
 EPISODE_BUNDLE_SCHEMA = "look-twice.episode-bundle/v1.1"
-BUILDER_VERSION = "look-twice.competition-replay-builder/2"
+BUILDER_VERSION = "look-twice.competition-replay-builder/3"
 
 
 def file_sha256(path: str | Path) -> str:
@@ -431,6 +431,10 @@ def adapt_v8_episode(
     episode = json.loads(path.read_text(encoding="utf-8"))
     scenario = episode.get("scenario") or {}
     public_context = scenario.get("public_context") or {}
+    carrier_width = public_context.get("carrier_width")
+    scout_width = public_context.get("scout_width")
+    if carrier_width is None or scout_width is None:
+        raise ValueError("public scenario context is missing agent collision widths")
     configuration = episode.get("configuration") or {}
     environment = episode.get("environment") or {}
     metrics = episode.get("metrics") or {}
@@ -483,6 +487,16 @@ def adapt_v8_episode(
             "gpu": environment.get("gpu"),
             "claims_mode": environment.get("claims_mode"),
             "corridors": public_context.get("corridors") or [],
+            "agent_geometry": {
+                "carrier": {
+                    "collision_width_m": float(carrier_width),
+                    "source": "scenario.public_context.carrier_width",
+                },
+                "scout": {
+                    "collision_width_m": float(scout_width),
+                    "source": "scenario.public_context.scout_width",
+                },
+            },
             "source_partition": "confirmatory-non-locked",
             "recorded_gpu_evidence": True,
             "simulation_only": True,
@@ -650,6 +664,17 @@ def assert_public_bundle(bundle: Mapping[str, Any]) -> None:
                 f"motion trajectory is not monotonic: {motion.get('motion_id')}"
             )
     outcome = bundle.get("outcome") or {}
+    geometry = (bundle.get("episode_meta") or {}).get("agent_geometry") or {}
+    for agent, expected_source in (
+        ("carrier", "scenario.public_context.carrier_width"),
+        ("scout", "scenario.public_context.scout_width"),
+    ):
+        item = geometry.get(agent) or {}
+        width = item.get("collision_width_m")
+        if not isinstance(width, (int, float)) or isinstance(width, bool) or width <= 0:
+            raise ValueError(f"{agent} collision width must be positive")
+        if item.get("source") != expected_source:
+            raise ValueError(f"{agent} geometry must come from public context")
     if outcome.get("unsafe_crossing"):
         raise ValueError("competition replay cannot claim a safe outcome when unsafe")
     if outcome.get("repair_attempted"):

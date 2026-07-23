@@ -69,9 +69,35 @@ function HomeContent() {
         <div className="flow-grid">{flow.map((item) => <article key={item[0]}><span>{item[0]}</span><h3>{zh ? item[3] : item[1]}</h3><p>{zh ? item[4] : item[2]}</p></article>)}</div>
       </section>
 
+      <section className="section policy-section">
+        <div className="section-heading">
+          <span>03 / THE DIFFERENCE</span>
+          <h2>{zh ? "安全拒绝只是底线。主动修复证据，才让机器人重新获得行动能力。" : "Safe refusal is the baseline. Active repair earns useful action back."}</h2>
+        </div>
+        <div className="policy-comparison">
+          <article>
+            <span>PASSIVE</span>
+            <h3>{zh ? "拒绝并绕行" : "Deny and detour"}</h3>
+            <p>{zh ? "证据不足时保持安全，但为不确定性付出路线成本。" : "Stays safe under uncertainty, but pays with a longer route."}</p>
+            <b>DENY → SAFE DETOUR</b>
+          </article>
+          <article className="active-policy">
+            <span>ACTIVE</span>
+            <h3>{zh ? "换视角、修证据、再行动" : "Move, repair, then act"}</h3>
+            <p>{zh ? "Scout 获取独立侧视根；Python 与 Purify 同时准入后，Carrier 才直接通行。" : "A scout acquires an independent side-view root. Only Python ∧ Purify admission unlocks the carrier."}</p>
+            <b>DENY → REPAIR → DIRECT</b>
+          </article>
+        </div>
+        <div className="platform-row">
+          <div><span>AMD GPU</span><p>{zh ? "加速 Genesis RGB-D、空间视觉推理与实验矩阵。" : "Accelerates Genesis RGB-D, spatial vision inference and experiment matrices."}</p></div>
+          <div><span>PURIFY</span><p>{zh ? "检查校准、谱系、独立根与动作合同，并签发 GateReceipt。" : "Checks calibration, lineage, independent roots and the action contract, then signs the GateReceipt."}</p></div>
+          <div><span>BOUNDARY</span><p>{zh ? "Recorded simulation evidence；不声称真实机器人或安全认证。" : "Recorded simulation evidence; no real-robot or safety-certification claim."}</p></div>
+        </div>
+      </section>
+
       <section className="section reel-section">
         <div className="section-heading">
-          <span>03 / 30-SECOND REEL</span>
+          <span>04 / 30-SECOND REEL</span>
           <h2>{zh ? "不需要解释：看机器人为什么停、如何修证、何时获准行动。" : "No explanation required: see why the robot stops, repairs evidence, and earns permission to act."}</h2>
         </div>
         <div className="reel-player">
@@ -92,7 +118,7 @@ function HomeContent() {
       </section>
 
       <section className="section cta-band">
-        <div><span>RECORDED CONFIRMATORY EPISODE</span><h2>{zh ? "看见每一条 Claim 如何改变机器人的行动资格。" : "See exactly how each claim changes what the robot is allowed to do."}</h2></div>
+        <div><span>LOCKED ONCE · RECEIPTS INCLUDED</span><h2>{zh ? "看见每一条 Claim 如何改变机器人的行动资格。" : "See exactly how each claim changes what the robot is allowed to do."}</h2></div>
         <Link href="/console" className="button primary">{zh ? "播放闭环" : "Play the evidence loop"}<span>→</span></Link>
       </section>
     </main>

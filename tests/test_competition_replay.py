@@ -50,6 +50,20 @@ class CompetitionReplayTest(unittest.TestCase):
         self.assertEqual(bundle["outcome"]["route_mode"], "direct")
         self.assertTrue(any(g["effective_admit"] for g in bundle["gate_receipts"]))
         self.assertGreaterEqual(len(bundle["measurement_roots"]), 2)
+        self.assertEqual(
+            bundle["episode_meta"]["agent_geometry"]["carrier"],
+            {
+                "collision_width_m": 0.55,
+                "source": "scenario.public_context.carrier_width",
+            },
+        )
+        self.assertEqual(
+            bundle["episode_meta"]["agent_geometry"]["scout"],
+            {
+                "collision_width_m": 0.32,
+                "source": "scenario.public_context.scout_width",
+            },
+        )
         assert_public_bundle(bundle)
 
     def test_passive_bundle_denies_and_detours(self) -> None:

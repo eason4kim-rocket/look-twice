@@ -33,6 +33,10 @@ def main() -> int:
     parser.add_argument("--frames-dir", type=Path, required=True)
     parser.add_argument("--timed-capture-dir", type=Path)
     parser.add_argument("--capture-fps", type=float, default=136 / 30)
+    parser.add_argument(
+        "--capture-crop",
+        help="Optional ffmpeg crop expression (width:height:x:y) for app-window capture",
+    )
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument(
         "--bundle",
@@ -54,12 +58,10 @@ def main() -> int:
             raise SystemExit(
                 f"timed Cinematic capture is incomplete: {len(missing)} missing frames"
             )
-        poster_source = captured[min(len(captured) - 1, round(args.capture_fps * 20))]
     else:
         missing = [str(path) for path in frames if not path.is_file()]
         if missing:
             raise SystemExit(f"missing captured Cinematic frames: {missing}")
-        poster_source = frames[4]
     if sum(DURATIONS) != 30:
         raise SystemExit("chapter durations must total exactly 30 seconds")
 
@@ -67,8 +69,10 @@ def main() -> int:
     video = args.out_dir / "look-twice-replay-30s.mp4"
     poster = args.out_dir / "look-twice-replay-30s.poster.webp"
     manifest = args.out_dir / "look-twice-replay-30s.manifest.json"
+    crop_filter = f"crop={args.capture_crop}," if args.capture_crop else ""
     video_filter = (
-        "scale=1920:1080:force_original_aspect_ratio=decrease:"
+        crop_filter
+        + "scale=1920:1080:force_original_aspect_ratio=decrease:"
         "in_range=pc:out_range=tv,"
         "pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=0x05090b,"
         "fps=30,format=yuv420p"
@@ -154,20 +158,35 @@ def main() -> int:
                 ]
             )
 
-    run(
-        [
-            "cwebp",
-            "-quiet",
-            "-q",
-            "82",
-            "-resize",
-            "1920",
-            "1080",
-            str(poster_source),
-            "-o",
-            str(poster),
-        ]
-    )
+    with tempfile.TemporaryDirectory(prefix="look-twice-poster-") as temp_dir:
+        poster_frame = Path(temp_dir) / "poster.png"
+        run(
+            [
+                "ffmpeg",
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-y",
+                "-ss",
+                "20",
+                "-i",
+                str(video),
+                "-frames:v",
+                "1",
+                str(poster_frame),
+            ]
+        )
+        run(
+            [
+                "cwebp",
+                "-quiet",
+                "-q",
+                "82",
+                str(poster_frame),
+                "-o",
+                str(poster),
+            ]
+        )
 
     probe = json.loads(
         subprocess.check_output(
@@ -214,11 +233,12 @@ def main() -> int:
         .isoformat()
         .replace("+00:00", "Z"),
         "recording_method": (
-            "cinematic_replay_timed_capture"
+            "recorded_trajectory_replay_cinematic_capture"
             if timed_capture
-            else "cinematic_replay_frame_capture"
+            else "recorded_trajectory_replay_frame_capture"
         ),
         "capture_fps": args.capture_fps if timed_capture else None,
+        "capture_crop": args.capture_crop if timed_capture else None,
         "chapter_durations_seconds": list(DURATIONS),
         "video": {
             "path": video.name,

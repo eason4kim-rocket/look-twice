@@ -40,6 +40,14 @@ test("publishes candidate-neutral, traceable replay data", async () => {
     const bundle = JSON.parse(await readFile(new URL(`../public/data/replays/${replay.replay_id}.json`, import.meta.url), "utf8"));
     assert.equal(bundle.schema_version, "look-twice.episode-bundle/v1.1");
     assert.equal(bundle.episode_meta.live_gpu_dependency, false);
+    assert.equal(
+      bundle.episode_meta.agent_geometry.carrier.source,
+      "scenario.public_context.carrier_width",
+    );
+    assert.equal(
+      bundle.episode_meta.agent_geometry.scout.source,
+      "scenario.public_context.scout_width",
+    );
     assert.ok(bundle.integrity.source_episode_sha256);
     assert.ok(bundle.sensor_frames.every((frame) => frame.media.available));
     assert.equal(new Set(bundle.gate_receipts.map((gate) => gate.gate_id)).size, bundle.gate_receipts.length);
@@ -86,7 +94,10 @@ test("publishes a reproducible 30-second media pack", async () => {
   assert.equal(mediaManifest.video.height, 1080);
   assert.equal(mediaManifest.video.fps, 30);
   assert.equal(mediaManifest.video.audio, false);
-  assert.equal(mediaManifest.recording_method, "cinematic_replay_timed_capture");
+  assert.equal(
+    mediaManifest.recording_method,
+    "recorded_trajectory_replay_cinematic_capture",
+  );
   assert.equal(mediaManifest.boundary.recorded_amd_gpu_evidence, true);
   assert.equal(mediaManifest.boundary.simulation_only, true);
   assert.equal(mediaManifest.boundary.live_gpu_dependency, false);

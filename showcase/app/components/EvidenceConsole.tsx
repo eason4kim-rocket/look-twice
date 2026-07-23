@@ -4,16 +4,17 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildReplayChapters, resolveChapterState } from "../lib/replayDirector";
 import {
-  advanceTimeline,
+  chapterProgress,
+  createPlaybackState,
+  seekPlayback,
+  tickPlayback,
   timelineDurations,
+  togglePlayback,
 } from "../lib/replayTimeline";
 import type { EpisodeBundle, ReleaseProfile } from "../lib/types";
 import { useLanguage } from "./SiteShell";
 import { WorldReplay3D } from "./WorldReplay3D";
-import "./console.css";
-import "./judge-console.css";
-import "./recorded.css";
-import "./world-replay.css";
+import "./industrial-console.css";
 
 type Manifest = {
   default_candidate_id: string;
@@ -37,8 +38,9 @@ export function EvidenceConsole() {
   const [profile, setProfile] = useState<ReleaseProfile | null>(null);
   const [bundle, setBundle] = useState<EpisodeBundle | null>(null);
   const [replayId, setReplayId] = useState("");
-  const [chapterIndex, setChapterIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playback, setPlayback] = useState(() => createPlaybackState(false));
+  const chapterIndex = playback.chapterIndex;
+  const playing = playback.playing;
   const [sensorMode, setSensorMode] = useState<"rgb" | "depth" | "mask">("rgb");
   const [cinematic, setCinematic] = useState(false);
   const requestedReplay = useRef("");
@@ -95,8 +97,7 @@ export function EvidenceConsole() {
       .then((response) => response.json())
       .then((next: EpisodeBundle) => {
         setBundle(next);
-        setChapterIndex(0);
-        setPlaying(false);
+        setPlayback(createPlaybackState(false));
         autoplayStarted.current = false;
       });
   }, [manifest, replayId]);
@@ -121,41 +122,48 @@ export function EvidenceConsole() {
       return;
     }
     autoplayStarted.current = true;
-    setPlaying(true);
+    setPlayback(createPlaybackState(true));
   }, [bundle, chapters.length]);
 
   useEffect(() => {
-    if (!playing || !chapters.length) return;
+    if (!playback.playing || !chapters.length || !bundle) return;
     const durations = timelineDurations(Boolean(bundle?.outcome.repair_attempted));
-    const timer = window.setTimeout(() => {
-      setChapterIndex((current) => {
-        const next = advanceTimeline(current, chapters.length);
-        setPlaying(next.playing);
-        return next.chapterIndex;
-      });
-    }, durations[chapterIndex] || 4000);
-    return () => window.clearTimeout(timer);
-  }, [playing, chapterIndex, chapters.length, bundle]);
+    let animationFrame = 0;
+    let previous = performance.now();
+    const update = (now: number) => {
+      const delta = Math.max(0, now - previous);
+      previous = now;
+      setPlayback((current) => tickPlayback(current, delta, durations));
+      animationFrame = requestAnimationFrame(update);
+    };
+    animationFrame = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [playback.playing, chapters.length, bundle]);
 
   useEffect(() => {
+    const durations = timelineDurations(
+      Boolean(bundle?.outcome.repair_attempted),
+    );
     const onKey = (event: KeyboardEvent) => {
       if (!chapters.length) return;
       if (event.key === "ArrowRight") {
-        setChapterIndex((value) => Math.min(chapters.length - 1, value + 1));
-        setPlaying(false);
+        setPlayback((current) =>
+          seekPlayback(current.chapterIndex + 1, durations),
+        );
       }
       if (event.key === "ArrowLeft") {
-        setChapterIndex((value) => Math.max(0, value - 1));
-        setPlaying(false);
+        setPlayback((current) =>
+          seekPlayback(current.chapterIndex - 1, durations),
+        );
       }
       if (event.key === " ") {
         event.preventDefault();
-        setPlaying((value) => !value);
+        setPlayback((current) => togglePlayback(current));
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [chapters.length]);
+  }, [chapters.length, bundle]);
 
   if (!manifest || !profile || !bundle || !chapter || !state) {
     return <div className="loading">LOADING VERIFIED EVIDENCE PACK…</div>;
@@ -177,20 +185,16 @@ export function EvidenceConsole() {
   const denied = state.gate && !state.gate.effective_admit;
   const admitted = Boolean(state.gate?.effective_admit);
   const qualifyingRootCount = admitted ? 2 : 1;
-  const chapterDuration =
-    timelineDurations(Boolean(bundle.outcome.repair_attempted))[chapterIndex] ||
-    4000;
+  const playbackProgress = chapterProgress(
+    playback,
+    timelineDurations(Boolean(bundle.outcome.repair_attempted)),
+  );
   const nextView = String(request?.target_viewpoint || "diagnostic side view")
     .replaceAll("_", " ")
     .toUpperCase();
 
   const restartOrToggle = () => {
-    if (chapterIndex === chapters.length - 1) {
-      setChapterIndex(0);
-      setPlaying(true);
-      return;
-    }
-    setPlaying((value) => !value);
+    setPlayback((current) => togglePlayback(current));
   };
 
   return (
@@ -286,8 +290,12 @@ export function EvidenceConsole() {
                 (index === chapterIndex ? "current" : "")
               }
               onClick={() => {
-                setChapterIndex(index);
-                setPlaying(false);
+                setPlayback(
+                  seekPlayback(
+                    index,
+                    timelineDurations(Boolean(bundle.outcome.repair_attempted)),
+                  ),
+                );
               }}
             >
               <i>{index < chapterIndex ? "✓" : index + 1}</i>
@@ -320,8 +328,7 @@ export function EvidenceConsole() {
               bundle={bundle}
               chapterKind={chapter.kind}
               chapterStep={state.event?.step || frame.step}
-              animate={playing}
-              durationMs={chapterDuration}
+              progress={playbackProgress}
               label={
                 chapter.kind === "observe"
                   ? tx("GENESIS WORLD · ROBOT HELD", "GENESIS 世界 · 机器人停止")
@@ -463,18 +470,9 @@ export function EvidenceConsole() {
         />
       </section>
 
-      {state.revealOutcome && (
-        <section
-          className={
-            "comparison-card " +
-            (cinematic && playing ? "result-delayed" : "")
-          }
-          style={
-            cinematic && playing
-              ? { animationDelay: `${Math.max(0, chapterDuration - 3000)}ms` }
-              : undefined
-          }
-        >
+      {state.revealOutcome &&
+        (!cinematic || playbackProgress >= 0.625 || playback.completed) && (
+        <section className="comparison-card">
           <div>
             <span>ACTIVE</span>
             <b>REPAIR EVIDENCE → DIRECT</b>
@@ -500,8 +498,12 @@ export function EvidenceConsole() {
               <button
                 aria-label={tx("Previous chapter", "上一章")}
                 onClick={() => {
-                  setChapterIndex(Math.max(0, chapterIndex - 1));
-                  setPlaying(false);
+                  setPlayback(
+                    seekPlayback(
+                      chapterIndex - 1,
+                      timelineDurations(Boolean(bundle.outcome.repair_attempted)),
+                    ),
+                  );
                 }}
               >
                 ‹
@@ -512,10 +514,12 @@ export function EvidenceConsole() {
               <button
                 aria-label={tx("Next chapter", "下一章")}
                 onClick={() => {
-                  setChapterIndex(
-                    Math.min(chapters.length - 1, chapterIndex + 1),
+                  setPlayback(
+                    seekPlayback(
+                      chapterIndex + 1,
+                      timelineDurations(Boolean(bundle.outcome.repair_attempted)),
+                    ),
                   );
-                  setPlaying(false);
                 }}
               >
                 ›
@@ -536,8 +540,14 @@ export function EvidenceConsole() {
                     (index === chapterIndex ? "current" : "")
                   }
                   onClick={() => {
-                    setChapterIndex(index);
-                    setPlaying(false);
+                    setPlayback(
+                      seekPlayback(
+                        index,
+                        timelineDurations(
+                          Boolean(bundle.outcome.repair_attempted),
+                        ),
+                      ),
+                    );
                   }}
                 >
                   <i />
@@ -554,20 +564,29 @@ export function EvidenceConsole() {
             </a>
           </section>
           <details className="technical-details">
-            <summary>{tx("Technical trace and integrity", "技术追溯与完整性")}</summary>
-            <div>
-              <span>
-                SOURCE <b>{bundle.integrity.source_episode_sha256.slice(0, 16)}…</b>
-              </span>
-              <span>
-                BUNDLE <b>{bundle.integrity.bundle_sha256.slice(0, 16)}…</b>
-              </span>
-              <span>
-                GATE <b>{state.gate?.gate_id || "—"}</b>
-              </span>
-              <span>
-                LIVE GPU DEPENDENCY <b>NONE</b>
-              </span>
+            <summary>{tx("Open evidence audit", "展开证据审计")}</summary>
+            <div className="audit-grid">
+              <section>
+                <span>{tx("CURRENT EVIDENCE", "当前证据")}</span>
+                <p>CLAIM <b>{frame.value.toUpperCase()}</b></p>
+                <p>P(BLOCKED) <b>{formatP(frame.p_blocked)}</b></p>
+                <p>PREDICTION SET <b>{"{" + frame.prediction_set.join(", ") + "}"}</b></p>
+                <p>CAPTURE ROOTS <b>{state.gate?.measurement_root_ids.length || 1}</b></p>
+              </section>
+              <section>
+                <span>{tx("ACTION RECEIPT", "动作回执")}</span>
+                <p>PYTHON <b>{state.gate?.python_admitted ? "ADMIT" : state.gate ? "DENY" : "—"}</b></p>
+                <p>PURIFY GO <b>{state.gate?.purify_go_admitted ? "ADMIT" : state.gate ? "DENY" : "—"}</b></p>
+                <p>EFFECTIVE <b>{state.gate?.effective_admit ? "ADMIT" : state.gate ? "DENY" : "—"}</b></p>
+                <p>GATE ID <b>{state.gate?.gate_id || "—"}</b></p>
+              </section>
+              <section>
+                <span>{tx("INTEGRITY", "完整性")}</span>
+                <p>SOURCE <b>{bundle.integrity.source_episode_sha256.slice(0, 16)}…</b></p>
+                <p>BUNDLE <b>{bundle.integrity.bundle_sha256.slice(0, 16)}…</b></p>
+                <p>CLAIMS <b>{bundle.claims.length}</b></p>
+                <p>LIVE GPU <b>NOT REQUIRED</b></p>
+              </section>
             </div>
           </details>
         </>

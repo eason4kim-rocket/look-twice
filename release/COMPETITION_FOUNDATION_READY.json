@@ -17,7 +17,7 @@
   "errors": [],
   "frozen_import_manifest_sha256": "ec071dc90bf706eaec13671d44bbd63f204c32935d3a5ff0906e641fc223e5f2",
   "passed": true,
-  "replay_manifest_sha256": "5b886291ab4977d5df08c24b4be898b4baacd361fb2bcb6333686f0f0608b829",
+  "replay_manifest_sha256": "986043ca072d4cf5f833b602beb0fb2b30f4f43077d05177bb020a9e3dac06e6",
   "schema_version": "look-twice.competition-foundation-ready/v1",
   "status": "COMPETITION_FOUNDATION_READY",
   "v9_integration_boundary": "add ReleaseProfile + EpisodeBundle adapter only"

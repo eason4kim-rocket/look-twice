@@ -33,6 +33,16 @@
         "width": 0.95
       }
     ],
+    "agent_geometry": {
+      "carrier": {
+        "collision_width_m": 0.55,
+        "source": "scenario.public_context.carrier_width"
+      },
+      "scout": {
+        "collision_width_m": 0.32,
+        "source": "scenario.public_context.scout_width"
+      }
+    },
     "source_partition": "confirmatory-non-locked",
     "recorded_gpu_evidence": true,
     "simulation_only": true,
@@ -2266,7 +2276,7 @@
     "replan_count": 0
   },
   "integrity": {
-    "builder_version": "look-twice.competition-replay-builder/2",
+    "builder_version": "look-twice.competition-replay-builder/3",
     "source_episode_sha256": "724d79964456266b72d70d450ffc636a7bb2fa3e75295ad9fa3b1f62be67e349",
     "frozen_identity": {
       "vision_checkpoint": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
@@ -2275,6 +2285,6 @@
       "purify_binary": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00"
     },
     "recorded_media_manifest_sha256": "f38b3490daa4c7c7390133c28e065b436f3fbbd5ed6ca3c5c4096158a2f70a33",
-    "bundle_sha256": "9cebb3bd1e4f3ec710199afd5568493cb0ee331faf3be984f75624d25b8f1247"
+    "bundle_sha256": "6af570a2b2af9fa003025aa0ed94a42997f98ec627056dc9374ceb4adccb09ae"
   }
 }

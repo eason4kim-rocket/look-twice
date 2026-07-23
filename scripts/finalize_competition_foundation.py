@@ -63,7 +63,7 @@ def main() -> int:
     checks["public_data_scrubbed"] = not any(token in public_text for token in forbidden)
     checks["bilingual_keys_present"] = all(
         token in (ROOT / "showcase/app/components/EvidenceConsole.tsx").read_text()
-        for token in ("当前候选", "传感器证据", "动作资格审查", "机器人决策")
+        for token in ("当前候选", "录制的 RGB-D 证据", "动作授权", "机器人停止")
     )
     checks["neutral_schemas_present"] = all(
         (ROOT / path).is_file()

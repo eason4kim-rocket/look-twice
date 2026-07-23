@@ -1,103 +1,29 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import type {
-  EpisodeBundle,
-  MotionPoint,
-} from "../lib/types";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { EpisodeBundle, MotionPoint } from "../lib/types";
 import type { ReplayChapterKind } from "../lib/replayDirector";
+import {
+  chapterStepAtProgress,
+  createProjection,
+  interpolatePose,
+  sceneBounds,
+  trajectoryPoints,
+  type Bounds,
+  type Box,
+  type Projected,
+  type Projection,
+} from "../lib/worldGeometry";
 
 type Props = {
   bundle: EpisodeBundle;
   chapterKind: ReplayChapterKind;
   chapterStep: number;
-  animate: boolean;
-  durationMs: number;
+  progress: number;
   label: string;
 };
 
-type Pose = MotionPoint & { agent_id: string };
-type Projected = { x: number; y: number };
-
-const FLOOR_X = [-2.7, 3.2] as const;
-const FLOOR_Y = [-1.75, 1.75] as const;
-
-function agentPoints(bundle: EpisodeBundle, agentId: string) {
-  return bundle.motion_segments
-    .filter((motion) => motion.agent_id === agentId)
-    .flatMap((motion) => motion.trajectory_sample)
-    .sort((a, b) => a.step - b.step);
-}
-
-function poseAt(points: MotionPoint[], step: number): MotionPoint | undefined {
-  if (!points.length) return undefined;
-  if (step <= points[0].step) return points[0];
-  if (step >= points.at(-1)!.step) return points.at(-1);
-  let before = points[0];
-  let after = points.at(-1)!;
-  for (let index = 1; index < points.length; index += 1) {
-    if (points[index].step >= step) {
-      after = points[index];
-      before = points[index - 1];
-      break;
-    }
-  }
-  const span = Math.max(1, after.step - before.step);
-  const mix = Math.max(0, Math.min(1, (step - before.step) / span));
-  return {
-    step,
-    x: before.x + (after.x - before.x) * mix,
-    y: before.y + (after.y - before.y) * mix,
-    yaw: before.yaw + (after.yaw - before.yaw) * mix,
-  };
-}
-
-function chapterRange(
-  bundle: EpisodeBundle,
-  chapterKind: ReplayChapterKind,
-  chapterStep: number,
-) {
-  if (chapterKind === "move") {
-    const motions = bundle.motion_segments.filter(
-      (motion) =>
-        motion.agent_id === "scout" && motion.purpose === "scout_repair",
-    );
-    return {
-      start: Math.min(...motions.map((motion) => motion.start_step)),
-      end: Math.max(...motions.map((motion) => motion.end_step)),
-    };
-  }
-  if (chapterKind === "act") {
-    const deniedStep =
-      bundle.gate_receipts.find((gate) => !gate.effective_admit)?.evaluated_step ||
-      chapterStep;
-    const admittedStep = bundle.gate_receipts.find(
-      (gate) => gate.effective_admit,
-    )?.evaluated_step;
-    const carrier = bundle.motion_segments.filter(
-      (motion) => motion.agent_id === "carrier",
-    );
-    return {
-      start: admittedStep || deniedStep,
-      end: Math.max(...carrier.map((motion) => motion.end_step)),
-    };
-  }
-  return { start: chapterStep, end: chapterStep };
-}
-
-function project(
-  width: number,
-  height: number,
-  x: number,
-  y: number,
-  z = 0,
-): Projected {
-  const scale = Math.min(width / 8.1, height / 4.9);
-  return {
-    x: width * 0.47 + (x - y) * scale,
-    y: height * 0.52 + (x + y) * scale * 0.38 - z * scale,
-  };
-}
+type Pose = MotionPoint & { agent_id: "carrier" | "scout" };
 
 function polygon(
   context: CanvasRenderingContext2D,
@@ -119,98 +45,53 @@ function polygon(
   }
 }
 
-function slab(
+function drawFloor(
   context: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  region: number[],
-  color: string,
-  label: string,
+  projection: Projection,
+  bounds: Bounds,
 ) {
-  const [x0, x1, y0, y1] = region;
-  const top = [
-    project(width, height, x0, y0, 0.025),
-    project(width, height, x1, y0, 0.025),
-    project(width, height, x1, y1, 0.025),
-    project(width, height, x0, y1, 0.025),
-  ];
-  polygon(context, top, color, "rgba(255,255,255,.18)");
-  const center = project(width, height, (x0 + x1) / 2, (y0 + y1) / 2, 0.04);
-  context.fillStyle = "rgba(222,241,242,.8)";
-  context.font = "600 10px ui-monospace, SFMono-Regular, Menlo, monospace";
-  context.textAlign = "center";
-  context.fillText(label.toUpperCase(), center.x, center.y);
+  const step = 0.5;
+  for (let x = Math.floor(bounds.minX / step) * step; x < bounds.maxX; x += step) {
+    for (let y = Math.floor(bounds.minY / step) * step; y < bounds.maxY; y += step) {
+      const parity = Math.round((x + y) / step) % 2;
+      polygon(
+        context,
+        [
+          projection.project(x, y),
+          projection.project(x + step, y),
+          projection.project(x + step, y + step),
+          projection.project(x, y + step),
+        ],
+        parity ? "#152126" : "#111b1f",
+        "rgba(121,151,157,.07)",
+      );
+    }
+  }
 }
 
-function cuboid(
+function drawCorridor(
   context: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  pose: Pose,
+  projection: Projection,
+  region: number[],
   color: string,
-  label: string,
 ) {
-  const length = pose.agent_id === "carrier" ? 0.34 : 0.25;
-  const breadth = pose.agent_id === "carrier" ? 0.22 : 0.18;
-  const tall = pose.agent_id === "carrier" ? 0.22 : 0.17;
-  const cosine = Math.cos(pose.yaw);
-  const sine = Math.sin(pose.yaw);
-  const corners = [
-    [-length, -breadth],
-    [length, -breadth],
-    [length, breadth],
-    [-length, breadth],
-  ].map(([x, y]) => ({
-    x: pose.x + x * cosine - y * sine,
-    y: pose.y + x * sine + y * cosine,
-  }));
-  const bottom = corners.map((point) =>
-    project(width, height, point.x, point.y, 0.02),
-  );
-  const top = corners.map((point) =>
-    project(width, height, point.x, point.y, tall),
-  );
-  const carrier = pose.agent_id === "carrier";
-  const gate = pose.agent_id === "gate";
+  const [x0, x1, y0, y1] = region;
   polygon(
     context,
-    [bottom[1], bottom[2], top[2], top[1]],
-    gate ? "#343f44" : carrier ? "#0b7779" : "#9a6721",
+    [
+      projection.project(x0, y0, 0.015),
+      projection.project(x1, y0, 0.015),
+      projection.project(x1, y1, 0.015),
+      projection.project(x0, y1, 0.015),
+    ],
+    color,
+    "rgba(219,234,232,.2)",
   );
-  polygon(
-    context,
-    [bottom[2], bottom[3], top[3], top[2]],
-    gate ? "#465158" : carrier ? "#0e9c9d" : "#c1842b",
-  );
-  polygon(context, top, color, "rgba(255,255,255,.45)");
-  const center = project(width, height, pose.x, pose.y, tall + 0.03);
-  if (!gate) {
-    const nose = project(
-      width,
-      height,
-      pose.x + Math.cos(pose.yaw) * length * 1.25,
-      pose.y + Math.sin(pose.yaw) * length * 1.25,
-      tall + 0.03,
-    );
-    context.strokeStyle = "#061012";
-    context.lineWidth = 3;
-    context.beginPath();
-    context.moveTo(center.x, center.y);
-    context.lineTo(nose.x, nose.y);
-    context.stroke();
-  }
-  if (label) {
-    context.fillStyle = "#e7f0f1";
-    context.font = "700 10px ui-monospace, SFMono-Regular, Menlo, monospace";
-    context.textAlign = "center";
-    context.fillText(label, center.x, center.y - 18);
-  }
 }
 
 function drawPath(
   context: CanvasRenderingContext2D,
-  width: number,
-  height: number,
+  projection: Projection,
   points: MotionPoint[],
   untilStep: number,
   color: string,
@@ -218,240 +99,450 @@ function drawPath(
   const visible = points.filter((point) => point.step <= untilStep);
   if (visible.length < 2) return;
   context.strokeStyle = color;
-  context.lineWidth = 3;
-  context.setLineDash([7, 6]);
+  context.lineWidth = 2.4;
+  context.setLineDash([8, 7]);
   context.beginPath();
   visible.forEach((point, index) => {
-    const projected = project(width, height, point.x, point.y, 0.035);
-    if (index === 0) context.moveTo(projected.x, projected.y);
-    else context.lineTo(projected.x, projected.y);
+    const screen = projection.project(point.x, point.y, 0.035);
+    if (index === 0) context.moveTo(screen.x, screen.y);
+    else context.lineTo(screen.x, screen.y);
   });
   context.stroke();
   context.setLineDash([]);
 }
 
-function drawCaptureRoot(
+function drawGate(
   context: CanvasRenderingContext2D,
+  projection: Projection,
+  bundle: EpisodeBundle,
+  admitted: boolean,
+) {
+  const x = Math.min(
+    ...bundle.episode_meta.corridors.map((corridor) => corridor.region[0]),
+  ) - 0.08;
+  const y0 =
+    Math.min(
+      ...bundle.episode_meta.corridors.map((corridor) => corridor.region[2]),
+    ) - 0.12;
+  const y1 =
+    Math.max(
+      ...bundle.episode_meta.corridors.map((corridor) => corridor.region[3]),
+    ) + 0.12;
+  const start = projection.project(x, y0, 0.025);
+  const end = projection.project(x, y1, 0.025);
+  context.strokeStyle = admitted ? "#8adf72" : "#ff6f61";
+  context.lineWidth = 4;
+  context.setLineDash([6, 5]);
+  context.beginPath();
+  context.moveTo(start.x, start.y);
+  context.lineTo(end.x, end.y);
+  context.stroke();
+  context.setLineDash([]);
+}
+
+function drawCollisionEnvelope(
+  context: CanvasRenderingContext2D,
+  projection: Projection,
+  pose: Pose,
+  collisionWidth: number,
+  color: string,
+) {
+  const center = projection.project(pose.x, pose.y, 0.01);
+  const xEdge = projection.project(
+    pose.x + collisionWidth / 2,
+    pose.y,
+    0.01,
+  );
+  const yEdge = projection.project(
+    pose.x,
+    pose.y + collisionWidth / 2,
+    0.01,
+  );
+  const radiusX = Math.max(6, Math.abs(xEdge.x - center.x));
+  const radiusY = Math.max(4, Math.abs(yEdge.y - center.y));
+  context.fillStyle = color;
+  context.strokeStyle = color.replace(".14", ".52");
+  context.lineWidth = 1.5;
+  context.beginPath();
+  context.ellipse(center.x, center.y, radiusX, radiusY, 0, 0, Math.PI * 2);
+  context.fill();
+  context.stroke();
+}
+
+function drawRobot(
+  context: CanvasRenderingContext2D,
+  projection: Projection,
+  pose: Pose,
+  collisionWidth: number,
+  color: string,
+): Box {
+  const bodySize = collisionWidth * 0.68;
+  const half = bodySize / 2;
+  const height = Math.max(0.1, collisionWidth * 0.34);
+  const cosine = Math.cos(pose.yaw);
+  const sine = Math.sin(pose.yaw);
+  const corners = [
+    [-half, -half],
+    [half, -half],
+    [half, half],
+    [-half, half],
+  ].map(([x, y]) => ({
+    x: pose.x + x * cosine - y * sine,
+    y: pose.y + x * sine + y * cosine,
+  }));
+  const bottom = corners.map((point) =>
+    projection.project(point.x, point.y, 0.025),
+  );
+  const top = corners.map((point) =>
+    projection.project(point.x, point.y, height),
+  );
+  polygon(
+    context,
+    [bottom[1], bottom[2], top[2], top[1]],
+    pose.agent_id === "carrier" ? "#08797a" : "#94661f",
+  );
+  polygon(
+    context,
+    [bottom[2], bottom[3], top[3], top[2]],
+    pose.agent_id === "carrier" ? "#0d9898" : "#be842d",
+  );
+  polygon(context, top, color, "rgba(255,255,255,.48)");
+  const center = projection.project(pose.x, pose.y, height + 0.02);
+  const nose = projection.project(
+    pose.x + Math.cos(pose.yaw) * half * 1.15,
+    pose.y + Math.sin(pose.yaw) * half * 1.15,
+    height + 0.02,
+  );
+  context.strokeStyle = "#071012";
+  context.lineWidth = 2.5;
+  context.beginPath();
+  context.moveTo(center.x, center.y);
+  context.lineTo(nose.x, nose.y);
+  context.stroke();
+  const all = [...bottom, ...top];
+  return boxForPoints(all);
+}
+
+function boxesOverlap(a: Box, b: Box, padding = 0) {
+  return !(
+    a.x + a.width + padding <= b.x ||
+    b.x + b.width + padding <= a.x ||
+    a.y + a.height + padding <= b.y ||
+    b.y + b.height + padding <= a.y
+  );
+}
+
+function boxForPoints(points: Projected[]): Box {
+  const minX = Math.min(...points.map((point) => point.x));
+  const maxX = Math.max(...points.map((point) => point.x));
+  const minY = Math.min(...points.map((point) => point.y));
+  const maxY = Math.max(...points.map((point) => point.y));
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+function drawLabel(
+  context: CanvasRenderingContext2D,
+  anchor: Projected,
+  text: string,
+  color: string,
+  occupied: Box[],
   width: number,
   height: number,
+) {
+  context.font = "700 11px Inter, system-ui, sans-serif";
+  const labelWidth = context.measureText(text).width + 18;
+  const labelHeight = 25;
+  const candidates: Box[] = [
+    { x: anchor.x - labelWidth / 2, y: anchor.y - 47, width: labelWidth, height: labelHeight },
+    { x: anchor.x + 18, y: anchor.y - 14, width: labelWidth, height: labelHeight },
+    { x: anchor.x - labelWidth - 18, y: anchor.y - 14, width: labelWidth, height: labelHeight },
+  ];
+  const selected =
+    candidates.find(
+      (candidate) =>
+        candidate.x >= 8 &&
+        candidate.y >= 96 &&
+        candidate.x + candidate.width <= width - 8 &&
+        candidate.y + candidate.height <= height - 58 &&
+        !occupied.some((box) => boxesOverlap(candidate, box, 5)),
+    ) || candidates[0];
+  context.fillStyle = "rgba(7,12,14,.9)";
+  context.beginPath();
+  context.roundRect(
+    selected.x,
+    selected.y,
+    selected.width,
+    selected.height,
+    6,
+  );
+  context.fill();
+  context.strokeStyle = color;
+  context.lineWidth = 1;
+  context.stroke();
+  context.fillStyle = "#e7eeec";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText(
+    text,
+    selected.x + selected.width / 2,
+    selected.y + selected.height / 2,
+  );
+  occupied.push(selected);
+}
+
+function drawCaptureRoot(
+  context: CanvasRenderingContext2D,
+  projection: Projection,
   pose: MotionPoint,
   label: string,
   color: string,
-  pulse: number,
 ) {
-  const point = project(width, height, pose.x, pose.y, 0.03);
+  const point = projection.project(pose.x, pose.y, 0.025);
   context.strokeStyle = color;
-  context.lineWidth = 2;
-  context.globalAlpha = 0.6 + pulse * 0.35;
+  context.lineWidth = 1.5;
   context.beginPath();
-  context.ellipse(point.x, point.y, 15 + pulse * 5, 8 + pulse * 3, 0, 0, Math.PI * 2);
+  context.ellipse(point.x, point.y, 15, 8, 0, 0, Math.PI * 2);
   context.stroke();
-  context.globalAlpha = 1;
   context.fillStyle = color;
-  context.font = "700 9px ui-monospace, SFMono-Regular, Menlo, monospace";
+  context.font = "700 9px IBM Plex Mono, monospace";
   context.textAlign = "left";
-  context.fillText(label, point.x + 18, point.y - 8);
+  context.textBaseline = "alphabetic";
+  context.fillText(label, point.x + 18, point.y - 7);
+}
+
+function drawScale(
+  context: CanvasRenderingContext2D,
+  projection: Projection,
+  width: number,
+  height: number,
+) {
+  const x = 24;
+  const y = height - 76;
+  const length = projection.scale;
+  context.strokeStyle = "#91a2a5";
+  context.lineWidth = 1.5;
+  context.beginPath();
+  context.moveTo(x, y);
+  context.lineTo(x + length, y);
+  context.moveTo(x, y - 4);
+  context.lineTo(x, y + 4);
+  context.moveTo(x + length, y - 4);
+  context.lineTo(x + length, y + 4);
+  context.stroke();
+  context.fillStyle = "#91a2a5";
+  context.font = "600 9px IBM Plex Mono, monospace";
+  context.textAlign = "left";
+  context.fillText("1 m", x, y - 9);
+  context.fillText(
+    "RECORDED WORLD COORDINATES",
+    Math.min(width - 185, x + length + 18),
+    y + 3,
+  );
 }
 
 export function WorldReplay3D({
   bundle,
   chapterKind,
   chapterStep,
-  animate,
-  durationMs,
+  progress,
   label,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [size, setSize] = useState({ width: 1, height: 1 });
+  const bounds = useMemo(() => sceneBounds(bundle), [bundle]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setSize({
+        width: Math.max(1, Math.round(entry.contentRect.width)),
+        height: Math.max(1, Math.round(entry.contentRect.height)),
+      });
+    });
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-    let animationFrame = 0;
-    let cancelled = false;
-    const carrierPoints = agentPoints(bundle, "carrier");
-    const scoutPoints = agentPoints(bundle, "scout");
-    const range = chapterRange(bundle, chapterKind, chapterStep);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const movingChapter = chapterKind === "move" || chapterKind === "act";
-    const shouldAnimate = animate && movingChapter && !reduced;
-    const started = performance.now();
+    const moving = chapterKind === "move" || chapterKind === "act";
+    const effectiveProgress = reduced && moving ? 1 : progress;
+    const currentStep = chapterStepAtProgress(
+      bundle,
+      chapterKind,
+      chapterStep,
+      effectiveProgress,
+    );
+    const deviceScale = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(size.width * deviceScale);
+    canvas.height = Math.round(size.height * deviceScale);
+    context.setTransform(deviceScale, 0, 0, deviceScale, 0, 0);
+    context.clearRect(0, 0, size.width, size.height);
 
-    const render = (timestamp: number) => {
-      if (cancelled) return;
-      const ratio = shouldAnimate
-        ? Math.min(1, Math.max(0, (timestamp - started) / durationMs))
-        : movingChapter
-          ? 1
-          : 0;
-      const currentStep =
-        range.start + Math.round((range.end - range.start) * ratio);
-      const deviceScale = Math.min(2, window.devicePixelRatio || 1);
-      const bounds = canvas.getBoundingClientRect();
-      const width = Math.max(1, Math.round(bounds.width));
-      const height = Math.max(1, Math.round(bounds.height));
-      const pixelWidth = Math.round(width * deviceScale);
-      const pixelHeight = Math.round(height * deviceScale);
-      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-        canvas.width = pixelWidth;
-        canvas.height = pixelHeight;
-      }
-      context.setTransform(deviceScale, 0, 0, deviceScale, 0, 0);
-      context.clearRect(0, 0, width, height);
+    const gradient = context.createLinearGradient(0, 0, 0, size.height);
+    gradient.addColorStop(0, "#091216");
+    gradient.addColorStop(1, "#121c20");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, size.width, size.height);
 
-      const gradient = context.createLinearGradient(0, 0, 0, height);
-      gradient.addColorStop(0, "#081217");
-      gradient.addColorStop(1, "#101a1e");
-      context.fillStyle = gradient;
-      context.fillRect(0, 0, width, height);
+    const projection = createProjection(size.width, size.height, bounds);
+    drawFloor(context, projection, bounds);
+    bundle.episode_meta.corridors.forEach((corridor, index) =>
+      drawCorridor(
+        context,
+        projection,
+        corridor.region,
+        index === 0 ? "rgba(34,194,190,.16)" : "rgba(139,217,113,.13)",
+      ),
+    );
 
-      for (let x = FLOOR_X[0]; x < FLOOR_X[1]; x += 0.5) {
-        for (let y = FLOOR_Y[0]; y < FLOOR_Y[1]; y += 0.5) {
-          const parity = Math.round((x + y) * 2) % 2;
-          polygon(
+    const gate = bundle.gate_receipts
+      .filter((receipt) => receipt.evaluated_step <= currentStep)
+      .at(-1);
+    drawGate(context, projection, bundle, Boolean(gate?.effective_admit));
+
+    const carrierPoints = trajectoryPoints(bundle, "carrier");
+    const scoutPoints = trajectoryPoints(bundle, "scout");
+    drawPath(context, projection, carrierPoints, currentStep, "#26c7c3");
+    drawPath(context, projection, scoutPoints, currentStep, "#efb34f");
+
+    const selectedRootSteps = new Set(
+      bundle.sensor_frames
+        .filter(
+          (frame) => frame.corridor_id === bundle.outcome.selected_corridor,
+        )
+        .map((frame) => frame.step),
+    );
+    [...bundle.measurement_roots]
+      .sort((a, b) => a.observed_step - b.observed_step)
+      .filter(
+        (root) =>
+          root.observed_step <= currentStep &&
+          selectedRootSteps.has(root.observed_step),
+      )
+      .forEach((root, index) => {
+        const points =
+          root.observer_agent_id === "scout" ? scoutPoints : carrierPoints;
+        const rootPose = interpolatePose(points, root.observed_step);
+        if (rootPose) {
+          drawCaptureRoot(
             context,
-            [
-              project(width, height, x, y),
-              project(width, height, x + 0.5, y),
-              project(width, height, x + 0.5, y + 0.5),
-              project(width, height, x, y + 0.5),
-            ],
-            parity ? "#172329" : "#121d22",
-            "rgba(95,126,136,.09)",
+            projection,
+            rootPose,
+            `ROOT ${String(index + 1).padStart(2, "0")}`,
+            root.observer_agent_id === "scout" ? "#efb34f" : "#26c7c3",
           );
         }
-      }
-
-      bundle.episode_meta.corridors.forEach((corridor, index) => {
-        slab(
-          context,
-          width,
-          height,
-          corridor.region,
-          index === 0 ? "rgba(21,213,208,.2)" : "rgba(131,229,110,.16)",
-          corridor.id,
-        );
       });
 
-      const gateX = Math.min(
-        ...bundle.episode_meta.corridors.map((corridor) => corridor.region[0]),
+    const geometry = bundle.episode_meta.agent_geometry;
+    const robots: Array<{
+      pose: Pose;
+      width: number;
+      color: string;
+      envelope: string;
+      label: string;
+    }> = [];
+    const carrier = interpolatePose(carrierPoints, currentStep);
+    const scout = interpolatePose(scoutPoints, currentStep);
+    if (carrier) {
+      robots.push({
+        pose: { ...carrier, agent_id: "carrier" },
+        width: geometry?.carrier.collision_width_m || 0.55,
+        color: "#20d0cb",
+        envelope: "rgba(32,208,203,.14)",
+        label: "CARRIER",
+      });
+    }
+    if (scout) {
+      robots.push({
+        pose: { ...scout, agent_id: "scout" },
+        width: geometry?.scout.collision_width_m || 0.32,
+        color: "#f0b64f",
+        envelope: "rgba(240,182,79,.14)",
+        label: "SCOUT",
+      });
+    }
+    robots.forEach((robot) =>
+      drawCollisionEnvelope(
+        context,
+        projection,
+        robot.pose,
+        robot.width,
+        robot.envelope,
+      ),
+    );
+    robots.sort(
+      (a, b) =>
+        projection.project(a.pose.x, a.pose.y).y -
+        projection.project(b.pose.x, b.pose.y).y,
+    );
+    const bodyBoxes: Box[] = [];
+    const labelAnchors: Array<{
+      anchor: Projected;
+      text: string;
+      color: string;
+    }> = [];
+    robots.forEach((robot) => {
+      const box = drawRobot(
+        context,
+        projection,
+        robot.pose,
+        robot.width,
+        robot.color,
       );
-      const gateLeft: Pose = {
-        agent_id: "gate",
-        step: currentStep,
-        x: gateX - 0.12,
-        y: -0.94,
-        yaw: 0,
-      };
-      const gateRight: Pose = { ...gateLeft, y: 0.94 };
-      cuboid(context, width, height, gateLeft, "#59646a", "");
-      cuboid(context, width, height, gateRight, "#59646a", "");
-      const gateLabel = project(width, height, gateX - 0.12, 0, 0.5);
-      context.fillStyle = "rgba(211,224,226,.72)";
-      context.font = "600 9px ui-monospace, SFMono-Regular, Menlo, monospace";
-      context.textAlign = "center";
-      context.fillText("EVIDENCE GATE", gateLabel.x, gateLabel.y);
+      bodyBoxes.push(box);
+      labelAnchors.push({
+        anchor: {
+          x: box.x + box.width / 2,
+          y: box.y,
+        },
+        text: robot.label,
+        color: robot.color,
+      });
+    });
+    const occupied = [...bodyBoxes];
+    labelAnchors.forEach((item) =>
+      drawLabel(
+        context,
+        item.anchor,
+        item.text,
+        item.color,
+        occupied,
+        size.width,
+        size.height,
+      ),
+    );
 
-      drawPath(context, width, height, carrierPoints, currentStep, "#15d5d0");
-      drawPath(context, width, height, scoutPoints, currentStep, "#f0b44d");
-
-      const carrierPose = poseAt(carrierPoints, currentStep);
-      const scoutPose = poseAt(scoutPoints, currentStep);
-      if (carrierPose) {
-        cuboid(
-          context,
-          width,
-          height,
-          { ...carrierPose, agent_id: "carrier" },
-          "#15d5d0",
-          "CARRIER",
-        );
-      }
-      if (scoutPose) {
-        cuboid(
-          context,
-          width,
-          height,
-          { ...scoutPose, agent_id: "scout" },
-          "#f0b44d",
-          "SCOUT",
-        );
-      }
-
-      const pulse = (Math.sin(timestamp / 350) + 1) / 2;
-      const selectedRootSteps = new Set(
-        bundle.sensor_frames
-          .filter(
-            (frame) =>
-              frame.corridor_id === bundle.outcome.selected_corridor,
-          )
-          .map((frame) => frame.step),
-      );
-      [...bundle.measurement_roots]
-        .sort((a, b) => a.observed_step - b.observed_step)
-        .filter(
-          (root) =>
-            root.observed_step <= currentStep &&
-            selectedRootSteps.has(root.observed_step),
-        )
-        .forEach((root, index) => {
-          const points =
-            root.observer_agent_id === "scout" ? scoutPoints : carrierPoints;
-          const rootPose = poseAt(points, root.observed_step);
-          if (rootPose) {
-            drawCaptureRoot(
-              context,
-              width,
-              height,
-              rootPose,
-              `ROOT ${String(index + 1).padStart(2, "0")}`,
-              root.observer_agent_id === "scout" ? "#f0b44d" : "#15d5d0",
-              pulse,
-            );
-          }
-        });
-
-      context.fillStyle = "rgba(5,9,11,.88)";
-      context.fillRect(16, 16, 310, 66);
-      context.strokeStyle = "rgba(72,99,108,.65)";
-      context.strokeRect(16, 16, 310, 66);
-      context.textAlign = "left";
-      context.fillStyle = "#dce7e9";
-      context.font = "700 11px ui-monospace, SFMono-Regular, Menlo, monospace";
-      context.fillText(label, 32, 42);
-      context.fillStyle = movingChapter ? "#83e56e" : "#87969b";
-      context.font = "600 9px ui-monospace, SFMono-Regular, Menlo, monospace";
-      context.fillText(
-        movingChapter
-          ? `${chapterKind.toUpperCase()} · STEP ${currentStep}`
-          : `HELD STATE · STEP ${currentStep}`,
-        32,
-        64,
-      );
-
-      if (shouldAnimate && ratio < 1) {
-        animationFrame = requestAnimationFrame(render);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(render);
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(animationFrame);
-    };
+    drawScale(context, projection, size.width, size.height);
   }, [
-    animate,
+    bounds,
     bundle,
     chapterKind,
     chapterStep,
-    durationMs,
-    label,
+    progress,
+    size.height,
+    size.width,
   ]);
 
   return (
     <div className="world-replay-3d">
       <canvas ref={canvasRef} aria-label={label} />
+      <div className="world-stage-heading">
+        <span>{label}</span>
+        <b>
+          {chapterKind === "act"
+            ? "ACTION QUALIFIED"
+            : chapterKind === "move"
+              ? "EVIDENCE REPAIR IN MOTION"
+              : "ROBOT HELD"}
+        </b>
+      </div>
       <div className="world-replay-badge">
         <i />
         RECORDED TRAJECTORY REPLAY · SIMULATION ONLY
@@ -459,7 +550,7 @@ export function WorldReplay3D({
       <div className="world-replay-legend">
         <span><i className="carrier" /> CARRIER</span>
         <span><i className="scout" /> SCOUT</span>
-        <span>AMD GPU EVIDENCE</span>
+        <span>SCHEMATIC BODIES · RECORDED POSE + COLLISION WIDTH</span>
       </div>
     </div>
   );
