@@ -21,6 +21,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <span>Look Twice<small>Active evidence assurance</small></span>
         </Link>
         <nav aria-label={zh ? "主导航" : "Primary navigation"}>
+          <Link className={pathname === "/" ? "active" : ""} href="/">{zh?"首页":"Home"}</Link>
           <Link className={pathname === "/console" ? "active" : ""} href="/console">{zh?"控制台":"Console"}</Link>
           <Link className={pathname === "/results" ? "active" : ""} href="/results">{zh?"结果":"Results"}</Link>
           <Link className={pathname === "/reproduce" ? "active" : ""} href="/reproduce">{zh?"复现":"Reproduce"}</Link>

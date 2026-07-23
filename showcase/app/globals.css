@@ -38,7 +38,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
     radial-gradient(circle at 85% 8%, rgba(24, 170, 167, 0.09), transparent 24%),
     var(--paper);
 }
-.shell-console { background: #0f1518; color: #edf2ef; }
+.shell-console {
+  background:
+    radial-gradient(circle at 85% 8%, rgba(24, 170, 167, 0.08), transparent 24%),
+    var(--paper);
+  color: var(--ink);
+}
 
 .topbar {
   position: sticky;
@@ -54,8 +59,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   backdrop-filter: blur(20px);
 }
 .shell-console .topbar {
-  border-color: var(--line-dark);
-  background: rgba(15, 21, 24, 0.9);
+  border-color: var(--line);
+  background: rgba(244, 242, 236, 0.92);
 }
 .brand { display: inline-flex; align-items: center; gap: 13px; width: max-content; }
 .brand > span:last-child {
@@ -82,7 +87,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%;
   background: var(--ink);
 }
-.shell-console .brand-symbol { background: #edf2ef; }
+.shell-console .brand-symbol { background: var(--ink); }
 .brand-symbol i {
   width: 7px;
   height: 14px;
@@ -123,7 +128,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   cursor: pointer;
   font: 600 11px var(--font-mono);
 }
-.shell-console .top-actions button { border-color: var(--line-dark); }
+.shell-console .top-actions button { border-color: var(--line); }
 .status-pill {
   padding: 9px 13px;
   border-radius: 999px;
@@ -435,7 +440,7 @@ footer {
   color: var(--muted);
   font: 500 9px var(--font-mono);
 }
-.shell-console footer { border-top: 1px solid var(--line-dark); }
+.shell-console footer { border-top: 1px solid var(--line); }
 .compact .brand-symbol { width: 28px; height: 28px; }
 .compact .brand-symbol i { width: 5px; height: 11px; }
 
