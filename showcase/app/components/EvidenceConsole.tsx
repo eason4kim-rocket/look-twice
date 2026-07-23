@@ -30,7 +30,7 @@ type Manifest = {
 };
 
 export function EvidenceConsole() {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const zh = language === "zh";
   const tx = (en: string, cn: string) => (zh ? cn : en);
   const [manifest, setManifest] = useState<Manifest | null>(null);
@@ -53,11 +53,9 @@ export function EvidenceConsole() {
     requestedAutoplay.current = query.get("autoplay") === "1";
     const isCinematic = query.get("cinematic") === "1";
     setCinematic(isCinematic);
-    if (query.get("locale") === "zh") setLanguage("zh");
-    if (query.get("locale") === "en") setLanguage("en");
     document.documentElement.classList.toggle("cinematic-page", isCinematic);
     return () => document.documentElement.classList.remove("cinematic-page");
-  }, [setLanguage]);
+  }, []);
 
   useEffect(() => {
     fetch("/data/manifest.json")
@@ -166,7 +164,7 @@ export function EvidenceConsole() {
   }, [chapters.length, bundle]);
 
   if (!manifest || !profile || !bundle || !chapter || !state) {
-    return <div className="loading">LOADING VERIFIED EVIDENCE PACK…</div>;
+    return <div className="loading">{tx("LOADING VERIFIED EVIDENCE PACK…", "正在加载已验证证据包…")}</div>;
   }
 
   const frames = state.frameIds
@@ -189,9 +187,10 @@ export function EvidenceConsole() {
     playback,
     timelineDurations(Boolean(bundle.outcome.repair_attempted)),
   );
-  const nextView = String(request?.target_viewpoint || "diagnostic side view")
-    .replaceAll("_", " ")
-    .toUpperCase();
+  const nextView = viewpointLabel(
+    String(request?.target_viewpoint || "diagnostic_side_view"),
+    zh,
+  );
 
   const restartOrToggle = () => {
     setPlayback((current) => togglePlayback(current));
@@ -204,7 +203,7 @@ export function EvidenceConsole() {
           <label>
             <span>{tx("ACTIVE CANDIDATE", "当前候选")}</span>
             <select
-              aria-label="Candidate"
+              aria-label={tx("Candidate", "候选版本")}
               value={candidateId}
               onChange={(event) => setCandidateId(event.target.value)}
             >
@@ -218,7 +217,7 @@ export function EvidenceConsole() {
           <label>
             <span>{tx("REPLAY", "证据回放")}</span>
             <select
-              aria-label="Replay"
+              aria-label={tx("Replay", "证据回放")}
               value={replayId}
               onChange={(event) => setReplayId(event.target.value)}
             >
@@ -234,9 +233,9 @@ export function EvidenceConsole() {
             </select>
           </label>
           <div className="evidence-labels">
-            <span>RECORDED AMD GPU EVIDENCE</span>
-            <span>SIMULATION ONLY</span>
-            <span>FROZEN ARTIFACT</span>
+            <span>{tx("RECORDED AMD GPU EVIDENCE", "录制的 AMD GPU 证据")}</span>
+            <span>{tx("SIMULATION ONLY", "仅限仿真")}</span>
+            <span>{tx("FROZEN ARTIFACT", "冻结产物")}</span>
           </div>
         </div>
       )}
@@ -310,12 +309,18 @@ export function EvidenceConsole() {
           />
           <Fact
             label={tx("AUTHORIZATION", "动作授权")}
-            value={admitted ? "ADMIT" : denied ? "DENY" : "PENDING"}
+            value={admitted ? tx("ADMIT", "准入") : denied ? tx("DENY", "拒绝") : tx("PENDING", "待定")}
             tone={admitted ? "pass" : denied ? "fail" : "pending"}
           />
           <Fact
             label={tx("FINAL ROUTE", "最终路线")}
-            value={state.routeMode.toUpperCase()}
+            value={
+              state.revealOutcome
+                ? state.routeMode === "direct"
+                  ? tx("DIRECT", "直行")
+                  : tx("DETOUR", "绕行")
+                : tx("PENDING", "待定")
+            }
             tone={state.revealOutcome ? "pass" : "pending"}
           />
         </div>
@@ -329,6 +334,7 @@ export function EvidenceConsole() {
               chapterKind={chapter.kind}
               chapterStep={state.event?.step || frame.step}
               progress={playbackProgress}
+              language={language}
               label={
                 chapter.kind === "observe"
                   ? tx("GENESIS WORLD · ROBOT HELD", "GENESIS 世界 · 机器人停止")
@@ -348,7 +354,7 @@ export function EvidenceConsole() {
             <div className="world-evidence-dock">
               <div className="evidence-dock-title">
                 <span>{tx("RECORDED RGB-D EVIDENCE", "录制的 RGB-D 证据")}</span>
-                <b>{sensorMode === "mask" ? "MASK" : sensorMode.toUpperCase()}</b>
+                <b>{sensorModeLabel(sensorMode, zh)}</b>
               </div>
               {chapter.kind === "repair" && frames.length > 1 ? (
                 <div className="evidence-pair">
@@ -358,6 +364,7 @@ export function EvidenceConsole() {
                     label={tx("BEFORE · ROOT 01", "之前 · ROOT 01")}
                     status={tx("ORIGINAL ROOT", "原始证据根")}
                     scanning={playing}
+                    zh={zh}
                   />
                   <FrameView
                     frame={frames.at(-1)!}
@@ -365,6 +372,7 @@ export function EvidenceConsole() {
                     label={tx("AFTER · ROOT 02", "之后 · ROOT 02")}
                     status={tx("NEW INDEPENDENT ROOT", "新独立证据根")}
                     scanning={playing}
+                    zh={zh}
                   />
                 </div>
               ) : (
@@ -383,10 +391,11 @@ export function EvidenceConsole() {
                             : tx("TARGETING DIAGNOSTIC VIEW", "正在选择诊断视角")
                   }
                   scanning={playing}
+                  zh={zh}
                   label={
                     chapter.kind === "observe"
                       ? tx("INITIAL FRONT VIEW · ROOT 01", "初始正面视角 · ROOT 01")
-                      : tx("CLAIM EVIDENCE", "CLAIM 证据")
+                      : tx("CLAIM EVIDENCE", "证据声明")
                   }
                 />
               )}
@@ -396,7 +405,7 @@ export function EvidenceConsole() {
         <aside className="decision-summary">
           <span>{tx("CURRENT DECISION", "当前决策")}</span>
           <strong className={admitted ? "pass" : denied ? "fail" : "pending"}>
-            {admitted ? "ADMITTED" : denied ? "DENIED" : "EVALUATING"}
+            {admitted ? tx("ADMITTED", "已准入") : denied ? tx("DENIED", "已拒绝") : tx("EVALUATING", "评估中")}
           </strong>
           <p>
             {admitted
@@ -414,7 +423,7 @@ export function EvidenceConsole() {
                 ? tx("WHAT CHANGED", "发生了什么变化")
                 : tx("NEXT BEST VIEW", "下一最佳视角")}
             </span>
-            <b>{admitted ? "PYTHON ∧ PURIFY ADMIT" : nextView}</b>
+            <b>{admitted ? tx("PYTHON ∧ PURIFY ADMIT", "PYTHON ∧ PURIFY 双重准入") : nextView}</b>
             <small>
               {admitted
                 ? tx("NEW ROOT · CALIBRATED · TRACEABLE", "新根 · 已校准 · 可追溯")
@@ -425,6 +434,7 @@ export function EvidenceConsole() {
             <ContractLine
               label={tx("Fresh calibrated evidence", "证据新鲜且校准适用")}
               pass={!state.gate?.reasons?.includes("stale")}
+              zh={zh}
             />
             <ContractLine
               label={tx("Independent side-view root", "独立侧视采集根")}
@@ -433,10 +443,12 @@ export function EvidenceConsole() {
                   ? !state.gate.reasons.includes("missing_side_view_vision_root")
                   : undefined
               }
+              zh={zh}
             />
             <ContractLine
               label="Python ∧ Purify"
               pass={state.gate?.effective_admit}
+              zh={zh}
             />
           </div>
         </aside>
@@ -450,23 +462,23 @@ export function EvidenceConsole() {
               className={sensorMode === mode ? "active" : ""}
               onClick={() => setSensorMode(mode)}
             >
-              {mode === "mask" ? "CORRIDOR MASK" : mode.toUpperCase()}
+              {sensorModeLabel(mode, zh)}
             </button>
           ))}
         </div>
-        <Metric label="P(BLOCKED)" value={formatP(frame?.p_blocked)} />
+        <Metric label={tx("P(BLOCKED)", "P（受阻）")} value={formatP(frame?.p_blocked)} />
         <Metric
           label={tx("PREDICTION SET", "预测集")}
-          value={"{" + (frame?.prediction_set?.join(", ") || "—") + "}"}
+          value={predictionSetValue(frame?.prediction_set, zh)}
         />
-        <Metric label="CLAIM" value={(frame?.value || "—").toUpperCase()} accent />
+        <Metric label={tx("CLAIM", "证据声明")} value={claimValue(frame?.value, zh)} accent />
         <Metric
-          label="PYTHON GATE"
-          value={state.gate?.python_admitted ? "ADMIT" : state.gate ? "DENY" : "—"}
+          label={tx("PYTHON GATE", "PYTHON 门控")}
+          value={state.gate?.python_admitted ? tx("ADMIT", "准入") : state.gate ? tx("DENY", "拒绝") : "—"}
         />
         <Metric
-          label="PURIFY GO"
-          value={state.gate?.purify_go_admitted ? "ADMIT" : state.gate ? "DENY" : "—"}
+          label={tx("PURIFY GO", "PURIFY GO 门控")}
+          value={state.gate?.purify_go_admitted ? tx("ADMIT", "准入") : state.gate ? tx("DENY", "拒绝") : "—"}
         />
       </section>
 
@@ -474,19 +486,19 @@ export function EvidenceConsole() {
         (!cinematic || playbackProgress >= 0.625 || playback.completed) && (
         <section className="comparison-card">
           <div>
-            <span>ACTIVE</span>
-            <b>REPAIR EVIDENCE → DIRECT</b>
-            <small>Independent root · Python ∧ Purify admit</small>
+            <span>{tx("ACTIVE", "主动策略")}</span>
+            <b>{tx("REPAIR EVIDENCE → DIRECT", "修复证据 → 直行")}</b>
+            <small>{tx("Independent root · Python ∧ Purify admit", "独立证据根 · Python ∧ Purify 双重准入")}</small>
           </div>
           <div>
-            <span>PASSIVE</span>
-            <b>NO REPAIR → SAFE DETOUR</b>
-            <small>Safe, but pays for unresolved uncertainty</small>
+            <span>{tx("PASSIVE", "被动策略")}</span>
+            <b>{tx("NO REPAIR → SAFE DETOUR", "不修证据 → 安全绕行")}</b>
+            <small>{tx("Safe, but pays for unresolved uncertainty", "保持安全，但为未消除的不确定性付出绕行成本")}</small>
           </div>
           <div className="safe-result">
-            <span>UNSAFE CROSSINGS</span>
+            <span>{tx("UNSAFE CROSSINGS", "不安全穿越")}</span>
             <b>0</b>
-            <small>Recorded Genesis + AMD GPU evidence</small>
+            <small>{tx("Recorded Genesis + AMD GPU evidence", "录制的 Genesis + AMD GPU 证据")}</small>
           </div>
         </section>
       )}
@@ -560,7 +572,7 @@ export function EvidenceConsole() {
               href={"/data/replays/" + replayId + ".json"}
               target="_blank"
             >
-              RAW JSON ↗
+              {tx("RAW JSON ↗", "原始 JSON ↗")}
             </a>
           </section>
           <details className="technical-details">
@@ -568,24 +580,24 @@ export function EvidenceConsole() {
             <div className="audit-grid">
               <section>
                 <span>{tx("CURRENT EVIDENCE", "当前证据")}</span>
-                <p>CLAIM <b>{frame.value.toUpperCase()}</b></p>
-                <p>P(BLOCKED) <b>{formatP(frame.p_blocked)}</b></p>
-                <p>PREDICTION SET <b>{"{" + frame.prediction_set.join(", ") + "}"}</b></p>
-                <p>CAPTURE ROOTS <b>{state.gate?.measurement_root_ids.length || 1}</b></p>
+                <p>{tx("CLAIM", "证据声明")} <b>{claimValue(frame.value, zh)}</b></p>
+                <p>{tx("P(BLOCKED)", "P（受阻）")} <b>{formatP(frame.p_blocked)}</b></p>
+                <p>{tx("PREDICTION SET", "预测集")} <b>{predictionSetValue(frame.prediction_set, zh)}</b></p>
+                <p>{tx("CAPTURE ROOTS", "采集根")} <b>{state.gate?.measurement_root_ids.length || 1}</b></p>
               </section>
               <section>
                 <span>{tx("ACTION RECEIPT", "动作回执")}</span>
-                <p>PYTHON <b>{state.gate?.python_admitted ? "ADMIT" : state.gate ? "DENY" : "—"}</b></p>
-                <p>PURIFY GO <b>{state.gate?.purify_go_admitted ? "ADMIT" : state.gate ? "DENY" : "—"}</b></p>
-                <p>EFFECTIVE <b>{state.gate?.effective_admit ? "ADMIT" : state.gate ? "DENY" : "—"}</b></p>
-                <p>GATE ID <b>{state.gate?.gate_id || "—"}</b></p>
+                <p>PYTHON <b>{state.gate?.python_admitted ? tx("ADMIT", "准入") : state.gate ? tx("DENY", "拒绝") : "—"}</b></p>
+                <p>PURIFY GO <b>{state.gate?.purify_go_admitted ? tx("ADMIT", "准入") : state.gate ? tx("DENY", "拒绝") : "—"}</b></p>
+                <p>{tx("EFFECTIVE", "最终结果")} <b>{state.gate?.effective_admit ? tx("ADMIT", "准入") : state.gate ? tx("DENY", "拒绝") : "—"}</b></p>
+                <p>{tx("GATE ID", "门控 ID")} <b>{state.gate?.gate_id || "—"}</b></p>
               </section>
               <section>
                 <span>{tx("INTEGRITY", "完整性")}</span>
-                <p>SOURCE <b>{bundle.integrity.source_episode_sha256.slice(0, 16)}…</b></p>
+                <p>{tx("SOURCE", "源回合")} <b>{bundle.integrity.source_episode_sha256.slice(0, 16)}…</b></p>
                 <p>BUNDLE <b>{bundle.integrity.bundle_sha256.slice(0, 16)}…</b></p>
-                <p>CLAIMS <b>{bundle.claims.length}</b></p>
-                <p>LIVE GPU <b>NOT REQUIRED</b></p>
+                <p>{tx("CLAIMS", "证据声明")} <b>{bundle.claims.length}</b></p>
+                <p>{tx("LIVE GPU", "在线 GPU")} <b>{tx("NOT REQUIRED", "无需")}</b></p>
               </section>
             </div>
           </details>
@@ -594,7 +606,7 @@ export function EvidenceConsole() {
       {cinematic && (
         <div className="cinematic-footer">
           <b>LOOK TWICE</b>
-          <span>AMD GPU · GENESIS · PURIFY · SIMULATION ONLY</span>
+          <span>{tx("AMD GPU · GENESIS · PURIFY · SIMULATION ONLY", "AMD GPU · GENESIS · PURIFY · 仅限仿真")}</span>
         </div>
       )}
     </main>
@@ -607,12 +619,14 @@ function FrameView({
   label,
   status,
   scanning,
+  zh,
 }: {
   frame: EpisodeBundle["sensor_frames"][number];
   mode: "rgb" | "depth" | "mask";
   label: string;
   status: string;
   scanning: boolean;
+  zh: boolean;
 }) {
   const source = frame.media[mode === "mask" ? "corridor_mask" : mode];
   return (
@@ -622,15 +636,17 @@ function FrameView({
         unoptimized
         className="recorded-frame"
         src={source}
-        alt={mode + " evidence at " + frame.viewpoint}
+        alt={zh
+          ? `${sensorModeLabel(mode, true)} 证据，视角 ${viewpointLabel(frame.viewpoint, true)}`
+          : `${sensorModeLabel(mode, false)} evidence at ${viewpointLabel(frame.viewpoint, false)}`}
       />
       <div className="frame-top">
         <b>{label}</b>
         <span>{frame.tensor_device}</span>
       </div>
       <div className="frame-bottom">
-        <span>{frame.corridor_id} · {frame.viewpoint}</span>
-        <b>CLAIM: {frame.value.toUpperCase()}</b>
+        <span>{corridorLabel(frame.corridor_id, zh)} · {viewpointLabel(frame.viewpoint, zh)}</span>
+        <b>{zh ? "证据声明" : "CLAIM"}: {claimValue(frame.value, zh)}</b>
       </div>
       <div className="recorded-status">
         <i />
@@ -678,9 +694,11 @@ function Metric({
 function ContractLine({
   label,
   pass,
+  zh,
 }: {
   label: string;
   pass?: boolean;
+  zh: boolean;
 }) {
   return (
     <div>
@@ -688,9 +706,47 @@ function ContractLine({
         {pass === undefined ? "·" : pass ? "✓" : "×"}
       </i>
       <span>{label}</span>
-      <b>{pass === undefined ? "WAIT" : pass ? "PASS" : "OPEN"}</b>
+      <b>{pass === undefined ? (zh ? "等待" : "WAIT") : pass ? (zh ? "通过" : "PASS") : (zh ? "缺失" : "OPEN")}</b>
     </div>
   );
+}
+
+function sensorModeLabel(mode: "rgb" | "depth" | "mask", zh: boolean) {
+  if (mode === "rgb") return zh ? "彩色图像" : "RGB";
+  if (mode === "depth") return zh ? "深度图" : "DEPTH";
+  return zh ? "走廊掩码" : "CORRIDOR MASK";
+}
+
+function claimValue(value: string | undefined, zh: boolean) {
+  if (!value) return "—";
+  if (!zh) return value.toUpperCase();
+  if (value === "clear") return "畅通";
+  if (value === "blocked") return "受阻";
+  if (value === "inconclusive") return "不确定";
+  return value;
+}
+
+function predictionSetValue(values: string[] | undefined, zh: boolean) {
+  if (!values?.length) return "—";
+  return `{${values.map((value) => claimValue(value, zh)).join(", ")}}`;
+}
+
+function corridorLabel(value: string, zh: boolean) {
+  if (!zh) return value.replaceAll("_", " ").toUpperCase();
+  return value.replace(/^corridor_/i, "走廊 ").replaceAll("_", " ").toUpperCase();
+}
+
+function viewpointLabel(value: string, zh: boolean) {
+  if (!zh) return value.replaceAll("_", " ").toUpperCase();
+  const labels: Record<string, string> = {
+    diagnostic_side_view: "诊断侧视点",
+    carrier_initial_front: "载具初始正面视角",
+    left_near: "左侧近点",
+    left_far: "左侧远点",
+    right_near: "右侧近点",
+    right_far: "右侧远点",
+  };
+  return labels[value] || value.replaceAll("_", " ");
 }
 
 function formatP(value?: number) {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
+import { LanguageProvider } from "./components/SiteShell";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -32,5 +33,11 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${inter.variable} ${mono.variable}`}>{children}</body></html>;
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${mono.variable}`}>
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
+    </html>
+  );
 }

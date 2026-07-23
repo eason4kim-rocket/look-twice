@@ -134,7 +134,7 @@ export function buildReplayChapters(
       label: zh ? "拒绝" : "DENY",
       title: zh ? "Purify 阻止未经证据支持的动作" : "Purify stops the unsupported action",
       body: zh
-        ? "动作合同缺少独立侧视证据。更多同源 Claim 不会增加保障。"
+        ? "动作合同缺少独立侧视证据。更多同源证据声明不会增加保障。"
         : "The action contract lacks independent side-view evidence. More correlated claims would not add assurance.",
       eventIndex: Math.max(0, firstDeny?.index || 0),
       frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
@@ -166,7 +166,7 @@ export function buildReplayChapters(
           ? "机器人协同移动到独立侧视位置"
           : "The robots reposition for an independent side view",
         body: zh
-          ? "Scout 获取新物理采集根；Carrier 同时沿记录的接近轨迹连续移动。"
+          ? "侦察车获取新物理采集根；载具同时沿记录的接近轨迹连续移动。"
           : "The scout acquires a new physical capture root while the carrier follows its recorded approach trajectory.",
         eventIndex: Math.max(0, moveIndex),
         frameIds: initialObservation ? [initialObservation.event.ref_id] : [],
@@ -180,7 +180,7 @@ export function buildReplayChapters(
         label: zh ? "修复" : "REPAIR",
         title: zh ? "独立证据修复了动作合同" : "Independent evidence repairs the contract",
         body: zh
-          ? "新的 RGB-D Claim 被校准、纳入谱系；Python 与 Purify Go 同时准入。"
+          ? "新的 RGB-D 证据声明已校准并纳入谱系；Python 与 Purify Go 同时准入。"
           : "The new RGB-D claim is calibrated and lineage-aware; Python and Purify Go both admit.",
         eventIndex: Math.max(0, admit?.index || outcomeIndex),
         frameIds: [
@@ -208,7 +208,7 @@ export function buildReplayChapters(
     body:
       bundle.outcome.route_mode === "direct"
         ? zh
-          ? "最终路线 DIRECT，unsafe=0。证据改变了动作资格。"
+          ? "最终路线为直行，未发生不安全穿越。更好的证据改变了动作资格。"
           : "Final route: DIRECT, unsafe=0. Better evidence changed action qualification."
         : zh
           ? "被动策略保持安全，但为不确定性付出绕行代价。"

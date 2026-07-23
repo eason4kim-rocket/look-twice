@@ -21,6 +21,7 @@ type Props = {
   chapterStep: number;
   progress: number;
   label: string;
+  language: "en" | "zh";
 };
 
 type Pose = MotionPoint & { agent_id: "carrier" | "scout" };
@@ -315,6 +316,7 @@ function drawScale(
   projection: Projection,
   width: number,
   height: number,
+  language: "en" | "zh",
 ) {
   const x = 24;
   const y = height - 76;
@@ -334,7 +336,7 @@ function drawScale(
   context.textAlign = "left";
   context.fillText("1 m", x, y - 9);
   context.fillText(
-    "RECORDED WORLD COORDINATES",
+    language === "zh" ? "录制的世界坐标" : "RECORDED WORLD COORDINATES",
     Math.min(width - 185, x + length + 18),
     y + 3,
   );
@@ -346,6 +348,7 @@ export function WorldReplay3D({
   chapterStep,
   progress,
   label,
+  language,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [size, setSize] = useState({ width: 1, height: 1 });
@@ -456,7 +459,7 @@ export function WorldReplay3D({
         width: geometry?.carrier.collision_width_m || 0.55,
         color: "#20d0cb",
         envelope: "rgba(32,208,203,.14)",
-        label: "CARRIER",
+        label: language === "zh" ? "载具" : "CARRIER",
       });
     }
     if (scout) {
@@ -465,7 +468,7 @@ export function WorldReplay3D({
         width: geometry?.scout.collision_width_m || 0.32,
         color: "#f0b64f",
         envelope: "rgba(240,182,79,.14)",
-        label: "SCOUT",
+        label: language === "zh" ? "侦察车" : "SCOUT",
       });
     }
     robots.forEach((robot) =>
@@ -519,13 +522,14 @@ export function WorldReplay3D({
       ),
     );
 
-    drawScale(context, projection, size.width, size.height);
+    drawScale(context, projection, size.width, size.height, language);
   }, [
     bounds,
     bundle,
     chapterKind,
     chapterStep,
     progress,
+    language,
     size.height,
     size.width,
   ]);
@@ -537,20 +541,24 @@ export function WorldReplay3D({
         <span>{label}</span>
         <b>
           {chapterKind === "act"
-            ? "ACTION QUALIFIED"
+            ? language === "zh" ? "动作已获准" : "ACTION QUALIFIED"
             : chapterKind === "move"
-              ? "EVIDENCE REPAIR IN MOTION"
-              : "ROBOT HELD"}
+              ? language === "zh" ? "正在移动修复证据" : "EVIDENCE REPAIR IN MOTION"
+              : language === "zh" ? "机器人保持停止" : "ROBOT HELD"}
         </b>
       </div>
       <div className="world-replay-badge">
         <i />
-        RECORDED TRAJECTORY REPLAY · SIMULATION ONLY
+        {language === "zh"
+          ? "录制轨迹回放 · 仅限仿真"
+          : "RECORDED TRAJECTORY REPLAY · SIMULATION ONLY"}
       </div>
       <div className="world-replay-legend">
-        <span><i className="carrier" /> CARRIER</span>
-        <span><i className="scout" /> SCOUT</span>
-        <span>SCHEMATIC BODIES · RECORDED POSE + COLLISION WIDTH</span>
+        <span><i className="carrier" /> {language === "zh" ? "载具" : "CARRIER"}</span>
+        <span><i className="scout" /> {language === "zh" ? "侦察车" : "SCOUT"}</span>
+        <span>{language === "zh"
+          ? "示意车体 · 录制位姿与碰撞宽度"
+          : "SCHEMATIC BODIES · RECORDED POSE + COLLISION WIDTH"}</span>
       </div>
     </div>
   );
