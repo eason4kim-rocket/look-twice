@@ -39,13 +39,14 @@
   padding: 34px clamp(18px, 3.2vw, 56px);
   display: grid;
   grid-template-columns: minmax(430px, 1.2fr) minmax(330px, .72fr) 235px;
+  grid-template-areas: "copy rail facts";
   gap: 28px;
   border-bottom: 1px solid var(--console-line);
   background:
     radial-gradient(circle at 8% 10%, rgba(24,170,167,.1), transparent 28%),
     var(--console-bg);
 }
-.judge-copy { align-self: center; }
+.judge-copy { grid-area: copy; align-self: center; }
 .judge-copy > span {
   color: var(--cyan-bright);
   font: 600 9px var(--font-mono);
@@ -101,6 +102,7 @@
 .why-card b { display: block; margin-top: 9px; color: #111718; font-size: 11px; line-height: 1.4; }
 
 .chapter-rail {
+  grid-area: rail;
   align-self: center;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -135,7 +137,7 @@
   color: var(--cyan-bright);
 }
 .chapter-rail button.current i { background: var(--cyan-bright); color: #071012; }
-.headline-facts { display: grid; gap: 8px; }
+.headline-facts { grid-area: facts; display: grid; gap: 8px; }
 .headline-facts > div {
   padding: 18px;
   display: flex;
@@ -587,8 +589,12 @@
   height: 156px;
   min-height: 156px;
   padding: 14px clamp(14px, 2.4vw, 38px);
-  grid-template-columns: minmax(410px, 1.12fr) minmax(420px, .94fr) 184px;
-  gap: 16px;
+  grid-template-columns: minmax(520px, .92fr) minmax(620px, 1.08fr);
+  grid-template-rows: 70px 42px;
+  grid-template-areas:
+    "copy rail"
+    "copy facts";
+  gap: 8px 22px;
 }
 .judge-copy > span { font-size: 8px; }
 .judge-copy h1 {
@@ -644,11 +650,13 @@
 
 .chapter-rail {
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 5px;
+  gap: 6px;
+  align-self: stretch;
 }
 .chapter-rail button {
-  min-height: 54px;
-  padding: 7px 6px;
+  min-height: 0;
+  height: 70px;
+  padding: 7px 6px 6px;
   text-align: center;
 }
 .chapter-rail button i {
@@ -663,11 +671,32 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.headline-facts { gap: 5px; }
-.headline-facts > div { padding: 9px 11px; }
+.headline-facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.headline-facts > div {
+  min-width: 0;
+  padding: 6px 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid rgba(17,23,24,.07);
+  box-shadow: none;
+}
 .headline-facts span,
 .headline-facts b { line-height: 1.05; }
-.headline-facts b { margin-top: 4px; font-size: 14px; }
+.headline-facts span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.headline-facts b {
+  flex: 0 0 auto;
+  margin-top: 0;
+  font-size: 13px;
+}
 
 .visual-stage {
   padding: 10px clamp(14px, 2.4vw, 38px);
@@ -918,6 +947,10 @@
   .judge-stage {
     height: auto;
     grid-template-columns: minmax(360px, 1fr) minmax(360px, .9fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "copy rail"
+      "facts facts";
   }
   .headline-facts {
     grid-column: 1 / -1;
@@ -936,6 +969,11 @@
     min-height: 0;
     padding: 20px 14px;
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "copy"
+      "rail"
+      "facts";
   }
   .judge-copy h1 { font-size: 34px; }
   .judge-actions { flex-wrap: wrap; }
@@ -972,9 +1010,13 @@
 }
 
 .console-wrap.cinematic .judge-stage {
+  height: auto;
   min-height: 180px;
   padding-top: 14px;
   padding-bottom: 14px;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-template-areas: "copy";
 }
 .console-wrap.cinematic .world-evidence-layout,
 .console-wrap.cinematic .world-replay-3d,

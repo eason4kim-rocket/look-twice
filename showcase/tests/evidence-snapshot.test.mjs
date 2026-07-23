@@ -76,6 +76,14 @@ test("compact layout removes the duplicate timeline and stacks only below 900px"
   );
   assert.match(consoleCss, /\.console-toolbar\s*\{[^}]*min-height:\s*52px/s);
   assert.match(consoleCss, /\.judge-stage\s*\{[^}]*min-height:\s*156px/s);
+  assert.match(
+    consoleCss,
+    /\.judge-stage\s*\{[\s\S]*?grid-template-areas:\s*\n\s*"copy rail"\s*\n\s*"copy facts"/s,
+  );
+  assert.match(
+    consoleCss,
+    /\.headline-facts\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/s,
+  );
 });
 
 test("judge copy does not imply occlusion and names independent verification", () => {
