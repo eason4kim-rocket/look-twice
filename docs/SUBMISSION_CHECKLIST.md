@@ -272,7 +272,7 @@ Stable targets:
 - [x] Copy the refreshed staged directory into the dedicated branch of the
       official fork and push it.
 - [x] Verify the refreshed official-fork branch at commit
-      `a004dbde9f439adde9787e188af8b1873382e2f9` contains only the prior 20 intended
+      `32cff1a1e77952e689f4730ff21b8a8a8ad01a63` contains only the 21 intended
       files (20 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.

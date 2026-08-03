@@ -14,7 +14,7 @@
     "official_pr_opening_authorized": false,
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
-    "public_targets_anonymously_verified": false,
+    "public_targets_anonymously_verified": true,
     "entrant_team_name": "Liu Liang",
     "entrant_role": "solo entrant",
     "entrant_github": "eason4kim-rocket",
@@ -202,7 +202,7 @@
       "size_bytes": 1077809,
       "page_count": 12,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
-      "publication_verified": false
+      "publication_verified": true
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -241,7 +241,7 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "status": "local_checksums_verified_pending_official_fork_sync_no_pr"
+      "status": "official_fork_branch_published_and_verified_no_pr"
     }
   },
   "links": {
@@ -274,11 +274,11 @@
     "rocm_telemetry_helper_tests": "3/3 passed; separate 60-second model-forward telemetry report validated",
     "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
     "feasibility_audit_tests": "10/10 passed; derived artifact matched the 30 archived active episodes and preserved the 29/30 formal primary",
-    "official_repository_staging_checksums": "passed locally; 20 checksummed artifacts verified (21 total files including SHA256SUMS); checksum-index SHA256 223d8290072d71b182427d1ad4a0c6f8d174608e02994ed6a2ebe929d79d1108",
-    "github_actions_ci": "pending for the current feasibility-audit publication commit; previous functional run 30808919006 passed",
-    "github_pages_deployment": "pending refresh for the current feasibility-audit publication; previous deployment 30808802226 passed",
-    "public_distribution": "current feasibility-audit refresh pending source, Pages, PDF asset, and official-fork publication verification",
-    "official_fork_branch": "current 21-file package pending official-fork sync; official_pr_opened=false"
+    "official_repository_staging_checksums": "passed locally and on official-fork branch 32cff1a1e77952e689f4730ff21b8a8a8ad01a63; 20 checksummed artifacts verified (21 total files including SHA256SUMS); checksum-index SHA256 223d8290072d71b182427d1ad4a0c6f8d174608e02994ed6a2ebe929d79d1108",
+    "github_actions_ci": "functional feasibility-audit commit 5d929f8f223a184b3670c4be51f8256e127ebd6c; run 30811281217 passed; Python, Purify Go, and showcase jobs all green",
+    "github_pages_deployment": "commit dd741c24d7264e292c755d1547d4943dd2389333; Pages run 30811406679 completed successfully; four routes, feasibility JSON, PDF, and referenced client assets verified without credentials",
+    "public_distribution": "feasibility audit, refreshed Pages site, source branch, report PDF release asset, and official-fork package published and verified without credentials",
+    "official_fork_branch": "21 intended files published on the Liu Liang branch at commit 32cff1a1e77952e689f4730ff21b8a8a8ad01a63; 20 checksum entries passed; official_pr_opened=false"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",
