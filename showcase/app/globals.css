@@ -226,6 +226,13 @@ h1 em { color: var(--cyan); font-style: normal; }
   font: 600 7px/1.45 var(--font-mono);
   text-transform: uppercase;
 }
+.challenge-proof-note {
+  margin: 0;
+  padding: 9px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: 500 7px/1.55 var(--font-mono);
+}
 .challenge-proof-links {
   padding: 10px 14px;
   display: flex;

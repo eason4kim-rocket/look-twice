@@ -402,9 +402,16 @@ def build_cover(
         leading=8,
         textColor=colors.HexColor("#91A0A1"),
     )
+    audit_note_style = ParagraphStyle(
+        "CoverAuditNote",
+        parent=styles["cover_meta"],
+        fontSize=6.2,
+        leading=8.2,
+        textColor=colors.HexColor("#AAB6B7"),
+    )
     metric_data = [[
         Paragraph("3,200<br/><font size=\"5.8\" color=\"#91A0A1\">LOCKED SAMPLES</font>", metric_style),
-        Paragraph("29 / 30<br/><font size=\"5.8\" color=\"#91A0A1\">ACTIVE CHALLENGE DIRECT</font>", metric_style),
+        Paragraph("29 / 29<br/><font size=\"5.8\" color=\"#91A0A1\">FEASIBLE-WORLD DIRECT*</font>", metric_style),
         Paragraph("60 / 60<br/><font size=\"5.8\" color=\"#91A0A1\">MISSION SUCCESS</font>", metric_style),
         Paragraph("0 / 60<br/><font size=\"5.8\" color=\"#91A0A1\">UNSAFE OR FALLBACK</font>", metric_style),
     ]]
@@ -439,7 +446,14 @@ def build_cover(
     items.extend(
         [
             metrics,
-            Spacer(1, 9),
+            Spacer(1, 5),
+            Paragraph(
+                "* Post-hoc descriptive oracle audit: 29/29 worlds with a clear corridor "
+                "went direct; the sole dual-blocked world safely detoured.<br/>"
+                "The preregistered primary remains active 29/30 versus passive 0/30.",
+                audit_note_style,
+            ),
+            Spacer(1, 6),
             Paragraph(
                 "Entrant / team: Liu Liang (solo) · Candidate: v8-frozen · "
                 "Apache-2.0 · Simulation only · English submission",

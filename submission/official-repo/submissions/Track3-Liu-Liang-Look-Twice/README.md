@@ -29,6 +29,8 @@ sim-to-real transfer, or safety certification.
 
 - One-page frozen challenge Judge Card:
   [packaged copy](V8-Frozen-Challenge-Judge-Card.md)
+- Post-hoc descriptive offline route-feasibility audit:
+  [packaged JSON](evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json)
 - Independent machine verification:
   [packaged JSON](evidence/challenge_102500_102529/VERIFICATION.json) ·
   [stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json)
@@ -101,6 +103,16 @@ execution:
 The paired gain is **+96.7 percentage points** with exact two-sided McNemar
 `p=3.73e-9`. The sole active non-direct world remained safe and completed by
 detour. All 60 episodes and the independent validator passed without a retry.
+
+The preregistered primary endpoint remains **active 29/30 versus passive
+0/30**. A separate post-hoc descriptive offline oracle-feasibility audit found
+all **29/29** worlds with at least one oracle-clear corridor went direct and
+selected an oracle-clear corridor. Seed `102515` was the only world with both
+corridors oracle-blocked and completed by safe detour. Thus **30/30 active
+route outcomes matched offline feasibility**. Oracle labels were never
+available to the controller, and this audit is not a preregistered endpoint.
+Across the 30 active records, unsafe was false, collision count was zero, and
+fallback was false.
 
 Receipt-level Python/Purify Go agreement was **250/268 (93.3%)**. All 18
 differences were Python-admit/Go-deny and remained fail-closed with

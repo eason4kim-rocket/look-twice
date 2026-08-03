@@ -39,6 +39,16 @@ retuning, or threshold changes:
 - 844 two-second ROCm samples across the full 1,685.5-second subprocess wall,
   including idle, for all 60 episodes.
 
+The preregistered primary endpoint remains active **29/30 versus passive
+0/30** with exact two-sided McNemar `p=3.73e-9`. A separate post-hoc descriptive
+offline oracle-feasibility audit found 29/29 active worlds with at least one
+oracle-clear corridor went direct and selected an oracle-clear corridor; the
+only dual-blocked world, seed `102515`, completed by safe detour. Therefore
+30/30 active route outcomes matched offline feasibility. Oracle labels were
+never available to the controller, and this audit is not a preregistered
+endpoint. Across the active records, unsafe was false, collision count was
+zero, and fallback was false.
+
 This is not a reopened locked split, OOD evidence, or a physical-robot result.
 Carrier and scout are two logical roles on one shared Genesis chassis, not two
 physical devices or simultaneous dual-body dynamics. Loaded-carrier logical
@@ -57,7 +67,10 @@ path fell 22.5%, while total logical-role team path rose 24.0%.
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
 - `Look-Twice-V8-Technical-Report.pdf` - 12-page English technical report;
   SHA256
-  `fa429b5989ef36b4844e32bcd343eeb867d317185e0ad372fa3cf2deaaab8d0a`.
+  `d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa`.
+- `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
+  offline feasibility audit; SHA256
+  `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
 - `v8-frozen-challenge-102500-102529.raw.tar.gz` - complete 195-file raw
   challenge archive; SHA256
   `171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2`.

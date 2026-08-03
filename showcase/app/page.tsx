@@ -32,18 +32,22 @@ function HomeContent() {
           <p className="hero-lead">{zh
             ? "Look Twice 将不稳定、冲突且同源的机器人观察，转化为可供物理动作依赖的可信事实；证据不足时，它主动修复证据。"
             : "Look Twice turns noisy, conflicting and correlated robot observations into action-qualified facts—and actively repairs evidence when confidence is not enough."}</p>
-          <div className="challenge-proof" aria-label={zh ? "公开预注册挑战结果" : "Publicly preregistered challenge result"}>
+          <div className="challenge-proof" aria-label={zh ? "预注册挑战结果与事后可行性审计" : "Preregistered challenge result and post-hoc feasibility audit"}>
             <div className="challenge-proof-head">
-              <span>{zh ? "公开预注册 · 同生成器挑战 · 非 OOD" : "PUBLICLY PREREGISTERED · SAME-GENERATOR CHALLENGE · NOT OOD"}</span>
-              <b>{zh ? "独立验证通过" : "INDEPENDENT VERIFICATION PASS"}</b>
+              <span>{zh ? "公开预注册挑战 · 独立验证通过" : "PUBLICLY PREREGISTERED CHALLENGE · INDEPENDENTLY VERIFIED"}</span>
+              <b>{zh ? "安全路线结果 30/30*" : "SAFE ROUTE OUTCOMES 30/30*"}</b>
             </div>
             <div className="challenge-proof-grid">
-              <div><strong>29<small>/30</small></strong><span>{zh ? "主动全链直行；被动 0/30" : "active full-chain direct; passive 0/30"}</span></div>
+              <div><strong>29<small>/29</small></strong><span>{zh ? "有可通行走廊的世界全部安全直行" : "all worlds with a clear corridor went direct"}</span></div>
+              <div><strong>1<small>/1</small></strong><span>{zh ? "唯一双廊阻塞世界安全绕行" : "sole dual-blocked world safely detoured"}</span></div>
               <div><strong>60<small>/60</small></strong><span>{zh ? "任务成功 · 0 unsafe · 0 fallback" : "mission success · 0 unsafe · 0 fallback"}</span></div>
-              <div><strong>3.73×10<sup>−9</sup></strong><span>{zh ? "双侧精确 McNemar p" : "two-sided exact McNemar p"}</span></div>
             </div>
+            <p className="challenge-proof-note">{zh
+              ? "* 事后描述性 oracle 可行性审计；oracle 从未提供给控制器，也不是预注册端点。预注册主端点仍为主动 29/30 对被动 0/30（p=3.73×10⁻⁹）。"
+              : "* Post-hoc descriptive oracle-feasibility audit; oracle was never available to the controller and this is not a preregistered endpoint. The preregistered primary remains active 29/30 versus passive 0/30 (p=3.73×10⁻⁹)."}</p>
             <div className="challenge-proof-links">
               <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "90 秒评委卡 ↗" : "90-SECOND JUDGE CARD ↗"}</a>
+              <a href={challengeEvidence.feasibilityAuditUrl} target="_blank" rel="noreferrer">{zh ? "可行性审计 ↗" : "FEASIBILITY AUDIT ↗"}</a>
               <a href={challengeEvidence.rawArchiveUrl}>{zh ? "原始归档 ↗" : "RAW ARCHIVE ↗"}</a>
               <a href={challengeEvidence.verificationUrl}>{zh ? "验证回执 ↗" : "VERIFICATION ↗"}</a>
             </div>
@@ -105,7 +109,7 @@ function HomeContent() {
             <span>{zh ? "主动策略" : "ACTIVE"}</span>
             <h3>{zh ? "换视角、修证据、再行动" : "Move, repair, then act"}</h3>
             <p>{zh ? "侦察车 Scout 获取独立侧视根；Python 与 Purify 同时准入后，载具 Carrier 才直接通行。" : "A scout acquires an independent side-view root. Only Python ∧ Purify admission unlocks the carrier."}</p>
-            <b>{zh ? "预注册挑战：29/30 · +96.7 个百分点" : "PREREGISTERED CHALLENGE: 29/30 · +96.7 PP"}</b>
+            <b>{zh ? "29/29 可直达世界安全直行 · 1/1 双阻塞绕行*" : "29/29 FEASIBLE WORLDS DIRECT · 1/1 DUAL-BLOCKED DETOUR*"}</b>
           </article>
         </div>
         <div className="platform-row">

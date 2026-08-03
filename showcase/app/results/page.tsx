@@ -243,10 +243,16 @@ function Results() {
     <section className="result-section challenge-primary-evidence">
       <div className="result-title">
         <span>{zh ? "主计分证据 · 30 个成对世界" : "PRIMARY SCORING EVIDENCE · 30 PAIRED WORLDS"}</span>
-        <h2>{zh ? "主动修证恢复直行；被动策略始终安全绕行。" : "Active repair restores direct action. Passive stays safe by detouring."}</h2>
+        <h2>{zh ? "能安全直行时全部直行；唯一双廊阻塞世界正确绕行。" : "Direct whenever physically feasible; detour when both corridors are blocked."}</h2>
         <p>{zh ? `种子 ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} 在公开预注册之后仅评测一次。该挑战与原 12-pair locked test 分开，来自相同生成器家族，不是 OOD。` : `Seeds ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} were evaluated once after public preregistration. This challenge is separate from the original 12-pair locked test, comes from the same generator family, and is not OOD.`}</p>
       </div>
       <div className="benchmark-panel challenge-panel">
+        <div className="feasibility-proof">
+          <article><span>{zh ? "离线可行性一致路线结果*" : "OFFLINE FEASIBILITY-CONSISTENT ROUTES*"}</span><strong>30<small>/30</small></strong></article>
+          <article><span>{zh ? "存在 CLEAR 走廊时安全直行" : "DIRECT WITH AN ORACLE-CLEAR CORRIDOR"}</span><strong>29<small>/29</small></strong></article>
+          <article><span>{zh ? "双廊均阻塞时安全绕行" : "SAFE DETOUR WHEN BOTH WERE BLOCKED"}</span><strong>1<small>/1</small></strong></article>
+          <p>{zh ? "* 事后描述性 oracle 审计，不是预注册端点；oracle 从未提供给控制器。下方保留原预注册主端点 29/30 对 0/30。" : "* Post-hoc descriptive oracle audit, not a preregistered endpoint; oracle was never available to the controller. The original preregistered primary, 29/30 versus 0/30, remains below."}</p>
+        </div>
         <div className="benchmark-tags"><span>PUBLIC PREREGISTRATION</span><span>30 PAIRED WORLDS</span><span>60 / 60 VALID</span><span>VERIFIER PASS</span></div>
         <div className="benchmark-grid challenge-primary-grid">
           <article><span>{zh ? "主动全链直行" : "ACTIVE FULL-CHAIN DIRECT"}</span><strong>{primary.active.count}<small>/{primary.active.total}</small></strong><i>95% Wilson 83.3–99.4%</i></article>
@@ -278,12 +284,14 @@ function Results() {
         </div>
         <div className="challenge-identities">
           <span><b>REPORT SHA256</b><code>{challengeEvidence.reportSha256}</code></span>
+          <span><b>FEASIBILITY AUDIT SHA256</b><code>{challengeEvidence.feasibilityAuditSha256}</code></span>
           <span><b>RAW SHA256</b><code>{challengeEvidence.rawArchiveSha256}</code></span>
           <span><b>VERIFICATION SHA256</b><code>{challengeEvidence.verificationSha256}</code></span>
         </div>
         <div className="evidence-links challenge-links">
           <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开 90 秒评委卡 ↗" : "OPEN 90-SECOND JUDGE CARD ↗"}</a>
           <a href={challengeEvidence.reportUrl} target="_blank">{zh ? "机器可读报告 ↗" : "MACHINE-READABLE REPORT ↗"}</a>
+          <a href={challengeEvidence.feasibilityAuditUrl} target="_blank">{zh ? "可行性审计 JSON ↗" : "FEASIBILITY AUDIT JSON ↗"}</a>
           <a href={challengeEvidence.rawArchiveUrl}>{zh ? "下载原始归档 ↗" : "DOWNLOAD RAW ARCHIVE ↗"}</a>
           <a href={challengeEvidence.verificationUrl}>{zh ? "独立验证 JSON ↗" : "INDEPENDENT VERIFICATION JSON ↗"}</a>
         </div>

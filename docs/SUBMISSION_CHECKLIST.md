@@ -53,6 +53,11 @@ Official sources:
       not a population or real-world generalization.
 - [x] Retain challenge seed 102515 as the sole active non-direct case and state
       that it completed safely by detour.
+- [x] Publish the post-hoc descriptive oracle-feasibility audit separately:
+      29/29 oracle-clear worlds direct via a clear corridor, 1/1 dual-blocked
+      world safely detoured, and 30/30 active route outcomes matched offline
+      feasibility. Keep oracle unavailable to the controller and retain the
+      formal 29/30 preregistered endpoint.
 - [x] State the non-locked seed-105400 application-value finding narrowly:
       loaded-carrier travel -23.24% through scout burden transfer.
 - [x] Disclose that seed 105400 total robot travel increased 24.32% and does
@@ -128,8 +133,8 @@ Official sources:
       README.
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
-- [x] Regenerate final `SHA256SUMS` and verify all 19 checksummed artifacts
-      (20 total files including `SHA256SUMS`).
+- [x] Regenerate final `SHA256SUMS` and verify all 20 checksummed artifacts
+      (21 total files including `SHA256SUMS`).
 
 ## Reproducibility
 
@@ -267,8 +272,8 @@ Stable targets:
 - [x] Copy the refreshed staged directory into the dedicated branch of the
       official fork and push it.
 - [x] Verify the refreshed official-fork branch at commit
-      `a004dbde9f439adde9787e188af8b1873382e2f9` contains only the 20 intended
-      files (19 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
+      `a004dbde9f439adde9787e188af8b1873382e2f9` contains only the prior 20 intended
+      files (20 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.

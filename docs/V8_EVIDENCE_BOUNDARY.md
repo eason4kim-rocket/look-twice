@@ -129,10 +129,22 @@ crossing. Thus no selected crossing was authorized by a disagreement. This
 audit changes no preregistered endpoint, runtime byte, calibration, or
 threshold and is not promoted into a new confirmatory endpoint.
 
-The one active non-direct case, seed `102515`, completed safely by detour. The
-primary full-chain endpoint requires mission success, direct/no-detour routing,
-and a same-corridor `cross_corridor` receipt for which Python, Go, and the
-effective decision all admit. Route-only direct is secondary.
+The separate
+`release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` is a post-hoc
+descriptive offline oracle-feasibility audit. It does not replace the
+preregistered primary endpoint, which remains active 29/30 versus passive 0/30
+(exact two-sided McNemar `p=3.73e-9`). Of the 30 active worlds, all 29/29 with
+at least one oracle-clear corridor went direct and selected an oracle-clear
+corridor. The only dual-blocked world, seed `102515`, completed by safe detour;
+therefore 30/30 active route outcomes matched offline feasibility. Oracle
+labels were never available to the controller. Across the active records,
+unsafe was false, collision count was zero, and fallback was false. This audit
+is not a preregistered endpoint and must never be presented as a perfect
+direct-route score.
+
+The primary full-chain endpoint requires mission success, direct/no-detour
+routing, and a same-corridor `cross_corridor` receipt for which Python, Go, and
+the effective decision all admit. Route-only direct is secondary.
 
 Machine evidence is retained in
 `release/v8-frozen/results/challenge_102500_102529/`:

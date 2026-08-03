@@ -133,6 +133,25 @@ fallback: 0/60
 comparable Python/Go receipt agreement: 250/268 (93.3%)
 ```
 
+The preregistered primary endpoint remains active 29/30 versus passive 0/30,
+with exact two-sided McNemar `p=3.73e-9`. To reproduce the separate post-hoc
+descriptive offline oracle-feasibility audit without extracting or rerunning
+episodes:
+
+```bash
+python3 scripts/audit_v8_challenge_feasibility.py \
+  v8-frozen-challenge-102500-102529.raw.tar.gz \
+  --output v8-frozen-challenge-102500-102529.LOCAL-FEASIBILITY-AUDIT.json
+```
+
+The derived result is 29/29 active worlds with at least one oracle-clear
+corridor routed direct and selected an oracle-clear corridor; the sole
+dual-blocked world, seed `102515`, completed by safe detour. Thus 30/30 active
+route outcomes matched offline feasibility, with unsafe false, collision count
+zero, and fallback false across the active records. Oracle labels were never
+available to the controller. This audit is not a preregistered endpoint and
+does not change the formal 29/30 direct result.
+
 All 18 receipt disagreements are Python-admit/Go-deny with
 `effective_admit=false`; no disagreement opens the gate. Carrier and scout are
 two logical roles with distinct poses/viewpoints on one shared Genesis

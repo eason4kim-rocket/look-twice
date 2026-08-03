@@ -1,6 +1,35 @@
 .challenge-page-header { padding-top: 76px; padding-bottom: 58px; }
 .challenge-primary-evidence { padding-top: 72px; background: rgba(255,255,255,.2); }
 .challenge-panel { border: 1px solid rgba(41,206,200,.18); }
+.feasibility-proof {
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid rgba(41,206,200,.3);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(41,206,200,.055);
+}
+.feasibility-proof article {
+  min-height: 142px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--line-dark);
+}
+.feasibility-proof article:nth-child(3) { border-right: 0; }
+.feasibility-proof span { color: var(--green); font: 650 7px/1.5 var(--font-mono); }
+.feasibility-proof strong { color: var(--cyan-bright); font: 600 38px/1 var(--font-mono); letter-spacing: -.06em; }
+.feasibility-proof strong small { color: #7e8d8f; font-size: .5em; }
+.feasibility-proof > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 12px 20px;
+  border-top: 1px solid var(--line-dark);
+  color: #9aa8a9;
+  font: 500 7px/1.6 var(--font-mono);
+}
 .challenge-primary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .challenge-primary-grid article { min-height: 170px; }
 .challenge-primary-grid strong sup { font-size: .47em; letter-spacing: 0; }
@@ -351,6 +380,9 @@
 @media (max-width: 820px) {
   .results-metrics, .result-section { grid-template-columns: 1fr; }
   .result-section { gap: 44px; }
+  .feasibility-proof { grid-template-columns: 1fr; }
+  .feasibility-proof article { border-right: 0; border-bottom: 1px solid var(--line-dark); }
+  .feasibility-proof article:nth-child(3) { border-bottom: 0; }
   .challenge-primary-grid { grid-template-columns: repeat(2, 1fr); }
   .evidence-tier-note { align-items: flex-start; flex-direction: column; gap: 10px; }
 }

@@ -14,7 +14,7 @@
     "official_pr_opening_authorized": false,
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
-    "public_targets_anonymously_verified": true,
+    "public_targets_anonymously_verified": false,
     "entrant_team_name": "Liu Liang",
     "entrant_role": "solo entrant",
     "entrant_github": "eason4kim-rocket",
@@ -69,6 +69,16 @@
     "mission_success": "60/60",
     "unsafe": "0/60",
     "fallback": "0/60",
+    "post_hoc_feasibility_audit": {
+      "analysis_type": "post-hoc descriptive offline oracle-feasibility audit",
+      "oracle_available_to_controller": false,
+      "preregistered_endpoint": false,
+      "oracle_clear_worlds_direct_via_oracle_clear_corridor": "29/29",
+      "dual_blocked_world_safe_detour": "1/1 (seed 102515)",
+      "offline_feasibility_consistent_route_outcomes": "30/30",
+      "does_not_relabel_detour_as_direct": true,
+      "formal_primary_remains": "active 29/30 direct versus passive 0/30"
+    },
     "python_go_comparable_receipt_agreement": "250/268 (93.3%)",
     "receipt_mismatches": 18,
     "receipt_mismatch_scope": "all Python-admit/Go-deny with effective_admit=false; no mismatch opened the gate",
@@ -151,6 +161,16 @@
       "not_control_loop_latency": true,
       "not_locked_ood_or_physical": true
     },
+    "challenge_feasibility_audit": {
+      "path": "release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
+      "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
+      "sha256": "dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434",
+      "size_bytes": 32696,
+      "status": "passed",
+      "post_hoc_descriptive_only": true,
+      "oracle_available_to_controller": false,
+      "preregistered_endpoint": false
+    },
     "locked_input_evidence_pack": {
       "archive_name": "v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
       "archive_sha256": "0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba",
@@ -178,11 +198,11 @@
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "fa429b5989ef36b4844e32bcd343eeb867d317185e0ad372fa3cf2deaaab8d0a",
-      "size_bytes": 1076989,
+      "sha256": "d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa",
+      "size_bytes": 1077809,
       "page_count": 12,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
-      "publication_verified": true
+      "publication_verified": false
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -221,7 +241,7 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "status": "official_fork_branch_published_and_verified_no_pr"
+      "status": "local_checksums_verified_pending_official_fork_sync_no_pr"
     }
   },
   "links": {
@@ -240,7 +260,7 @@
     "frozen_foundation": "passed",
     "python_replay_tests": "6/6 passed",
     "go_tests": "passed",
-    "node_22_site_tests": "26/26 passed",
+    "node_22_site_tests": "27/27 passed",
     "node_22_lint": "passed",
     "node_dependency_audit": "0 known vulnerabilities",
     "production_build": "passed",
@@ -253,11 +273,12 @@
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
     "rocm_telemetry_helper_tests": "3/3 passed; separate 60-second model-forward telemetry report validated",
     "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
-    "official_repository_staging_checksums": "passed locally and on the published branch; 19 checksummed artifacts verified (20 total files including SHA256SUMS); checksum-index SHA256 76c0fb8733afc16aa502ff63bda99fc94dd7dac8ea5557d6dc7dfb2bdea19dce",
-    "github_actions_ci": "functional evidence commit c97f8db0fc942a679ebc493beb06f419e7c16996; run 30808919006 passed; Python, Purify Go, and showcase jobs all green",
-    "github_pages_deployment": "commit 02a55e0c979af98cb338edb7e8f83c9e97dfc780; Pages run 30808802226 completed successfully; routes and hashed client assets verified without credentials",
-    "public_distribution": "release assets, refreshed Pages site, source branch, report, checkpoint, and official-fork package published and verified without credentials",
-    "official_fork_branch": "20 intended files published on the Liu Liang branch at commit a004dbde9f439adde9787e188af8b1873382e2f9; 19 checksum entries passed; official_pr_opened=false"
+    "feasibility_audit_tests": "10/10 passed; derived artifact matched the 30 archived active episodes and preserved the 29/30 formal primary",
+    "official_repository_staging_checksums": "passed locally; 20 checksummed artifacts verified (21 total files including SHA256SUMS); checksum-index SHA256 223d8290072d71b182427d1ad4a0c6f8d174608e02994ed6a2ebe929d79d1108",
+    "github_actions_ci": "pending for the current feasibility-audit publication commit; previous functional run 30808919006 passed",
+    "github_pages_deployment": "pending refresh for the current feasibility-audit publication; previous deployment 30808802226 passed",
+    "public_distribution": "current feasibility-audit refresh pending source, Pages, PDF asset, and official-fork publication verification",
+    "official_fork_branch": "current 21-file package pending official-fork sync; official_pr_opened=false"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",

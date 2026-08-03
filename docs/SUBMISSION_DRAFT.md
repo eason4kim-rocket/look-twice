@@ -132,6 +132,15 @@ sole active non-direct case completed safely by detour. The independent
 validator passed with zero errors; deterministic verification SHA256 is
 `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`.
 
+The preregistered primary endpoint remains **active 29/30 versus passive
+0/30**. A separate post-hoc descriptive offline oracle-feasibility audit found
+that all **29/29** worlds with at least one oracle-clear corridor went direct
+and selected an oracle-clear corridor. The only dual-blocked world, seed
+`102515`, completed by safe detour. Thus **30/30 active route outcomes matched
+offline feasibility**. Oracle labels were never available to the controller,
+and this audit is not a preregistered endpoint. Across the 30 active records,
+unsafe was false, collision count was zero, and fallback was false.
+
 Receipt-level Python/Purify Go agreement was **250/268 (93.3%)**. All 18
 differences were Python-admit/Go-deny and remained fail-closed with
 `effective_admit=false`; no selected crossing relied on a disagreement.
@@ -197,7 +206,7 @@ control-loop latency or physical energy per mission.
 | Requirement | Location |
 | --- | --- |
 | One-page challenge Judge Card | [public preregistration, result, AMD telemetry, application burden, and verifier](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md) |
-| Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
+| Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [post-hoc feasibility audit](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
 | Technical report | [release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf) · [source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md) |
 | Project source code | [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |

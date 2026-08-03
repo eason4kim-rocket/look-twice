@@ -208,19 +208,20 @@ export function EvidenceConsole() {
   return (
     <main className={"console-wrap " + (cinematic ? "cinematic" : "")}>
       {!cinematic && (
-        <section className="challenge-ribbon" aria-label={tx("Publicly preregistered challenge result", "公开预注册挑战结果")}>
+        <section className="challenge-ribbon" aria-label={tx("Publicly preregistered challenge result and post-hoc feasibility audit", "公开预注册挑战结果与事后可行性审计")}>
           <div className="challenge-ribbon-title">
-            <span>{tx("PREREGISTERED AGGREGATE · SEPARATE FROM THE NON-LOCKED CONFIRMATORY REPLAY", "预注册聚合结果 · 与下方非锁定 confirmatory replay 分开")}</span>
-            <b>{tx("PUBLICLY PREREGISTERED · SAME GENERATOR · NOT OOD · ONE SHARED CHASSIS", "公开预注册 · 同生成器 · 非 OOD · 一台共享底盘")}</b>
+            <span>{tx("PREREGISTERED AGGREGATE · ONE SHARED CHASSIS · SEPARATE FROM THE NON-LOCKED CONFIRMATORY REPLAY", "预注册聚合结果 · 一台共享底盘 · 与下方非锁定 confirmatory replay 分开")}</span>
+            <b>{tx("30/30 FEASIBILITY-CONSISTENT* · POST-HOC, NOT THE PREREGISTERED ENDPOINT", "30/30 路线符合离线可行性* · 事后描述，非预注册端点")}</b>
           </div>
           <div className="challenge-ribbon-metrics">
-            <div><strong>29<small>/30</small></strong><span>{tx("active full-chain direct · passive 0/30", "主动全链直行 · 被动 0/30")}</span></div>
-            <div><strong>p=3.73×10<sup>−9</sup></strong><span>{tx("exact two-sided McNemar", "双侧精确 McNemar")}</span></div>
+            <div><strong>29<small>/29</small></strong><span>{tx("clear-corridor worlds went direct*", "有 clear 走廊的世界全部直行*")}</span></div>
+            <div><strong>1<small>/1</small></strong><span>{tx("dual-blocked world safely detoured*", "双廊阻塞世界安全绕行*")}</span></div>
             <div><strong>60<small>/60</small></strong><span>{tx("mission success · 0 unsafe · 0 fallback", "任务成功 · 0 unsafe · 0 fallback")}</span></div>
-            <div><strong>93.3%</strong><span>{tx("250/268 receipts agree · 18 Go fail-closed", "250/268 回执一致 · 18 次 Go 失效关闭")}</span></div>
+            <div><strong>29<small>/30</small></strong><span>{tx("preregistered primary · passive 0/30", "预注册主端点 · 被动 0/30")}</span></div>
           </div>
           <div className="challenge-ribbon-links">
             <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{tx("JUDGE CARD ↗", "评委卡 ↗")}</a>
+            <a href={challengeEvidence.feasibilityAuditUrl} target="_blank" rel="noreferrer">{tx("FEASIBILITY AUDIT ↗", "可行性审计 ↗")}</a>
             <a href={challengeEvidence.rawArchiveUrl}>{tx("RAW ARCHIVE ↗", "原始归档 ↗")}</a>
             <a href={challengeEvidence.verificationUrl}>{tx("VERIFICATION ↗", "验证回执 ↗")}</a>
           </div>

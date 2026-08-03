@@ -25,6 +25,10 @@ archive.
   and the separate non-locked seed-105400 cost ledger from already archived
   evidence. It does not rerun V8, reopen the locked test, or change a model or
   threshold.
+- `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` is a post-hoc descriptive
+  offline oracle-feasibility classification of the 30 archived active-policy
+  episodes. It does not rerun an episode, expose oracle labels to the
+  controller, or replace the preregistered primary endpoint.
 - `challenge_102500_102529/CHALLENGE_REPORT.json` is the preregistered
   30-world paired analysis, including the primary full-chain endpoint,
   per-seed outcomes, confidence intervals, receipt agreement, operational
@@ -90,6 +94,16 @@ corridor B, one Go-qualified root, and the inconclusive set
 `{clear, blocked}`. Four concerned a non-selected corridor; the other 14
 preceded the final selected-corridor joint admit. This audit changed no
 runtime, calibration, or threshold.
+
+The preregistered primary endpoint remains **active 29/30 versus passive
+0/30**. The separate post-hoc descriptive offline oracle-feasibility audit
+found that all **29/29** worlds with at least one oracle-clear corridor went
+direct and selected an oracle-clear corridor. Seed `102515` was the sole world
+with both corridors oracle-blocked and completed by safe detour. Therefore
+**30/30 active route outcomes matched offline feasibility**. Oracle labels
+were never available to the controller, and this is not a preregistered
+endpoint. Across the 30 active records, unsafe was false, collision count was
+zero, and fallback was false.
 
 Active repair reduced mean loaded-carrier logical path from 6.404 to 4.961
 (-22.5%) while adding 2.980 scout path; total logical-role path increased from

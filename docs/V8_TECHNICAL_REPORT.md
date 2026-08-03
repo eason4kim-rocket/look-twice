@@ -49,6 +49,14 @@ full subprocess-wall AMD telemetry, checksums, and an independent recomputation
 validator are public. This supplement is not called locked, OOD, or real-world
 evidence.
 
+The preregistered primary remains active 29/30 versus passive 0/30. A separate
+post-hoc descriptive offline oracle-feasibility audit found that all 29/29
+worlds with at least one oracle-clear corridor went direct; seed 102515 was the
+only world with both corridors oracle-blocked and completed safely by detour.
+Consequently, 30/30 active route outcomes matched offline feasibility. Oracle
+labels were never available to the controller, and this is not a preregistered
+endpoint.
+
 The result is simulation-only and uses a kinematic Genesis motion backend. It
 does not claim real-robot validation or safety certification.
 
@@ -423,8 +431,14 @@ evidence for the fixed seed suite, not a population or real-world guarantee.
 | Live RGB-D / checkpoint / Go receipt | 60 / 60 each |
 | Receipt-level Python/Go agreement | 250 / 268 (93.3%) |
 
-The single active non-direct case, seed 102515, completed safely by detour and
-remained in the denominator. All 18 receipt disagreements were
+Formal primary stays active **29/30** versus passive **0/30** (exact McNemar
+**p=3.73e-9**). A descriptive post-hoc offline oracle audit—not available to
+the controller or preregistered—found **29/29** clear-corridor worlds direct via
+a clear corridor; dual-blocked seed `102515` safely detoured. Thus **30/30 route
+outcomes matched offline feasibility** without relabeling; all 30 active
+records had zero unsafe crossings, collisions, and fallbacks.
+
+All 18 receipt disagreements were
 Python-admit/Go-deny with `effective_admit=false`; none opened the gate. Every
 disagreement was then examined in a post-hoc descriptive audit, not a
 preregistered endpoint. All shared the same signature: active policy, corridor

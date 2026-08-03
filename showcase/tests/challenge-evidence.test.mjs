@@ -11,9 +11,20 @@ const canonicalReportUrl = new URL(
   "../../release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json",
   import.meta.url,
 );
+const publicFeasibilityAuditUrl = new URL(
+  "../public/data/source/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
+  import.meta.url,
+);
+const canonicalFeasibilityAuditUrl = new URL(
+  "../../release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
+  import.meta.url,
+);
 const reportBytes = await readFile(publicReportUrl);
 const canonicalBytes = await readFile(canonicalReportUrl);
+const feasibilityAuditBytes = await readFile(publicFeasibilityAuditUrl);
+const canonicalFeasibilityAuditBytes = await readFile(canonicalFeasibilityAuditUrl);
 const report = JSON.parse(reportBytes);
+const feasibilityAudit = JSON.parse(feasibilityAuditBytes);
 const source = async (path) =>
   readFile(new URL(`../app/${path}`, import.meta.url), "utf8");
 
@@ -49,6 +60,46 @@ test("preregistered challenge denominator, primary result and safety are exact",
   assert.equal(analysis.secondary_endpoints.fallback_used.all_episodes.count, 0);
 });
 
+test("publishes the byte-identical post-hoc feasibility audit without relabeling the primary", () => {
+  assert.deepEqual(feasibilityAuditBytes, canonicalFeasibilityAuditBytes);
+  assert.equal(
+    createHash("sha256").update(feasibilityAuditBytes).digest("hex"),
+    "dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434",
+  );
+  assert.equal(feasibilityAudit.status, "passed");
+  assert.deepEqual(
+    feasibilityAudit.summary.preregistered_primary_active_direct_route,
+    { count: 29, denominator: 30, percent: 96.66666666666667, unchanged: true },
+  );
+  assert.equal(
+    feasibilityAudit.summary.oracle_clear_direct_and_selected_oracle_clear.count,
+    29,
+  );
+  assert.equal(
+    feasibilityAudit.summary.oracle_clear_direct_and_selected_oracle_clear.denominator,
+    29,
+  );
+  assert.equal(feasibilityAudit.summary.both_blocked_safe_detour.count, 1);
+  assert.equal(feasibilityAudit.summary.both_blocked_safe_detour.denominator, 1);
+  assert.equal(
+    feasibilityAudit.summary.offline_feasibility_consistent_route_outcomes.count,
+    30,
+  );
+  assert.equal(
+    feasibilityAudit.summary.offline_feasibility_consistent_route_outcomes.denominator,
+    30,
+  );
+  assert.equal(feasibilityAudit.evidence_boundary.post_hoc, true);
+  assert.equal(
+    feasibilityAudit.evidence_boundary.secondary_not_preregistered_endpoint,
+    true,
+  );
+  assert.equal(
+    feasibilityAudit.evidence_boundary.does_not_relabel_detour_as_direct,
+    true,
+  );
+});
+
 test("preregistered challenge telemetry, receipts and scope stay visible", async () => {
   const analysis = report.analysis;
   const comparable =
@@ -71,7 +122,14 @@ test("preregistered challenge telemetry, receipts and scope stay visible", async
   for (const page of [home, results, consoleSource]) {
     assert.match(page, /29<small>\/30|primary\.active\.count|29\/30/);
     assert.match(page, /0\/30|primary\.passive\.count/);
+    assert.match(page, /29<small>\/29|29\/29/);
+    assert.match(page, /1<small>\/1|1\/1/);
+    assert.doesNotMatch(page, /30\/30\s+(?:full-chain\s+)?direct/i);
+    assert.doesNotMatch(page, /30\/30\s+preregistered/i);
   }
+  assert.match(home, /Post-hoc descriptive oracle-feasibility audit/);
+  assert.match(results, /Post-hoc descriptive oracle audit, not a preregistered endpoint/);
+  assert.match(consoleSource, /POST-HOC, NOT THE PREREGISTERED ENDPOINT/);
   assert.match(results, /250\/\{receipts\.total\}|250\/268|receipts\.count/);
   assert.match(results, /Post-hoc descriptive audit \(not a preregistered endpoint\)/);
   assert.match(results, /all \$\{receiptMismatches\} differences were active corridor B with Python=true, Go=false, effective=false/);
@@ -84,6 +142,8 @@ test("preregistered challenge telemetry, receipts and scope stay visible", async
   assert.match(consoleSource, /NON-LOCKED CONFIRMATORY REPLAY/);
   assert.doesNotMatch(consoleSource, /SELECTED REPLAY: ORIGINAL 12-PAIR LOCKED TEST/);
   assert.match(evidenceLinks, /V8_FROZEN_CHALLENGE_JUDGE_CARD\.md/);
+  assert.match(evidenceLinks, /V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT\.json/);
+  assert.match(evidenceLinks, /dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434/);
   assert.match(evidenceLinks, /v8-frozen-challenge-102500-102529\.raw\.tar\.gz/);
   assert.match(evidenceLinks, /v8-frozen-challenge-102500-102529\.VERIFICATION\.json/);
 });

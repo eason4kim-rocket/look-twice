@@ -44,6 +44,16 @@ logical-role ledger reduced loaded-carrier path by 22.5% while total team path
 rose 24.0%. Carrier and scout are logical roles on one shared Genesis chassis,
 not two physical devices or simultaneous dual-body dynamics.
 
+The preregistered primary endpoint remains **active 29/30 versus passive
+0/30** (exact two-sided McNemar `p=3.73e-9`). A separate post-hoc descriptive
+offline oracle-feasibility audit found that all **29/29** worlds with at least
+one oracle-clear corridor went direct and selected an oracle-clear corridor.
+The only dual-blocked world, seed `102515`, completed by safe detour. Thus
+**30/30 active route outcomes matched offline feasibility**. Oracle labels were
+never available to the controller, and this audit is not a preregistered
+endpoint. Across the 30 active records, unsafe was false, collision count was
+zero, and fallback was false.
+
 ## Public target URLs
 
 | Surface | Target |
@@ -94,11 +104,12 @@ PR was opened.
 | Challenge full-wall telemetry | `release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json` | `463add74afa2c905cb7e63e7450f8761f3c6c3cd56ee9789633c7df0272860c0` |
 | Challenge verification | `release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json` | `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940` |
 | Challenge raw archive | release asset, 3,188,824 bytes | `171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2` |
-| Rendered 12-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `fa429b5989ef36b4844e32bcd343eeb867d317185e0ad372fa3cf2deaaab8d0a` |
+| Post-hoc challenge feasibility audit | `release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` | `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434` |
+| Rendered 12-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa` |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 19 checksummed artifacts verified; 20 total files including `SHA256SUMS` |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 20 checksummed artifacts verified; 21 total files including `SHA256SUMS` |
 
 ## Frozen checkpoint
 

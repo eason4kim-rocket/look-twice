@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-official-submission-package/v1",
   "package_id": "Track3-Liu-Liang-Look-Twice",
-  "generated_at_utc": "2026-08-03T10:56:19Z",
+  "generated_at_utc": "2026-08-03T11:49:13Z",
   "track": "Track 3 - Physical AI",
   "entry": {
     "project_name": "Look Twice V8",
@@ -51,6 +51,16 @@
         "independent_verification_errors": 0
       }
     },
+    "post_hoc_feasibility_audit": {
+      "analysis_type": "post-hoc descriptive offline oracle-feasibility audit",
+      "oracle_available_to_controller": false,
+      "preregistered_endpoint": false,
+      "formal_primary_remains": "active 29/30 direct versus passive 0/30",
+      "oracle_clear_worlds_direct_via_oracle_clear_corridor": "29/29",
+      "dual_blocked_world_safe_detour": "1/1 (seed 102515)",
+      "offline_feasibility_consistent_route_outcomes": "30/30",
+      "does_not_relabel_detour_as_direct": true
+    },
     "simulation_scope": {
       "backend": "Genesis 1.1.2 kinematic simulation on AMD ROCm",
       "agent_realization": "carrier and scout are logical-role poses and capture roots on one shared Genesis chassis",
@@ -83,20 +93,20 @@
     {
       "path": "Look-Twice-V8-Technical-Report.pdf",
       "role": "technical report",
-      "size_bytes": 1076989,
-      "sha256": "fa429b5989ef36b4844e32bcd343eeb867d317185e0ad372fa3cf2deaaab8d0a"
+      "size_bytes": 1077809,
+      "sha256": "d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa"
     },
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 11266,
-      "sha256": "902ed82d2fed8d97c5ce569a7e252224a0c93bdfd651bc66933b0b2b6f83d489"
+      "size_bytes": 12022,
+      "sha256": "09b31011f529eaf20aa30af078715dc37d52c2512f15514115ebe8870af9b916"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
       "role": "one-page judge entrypoint",
-      "size_bytes": 5739,
-      "sha256": "cffb1e4374f0cbfbbb0a62d8f382bad698cd7ca39464845857431e14ada8563e"
+      "size_bytes": 6336,
+      "sha256": "0a565b7737c3c492618473f54976533838ccccbed260d8a2320296f5ab3ff278"
     },
     {
       "path": "evidence/LOCKED_TEST_REPORT.public.json",
@@ -107,8 +117,14 @@
     {
       "path": "evidence/README.md",
       "role": "compact evidence index and boundary ledger",
-      "size_bytes": 11072,
-      "sha256": "3f31836cc91029e58173b56c525385cba8db23a3984f35d33ad17520fbd630b3"
+      "size_bytes": 11988,
+      "sha256": "8bbf31dfd6be6a5b53cfbfbbf9c7a1eb5d6b4929a77a50f35e517cc6fdcffe37"
+    },
+    {
+      "path": "evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
+      "role": "post-hoc descriptive offline route-feasibility audit",
+      "size_bytes": 32696,
+      "sha256": "dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434"
     },
     {
       "path": "evidence/V8_FROZEN_IMPORT_MANIFEST.json",
