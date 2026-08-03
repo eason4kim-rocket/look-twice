@@ -45,7 +45,10 @@
   border-radius: 12px;
   color: var(--ink-soft);
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
+.boundary a { color: var(--cyan); font-weight: 650; }
+.boundary code { color: var(--ink-soft); font: 9px/1.6 var(--font-mono); }
 
 @media (max-width: 900px) {
   .repro-grid { grid-template-columns: 1fr; }

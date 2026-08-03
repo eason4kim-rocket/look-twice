@@ -1,8 +1,14 @@
-# Upstream Genesis PR draft — AMD multi-agent RGB-D notes
+# Archived Genesis upstream draft - not submitted
+
+> Historical V6-era draft for Genesis 1.1.x. It is not part of the V8
+> competition claim, has not been filed upstream, and should not be opened as
+> written. The current Genesis project and documentation structure have moved
+> on, and several recommendations below require a new reproducer, benchmark,
+> and maintainer issue before they could become an honest contribution.
 
 **Target repo:** [Genesis-Embodied-AI/Genesis](https://github.com/Genesis-Embodied-AI/Genesis)  
 **Suggested path:** `docs/examples/amd_multi_agent_rgbd.md` or `examples/rigid/amd_multi_agent_rgbd.py`  
-**Status:** Content-ready; open PR from a fork after maintainer style check.
+**Status:** Archived historical proposal; no upstream PR exists.
 
 ## PR title
 
@@ -64,7 +70,7 @@ rgb = np.ascontiguousarray(rgb)
 depth = np.ascontiguousarray(depth)
 ```
 
-## How to file
+## Historical filing sketch - do not run as written
 
 ```bash
 # from a Genesis fork

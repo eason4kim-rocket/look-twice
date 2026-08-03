@@ -74,7 +74,7 @@ Formal narrative alignment (scaffold):
 
 ## Cloud
 
-Target: `root@36.150.116.206 -p 31128` → `/workspace/look-twice-v6` (sync after push).
+Target: archived Radeon Cloud instance; connection details intentionally omitted.
 
 
 ## Gate contract fixes (post-skeptic)

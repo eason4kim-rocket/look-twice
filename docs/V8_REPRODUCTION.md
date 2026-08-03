@@ -19,10 +19,6 @@ git clone --branch v8-competition-release --single-branch \
 cd look-twice
 ```
 
-Until the release branch is pushed, use the provided source archive or the
-local release worktree. The final submission must not publish these commands
-until the public branch resolves from a logged-out browser.
-
 ## 2. CPU evidence audit
 
 Requirements:
@@ -37,6 +33,7 @@ Run:
 python3 scripts/build_competition_replays.py
 python3 -m unittest tests.test_competition_replay -v
 python3 scripts/verify_frozen_foundation.py
+python3 scripts/derive_v8_task_utility.py
 ```
 
 Expected final verifier fields:
@@ -53,9 +50,11 @@ Expected final verifier fields:
 }
 ```
 
-The command regenerates public replay bundles deterministically. If any
+The first command regenerates public replay bundles deterministically. If any
 guarded runtime file, result, receipt, calibration artifact, episode, or bundle
-has changed, verification fails.
+has changed, verification fails. The final command derives paired task utility
+and a confirmatory cost ledger from already archived evidence; it does not run
+V8, reopen the locked split, or change model thresholds.
 
 ## 3. Inspect the authoritative result
 
@@ -197,13 +196,43 @@ bytes:    159592901
 sha256:   7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783
 ```
 
-The checkpoint is preserved outside normal Git because it exceeds GitHub's
-100 MB blob limit. Before final submission, publish it as a GitHub release
-asset or model-hosting artifact and verify the download hash.
+The checkpoint is distributed as a GitHub release asset because it exceeds
+GitHub's 100 MB blob limit. Download it with the Python standard library:
+
+```bash
+python3 - <<'PY'
+from urllib.request import urlretrieve
+
+url = (
+    "https://github.com/eason4kim-rocket/look-twice/releases/download/"
+    "v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt"
+)
+urlretrieve(url, "v8_seg_v3_selected_ep22_7b158726f9c0.pt")
+PY
+
+shasum -a 256 v8_seg_v3_selected_ep22_7b158726f9c0.pt
+```
+
+The result must be exactly the SHA256 above before loading the file.
+
+### 7.1 Dependency and environment contract
+
+The exact GPU path uses the AMD competition image. Install the recorded direct
+Genesis pin and retain the image's ABI-matched ROCm PyTorch packages:
+
+```bash
+/opt/venv/bin/python -m pip install -r requirements-rocm-v8.txt
+/opt/venv/bin/python scripts/verify_v8_rocm_environment.py
+```
+
+The preflight requires Genesis 1.1.2, PyTorch 2.9.1+gitff65f5b, HIP
+7.2.53211-e1a6bc5663, and `gfx1100`. `torchvision` must remain the build paired
+with that competition-image PyTorch package. A generic PyPI PyTorch wheel is
+not an exact reproduction of the frozen runtime.
 
 ## 8. Run a new non-locked Radeon episode
 
-After placing the checkpoint at `$V8_CHECKPOINT`, run:
+After placing the verified checkpoint at `$V8_CHECKPOINT`, run:
 
 ```bash
 export PYTHONPATH=src
@@ -254,7 +283,7 @@ Expected Purify binary SHA:
 ## 10. Reproducibility limits
 
 - The full train/validation/locked datasets are not committed to Git.
-- The frozen model requires a separately hosted 159 MB checkpoint.
+- The frozen model is a separately hosted 159 MB release asset.
 - The exact locked run is permanent and should not be regenerated.
 - A new execution can differ in wall-clock timing because the public replay
   does not pin the cloud scheduler or all system packages.

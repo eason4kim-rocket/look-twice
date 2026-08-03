@@ -50,6 +50,15 @@ function Reproduce() {
           <p>× {zh ? "不包含完整私有 Purify 产品" : "No complete private Purify product"}</p>
         </div>
       </section>
+      <section className="boundary">
+        <span>{zh ? "冻结模型" : "FROZEN CHECKPOINT"}</span>
+        <h2>{zh ? "公开下载后先校验 256 位哈希。" : "Download publicly, then verify the SHA256 before inference."}</h2>
+        <div>
+          <p><a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt">{zh ? "下载 159,592,901 字节 checkpoint ↗" : "Download the 159,592,901-byte checkpoint ↗"}</a></p>
+          <p><code>7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783</code></p>
+          <p><a href="https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release">{zh ? "完整复现说明与环境检查 ↗" : "Full reproduction guide and environment check ↗"}</a></p>
+        </div>
+      </section>
     </main>
   );
 }

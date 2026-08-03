@@ -40,6 +40,27 @@ The authoritative report is
 
 These numbers may be used in the README, report, website, video, and PR body.
 
+### Submission-time derivation
+
+`release/v8-derived/V8_TASK_UTILITY_DERIVATION.json` reads only the permanent
+locked report and the two guarded seed-105400 replay episodes. It reruns no V8
+episode, does not reopen the locked split, and changes no model, calibration,
+contract, or threshold. Its SHA256 is
+`f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
+
+Allowed locked derivations include:
+
+- active 11/12 direct versus passive 0/12 direct;
+- paired direct-route gain of 91.7 percentage points;
+- 12/12 mission completion for each policy;
+- zero unsafe crossings and fallbacks across 24 policy runs;
+- 24/24 Python/Go decision agreement;
+- 3,001/3,200 decisive predictions (93.78%), without relabeling the 199
+  non-decisive samples as errors or forced classifications.
+
+The exact paired test is descriptive only for the fixed seed suite. It must not
+be generalized to real robots or an unspecified world population.
+
 ## Supporting evidence
 
 The development and confirmatory smokes establish runtime wiring before the
@@ -67,6 +88,12 @@ It must be described as:
 
 It must not be described as a new benchmark run, a locked-test episode, a live
 cloud execution, or a real-robot recording.
+
+Seed 105400 may also support the following explicitly non-locked cost ledger:
+loaded-carrier travel 4.915 m active versus 6.404 m passive (-23.24%), scout
+travel 3.046 m active, and total robot travel 7.961 m active versus 6.404 m
+passive (+24.32%). This supports motion-burden shifting, not lower total
+distance, latency, energy use, or locked-population path efficiency.
 
 ## Later research excluded from V8 claims
 
@@ -96,10 +123,8 @@ silently omitted from the research archive.
   presentation artifact, not the locked aggregate.
 - The locked result is an internal one-shot simulated evaluation, not a safety
   certification.
-- The 159 MB frozen checkpoint is identified by SHA but cannot be committed as
-  a normal GitHub blob because it exceeds GitHub's 100 MB file limit. A release
-  asset or model-hosting mirror is required before final handoff if judges must
-  rerun GPU inference from the repository alone.
+- The 159 MB frozen checkpoint is identified by SHA and distributed as a
+  GitHub release asset because it exceeds GitHub's 100 MB file limit.
 - No external upstream contribution is claimed.
 
 ## Claim approval rule

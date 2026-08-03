@@ -87,6 +87,27 @@ type BenchmarkReport = {
   }>;
 };
 
+type TaskUtilityReport = {
+  status: string;
+  locked_task_utility: {
+    direct_route: {
+      active: { count: number; denominator: number; percent: number };
+      passive: { count: number; denominator: number; percent: number };
+      paired_gain_percentage_points: number;
+    };
+    python_go_decision_agreement: { count: number; denominator: number };
+  };
+  confirmatory_cost_ledger: {
+    loaded_carrier_travel_m: {
+      active: number;
+      passive: number;
+      active_reduction_percent: number;
+    };
+    scout_travel_m: { active: number };
+    total_robot_travel_m: { active_increase_percent: number };
+  };
+};
+
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
 export default function ResultsPage() {
@@ -99,6 +120,7 @@ function Results() {
   const [profile, setProfile] = useState<ReleaseProfile | null>(null);
   const [locked, setLocked] = useState<LockedReport | null>(null);
   const [benchmark, setBenchmark] = useState<BenchmarkReport | null>(null);
+  const [utility, setUtility] = useState<TaskUtilityReport | null>(null);
   useEffect(() => {
     fetch("/data/manifest.json").then((response) => response.json()).then((manifest) => {
       const selected = manifest.profiles.find(
@@ -116,6 +138,13 @@ function Results() {
       })
       .then(setBenchmark)
       .catch(() => setBenchmark(null));
+    fetch("/data/source/V8_TASK_UTILITY_DERIVATION.json")
+      .then((response) => {
+        if (!response.ok) throw new Error("task-utility report unavailable");
+        return response.json();
+      })
+      .then(setUtility)
+      .catch(() => setUtility(null));
   }, []);
   if (!profile) return <div className="loading">{zh ? "正在加载冻结候选…" : "LOADING FROZEN PROFILE…"}</div>;
   const batchOne = benchmark?.results.find((item) => item.batch_size === 1);
@@ -132,6 +161,20 @@ function Results() {
         <article><span>{zh ? "False-clear 单例率" : "FALSE-CLEAR SINGLETON RATE"}</span><strong>{percent(locked.offline.metrics.false_clear_singleton_rate)}</strong><small>{zh ? "决断预测" : "decisive predictions"}</small></article>
         <article><span>{zh ? "Conformal 覆盖率" : "CONFORMAL COVERAGE"}</span><strong>{percent(locked.offline.metrics.coverage)}</strong><small>{zh ? "声明总体" : "declared population"}</small></article>
         <article className="seal-card"><span>{zh ? "冻结纪律" : "FREEZE DISCIPLINE"}</span><strong>{locked.passed && locked.permanent ? "PASS" : "CHECK"}</strong><small>{zh ? "无重调参 · 无重拟合 · 无视觉重训" : "no retune · no refit · no vision retrain"}</small></article>
+      </div>
+    </section>}
+    {utility && <section className="result-section utility-evidence">
+      <div className="result-title"><span>{zh ? "锁定成对任务效用" : "LOCKED PAIRED TASK UTILITY"}</span><h2>{zh ? "安全拒绝是底线；主动修证让有用行动重新发生。" : "Safe refusal is the baseline. Active repair earns useful action back."}</h2><p>{zh ? "12 个相同世界、两种策略成对比较；24 个回合均从初始拒绝开始。" : "Twelve identical paired worlds, two policies; all 24 episodes began with the same initial denial."}</p></div>
+      <div className="benchmark-panel">
+        <div className="benchmark-tags"><span>LOCKED ONCE</span><span>12 PAIRED WORLDS</span><span>DERIVATION ONLY</span><span>NO V8 RERUN</span></div>
+        <div className="benchmark-grid">
+          <article><span>{zh ? "主动直行" : "ACTIVE DIRECT"}</span><strong>{utility.locked_task_utility.direct_route.active.count}<small>/{utility.locked_task_utility.direct_route.active.denominator}</small></strong></article>
+          <article><span>{zh ? "被动直行" : "PASSIVE DIRECT"}</span><strong>{utility.locked_task_utility.direct_route.passive.count}<small>/{utility.locked_task_utility.direct_route.passive.denominator}</small></strong></article>
+          <article><span>{zh ? "成对直行增益" : "PAIRED DIRECT GAIN"}</span><strong>+{utility.locked_task_utility.direct_route.paired_gain_percentage_points.toFixed(1)}<small> pp</small></strong></article>
+          <article><span>{zh ? "PYTHON / GO 一致" : "PYTHON / GO AGREE"}</span><strong>{utility.locked_task_utility.python_go_decision_agreement.count}<small>/{utility.locked_task_utility.python_go_decision_agreement.denominator}</small></strong></article>
+        </div>
+        <p>{zh ? `独立的非锁定 seed 105400 成本账本：主动修证将载荷车里程从 ${utility.confirmatory_cost_ledger.loaded_carrier_travel_m.passive.toFixed(3)} m 降至 ${utility.confirmatory_cost_ledger.loaded_carrier_travel_m.active.toFixed(3)} m（-${utility.confirmatory_cost_ledger.loaded_carrier_travel_m.active_reduction_percent.toFixed(2)}%），但 scout 行驶 ${utility.confirmatory_cost_ledger.scout_travel_m.active.toFixed(3)} m，总机器人里程增加 ${utility.confirmatory_cost_ledger.total_robot_travel_m.active_increase_percent.toFixed(2)}%。这是运动负担转移，不是总距离或延迟加速。` : `Separate non-locked seed 105400 cost ledger: active repair reduced loaded-carrier travel from ${utility.confirmatory_cost_ledger.loaded_carrier_travel_m.passive.toFixed(3)} m to ${utility.confirmatory_cost_ledger.loaded_carrier_travel_m.active.toFixed(3)} m (-${utility.confirmatory_cost_ledger.loaded_carrier_travel_m.active_reduction_percent.toFixed(2)}%), while the scout traveled ${utility.confirmatory_cost_ledger.scout_travel_m.active.toFixed(3)} m and total robot travel rose ${utility.confirmatory_cost_ledger.total_robot_travel_m.active_increase_percent.toFixed(2)}%. This is burden shifting, not a total-distance or latency speedup.`}</p>
+        <a href="/data/source/V8_TASK_UTILITY_DERIVATION.json" target="_blank">{zh ? "查看派生 JSON ↗" : "TASK-UTILITY JSON ↗"}</a>
       </div>
     </section>}
     {benchmark && batchOne && batchEight && <section className="result-section rocm-evidence">
@@ -151,6 +194,6 @@ function Results() {
     <section className="result-section"><div className="result-title"><span>{zh ? "能力边界" : "CAPABILITY ENVELOPE"}</span><h2>{zh ? "通过的不是单一模型，而是端到端动作保障链。" : "The evaluated unit is the end-to-end action assurance chain."}</h2></div><div className="capability-list">{profile.capabilities.map((capability, index) => <div key={capability}><b>{String(index + 1).padStart(2, "0")}</b><span>{capabilityLabels[capability]?.[zh ? "zh" : "en"] || capability.replaceAll("_", " ")}</span><i>{zh ? "已验证" : "VERIFIED"}</i></div>)}</div></section>
     <section className="result-section identities"><div className="result-title"><span>{zh ? "冻结身份" : "FROZEN IDENTITIES"}</span><h2>{zh ? "模型、校准与授权内核均可追溯。" : "Model, calibration and authorization identities are traceable."}</h2></div><div>{profile.artifact_identities.map((artifact) => <p key={artifact.artifact}><span>{artifactLabels[artifact.artifact]?.[zh ? "zh" : "en"] || artifact.artifact.replaceAll("_", " ")}</span><code>{artifact.sha256}</code></p>)}</div></section>
     <section className="result-section limits"><div className="result-title"><span>{zh ? "诚实边界" : "HONEST BOUNDARY"}</span><h2>{zh ? "我们明确系统做到了什么，也明确没有声称什么。" : "The boundary is part of the result."}</h2></div><div>{profile.limitations.map((limitation, index) => <article key={limitation.en}><b>0{index + 1}</b><p>{zh ? limitation.zh : limitation.en}</p></article>)}</div></section>
-    <section className="result-section report-download"><div className="result-title"><span>{zh ? "提交资料" : "SUBMISSION MATERIALS"}</span><h2>{zh ? "英文报告、原始数据与复现说明已归档。" : "English report, raw evidence and reproduction notes are packaged."}</h2></div><div><a className="report-primary" href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice" target="_blank">{zh ? "打开源代码仓库 ↗" : "OPEN SOURCE REPOSITORY ↗"}</a><a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a><a href="/media/look-twice-replay-30s.mp4">{zh ? "下载 30 秒证据短片 ↓" : "DOWNLOAD 30-SECOND EVIDENCE REEL ↓"}</a></div></section>
+    <section className="result-section report-download"><div className="result-title"><span>{zh ? "提交资料" : "SUBMISSION MATERIALS"}</span><h2>{zh ? "英文报告、原始数据与复现说明已归档。" : "English report, raw evidence and reproduction notes are packaged."}</h2></div><div><a className="report-primary" href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4" target="_blank">{zh ? "观看 4:10 英文演示 ↗" : "WATCH 4:10 ENGLISH DEMO ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release" target="_blank">{zh ? "打开冻结源码分支 ↗" : "OPEN FROZEN SOURCE BRANCH ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt" target="_blank">{zh ? "下载冻结模型 ↗" : "DOWNLOAD FROZEN CHECKPOINT ↗"}</a><a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a><a href="/media/look-twice-replay-30s.mp4">{zh ? "下载 30 秒证据短片 ↓" : "DOWNLOAD 30-SECOND EVIDENCE REEL ↓"}</a></div></section>
   </main>;
 }

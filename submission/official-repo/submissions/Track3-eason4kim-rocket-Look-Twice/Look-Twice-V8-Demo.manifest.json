@@ -1,0 +1,237 @@
+{
+  "schema_version": "look-twice.v8-demo-video/v1",
+  "generated_at_utc": "2026-08-03T03:52:53Z",
+  "candidate_id": "v8-frozen",
+  "track": "Track 3 - Physical AI",
+  "language": "English",
+  "video": {
+    "filename": "Look-Twice-V8-Demo.mp4",
+    "sha256": "906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280",
+    "bytes": 17342763,
+    "duration_seconds": 250.0,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "audio_codec": "aac",
+    "audio_sample_rate_hz": 48000,
+    "audio_channels": 1,
+    "faststart": true
+  },
+  "encoding": {
+    "chapter_crf": 21,
+    "chapter_preset": "medium",
+    "aac_bitrate": "160k",
+    "target_loudness_lufs": -16,
+    "maximum_size_mib": 50.0
+  },
+  "chapters": [
+    {
+      "slug": "hook",
+      "start_seconds": 0,
+      "end_seconds": 19,
+      "duration_seconds": 19,
+      "title": "Action assurance before action",
+      "spoken_text": "Many confident sensor outputs can still represent one physical observation. Look Twice is an action-assurance layer. Before a robot crosses, it asks whether the evidence is independent, current, calibrated, and specific to that corridor. If not, the robot looks again.",
+      "boundary": "POSITIONING \u00b7 SIMULATION-ONLY RESEARCH",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 18.125,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "problem",
+      "start_seconds": 19,
+      "end_seconds": 43,
+      "duration_seconds": 24,
+      "title": "One capture is not a committee",
+      "spoken_text": "Our target is a warehouse mobile robot choosing whether to cross a designated corridor. R G B, depth, and maps can be noisy, stale, correlated, or conflicting. Counting derived outputs as independent votes can turn one camera capture into false certainty.",
+      "boundary": "V8 SENSOR SNAPSHOTS \u00b7 ONE PHYSICAL CAPTURE ROOT",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 17.526,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "architecture",
+      "start_seconds": 43,
+      "end_seconds": 73,
+      "duration_seconds": 30,
+      "title": "Lineage-aware action qualification",
+      "spoken_text": "V eight projects the intended corridor into the image and runs a spatial R G B D model on an A M D Radeon G P U. Each output becomes a lineage-aware Claim. Split conformal prediction produces clear, blocked, or inconclusive sets. A scoped Action Contract then checks freshness, calibration, conflicts, and independent roots. Both Python and the standalone Purify Go core must admit the action.",
+      "boundary": "LATEST TECHNICAL REPORT \u00b7 SYSTEM ARCHITECTURE",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 26.868,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "active",
+      "start_seconds": 73,
+      "end_seconds": 118,
+      "duration_seconds": 45,
+      "title": "BeliefGap-driven active evidence repair",
+      "spoken_text": "The carrier's initial front snapshot predicts clear, but direct motion is denied because the contract requires an independent side-view root. The denial emits a machine-readable belief gap. The scout moves to a diagnostic viewpoint and captures new R G B D evidence. R G B and depth from that capture still count as one root. Python and Purify re-evaluate the contract. Only their conjunction unlocks the direct route.",
+      "boundary": "NON-LOCKED CONFIRMATORY REPLAY \u00b7 SEED 105400",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 26.572,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "passive",
+      "start_seconds": 118,
+      "end_seconds": 138,
+      "duration_seconds": 20,
+      "title": "Safety baseline versus recovered task utility",
+      "spoken_text": "The passive policy receives the same initial denial and does not repair the evidence. It remains safe by taking the disclosed detour. This comparison separates the safety of denial from the task value recovered by active perception.",
+      "boundary": "LOCKED FULL-CHAIN \u00b7 12 PAIRED SEEDS",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 14.556,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "results",
+      "start_seconds": 138,
+      "end_seconds": 175,
+      "duration_seconds": 37,
+      "title": "Opened once; denominator retained",
+      "spoken_text": "V eight was opened once on a predeclared locked split. Nothing was retuned, refit, or retrained afterward. Across three thousand two hundred offline samples, intersection over union, decisive balanced accuracy, blocked recall, and coverage were one point zero, with zero false-clear singletons. In twelve paired live seeds, active repair qualified eleven direct routes. Across all twenty-four policy runs, unsafe crossings and unplanned fallbacks were both zero. The one conservative active detour remains in the denominator.",
+      "boundary": "AUTHORITATIVE LOCKED REPORT \u00b7 OPENED ONCE",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 35.029,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "amd",
+      "start_seconds": 175,
+      "end_seconds": 213,
+      "duration_seconds": 38,
+      "title": "Radeon execution with a disclosed boundary",
+      "spoken_text": "The closed loop ran on one Radeon Cloud G F X eleven hundred G P U through rock em: Genesis simulation and R G B D rendering, tensor preprocessing, and spatial model inference. The Purify contract gate remained a small C P U Go process. A separate hash-pinned F P thirty-two model-forward benchmark measured one hundred ninety-two point three one milliseconds P fifty at batch one, and six point two five images per second at batch eight. It is not end-to-end robot latency.",
+      "boundary": "HASH-PINNED FROZEN MODEL \u00b7 MODEL FORWARD ONLY",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 32.087,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "reproduction",
+      "start_seconds": 213,
+      "end_seconds": 238,
+      "duration_seconds": 25,
+      "title": "Receipts and hashes, not a black box",
+      "spoken_text": "Judges can rebuild both public replays, verify every guarded cryptographic hash, inspect the source episodes and gate receipts, run the Go tests, and start the Evidence Console with Docker. The public site needs no live G P U because it replays the exact recorded A M D simulation evidence.",
+      "boundary": "REAL COMMAND OUTPUT \u00b7 CPU EVIDENCE AUDIT",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 19.552,
+        "intro_silence_seconds": 0.55
+      }
+    },
+    {
+      "slug": "close",
+      "start_seconds": 238,
+      "end_seconds": 250,
+      "duration_seconds": 12,
+      "title": "A concrete next observation",
+      "spoken_text": "Look Twice turns uncertainty into a concrete next observation, and robot action into an auditable decision. Simulation only; no safety-certification claim.",
+      "boundary": "TRACK 3 \u00b7 PHYSICAL AI \u00b7 SIMULATION ONLY",
+      "narration": {
+        "voice": "Samantha",
+        "rate_words_per_minute": 155,
+        "raw_duration_seconds": 10.683,
+        "intro_silence_seconds": 0.55
+      }
+    }
+  ],
+  "evidence_boundaries": {
+    "locked_aggregate_source": "release/v8-frozen/results/LOCKED_TEST_REPORT.json",
+    "locked_report_sha256": "5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb",
+    "confirmatory_replay_source": "showcase/public/data/replays/v8-active-repair-direct.json",
+    "confirmatory_replay_seed": 105400,
+    "confirmatory_replay_formal_result_eligible": false,
+    "confirmatory_replay_label_burned_in": true,
+    "simulation_only": true,
+    "real_robot_claim": false,
+    "safety_certification_claim": false,
+    "historical_v2_v3_media_used": false
+  },
+  "locked_task_utility": {
+    "n_active": 12,
+    "n_passive": 12,
+    "active_direct": 11,
+    "passive_direct": 0,
+    "passive_detours": 12,
+    "active_uplift_percentage_points": 91.7,
+    "unsafe_total": 0,
+    "total_policy_runs": 24
+  },
+  "inputs": {
+    "recorded_v8_reel": {
+      "path": "showcase/public/media/look-twice-replay-30s.mp4",
+      "sha256": "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2"
+    },
+    "technical_report_pdf": {
+      "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
+      "sha256": "38ad3846bcb665d7a6554d6bb53ec73e4af7e6528db3cc0513bdd6ecd165d2f6",
+      "pages_used": [
+        3,
+        6,
+        7
+      ]
+    },
+    "locked_report": {
+      "path": "release/v8-frozen/results/LOCKED_TEST_REPORT.json",
+      "sha256": "5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb"
+    },
+    "rocm_benchmark": {
+      "path": "release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json",
+      "sha256": "282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156",
+      "scope": {
+        "workload": "synthetic preloaded-tensor model-forward benchmark",
+        "includes": [
+          "frozen vision model forward pass",
+          "Python dispatch and synchronized ROCm execution"
+        ],
+        "excludes": [
+          "RGB-D preprocessing",
+          "Genesis simulation",
+          "Go evidence fusion",
+          "network or storage I/O",
+          "closed-loop robot actuation"
+        ],
+        "not_an_accuracy_evaluation": true,
+        "locked_test_opened": false,
+        "model_weights_modified": false
+      }
+    },
+    "vhs_audit_tape": {
+      "path": "scripts/video/v8-audit.tape",
+      "sha256": "5a15db38c478e22aed5c0ba784133b655e508a82299d53f51a05bed41621960f",
+      "rendered_audit_sha256": "dacf28a9bf80e89528a08d77141080c416e99d144072a9c5832b6812aff45c7f"
+    },
+    "builder": {
+      "path": "scripts/build_v8_demo_video.py",
+      "sha256": "0de7f6e777742b413c76046a0d218b23e272541014412abc54a0962a797158bf"
+    }
+  }
+}

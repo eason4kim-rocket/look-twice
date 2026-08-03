@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | Branch | `v6-collaborative-evidence-repair` |
-| Host | `root@36.150.116.206:31128` · `/workspace/look-twice-v6` |
+| Host | Archived Radeon Cloud instance; connection details intentionally omitted |
 | GPU | AMD Radeon Graphics (`cuda:0`, ROCm / PyTorch 2.9.1) |
 | Genesis | 1.1.2 · backend `gs.amdgpu` |
 | Runtime | **genesis** dual-agent RGB-D (not synthetic-only) |

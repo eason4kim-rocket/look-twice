@@ -1,9 +1,11 @@
 # Look Twice V8: Active Evidence Assurance for Physical AI
 
-Look Twice prevents a robot from treating noisy, correlated, stale, or
-conflicting observations as action-ready facts. When the evidence is
-insufficient, it actively acquires an independent RGB-D observation and asks a
-standalone Purify Go gate to qualify the action again.
+Look Twice is a pre-action evidence-assurance layer for embodied AI, not
+another perception leaderboard. It asks not only what the model predicts, but
+whether the evidence is independent, fresh, calibrated, and sufficient for the
+intended action. When it is not, the robot acquires the missing view,
+re-qualifies the same Action Contract, and either recovers useful motion or
+fails closed.
 
 ```text
 Genesis RGB-D observations
@@ -20,11 +22,11 @@ deployment or a certified safety controller.
 
 ## 90-second judge path
 
-1. Open the public [Evidence Console](https://look-twice-evidence-console.eason1319.workers.dev/).
+1. Open the public [Evidence Console](https://eason4kim-rocket.github.io/).
 2. Play the active replay: initial denial -> independent side-view capture ->
    Python and Purify admission -> direct route.
 3. Compare the passive replay: the same initial denial produces a safe detour.
-4. Inspect the [frozen results](https://look-twice-evidence-console.eason1319.workers.dev/results)
+4. Inspect the [frozen results](https://eason4kim-rocket.github.io/results/)
    and open the linked source JSON.
 5. Use the CPU-only audit below to verify the replay bundles and frozen SHA
    boundary locally.
@@ -44,18 +46,44 @@ refitting, or vision retraining followed the open.
 | Split-conformal coverage | 1.000 |
 | Decisive predictions | 3,001 / 3,200 |
 | Active full-chain direct actions | 11 / 12 |
+| Passive full-chain direct actions | 0 / 12 |
+| Paired direct-route gain | +91.7 percentage points |
+| Mission completion | 12 / 12 active; 12 / 12 passive |
 | Passive initial denials | 12 / 12 |
 | Passive safe detours | 12 / 12 |
 | Unsafe crossings | 0 / 24 policy runs |
 | Unplanned fallback | 0 / 24 policy runs |
+| Python / Purify Go decision agreement | 24 / 24 policy runs |
 
 Authoritative source:
 [`LOCKED_TEST_REPORT.json`](release/v8-frozen/results/LOCKED_TEST_REPORT.json).
 The archived report SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
 
-The public replay is a recorded non-locked confirmatory episode. It illustrates
-the evaluated mechanism but is not substituted for the locked population.
+The direct-route gain is a derivation from the permanent paired rows; V8 was
+not rerun and the locked split was not reopened. The public replay is a
+recorded non-locked confirmatory episode. It illustrates the evaluated
+mechanism but is not substituted for the locked population.
+
+## Task value: recover direct motion, shift carrier burden
+
+Safe refusal is the baseline. In the 12 paired locked worlds, the passive
+policy took a safe detour in 12/12, while active evidence repair converted the
+same initial denial into a jointly authorized direct route in 11/12 - a +91.7
+percentage-point gain with zero recorded unsafe crossings or fallbacks across
+all 24 policy runs. Seed 102105 remained conservative and stays in the
+denominator.
+
+The guarded non-locked seed 105400 replay provides a narrower cost ledger.
+Active repair reduced loaded-carrier travel from 6.404 m to 4.915 m (-23.24%)
+while both policies delivered the payload without a recorded collision. This
+was not a free speedup: the scout traveled 3.046 m, total robot travel rose
+from 6.404 m to 7.961 m, and the active episode took more steps. The value
+claim is burden shifting from a loaded carrier to a diagnostic scout, not lower
+total distance or latency.
+
+Source: [task-utility derivation](release/v8-derived/V8_TASK_UTILITY_DERIVATION.json),
+SHA256 `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
 
 ## What is novel
 
@@ -131,11 +159,15 @@ go test ./...
 For the complete clean-clone procedure, evidence trace, AMD runtime command,
 and checkpoint boundary, see [V8 reproduction](docs/V8_REPRODUCTION.md).
 
+Frozen checkpoint: [download the 159,592,901-byte release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt)
+and verify SHA256
+`7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`.
+
 ## Track 3 judging map
 
 | Criterion | Evidence |
 | --- | --- |
-| Robot capability performance - 30 | Closed-loop deny, active observation, re-qualification, direct traversal, and safe detour; locked full-chain 11/12 with 0/24 unsafe crossings. |
+| Robot capability performance - 30 | Same-world paired evidence: active 11/12 direct versus passive 0/12 (+91.7 pp), with 12/12 mission completion for both policies and 0/24 unsafe crossings. |
 | AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D model inference, ROCm tensor path, and frozen environment identities. |
 | Innovation and originality - 20 | Lineage-aware Claims, conformal action qualification, dual authorization, BeliefGap-driven active repair, and signed receipts. |
 | Real-world application value - 20 | An evidence-assurance layer for warehouse AMRs and other robots operating under sensor correlation, conflict, and partial observability. |
@@ -148,9 +180,10 @@ and checkpoint boundary, see [V8 reproduction](docs/V8_REPRODUCTION.md).
 - [Detailed reproduction guide](docs/V8_REPRODUCTION.md)
 - [Architecture and evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md)
 - [English 3-5 minute demo script](docs/V8_DEMO_SCRIPT.md)
+- [Final 4:10 English workflow demo](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4)
 - [Official PR body draft](docs/SUBMISSION_DRAFT.md)
 - [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
-- [Public Evidence Console](https://look-twice-evidence-console.eason1319.workers.dev/)
+- [Public Evidence Console](https://eason4kim-rocket.github.io/)
 - [Recorded 30-second evidence reel](showcase/public/media/look-twice-replay-30s.mp4)
 
 ## Repository map
@@ -164,6 +197,9 @@ and checkpoint boundary, see [V8 reproduction](docs/V8_REPRODUCTION.md).
 - `scripts/build_competition_replays.py` - deterministic public replay builder;
 - `scripts/benchmark_v8_frozen_inference.py` - hash-pinned ROCm model-forward
   benchmark;
+- `scripts/derive_v8_task_utility.py` - locked paired-route and guarded replay
+  cost derivation without rerunning V8;
+- `scripts/verify_v8_rocm_environment.py` - exact ROCm core identity preflight;
 - `scripts/verify_frozen_foundation.py` - frozen-boundary verifier.
 
 ## Evidence boundary

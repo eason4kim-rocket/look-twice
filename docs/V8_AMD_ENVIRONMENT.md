@@ -66,6 +66,20 @@ requiring access to the competition cloud instance.
 | Purify Go binary | `31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00` |
 | Locked report file | `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb` |
 
+Public checkpoint asset:
+https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt
+
+Before a new GPU reproduction, run:
+
+```bash
+/opt/venv/bin/python -m pip install -r requirements-rocm-v8.txt
+/opt/venv/bin/python scripts/verify_v8_rocm_environment.py
+```
+
+The preflight checks Genesis, PyTorch, HIP, the ROCm device API, and the
+`gfx1100` architecture against the frozen core. The competition image's
+ABI-matched `torchvision` package must be retained.
+
 ## Frozen-model inference benchmark
 
 Source: `release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json`.

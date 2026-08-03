@@ -82,13 +82,13 @@ function HomeContent() {
             <span>{zh ? "被动策略" : "PASSIVE"}</span>
             <h3>{zh ? "拒绝并绕行" : "Deny and detour"}</h3>
             <p>{zh ? "证据不足时保持安全，但为不确定性付出路线成本。" : "Stays safe under uncertainty, but pays with a longer route."}</p>
-            <b>{zh ? "拒绝 → 安全绕行" : "DENY → SAFE DETOUR"}</b>
+            <b>{zh ? "锁定：0/12 直行 · 12/12 绕行" : "LOCKED: 0/12 DIRECT · 12/12 DETOUR"}</b>
           </article>
           <article className="active-policy">
             <span>{zh ? "主动策略" : "ACTIVE"}</span>
             <h3>{zh ? "换视角、修证据、再行动" : "Move, repair, then act"}</h3>
             <p>{zh ? "侦察车 Scout 获取独立侧视根；Python 与 Purify 同时准入后，载具 Carrier 才直接通行。" : "A scout acquires an independent side-view root. Only Python ∧ Purify admission unlocks the carrier."}</p>
-            <b>{zh ? "拒绝 → 修证 → 直行" : "DENY → REPAIR → DIRECT"}</b>
+            <b>{zh ? "锁定：11/12 直行 · +91.7 个百分点" : "LOCKED: 11/12 DIRECT · +91.7 PP"}</b>
           </article>
         </div>
         <div className="platform-row">
@@ -116,6 +116,8 @@ function HomeContent() {
             <b>{zh ? "录制的 AMD GPU 证据回放" : "RECORDED AMD GPU EVIDENCE REPLAY"}</b>
             <p>{zh ? "1920×1080 · 30 FPS · 无旁白 · 英文画面字幕（比赛默认）· 仅限仿真。全部状态来自同一回合证据包。" : "1920×1080 · 30 FPS · no narration · Simulation only. Every state comes from the same EpisodeBundle."}</p>
             <a href="/media/look-twice-replay-30s.mp4" download>{zh ? "下载 MP4 ↓" : "DOWNLOAD MP4 ↓"}</a>
+            <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4">{zh ? "观看 4:10 英文完整演示 ↗" : "WATCH THE 4:10 ENGLISH WORKFLOW DEMO ↗"}</a>
+            <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt">{zh ? "下载冻结模型（SHA 固定）↗" : "DOWNLOAD THE SHA-PINNED CHECKPOINT ↗"}</a>
           </div>
         </div>
       </section>

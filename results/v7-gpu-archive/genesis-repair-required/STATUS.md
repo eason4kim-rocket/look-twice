@@ -1,7 +1,8 @@
 # V7 Genesis Repair-Required — STATUS (honest)
 
 **Branch tip:** `7574548` on `v7-vision-evidence-contracts`  
-**Host:** `root@36.150.116.206:31128` · `/workspace/look-twice-v6`  
+**Host:** archived Radeon Cloud instance; connection details intentionally omitted
+
 **Phase lock:** world homology **closed**. Active phase = **Genesis RGB vision calibration only**  
 (no further motion / obstacle rewrites; no relaxing blocked-claim thresholds).  
 **Closed-loop chain 32/60 (53%) remains the honest freeze** until a clean vision dataset is trained **and** the post-collect gate passes.

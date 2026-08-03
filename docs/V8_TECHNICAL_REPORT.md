@@ -18,7 +18,8 @@ estimates and actions. This is dangerous when apparently independent outputs
 are copies of one capture, when observations are stale or time-skewed, when
 modalities disagree, or when the model is outside its calibration domain.
 
-Look Twice V8 is an evidence-assurance layer for embodied systems. It turns
+Look Twice V8 is a pre-action evidence-assurance layer for embodied systems,
+not another perception leaderboard. It turns
 Genesis RGB-D observations into spatially grounded, lineage-aware Claims;
 applies split-conformal prediction sets; evaluates a scoped Action Contract;
 and requires agreement between the Python control path and a standalone Purify
@@ -32,9 +33,11 @@ The frozen V8 candidate passed its single-use locked evaluation. The offline
 population contained 3,200 corridor samples. It achieved 1.000 corridor ROI
 IoU, 1.000 decisive balanced accuracy, 1.000 decisive blocked recall, 0.000
 false-clear singleton rate, and 1.000 conformal coverage. In 12 paired live
-full-chain seeds, active repair obtained 11/12 direct action qualifications;
-the passive policy denied and detoured 12/12; the 24 policy runs contained zero
-unsafe crossings and zero unplanned fallbacks.
+full-chain seeds, active repair obtained 11/12 direct action qualifications,
+while the passive policy obtained 0/12 direct routes and detoured 12/12. This
+is a paired direct-route gain of 91.7 percentage points. Both policies
+completed 12/12 missions; the 24 policy runs contained zero unsafe crossings,
+zero unplanned fallbacks, and 24/24 Python/Go decision agreement.
 
 The result is simulation-only and uses a kinematic Genesis motion backend. It
 does not claim real-robot validation or safety certification.
@@ -227,6 +230,10 @@ side-view capture. It then rebuilds the Claims and asks both authorization
 paths again. This separates safety from usefulness: denial remains safe, while
 active repair can recover a shorter direct route when the evidence supports it.
 
+The intended operational trade is specific: move a low-risk scout to repair
+evidence so a loaded carrier can avoid a conservative detour. It is not a claim
+that active repair reduces total multi-robot travel or wall-clock time.
+
 ## 6. AMD Radeon GPU and ROCm use
 
 The frozen evaluation ran on one Radeon Cloud `gfx1100` GPU with approximately
@@ -311,16 +318,45 @@ invocation, and policy-shape invariants.
 | --- | ---: |
 | Active effective admissions | 11 / 12 |
 | Active full-chain direct routes | 11 / 12 |
+| Passive full-chain direct routes | 0 / 12 |
+| Paired direct-route gain | +91.7 percentage points |
+| Mission completion | 12 / 12 active; 12 / 12 passive |
 | Passive initial denials | 12 / 12 |
 | Passive safe detours | 12 / 12 |
 | Passive repair attempts | 0 / 12 |
 | Unsafe crossings | 0 / 24 policy runs |
 | Unplanned fallbacks | 0 / 24 policy runs |
+| Python / Purify Go decision agreement | 24 / 24 policy runs |
 
 One active seed remained conservative and detoured rather than obtaining final
-direct qualification. It is counted in the denominator and not removed.
+direct qualification. Seed 102105 is counted in the denominator and not
+removed. Among the 11 discordant direct-route pairs, all 11 favored active
+repair. An exact two-sided McNemar test gives p=0.0009766; this is descriptive
+evidence for the fixed seed suite, not a population or real-world guarantee.
 
-### 8.3 Evidence identity
+### 8.3 Guarded confirmatory cost ledger
+
+The non-locked seed 105400 replay includes trajectory lengths and is guarded by
+the frozen import manifest. It is kinematic simulation and carries
+`formal_result_eligible=false`; it is not added to the locked aggregate.
+
+| Metric | Active repair | Passive baseline |
+| --- | ---: | ---: |
+| Loaded-carrier travel | 4.915 m | 6.404 m |
+| Scout travel | 3.046 m | 0.000 m |
+| Total robot travel | 7.961 m | 6.404 m |
+| Episode steps | 1,984 | 1,150 |
+| Observations / replans | 3 / 2 | 1 / 0 |
+| Payload delivered / collisions | yes / 0 | yes / 0 |
+
+Active repair reduced loaded-carrier travel by 1.488 m, or 23.24%, but raised
+total robot travel by 24.32%. This supports a burden-shifting claim - from the
+loaded carrier to a diagnostic scout - not a total-distance or latency speedup.
+The derivation is machine-readable at
+`release/v8-derived/V8_TASK_UTILITY_DERIVATION.json`, SHA256
+`f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
+
+### 8.4 Evidence identity
 
 The authoritative locked report file SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
@@ -343,6 +379,9 @@ The open-seal SHA256 is
    Go core must agree, and the decision is retained as a canonical receipt.
 6. **Replayable proof surface.** Judges can inspect a recorded evidence chain
    and source JSON without needing the live competition GPU.
+7. **Explicit task-cost accounting.** The submission distinguishes loaded
+   carrier burden from total team motion, so active repair is not presented as
+   a free speed or energy improvement.
 
 ## 10. Real-world value
 
@@ -367,13 +406,20 @@ incident review, and future assurance tooling.
 - CPU-only Docker Evidence Console;
 - source-linked replay bundles and 30-second evidence reel;
 - English technical report and detailed reproduction guide;
-- English script for the final 3-5 minute workflow video.
+- final 4:10 English workflow video;
+- public 159,592,901-byte frozen checkpoint release asset.
 
 Public Evidence Console:
-https://look-twice-evidence-console.eason1319.workers.dev/
+https://eason4kim-rocket.github.io/
 
-Source repository:
-https://github.com/eason4kim-rocket/look-twice
+Frozen source branch:
+https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release
+
+Final workflow video:
+https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4
+
+Frozen checkpoint:
+https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt
 
 ## 12. Reproducibility
 
@@ -383,6 +429,7 @@ The fastest audit requires Python 3.11+:
 python3 scripts/build_competition_replays.py
 python3 -m unittest tests.test_competition_replay -v
 python3 scripts/verify_frozen_foundation.py
+python3 scripts/derive_v8_task_utility.py
 ```
 
 The evidence website can be rebuilt with:
@@ -410,8 +457,9 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
 - Statistical claims apply only to the declared simulated distributions.
 - The public replay is a non-locked confirmatory example, not the locked
   aggregate.
-- The frozen 159 MB checkpoint requires a release-asset or model-hosting mirror
-  because it exceeds GitHub's normal 100 MB blob limit.
+- The frozen 159 MB checkpoint is distributed as a GitHub release asset because
+  it exceeds GitHub's normal 100 MB blob limit; its SHA must be verified before
+  use.
 - The source tree was identity-captured by file hashes because the GPU worktree
   was dirty; the Git commit alone is not presented as the runtime identity.
 - The public Purify core is a contest reference implementation, not the private

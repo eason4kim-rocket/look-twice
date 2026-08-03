@@ -1,7 +1,8 @@
 # Look Twice v6 — capability completion STATUS
 
 Branch: `v6-collaborative-evidence-repair`  
-Remote: `root@36.150.116.206:31128` `/workspace/look-twice-v6`  
+Remote: archived Radeon Cloud instance; connection details intentionally omitted
+
 GPU: AMD Radeon · `cuda:0` · Genesis 1.1.2 · `gs.amdgpu`
 
 ## Delivered

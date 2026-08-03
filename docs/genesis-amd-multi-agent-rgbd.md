@@ -1,4 +1,9 @@
-# Genesis on AMD ROCm: multi-agent RGB-D notes (Look Twice v6)
+# Genesis on AMD ROCm: historical Look Twice V6 notes
+
+> This records the environment-specific practices used by Look Twice V6 on
+> Genesis 1.1.x. It is not current upstream guidance, is not a V8 performance
+> claim, and has not been submitted to Genesis. In particular, current render
+> return types and process-isolation guidance must be revalidated before reuse.
 
 This note is intended as an upstream-friendly summary of practices that made
 multi-robot RGB-D capture workable on AMD GPUs with Genesis 1.1.x + ROCm/PyTorch.

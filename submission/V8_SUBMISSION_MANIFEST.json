@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-submission-package/v1",
   "generated_on": "2026-08-03",
-  "status": "pre_submission_package",
+  "status": "review_ready_no_pr",
   "competition": {
     "name": "AMD AI DevMaster Hackathon 2026",
     "track": "Track 3 - Physical AI",
@@ -9,13 +9,47 @@
     "required_language": "English",
     "pr_title": "Track 3, eason4kim-rocket, Look Twice"
   },
+  "submission_state": {
+    "official_pr_opened": false,
+    "official_pr_opening_authorized": false,
+    "owner_review_required_before_pr": true,
+    "entrant_assumption": "eason4kim-rocket (solo entrant)",
+    "entrant_identity_review_required": true
+  },
   "candidate": {
     "candidate_id": "v8-frozen",
     "source_branch": "v8-competition-release",
-    "entrant_assumption": "eason4kim-rocket (solo entrant)",
+    "positioning": "Action assurance before action: convert insufficient evidence into a concrete next observation, then admit, detour, or fail closed under dual Python and Purify Go authorization.",
     "simulation_only": true,
     "real_robot_claim": false,
-    "safety_certification_claim": false
+    "safety_certification_claim": false,
+    "external_upstream_pr_claim": false
+  },
+  "headline_evidence": {
+    "locked_same_world_pairs": 12,
+    "active_direct": "11/12",
+    "passive_direct": "0/12",
+    "paired_direct_gain_percentage_points": 91.7,
+    "active_mission_complete": "12/12",
+    "passive_mission_complete": "12/12",
+    "unsafe_crossing": "0/24",
+    "fallback": "0/24",
+    "python_go_decision_agreement": "24/24",
+    "interpretation_limit": "Descriptive evidence for the fixed locked seed suite; no population or real-world generalization."
+  },
+  "confirmatory_cost_ledger": {
+    "seed": 105400,
+    "formal_result_eligible": false,
+    "active_loaded_carrier_travel_m": 4.915138428290841,
+    "passive_loaded_carrier_travel_m": 6.403547896758405,
+    "loaded_carrier_reduction_percent": 23.243512697406775,
+    "active_scout_travel_m": 3.045587151066445,
+    "active_total_robot_travel_m": 7.960725579357286,
+    "passive_total_robot_travel_m": 6.403547896758405,
+    "active_total_travel_increase_percent": 24.317420712776322,
+    "payload_delivered": "both policies",
+    "collision_count": "0 active; 0 passive",
+    "interpretation": "Active repair shifts movement burden away from the loaded carrier to a scout; it does not reduce total robot travel or episode duration."
   },
   "artifacts": {
     "locked_report": {
@@ -29,21 +63,45 @@
     "frozen_checkpoint": {
       "sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
       "size_bytes": 159592901,
-      "public_url": null
+      "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt",
+      "publication_verified": false
     },
     "rocm_benchmark": {
       "path": "release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json",
       "sha256": "282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156"
     },
+    "task_utility_derivation": {
+      "path": "release/v8-derived/V8_TASK_UTILITY_DERIVATION.json",
+      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/evidence/V8_TASK_UTILITY_DERIVATION.json",
+      "sha256": "f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b",
+      "size_bytes": 4306
+    },
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "23c5edc768cb9d831ac90089bad00bf664c8e5bfcaae5d4472aa3666c9e52b15",
-      "size_bytes": 1063764
+      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
+      "sha256": "38ad3846bcb665d7a6554d6bb53ec73e4af7e6528db3cc0513bdd6ecd165d2f6",
+      "size_bytes": 1068088,
+      "page_count": 10,
+      "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
+      "publication_verified": false
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
+      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Evidence-Reel-30s.mp4",
       "sha256": "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2",
       "size_bytes": 1006188
+    },
+    "final_demo_video": {
+      "builder": "scripts/build_v8_demo_video.py",
+      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4",
+      "sidecar_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.manifest.json",
+      "duration_seconds": 250.0,
+      "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4",
+      "sha256": "906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280",
+      "size_bytes": 17342763,
+      "sidecar_sha256": "c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9",
+      "publication_verified": false,
+      "status": "render_complete_pending_owner_review_and_publication"
     },
     "social_preview": {
       "path": "showcase/public/og.png",
@@ -53,17 +111,16 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/SHA256SUMS",
-      "status": "ready_except_final_video_url_and_registered_team_confirmation"
-    },
-    "final_demo_video": {
-      "public_url": null,
-      "sha256": null,
-      "status": "required_before_submission"
+      "status": "review_ready_checksums_verified"
     }
   },
   "links": {
     "source_repository": "https://github.com/eason4kim-rocket/look-twice",
-    "public_evidence_console": "https://look-twice-evidence-console.eason1319.workers.dev/",
+    "source_branch_target": "https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release",
+    "public_evidence_console_target": "https://eason4kim-rocket.github.io/",
+    "public_results_target": "https://eason4kim-rocket.github.io/results",
+    "public_reproduction_target": "https://eason4kim-rocket.github.io/reproduce",
+    "release_target": "https://github.com/eason4kim-rocket/look-twice/releases/tag/v8-competition-candidate",
     "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07"
   },
   "verification": {
@@ -76,17 +133,22 @@
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
-    "pdf_visual_qa": "9/9 pages inspected",
-    "browser_visual_qa": "desktop and mobile passed",
-    "official_repository_staging_checksums": "passed",
-    "submission_surface_credential_scan": "passed"
+    "pdf_visual_qa": "10/10 pages inspected",
+    "browser_visual_qa": "desktop and mobile passed on the prepared build",
+    "submission_surface_credential_scan": "passed",
+    "final_demo_media_qa": "builder format guards passed; owner visual and audible review pending",
+    "official_repository_staging_checksums": "passed; all 10 packaged files verified"
   },
-  "release_blockers": [
-    "confirm registered team display name",
-    "push public V8 source branch and logged-out verify",
-    "publish public frozen-checkpoint mirror",
-    "record and publish final 3-5 minute English demo video",
-    "insert final video and checkpoint URLs into PR body",
-    "open official English submission PR"
+  "owner_review_items": [
+    "Confirm that the registered solo entrant or team display name is eason4kim-rocket; update the PR title and Team section if it differs.",
+    "Complete owner visual and audible review of the final demo.",
+    "Verify the source branch, Pages site, release assets, and official-fork branch without sign-in after publication.",
+    "Review the English PR body and authorize opening the official PR."
+  ],
+  "remaining_before_pr": [
+    "complete owner visual and audible review of the final 4:10 English demo",
+    "publish and logged-out verify the source branch, Pages site, checkpoint, report, and video",
+    "confirm registered entrant or team label",
+    "obtain owner approval to open the official English submission PR"
   ]
 }

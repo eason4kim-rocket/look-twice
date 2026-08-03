@@ -1,0 +1,9 @@
+# Direct Python package pin captured for the frozen V8 runtime.
+genesis-world==1.1.2
+
+# PyTorch and torchvision are intentionally not resolved from PyPI here.
+# V8 used the ABI-matched packages preinstalled in the AMD competition image:
+#   torch 2.9.1+gitff65f5b
+#   HIP   7.2.53211-e1a6bc5663
+# Replacing that custom ROCm build with a generic wheel is not an exact replay.
+# Run scripts/verify_v8_rocm_environment.py before a GPU reproduction.
