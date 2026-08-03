@@ -56,8 +56,10 @@ increased total robot travel by 24.32% and did not reduce latency.
 | Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 
 These are the stable final targets. The 239-second replacement, updated report,
-site, source branch, and official-fork package were published and verified
-without credentials on 2026-08-03. No official competition PR was opened.
+source branch, release assets, and refreshed official-fork package were
+published and verified without credentials on 2026-08-03. The refreshed Pages
+site remains pending publication and anonymous route verification. No official
+competition PR was opened.
 
 ## Handoff map
 
@@ -85,7 +87,7 @@ without credentials on 2026-08-03. No official competition PR was opened.
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | final 12-file checksum manifest verified |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 12 checksummed artifacts verified; 13 total files including `SHA256SUMS` |
 
 ## Frozen checkpoint
 

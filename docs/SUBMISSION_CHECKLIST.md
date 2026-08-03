@@ -99,7 +99,8 @@ Official sources:
       README.
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
-- [x] Regenerate final `SHA256SUMS` and verify all 12 packaged files.
+- [x] Regenerate final `SHA256SUMS` and verify all 12 checksummed artifacts
+      (13 total files including `SHA256SUMS`).
 
 ## Reproducibility
 
@@ -122,7 +123,7 @@ Official sources:
 - [x] Run `go test ./...` for the Purify reference core.
 - [x] Add exact ROCm dependency and environment preflight files.
 - [x] Build and route-smoke the Evidence Console with Docker.
-- [x] Lint, build, and run all 20 Evidence Console tests with Node 22.
+- [x] Lint, build, and run all 23 Evidence Console tests with Node 22.
 - [x] Pin patched Web dependencies and obtain zero known `npm audit`
       vulnerabilities.
 - [ ] Verify every README command exactly as written from the public clean
@@ -222,9 +223,10 @@ Stable targets:
       index, report PDF, compact evidence, and preview.
 - [x] Add the locally verified demo artifact and unchanged stable target URL.
 - [x] Regenerate and verify staging checksums for the 239-second identity.
-- [ ] Copy the refreshed staged directory into the dedicated branch of the
+- [x] Copy the refreshed staged directory into the dedicated branch of the
       official fork and push it.
-- [ ] Verify the refreshed official-fork branch contains only the 13 intended
+- [x] Verify the refreshed official-fork branch at commit
+      `286420ece6e744877dd4089d4585f14825c43469` contains only the 13 intended
       files (12 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
@@ -241,6 +243,6 @@ Stable targets:
 - [x] Final `SHA256SUMS` verifies cleanly after identity propagation.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
-- [ ] Refreshed official-fork branch contains only intended submission files.
+- [x] Refreshed official-fork branch contains only intended submission files.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
 - [x] No official PR exists before explicit owner approval.

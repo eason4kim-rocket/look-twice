@@ -14,7 +14,7 @@
     "official_pr_opening_authorized": false,
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
-    "public_targets_anonymously_verified": true,
+    "public_targets_anonymously_verified": false,
     "entrant_team_name": "Liu Liang",
     "entrant_role": "solo entrant",
     "entrant_github": "eason4kim-rocket",
@@ -86,7 +86,7 @@
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/V8_FROZEN_ROCM_TELEMETRY.json",
       "sha256": "0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9",
       "size_bytes": 24757,
-      "workload": "60-second synthetic preloaded-tensor FP32 frozen-model forward at batch 8",
+      "workload": "60.182-second sustained synthetic preloaded-tensor FP32 frozen-model forward at batch 8; 376 images",
       "clean_gpu_preflight": true,
       "gpu_use_samples_at_100_percent": "61/61",
       "mean_graphics_package_power_w": 135.327868852459,
@@ -107,7 +107,7 @@
       "manifest_content_sha256": "ed6f1bbf27aea692ba5e4b47cb7a1fb1e216e0978a473d70d0192bb2eb2a9d30",
       "worlds": 400,
       "metadata_records": 3200,
-      "evidence_class": "pre-open inputs and labels only",
+      "evidence_class": "pre-open locked inputs and labels only",
       "contains_original_one_shot_predictions": false,
       "contains_24_raw_locked_live_episodes": false,
       "recomputes_locked_result": false,
@@ -165,7 +165,7 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "status": "staged_and_checksums_verified_refresh_pending_no_pr"
+      "status": "official_fork_branch_published_and_verified_no_pr"
     }
   },
   "links": {
@@ -178,7 +178,7 @@
     "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07",
     "official_fork": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07",
     "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8",
-    "public_targets_anonymously_verified": true
+    "public_targets_anonymously_verified": false
   },
   "verification": {
     "frozen_foundation": "passed",
@@ -196,9 +196,9 @@
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
     "rocm_telemetry_helper_tests": "3/3 passed; formal 60-second report validated",
-    "official_repository_staging_checksums": "passed locally; all 12 packaged files verified",
-    "public_distribution": "locked archive, sidecar, checksum, report, video, and checkpoint release assets published and verified without credentials; source, Pages, and official-fork refresh pending",
-    "official_fork_branch": "previous 11-file package remains published at commit bb76ade; refreshed 13-file package pending; official_pr_opened=false"
+    "official_repository_staging_checksums": "passed locally and on the published branch; 12 checksummed artifacts verified (13 total files including SHA256SUMS)",
+    "public_distribution": "locked archive, sidecar, checksum, report, video, and checkpoint release assets plus source and official-fork refresh published and verified without credentials; refreshed Pages route verification pending",
+    "official_fork_branch": "13 intended files published on the Liu Liang branch at commit 286420ece6e744877dd4089d4585f14825c43469; 12 checksum entries passed; official_pr_opened=false"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",
