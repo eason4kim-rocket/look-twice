@@ -45,10 +45,11 @@ increased total robot travel by 24.32% and did not reduce latency.
 | Release | <https://github.com/eason4kim-rocket/look-twice/releases/tag/v8-competition-candidate> |
 | Technical report PDF | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf> |
 | Frozen checkpoint | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt> |
-| Final 4:10 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
+| Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 
-These are the stable final targets. They were downloaded or opened without
-credentials and identity-checked on 2026-08-03.
+These are the stable final targets. The 239-second replacement, updated report,
+site, source branch, and official-fork package were published and verified
+without credentials on 2026-08-03. No official competition PR was opened.
 
 ## Handoff map
 
@@ -69,9 +70,9 @@ credentials and identity-checked on 2026-08-03.
 | Locked-open seal | `release/v8-frozen/results/LOCKED_TEST_OPENED.json` | `7bfe13d0d7e117f76286cb094711322b810dc44d40ddbd149bf1304713baba14` |
 | Task-utility derivation | `release/v8-derived/V8_TASK_UTILITY_DERIVATION.json` | `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b` |
 | ROCm model-forward benchmark | `release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json` | `282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156` |
-| Rendered 10-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `38ad3846bcb665d7a6554d6bb53ec73e4af7e6528db3cc0513bdd6ecd165d2f6` |
+| Rendered 10-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde` |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
-| Final 4:10 demo | `submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4` | `906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280` |
+| Final 3:59 demo | `submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
 | Official-repo package | `submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/` | final 10-file checksum manifest verified |
 
@@ -81,8 +82,8 @@ credentials and identity-checked on 2026-08-03.
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`
 - Size: 159,592,901 bytes.
 - Public target: the `v8-competition-candidate` release asset linked above.
-- The release asset was downloaded again without credentials and matched this
-  identity exactly.
+- The unchanged checkpoint asset remained available at the stable URL and its
+  published SHA256 identity was rechecked.
 
 ## Verified local commands
 
@@ -103,10 +104,13 @@ dependency vulnerabilities. The frozen verifier reported all 21 guarded files
 green, and the task-utility derivation matched the fixed locked and
 confirmatory source hashes without reopening the test.
 
-The final demo render is 250.000 seconds and 17,342,763 bytes. Its SHA256 is
-`906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280`;
+The final demo render is 239.000 seconds and 9,032,035 bytes. Its SHA256 is
+`70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`;
 the builder sidecar SHA256 is
-`c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9`.
+`639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
+Narration is an AI-generated `cedar` voice from OpenAI
+`gpt-4o-mini-tts`; that disclosure is burned into the video. Chapter visuals
+use fixed composition with no `zoompan` motion.
 
 ## Evidence boundary
 
@@ -120,12 +124,13 @@ certification, locked latency, energy, or utilization claim. See
 ## Final owner-review gate
 
 - [ ] Confirm the registered entrant/team label and eligibility items.
-- [ ] Inspect the final 4:10 MP4 visually and audibly; its verified SHA256,
+- [ ] Inspect the final 3:59 MP4 visually and audibly; its verified SHA256,
       size, streams, and duration are already recorded in
       `V8_SUBMISSION_MANIFEST.json`.
 - [x] Regenerate and verify the official-directory `SHA256SUMS` after every
       final artifact is in place.
-- [x] Verify the Pages site, source branch, PDF, checkpoint, and video without
+- [x] Publish the final replacement assets, then verify the Pages site, source
+      branch, PDF, checkpoint, and video without
       sign-in.
 - [ ] Review the official-fork branch diff and the English PR body.
 - [ ] Explicitly authorize opening the official competition PR.

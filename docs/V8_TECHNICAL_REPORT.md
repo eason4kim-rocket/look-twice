@@ -406,7 +406,8 @@ incident review, and future assurance tooling.
 - CPU-only Docker Evidence Console;
 - source-linked replay bundles and 30-second evidence reel;
 - English technical report and detailed reproduction guide;
-- final 4:10 English workflow video;
+- final 3:59 English workflow video with fixed-composition visuals and
+  AI-generated OpenAI Cedar narration;
 - public 159,592,901-byte frozen checkpoint release asset.
 
 Public Evidence Console:

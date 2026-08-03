@@ -180,7 +180,7 @@ and verify SHA256
 - [Detailed reproduction guide](docs/V8_REPRODUCTION.md)
 - [Architecture and evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md)
 - [English 3-5 minute demo script](docs/V8_DEMO_SCRIPT.md)
-- [Final 4:10 English workflow demo](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4)
+- [Final 3:59 English workflow demo](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4)
 - [Official PR body draft](docs/SUBMISSION_DRAFT.md)
 - [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
 - [Public Evidence Console](https://eason4kim-rocket.github.io/)

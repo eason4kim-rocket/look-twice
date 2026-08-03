@@ -116,7 +116,7 @@ function HomeContent() {
             <b>{zh ? "录制的 AMD GPU 证据回放" : "RECORDED AMD GPU EVIDENCE REPLAY"}</b>
             <p>{zh ? "1920×1080 · 30 FPS · 无旁白 · 英文画面字幕（比赛默认）· 仅限仿真。全部状态来自同一回合证据包。" : "1920×1080 · 30 FPS · no narration · Simulation only. Every state comes from the same EpisodeBundle."}</p>
             <a href="/media/look-twice-replay-30s.mp4" download>{zh ? "下载 MP4 ↓" : "DOWNLOAD MP4 ↓"}</a>
-            <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4">{zh ? "观看 4:10 英文完整演示 ↗" : "WATCH THE 4:10 ENGLISH WORKFLOW DEMO ↗"}</a>
+            <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4">{zh ? "观看 3:59 英文完整演示 ↗" : "WATCH THE 3:59 ENGLISH WORKFLOW DEMO ↗"}</a>
             <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt">{zh ? "下载冻结模型（SHA 固定）↗" : "DOWNLOAD THE SHA-PINNED CHECKPOINT ↗"}</a>
           </div>
         </div>

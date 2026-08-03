@@ -1,0 +1,82 @@
+{
+  "schema_version": "look-twice.v8-demo-narration/v1",
+  "language": "English",
+  "provider": "OpenAI",
+  "model": "gpt-4o-mini-tts",
+  "voice": "cedar",
+  "generated_via": "OpenAI.fm interactive text-to-speech demo",
+  "ai_generated_disclosure_required": true,
+  "delivery_instructions": "Neutral American English. Calm, credible technical-documentary tone; restrained, not promotional. Natural conversational delivery at approximately 135 words per minute. Keep pitch, energy, accent, and cadence consistent across chapters. Use short sentence pauses and declarative endings. Enunciate acronyms and metrics precisely. Light emphasis only on Look Twice, Action Contract, Belief Gap, opened once, and simulation only. Avoid hype, theatricality, trailer cadence, breathiness, and upward inflection.",
+  "audio_format": {
+    "codec": "mp3",
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "nominal_bitrate": "128k"
+  },
+  "chapters": {
+    "hook": {
+      "file": "hook.mp3",
+      "sha256": "6dc96323a22927b30fb0674199df4d53ffa77ccae2e00490b3804c52bdc33b98",
+      "bytes": 281088,
+      "duration_seconds": 17.568,
+      "spoken_text": "Many confident outputs can still come from one physical observation. Look Twice is an assurance layer before robot action. It asks whether the evidence is independent, fresh, calibrated, and specific to this corridor. If not, the robot looks again before it moves."
+    },
+    "problem": {
+      "file": "problem.mp3",
+      "sha256": "94813d72b324f3f09e9a9d5d8f183317685859af67284b1a40a048b32994cf24",
+      "bytes": 269568,
+      "duration_seconds": 16.848,
+      "spoken_text": "Our test case is a warehouse robot deciding whether to cross a corridor. Camera, depth, and map evidence may be noisy, stale, correlated, or contradictory. If several outputs come from the same capture, counting them as independent votes creates confidence without new evidence."
+    },
+    "architecture": {
+      "file": "architecture.mp3",
+      "sha256": "364252d1792cac43fb19cff0ad60b8dce2422f8273c36d7090a5daf64ec4f002",
+      "bytes": 435456,
+      "duration_seconds": 27.216,
+      "spoken_text": "V-eight projects the intended corridor into the image and runs a spatial R-G-B-D model on an A-M-D Radeon G-P-U. Every output becomes a Claim with time, scope, calibration, and physical lineage. Conformal prediction marks the corridor clear, blocked, or inconclusive. A scoped Action Contract checks the evidence. Direct motion requires agreement from both the Python controller and the independent Purify Go core."
+    },
+    "active": {
+      "file": "active.mp3",
+      "sha256": "79f2d39098b0308dccaa6b4e6e3d48e7d2dbf544213c52aba4fbe8c5a9bfe4ca",
+      "bytes": 523392,
+      "duration_seconds": 32.712,
+      "spoken_text": "In this non-locked confirmatory replay, the carrier's front view suggests that the corridor is clear. The contract still denies direct motion because that view provides only one physical root. The denial reports a Belief Gap: acquire an independent side view. A scout moves to the diagnostic viewpoint and captures new R-G-B-D evidence. Color and depth from that capture still count as one root. The contract is evaluated again. Only agreement between Python and Purify unlocks the direct route."
+    },
+    "passive": {
+      "file": "passive.mp3",
+      "sha256": "951469db5c362288fd49660e0f7bdbd1080358998146acd8fe7a85ce10bedea1",
+      "bytes": 276864,
+      "duration_seconds": 17.304,
+      "spoken_text": "The passive policy receives the same initial denial but does not acquire more evidence. It stays safe by taking the disclosed detour. The comparison separates two ideas: denial prevents an unsupported action; active perception can recover useful motion."
+    },
+    "results": {
+      "file": "results.mp3",
+      "sha256": "0da3b1c69e7193406b35935b719903ef23694259315ce54039f14794236d8ef1",
+      "bytes": 573696,
+      "duration_seconds": 35.856,
+      "spoken_text": "The locked test was opened once, with no retuning or retraining afterward. It includes three thousand two hundred offline samples and twelve paired live worlds. The predeclared offline gates passed, with three thousand one decisive samples and no false-clear singletons. Active repair qualified the direct route in eleven of twelve worlds; passive qualified none, a ninety-one point seven percentage-point gain. Both completed every mission. Across all twenty-four policy runs, unsafe crossings and unplanned fallbacks were zero. The conservative active detour remains in the denominator."
+    },
+    "amd": {
+      "file": "amd.mp3",
+      "sha256": "a31fe370bfe845eb315d0784041ac4e98a5ad4ba6cfb7e7b7e22b50518aab49b",
+      "bytes": 564096,
+      "duration_seconds": 35.256,
+      "spoken_text": "The recorded closed loop used one Radeon Cloud G-F-X eleven hundred G-P-U through rock-em. Genesis simulation, R-G-B-D rendering, tensor preprocessing, and spatial model inference ran on the G-P-U. The Purify contract gate remained a small, independent Go process on the C-P-U. A separate, hash-pinned F-P thirty-two benchmark measured one hundred ninety-two point three one milliseconds at P-fifty for batch one, and six point two five images per second for batch eight. These are model-forward results with preloaded tensors, not end-to-end robot latency."
+    },
+    "reproduction": {
+      "file": "reproduction.mp3",
+      "sha256": "053aca6001d46745cddfe8c451a18b80aa3faac20fa11e364b36880645530682",
+      "bytes": 297600,
+      "duration_seconds": 18.6,
+      "spoken_text": "Judges can rebuild the public replays, verify every guarded hash, inspect the source episodes and gate receipts, test the Go core, and start the Evidence Console with Docker. The site needs no live G-P-U; it replays the exact recorded A-M-D simulation evidence."
+    },
+    "close": {
+      "file": "close.mp3",
+      "sha256": "55ff9ac7384bc95173bd1a1f7fec3fedbfea5bcfc3c9e03b084d51b2573cedfc",
+      "bytes": 36525,
+      "duration_seconds": 2.2,
+      "spoken_text": "If not, the robot looks again.",
+      "source_note": "Extracted and re-encoded as a 2.20-second closing excerpt from the same Cedar generation session; no synthetic words were added."
+    }
+  }
+}

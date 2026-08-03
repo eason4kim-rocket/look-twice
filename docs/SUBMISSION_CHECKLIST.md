@@ -3,7 +3,7 @@
 Verified against the official event page, governing Rules and Conditions, and
 official submission repository on 2026-08-03.
 
-**Owner-review state:** `review_ready_no_pr`
+**Owner-review state:** `public_review_packet_ready_no_pr`
 
 **Official PR opened:** `false`
 
@@ -81,21 +81,25 @@ Official sources:
 - [x] AMD environment and workload boundary.
 - [x] Evidence claim boundary.
 - [x] Exact English official PR body draft with stable target URLs.
-- [x] English 4:10 video script aligned to the deterministic builder.
-- [x] Complete the final 4:10 English demo MP4 render.
+- [x] English 3:59 video script aligned to the deterministic builder and its
+      exact nine-chapter narration inputs.
+- [x] Complete the final 239-second English demo MP4 render and local QA.
 - [ ] Complete owner visual and audible review of the final MP4.
 - [x] Recorded 30-second evidence reel.
 - [x] English-default Evidence Console build.
 - [x] Owner-review artifact manifest and handoff index.
-- [x] Self-contained official-repository staging directory with PDF, compact
-      evidence, final 4:10 demo, preview, and judge-facing README.
-- [x] Record final video and sidecar identities in the submission manifest.
+- [x] Refresh the self-contained official-repository staging directory with
+      the locally verified 3:59 demo, sidecar, identities, and judge-facing
+      README.
+- [x] Record the 239-second video and sidecar identities in the submission
+      manifest.
 - [x] Regenerate final `SHA256SUMS` and verify all 10 packaged files.
 
 ## Reproducibility
 
-- [x] Push `v8-competition-release` to the public source repository.
-- [x] Verify the final branch HEAD from an anonymous clean clone.
+- [x] Push the current 239-second demo, hash-pinned narration provenance, and
+      owner-review documentation to `v8-competition-release`.
+- [x] Verify the updated final branch HEAD from an anonymous clean clone.
 - [x] Publish the 159 MB V8 checkpoint at the stable release URL.
 - [x] Download the public checkpoint without credentials and verify its SHA256.
 - [x] Clean-clone the public branch in a new directory.
@@ -146,12 +150,21 @@ Stable targets:
 - [x] Rebuilt, linted, tested, and inspected the prepared site.
 - [x] Publish the updated public Pages site with HTTPS enforced.
 - [x] Verify all routes, client hydration, and binary assets without sign-in.
+- [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
+- [x] Download the replacement assets without sign-in and verify both hashes.
 
 ## Final video
 
 - [x] Builder uses only V8 competition artifacts, not historical V2/V3 media.
-- [x] Timeline is exactly 250 seconds (4:10), within the 3-5 minute target.
+- [x] Timeline is exactly 239 seconds (3:59), within the 3-5 minute target.
 - [x] Script contains English narration and English on-screen text.
+- [x] Narration uses hash-pinned OpenAI `gpt-4o-mini-tts` audio with voice
+      `cedar`.
+- [x] The closing card discloses
+      `AI-GENERATED NARRATION · OPENAI TEXT-TO-SPEECH`, and the sidecar records
+      provider, model, voice, and source provenance.
+- [x] Fixed-composition evidence slides remove `zoompan` and other synthetic
+      camera drift; recorded replay and audit footage retain native motion.
 - [x] Active replay is permanently labeled
       `NON-LOCKED CONFIRMATORY REPLAY · SEED 105400`.
 - [x] Script shows active and passive evidence paths, locked metrics, recorded
@@ -159,17 +172,20 @@ Stable targets:
 - [x] Script states `Simulation only` and the model-forward timing boundary.
 - [x] Script uses sanitized terminal prompts and excludes SSH details, private
       paths, tokens, unique device IDs, and local usernames.
-- [x] Complete final render.
-- [x] Verify 1920 x 1080 H.264, 30 fps, `yuv420p`, AAC audio, and 250-second
+- [x] Complete the final local render and media QA.
+- [x] Verify 1920 x 1080 H.264, 30 fps, `yuv420p`, AAC audio, and 239-second
       duration with `ffprobe`.
 - [x] Inspect representative frames across all nine chapters.
 - [ ] Complete owner listening review of the full narration.
-- [x] Confirm the 17,342,763-byte MP4 is below the release/package size limit.
+- [x] Confirm the 9,032,035-byte MP4 is below the release/package size limit.
 - [x] Record MP4 SHA256
-      `906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280`
+      `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`
       and sidecar SHA256
-      `c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9`.
-- [x] Upload to the stable no-sign-in URL and verify the downloaded MP4 hash.
+      `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
+- [x] Complete local format, decode, frame, audio, evidence-label, and privacy
+      QA for this exact identity.
+- [x] Replace the earlier assets at the stable no-sign-in URL and verify the
+      downloaded MP4 and sidecar hashes.
 
 ## IP, privacy, and repository hygiene
 
@@ -182,18 +198,19 @@ Stable targets:
 - [x] Review the submission PDF, preview MP4, social PNG, frozen Go binary, and
       other large tracked artifacts by file type and identity.
 - [ ] Confirm all datasets and assets have legal, licensing, and ethical use.
-- [x] Repeat metadata/privacy inspection for the final 4:10 video.
+- [x] Repeat metadata/privacy inspection for the final 3:59 video.
 
 ## Official submission repository
 
 - [x] Fork `AMD-DEV-CONTEST/Radeon-hackathon-2026-07`.
 - [x] Stage an English submission directory locally containing the judge-facing
       index, report PDF, compact evidence, and preview.
-- [x] Add the final demo artifact and stable target URL.
-- [x] Regenerate and verify staging checksums.
-- [x] Copy the staged directory into a dedicated branch of the official fork.
-- [x] Verify the official-fork branch is one commit / 12 intended files ahead
-      without opening a PR.
+- [x] Add the locally verified demo artifact and unchanged stable target URL.
+- [x] Regenerate and verify staging checksums for the 239-second identity.
+- [x] Copy the refreshed staged directory into the dedicated branch of the
+      official fork and push it.
+- [x] Verify the refreshed official-fork branch contains only the 11 intended
+      files (10 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
 - [ ] Use PR title `Track 3, eason4kim-rocket, Look Twice` unless the registered
       team label differs.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
@@ -205,9 +222,11 @@ Stable targets:
 ## Final no-PR review packet
 
 - [ ] Entrant/team label confirmed.
-- [ ] Final MP4 and sidecar inspected.
-- [x] Final `SHA256SUMS` verifies cleanly.
-- [x] Public branch/site/release assets pass anonymous checks.
-- [x] Official-fork branch contains only intended submission files.
+- [x] Final MP4 and sidecar pass local QA for the recorded 239-second identity.
+- [ ] Owner completes final visual and audible review.
+- [x] Final `SHA256SUMS` verifies cleanly after identity propagation.
+- [x] Replacement public branch/release assets pass anonymous checks; the
+      stable URLs remain unchanged.
+- [x] Refreshed official-fork branch contains only intended submission files.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
 - [x] No official PR exists before explicit owner approval.

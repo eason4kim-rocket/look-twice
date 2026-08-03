@@ -25,23 +25,25 @@ sim-to-real transfer, or safety certification.
 
 ## Judge-first links
 
-- Live Evidence Console: <https://eason4kim-rocket.github.io/>
-- Frozen results: <https://eason4kim-rocket.github.io/results>
-- Reproduction path: <https://eason4kim-rocket.github.io/reproduce>
+- Evidence Console target: <https://eason4kim-rocket.github.io/>
+- Frozen-results target: <https://eason4kim-rocket.github.io/results>
+- Reproduction target: <https://eason4kim-rocket.github.io/reproduce>
 - Dedicated source branch:
   <https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release>
 - Technical report:
   [packaged PDF](Look-Twice-V8-Technical-Report.pdf) ·
-  [public release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
-- Final 4:10 English demo:
+  [stable release target](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
+- Final 3:59 English demo target:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4>
 - Frozen checkpoint:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt>
 - 30-second evidence preview:
   [Look-Twice-V8-Evidence-Reel-30s.mp4](Look-Twice-V8-Evidence-Reel-30s.mp4)
 
-The 30-second file is a silent evidence preview. The 4:10 release asset is the
-complete narrated workflow demonstration.
+The 30-second file is a silent evidence preview. The 3:59 MP4 is the complete
+narrated workflow demonstration. The replacement MP4, sidecar, and report were
+downloaded from the stable release targets without credentials and matched the
+packaged SHA256 identities on 2026-08-03.
 
 ## 90-second judge path
 
@@ -132,11 +134,21 @@ The immutable locked report must hash to:
 5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb
 ```
 
-The 250.000-second final demo is 17,342,763 bytes and must hash to:
+The 239.000-second final demo is 9,032,035 bytes and must hash to:
 
 ```text
-906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280
+70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05
 ```
+
+Its sidecar manifest must hash to:
+
+```text
+639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb
+```
+
+Narration is AI-generated with OpenAI `gpt-4o-mini-tts` using the `cedar`
+voice; the disclosure is burned into the video. Chapter visuals use fixed
+composition with no `zoompan` motion.
 
 The compact [evidence directory](evidence/README.md) contains the scrubbed
 locked report, exact-checkpoint Radeon benchmark, frozen import manifest, and

@@ -13,6 +13,8 @@
     "official_pr_opened": false,
     "official_pr_opening_authorized": false,
     "owner_review_required_before_pr": true,
+    "final_demo_replacement_published": true,
+    "public_targets_anonymously_verified": true,
     "entrant_assumption": "eason4kim-rocket (solo entrant)",
     "entrant_identity_review_required": true
   },
@@ -79,8 +81,8 @@
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
       "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "38ad3846bcb665d7a6554d6bb53ec73e4af7e6528db3cc0513bdd6ecd165d2f6",
-      "size_bytes": 1068088,
+      "sha256": "9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde",
+      "size_bytes": 1068138,
       "page_count": 10,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
       "publication_verified": true
@@ -95,11 +97,22 @@
       "builder": "scripts/build_v8_demo_video.py",
       "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4",
       "sidecar_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.manifest.json",
-      "duration_seconds": 250.0,
+      "duration_seconds": 239.0,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4",
-      "sha256": "906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280",
-      "size_bytes": 17342763,
-      "sidecar_sha256": "c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9",
+      "sha256": "70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05",
+      "size_bytes": 9032035,
+      "sidecar_sha256": "639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb",
+      "narration": {
+        "provider": "OpenAI",
+        "model": "gpt-4o-mini-tts",
+        "voice": "cedar",
+        "ai_generated": true,
+        "disclosure_burned_in": true
+      },
+      "visual_motion": {
+        "fixed_chapter_composition": true,
+        "zoompan_used": false
+      },
       "publication_verified": true,
       "status": "published_and_hash_verified_pending_owner_review"
     },
@@ -111,7 +124,7 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/SHA256SUMS",
-      "status": "official_fork_branch_prepared_no_pr"
+      "status": "official_fork_branch_published_and_verified_no_pr"
     }
   },
   "links": {
@@ -136,15 +149,13 @@
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
-    "anonymous_public_branch_clone": "CPU verifier, 6/6 Python tests, task-utility derivation, Go tests, 20/20 Node tests, npm audit, package checksums, Docker build, and nine route checks passed",
     "pdf_visual_qa": "10/10 pages inspected",
-    "browser_visual_qa": "desktop visual QA passed; public console/results hydration verified anonymously",
+    "browser_visual_qa": "prepared build passed desktop visual QA; final public routes and static assets verified without credentials",
     "submission_surface_credential_scan": "passed",
-    "final_demo_media_qa": "format, decode, audio-level, privacy, and nine-chapter frame QA passed; owner full listening review pending",
-    "official_repository_staging_checksums": "passed; all 10 packaged files verified",
-    "release_assets": "four assets downloaded anonymously; sizes and SHA256 identities passed",
-    "pages_site": "four routes, PDF, JSON evidence, MP4 preview, and OG image returned 200 anonymously",
-    "official_fork_branch": "one commit and 12 intended files ahead; no PR exists"
+    "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
+    "official_repository_staging_checksums": "passed locally; all 10 packaged files verified",
+    "public_distribution": "release assets, Pages site, source branch, report, checkpoint, and official-fork package published and verified without credentials",
+    "official_fork_branch": "11 intended files published at commit 6987afe; package checksums passed; official_pr_opened=false"
   },
   "owner_review_items": [
     "Confirm that the registered solo entrant or team display name is eason4kim-rocket; update the PR title and Team section if it differs.",
@@ -152,7 +163,7 @@
     "Review the English PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
-    "complete owner visual and audible review of the final 4:10 English demo",
+    "complete owner visual and audible review of the final 3:59 English demo",
     "confirm registered entrant or team label",
     "obtain owner approval to open the official English submission PR"
   ]

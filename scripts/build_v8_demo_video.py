@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Build the 250-second English Look Twice V8 competition demo.
+"""Build the 239-second English Look Twice V8 competition demo.
 
 The builder uses only V8 competition artifacts:
 
 * the recorded 30-second V8 Evidence Console reel;
 * the latest rendered V8 technical report;
 * V8 RGB/depth/corridor-mask snapshots;
-* the frozen locked report and hash-pinned Radeon benchmark; and
+* the frozen locked report and hash-pinned Radeon benchmark;
+* hash-pinned OpenAI text-to-speech narration; and
 * a real terminal audit recorded from ``scripts/video/v8-audit.tape``.
 
 It intentionally does not consume the historical V2/V3 demo directory.  The
@@ -35,7 +36,20 @@ ROOT = Path(__file__).resolve().parents[1]
 WIDTH = 1920
 HEIGHT = 1080
 FPS = 30
-TOTAL_DURATION_SECONDS = 250
+TOTAL_DURATION_SECONDS = 239
+
+NARRATION_MODEL = "gpt-4o-mini-tts"
+NARRATION_VOICE = "cedar"
+NARRATION_INSTRUCTIONS = (
+    "Neutral American English. Calm, credible technical-documentary tone; "
+    "restrained, not promotional. Natural conversational delivery at "
+    "approximately 135 words per minute. Keep pitch, energy, accent, and "
+    "cadence consistent across chapters. Use short sentence pauses and "
+    "declarative endings. Enunciate acronyms and metrics precisely. Light "
+    "emphasis only on Look Twice, Action Contract, Belief Gap, opened once, "
+    "and simulation only. Avoid hype, theatricality, trailer cadence, "
+    "breathiness, and upward inflection."
+)
 
 OFFICIAL_STAGING = (
     ROOT
@@ -71,33 +85,34 @@ class Chapter:
         return self.start_seconds + self.duration_seconds
 
 
-# Spoken forms are optimized for macOS speech synthesis. Exact technical
-# notation remains visible in the corresponding chapter artwork.
+# Spoken forms are the exact inputs used for the hash-pinned OpenAI narration.
+# Exact technical notation remains visible in the corresponding artwork.
 CHAPTERS = (
     Chapter(
         "hook",
         0,
-        19,
+        21,
         "Action assurance before action",
         (
-            "Many confident sensor outputs can still represent one physical "
-            "observation. Look Twice is an action-assurance layer. Before a "
-            "robot crosses, it asks whether the evidence is independent, "
-            "current, calibrated, and specific to that corridor. If not, the "
-            "robot looks again."
+            "Many confident outputs can still come from one physical "
+            "observation. Look Twice is an assurance layer before robot "
+            "action. It asks whether the evidence is independent, fresh, "
+            "calibrated, and specific to this corridor. If not, the robot "
+            "looks again before it moves."
         ),
         "POSITIONING · SIMULATION-ONLY RESEARCH",
     ),
     Chapter(
         "problem",
-        19,
-        24,
+        21,
+        22,
         "One capture is not a committee",
         (
-            "Our target is a warehouse mobile robot choosing whether to cross "
-            "a designated corridor. R G B, depth, and maps can be noisy, stale, "
-            "correlated, or conflicting. Counting derived outputs as "
-            "independent votes can turn one camera capture into false certainty."
+            "Our test case is a warehouse robot deciding whether to cross a "
+            "corridor. Camera, depth, and map evidence may be noisy, stale, "
+            "correlated, or contradictory. If several outputs come from the "
+            "same capture, counting them as independent votes creates "
+            "confidence without new evidence."
         ),
         "V8 SENSOR SNAPSHOTS · ONE PHYSICAL CAPTURE ROOT",
     ),
@@ -107,102 +122,103 @@ CHAPTERS = (
         30,
         "Lineage-aware action qualification",
         (
-            "V eight projects the intended corridor into the image and runs a "
-            "spatial R G B D model on an A M D Radeon G P U. Each output becomes "
-            "a lineage-aware Claim. Split conformal prediction produces clear, "
-            "blocked, or inconclusive sets. A scoped Action Contract then checks "
-            "freshness, calibration, conflicts, and independent roots. Both "
-            "Python and the standalone Purify Go core must admit the action."
+            "V-eight projects the intended corridor into the image and runs a "
+            "spatial R-G-B-D model on an A-M-D Radeon G-P-U. Every output "
+            "becomes a Claim with time, scope, calibration, and physical "
+            "lineage. Conformal prediction marks the corridor clear, blocked, "
+            "or inconclusive. A scoped Action Contract checks the evidence. "
+            "Direct motion requires agreement from both the Python controller "
+            "and the independent Purify Go core."
         ),
         "LATEST TECHNICAL REPORT · SYSTEM ARCHITECTURE",
     ),
     Chapter(
         "active",
         73,
-        45,
+        39,
         "BeliefGap-driven active evidence repair",
         (
-            "The carrier's initial front snapshot predicts clear, but direct "
-            "motion is denied because the contract requires an independent "
-            "side-view root. The denial emits a machine-readable belief gap. "
-            "The scout moves to a diagnostic viewpoint and captures new R G B D "
-            "evidence. R G B and depth from that capture still count as one root. "
-            "Python and Purify re-evaluate the contract. Only their conjunction "
-            "unlocks the direct route."
+            "In this non-locked confirmatory replay, the carrier's front view "
+            "suggests that the corridor is clear. The contract still denies "
+            "direct motion because that view provides only one physical root. "
+            "The denial reports a Belief Gap: acquire an independent side "
+            "view. A scout moves to the diagnostic viewpoint and captures new "
+            "R-G-B-D evidence. Color and depth from that capture still count "
+            "as one root. The contract is evaluated again. Only agreement "
+            "between Python and Purify unlocks the direct route."
         ),
         "NON-LOCKED CONFIRMATORY REPLAY · SEED 105400",
     ),
     Chapter(
         "passive",
-        118,
-        20,
+        112,
+        19,
         "Safety baseline versus recovered task utility",
         (
-            "The passive policy receives the same initial denial and does not "
-            "repair the evidence. It remains safe by taking the disclosed "
-            "detour. This comparison separates the safety of denial from the "
-            "task value recovered by active perception."
+            "The passive policy receives the same initial denial but does not "
+            "acquire more evidence. It stays safe by taking the disclosed "
+            "detour. The comparison separates two ideas: denial prevents an "
+            "unsupported action; active perception can recover useful motion."
         ),
         "LOCKED FULL-CHAIN · 12 PAIRED SEEDS",
     ),
     Chapter(
         "results",
-        138,
+        131,
         37,
         "Opened once; denominator retained",
         (
-            "V eight was opened once on a predeclared locked split. Nothing was "
-            "retuned, refit, or retrained afterward. Across three thousand two "
-            "hundred offline samples, intersection over union, decisive balanced "
-            "accuracy, blocked recall, and coverage were one "
-            "point zero, with zero false-clear singletons. In twelve paired live "
-            "seeds, active repair qualified eleven direct routes. Across all "
-            "twenty-four policy runs, unsafe crossings and unplanned fallbacks "
-            "were both zero. The one conservative active detour remains in the "
-            "denominator."
+            "The locked test was opened once, with no retuning or retraining "
+            "afterward. It includes three thousand two hundred offline samples "
+            "and twelve paired live worlds. The predeclared offline gates "
+            "passed, with three thousand one decisive samples and no "
+            "false-clear singletons. Active repair qualified the direct route "
+            "in eleven of twelve worlds; passive qualified none, a ninety-one "
+            "point seven percentage-point gain. Both completed every mission. "
+            "Across all twenty-four policy runs, unsafe crossings and "
+            "unplanned fallbacks were zero. The conservative active detour "
+            "remains in the denominator."
         ),
         "AUTHORITATIVE LOCKED REPORT · OPENED ONCE",
     ),
     Chapter(
         "amd",
-        175,
-        38,
+        168,
+        37,
         "Radeon execution with a disclosed boundary",
         (
-            "The closed loop ran on one Radeon Cloud G F X eleven hundred G P U "
-            "through rock em: Genesis simulation and R G B D rendering, tensor "
-            "preprocessing, and spatial model inference. The Purify contract gate "
-            "remained a small C P U Go process. A separate hash-pinned F P "
-            "thirty-two model-forward benchmark measured one hundred ninety-two "
-            "point three one milliseconds P fifty at batch one, and six point two "
-            "five images per second at batch eight. It is not end-to-end robot "
-            "latency."
+            "The recorded closed loop used one Radeon Cloud G-F-X eleven "
+            "hundred G-P-U through rock-em. Genesis simulation, R-G-B-D "
+            "rendering, tensor preprocessing, and spatial model inference ran "
+            "on the G-P-U. The Purify contract gate remained a small, "
+            "independent Go process on the C-P-U. A separate, hash-pinned F-P "
+            "thirty-two benchmark measured one hundred ninety-two point three "
+            "one milliseconds at P-fifty for batch one, and six point two five "
+            "images per second for batch eight. These are model-forward "
+            "results with preloaded tensors, not end-to-end robot latency."
         ),
         "HASH-PINNED FROZEN MODEL · MODEL FORWARD ONLY",
     ),
     Chapter(
         "reproduction",
-        213,
-        25,
+        205,
+        22,
         "Receipts and hashes, not a black box",
         (
-            "Judges can rebuild both public replays, verify every guarded "
-            "cryptographic hash, inspect the source episodes and gate receipts, "
-            "run the Go tests, and start the Evidence Console with Docker. The "
-            "public site needs no live G P U because it replays the exact recorded "
-            "A M D simulation evidence."
+            "Judges can rebuild the public replays, verify every guarded hash, "
+            "inspect the source episodes and gate receipts, test the Go core, "
+            "and start the Evidence Console with Docker. The site needs no "
+            "live G-P-U; it replays the exact recorded A-M-D simulation evidence."
         ),
         "REAL COMMAND OUTPUT · CPU EVIDENCE AUDIT",
     ),
     Chapter(
         "close",
-        238,
+        227,
         12,
         "A concrete next observation",
         (
-            "Look Twice turns uncertainty into a concrete next observation, and "
-            "robot action into an auditable decision. Simulation only; no "
-            "safety-certification claim."
+            "If not, the robot looks again."
         ),
         "TRACK 3 · PHYSICAL AI · SIMULATION ONLY",
     ),
@@ -714,18 +730,20 @@ def make_close_slide(og_image: Path, output: Path) -> None:
     )
     draw.text((WIDTH // 2, 700), "SIMULATION ONLY · NOT SAFETY CERTIFICATION", font=font(24, mono=True), fill=MUTED, anchor="ma")
     draw.text((WIDTH // 2, 918), "Evidence strong enough for this action?", font=font(42), fill=INK, anchor="ma")
+    draw.text(
+        (WIDTH // 2, 1010),
+        "AI-GENERATED NARRATION · OPENAI TEXT-TO-SPEECH",
+        font=font(18, mono=True),
+        fill=MUTED,
+        anchor="ma",
+    )
     save_slide(image, output)
 
 
 def static_video(image: Path, duration: int, output: Path, *, crf: int, preset: str) -> None:
     frames = duration * FPS
-    zoom = min(1.022, 1.0 + frames * 0.00007)
-    vf = (
-        "zoompan="
-        f"z='min(zoom+0.00007,{zoom:.6f})':"
-        "x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
-        f"d={frames}:s={WIDTH}x{HEIGHT}:fps={FPS},format=yuv420p"
-    )
+    # Fixed pixels are intentional: evidence slides must not drift or breathe.
+    vf = f"fps={FPS},setsar=1,format=yuv420p"
     run(
         [
             "ffmpeg",
@@ -759,13 +777,25 @@ def static_video(image: Path, duration: int, output: Path, *, crf: int, preset: 
     )
 
 
-def reel_video(reel: Path, overlay: Path, output: Path, *, crf: int, preset: str) -> None:
+def reel_video(
+    reel: Path,
+    overlay: Path,
+    duration: int,
+    output: Path,
+    *,
+    crf: int,
+    preset: str,
+) -> None:
+    reel_duration = media_duration(reel)
+    if reel_duration > duration:
+        raise SystemExit("recorded replay is longer than its chapter")
+    pad_each_side = (duration - reel_duration) / 2
     filter_graph = (
         "[0:v]scale=1840:1035:force_original_aspect_ratio=decrease,"
         "pad=1920:1080:40:45:color=0x050d10,fps=30,"
-        "tpad=start_mode=clone:start_duration=7.5:"
-        "stop_mode=clone:stop_duration=7.5,"
-        "trim=duration=45,setpts=PTS-STARTPTS[base];"
+        f"tpad=start_mode=clone:start_duration={pad_each_side:.6f}:"
+        f"stop_mode=clone:stop_duration={pad_each_side:.6f},"
+        f"trim=duration={duration},setpts=PTS-STARTPTS[base];"
         "[base][1:v]overlay=0:0:format=auto,format=yuv420p[v]"
     )
     run(
@@ -786,7 +816,7 @@ def reel_video(reel: Path, overlay: Path, output: Path, *, crf: int, preset: str
             "-map",
             "[v]",
             "-frames:v",
-            str(45 * FPS),
+            str(duration * FPS),
             "-an",
             "-c:v",
             "libx264",
@@ -806,13 +836,13 @@ def reel_video(reel: Path, overlay: Path, output: Path, *, crf: int, preset: str
 def audit_video(
     audit_source: Path,
     overlay: Path,
+    target: int,
     output: Path,
     *,
     crf: int,
     preset: str,
 ) -> None:
     duration = media_duration(audit_source)
-    target = 25.0
     base = (
         f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=decrease,"
         f"pad={WIDTH}:{HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=0x050d10,fps={FPS}"
@@ -841,7 +871,7 @@ def audit_video(
             "-map",
             "[v]",
             "-frames:v",
-            str(25 * FPS),
+            str(target * FPS),
             "-an",
             "-c:v",
             "libx264",
@@ -860,20 +890,15 @@ def audit_video(
 
 def narration_audio(
     chapter: Chapter,
+    source: Path,
     output: Path,
-    *,
-    voice: str,
-    rate: int,
-    temp_dir: Path,
 ) -> dict[str, Any]:
-    aiff = temp_dir / f"{chapter.slug}.aiff"
-    run(["say", "-v", voice, "-r", str(rate), chapter.spoken_text, "-o", str(aiff)])
-    raw_duration = media_duration(aiff)
+    raw_duration = media_duration(source)
     intro_silence = 0.55
     if raw_duration + intro_silence > chapter.duration_seconds:
         raise SystemExit(
             f"narration for {chapter.slug} is {raw_duration:.2f}s and does not fit "
-            f"its {chapter.duration_seconds}s chapter at voice rate {rate}"
+            f"its {chapter.duration_seconds}s chapter"
         )
     filters = (
         f"adelay={int(intro_silence * 1000)},"
@@ -889,7 +914,7 @@ def narration_audio(
             "error",
             "-y",
             "-i",
-            str(aiff),
+            str(source),
             "-af",
             filters,
             "-ar",
@@ -902,8 +927,14 @@ def narration_audio(
         ]
     )
     return {
-        "voice": voice,
-        "rate_words_per_minute": rate,
+        "provider": "OpenAI",
+        "model": NARRATION_MODEL,
+        "voice": NARRATION_VOICE,
+        "generated_via": "OpenAI.fm interactive text-to-speech demo",
+        "ai_generated": True,
+        "source_path": repository_path(source),
+        "source_sha256": sha256(source),
+        "delivery_instructions": NARRATION_INSTRUCTIONS,
         "raw_duration_seconds": round(raw_duration, 3),
         "intro_silence_seconds": intro_silence,
     }
@@ -929,7 +960,10 @@ def validate_chapters() -> None:
         raise SystemExit(f"chapter timeline totals {cursor}, expected {TOTAL_DURATION_SECONDS}")
 
 
-def validate_inputs(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+def validate_inputs(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
+    narration_paths = tuple(args.narration_dir / f"{chapter.slug}.mp3" for chapter in CHAPTERS)
     paths = (
         args.reel,
         args.reel_manifest,
@@ -943,6 +977,8 @@ def validate_inputs(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str,
         args.poster,
         args.og_image,
         args.tape,
+        args.narration_manifest,
+        *narration_paths,
     )
     for path in paths:
         if not path.is_file():
@@ -992,7 +1028,33 @@ def validate_inputs(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str,
         raise SystemExit("unexpected Radeon benchmark scope")
     if scope.get("locked_test_opened") is not False:
         raise SystemExit("benchmark boundary does not preserve the locked split")
-    return locked, benchmark, replay
+
+    narration = read_json(args.narration_manifest)
+    if narration.get("model") != NARRATION_MODEL:
+        raise SystemExit("unexpected narration model")
+    if narration.get("voice") != NARRATION_VOICE:
+        raise SystemExit("unexpected narration voice")
+    if narration.get("delivery_instructions") != NARRATION_INSTRUCTIONS:
+        raise SystemExit("narration delivery instructions changed unexpectedly")
+    if narration.get("ai_generated_disclosure_required") is not True:
+        raise SystemExit("narration manifest does not require AI disclosure")
+    narration_chapters = narration.get("chapters") or {}
+    if set(narration_chapters) != {chapter.slug for chapter in CHAPTERS}:
+        raise SystemExit("narration chapter set does not match the video timeline")
+    for chapter in CHAPTERS:
+        entry = narration_chapters[chapter.slug]
+        source = args.narration_dir / f"{chapter.slug}.mp3"
+        if entry.get("file") != source.name:
+            raise SystemExit(f"unexpected narration filename for {chapter.slug}")
+        if entry.get("sha256") != sha256(source):
+            raise SystemExit(f"narration SHA256 mismatch for {chapter.slug}")
+        if int(entry.get("bytes", -1)) != source.stat().st_size:
+            raise SystemExit(f"narration byte count mismatch for {chapter.slug}")
+        if entry.get("spoken_text") != chapter.spoken_text:
+            raise SystemExit(f"narration text mismatch for {chapter.slug}")
+        if abs(float(entry.get("duration_seconds", -1)) - media_duration(source)) > 0.01:
+            raise SystemExit(f"narration duration mismatch for {chapter.slug}")
+    return locked, benchmark, replay, narration
 
 
 def render_audit_tape(tape: Path, output: Path) -> None:
@@ -1003,8 +1065,8 @@ def render_audit_tape(tape: Path, output: Path) -> None:
 
 def build(args: argparse.Namespace) -> tuple[Path, Path]:
     validate_chapters()
-    require_programs(("ffmpeg", "ffprobe", "pdftoppm", "say", "vhs", "go", "shasum"))
-    locked, benchmark, replay = validate_inputs(args)
+    require_programs(("ffmpeg", "ffprobe", "pdftoppm", "vhs", "go", "shasum"))
+    locked, benchmark, replay, narration = validate_inputs(args)
 
     output = args.output.resolve()
     manifest_path = output.with_suffix(".manifest.json")
@@ -1059,11 +1121,19 @@ def build(args: argparse.Namespace) -> tuple[Path, Path]:
             video_path = videos / f"{chapter.start_seconds:03d}-{chapter.slug}.mp4"
             audio_path = audio / f"{chapter.start_seconds:03d}-{chapter.slug}.wav"
             if chapter.slug == "active":
-                reel_video(args.reel, slides / "active-overlay.png", video_path, crf=args.crf, preset=args.preset)
+                reel_video(
+                    args.reel,
+                    slides / "active-overlay.png",
+                    chapter.duration_seconds,
+                    video_path,
+                    crf=args.crf,
+                    preset=args.preset,
+                )
             elif chapter.slug == "reproduction":
                 audit_video(
                     audit_raw,
                     slides / "audit-overlay.png",
+                    chapter.duration_seconds,
                     video_path,
                     crf=args.crf,
                     preset=args.preset,
@@ -1078,10 +1148,8 @@ def build(args: argparse.Namespace) -> tuple[Path, Path]:
                 )
             narration_meta[chapter.slug] = narration_audio(
                 chapter,
+                args.narration_dir / f"{chapter.slug}.mp3",
                 audio_path,
-                voice=args.voice,
-                rate=args.voice_rate,
-                temp_dir=audio,
             )
             chapter_videos.append(video_path)
             chapter_audio.append(audio_path)
@@ -1230,6 +1298,15 @@ def build(args: argparse.Namespace) -> tuple[Path, Path]:
                 "target_loudness_lufs": -16,
                 "maximum_size_mib": args.max_size_mib,
             },
+            "narration": {
+                "provider": "OpenAI",
+                "model": NARRATION_MODEL,
+                "voice": NARRATION_VOICE,
+                "ai_generated": True,
+                "delivery_instructions": NARRATION_INSTRUCTIONS,
+                "disclosure_burned_in": True,
+                "disclosure_text": "AI-generated narration · OpenAI text-to-speech",
+            },
             "chapters": [
                 {
                     "slug": chapter.slug,
@@ -1280,6 +1357,15 @@ def build(args: argparse.Namespace) -> tuple[Path, Path]:
                     "sha256": sha256(args.tape),
                     "rendered_audit_sha256": sha256(audit_raw),
                 },
+                "narration_manifest": {
+                    "path": repository_path(args.narration_manifest),
+                    "sha256": sha256(args.narration_manifest),
+                    "model": narration["model"],
+                    "voice": narration["voice"],
+                    "ai_generated_disclosure_required": narration[
+                        "ai_generated_disclosure_required"
+                    ],
+                },
                 "builder": {
                     "path": repository_path(Path(__file__).resolve()),
                     "sha256": sha256(Path(__file__).resolve()),
@@ -1320,6 +1406,8 @@ DEFAULTS = {
     "media_dir": ROOT / "showcase/public/data/media/v8-active-repair-direct",
     "og_image": ROOT / "showcase/public/og.png",
     "tape": ROOT / "scripts/video/v8-audit.tape",
+    "narration_dir": ROOT / "assets/v8-demo-narration",
+    "narration_manifest": ROOT / "assets/v8-demo-narration/manifest.json",
     "output": OFFICIAL_STAGING / "Look-Twice-V8-Demo.mp4",
 }
 
@@ -1348,14 +1436,18 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--media-dir", type=Path, default=DEFAULTS["media_dir"])
     value.add_argument("--og-image", type=Path, default=DEFAULTS["og_image"])
     value.add_argument("--tape", type=Path, default=DEFAULTS["tape"])
+    value.add_argument("--narration-dir", type=Path, default=DEFAULTS["narration_dir"])
+    value.add_argument(
+        "--narration-manifest",
+        type=Path,
+        default=DEFAULTS["narration_manifest"],
+    )
     value.add_argument(
         "--audit-video",
         type=Path,
         help="Use a previously rendered real VHS audit clip instead of rerunning the tape.",
     )
     value.add_argument("--output", type=Path, default=DEFAULTS["output"])
-    value.add_argument("--voice", default="Samantha")
-    value.add_argument("--voice-rate", type=int, default=155)
     value.add_argument("--crf", type=int, default=21)
     value.add_argument("--preset", default="medium")
     value.add_argument("--max-size-mib", type=float, default=50.0)
@@ -1381,6 +1473,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "media_dir",
         "og_image",
         "tape",
+        "narration_dir",
+        "narration_manifest",
         "output",
     ):
         setattr(args, name, getattr(args, name).expanduser().resolve())
@@ -1393,8 +1487,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         args.work_dir = args.work_dir.expanduser().resolve()
     if not 0 <= args.crf <= 51:
         raise SystemExit("--crf must be between 0 and 51")
-    if args.voice_rate <= 0:
-        raise SystemExit("--voice-rate must be positive")
     if args.max_size_mib <= 0:
         raise SystemExit("--max-size-mib must be positive")
     build(args)

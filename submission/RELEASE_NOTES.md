@@ -1,7 +1,9 @@
 # Look Twice V8 Competition Candidate
 
-This release carries the public, hash-pinned assets for the English Track 3
-owner-review package. It does not represent an opened competition PR.
+This release carries the hash-pinned assets for the English Track 3
+owner-review package. The 239-second replacement assets were downloaded without
+credentials and identity-verified on 2026-08-03. No competition PR has been
+opened.
 
 Look Twice is a pre-action evidence-assurance layer for embodied AI. A denied
 Action Contract becomes a machine-readable `BeliefGap`; a scout acquires the
@@ -27,16 +29,22 @@ denominator.
 - `v8_seg_v3_selected_ep22_7b158726f9c0.pt` - frozen 159,592,901-byte
   checkpoint; SHA256
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`.
-- `Look-Twice-V8-Demo.mp4` - 250-second English workflow demo; SHA256
-  `906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280`.
+- `Look-Twice-V8-Demo.mp4` - 239-second English workflow demo, 9,032,035
+  bytes; SHA256
+  `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`.
 - `Look-Twice-V8-Demo.manifest.json` - machine-readable video identity and
   chapter/evidence boundary; SHA256
-  `c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9`.
+  `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
 - `Look-Twice-V8-Technical-Report.pdf` - 10-page English technical report;
   SHA256
-  `38ad3846bcb665d7a6554d6bb53ec73e4af7e6528db3cc0513bdd6ecd165d2f6`.
+  `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`.
 
 The model-forward Radeon benchmark uses preloaded synthetic tensors and is not
 end-to-end robot latency. The separate seed-105400 confirmatory replay is
 explicitly non-locked and supports a burden-shifting claim, not a total-distance
 or latency speedup.
+
+The demo narration is AI-generated with OpenAI `gpt-4o-mini-tts` using the
+`cedar` voice, with an on-screen disclosure. Chapter visuals use fixed
+composition and no `zoompan` motion. Owner visual and audible review remains
+required before PR submission.

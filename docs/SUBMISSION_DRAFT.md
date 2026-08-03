@@ -1,5 +1,10 @@
 # Track 3, eason4kim-rocket, Look Twice
 
+> **Owner-review preparation state - not yet filed:** the final 239-second
+> video, sidecar, report, public site, source branch, and official-fork branch
+> are published at stable review targets and were verified without credentials.
+> No competition PR is open.
+
 ## Project
 
 **Look Twice V8 - Active Evidence Assurance for Physical AI on AMD Radeon GPU**
@@ -138,11 +143,20 @@ Genesis, Go fusion, I/O, and actuation and are not end-to-end latency. Source:
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |
 | Frozen checkpoint | [159 MB release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt) |
-| Demo video | [4:10 English MP4](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4) |
+| Demo video | [3:59 English MP4 - stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4) |
 | Short evidence reel | [30-second preview](https://eason4kim-rocket.github.io/media/look-twice-replay-30s.mp4) |
 
-Final demo identity: 250.000 seconds, 17,342,763 bytes, SHA256
-`906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280`.
+Published and anonymously verified final demo identity: 239.000 seconds,
+9,032,035 bytes, MP4
+SHA256
+`70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`;
+sidecar SHA256
+`639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
+The narration is AI-generated with OpenAI `gpt-4o-mini-tts`, voice `cedar`.
+The closing card burns in
+`AI-GENERATED NARRATION · OPENAI TEXT-TO-SPEECH`, and the sidecar records the
+provider, model, voice, and hash-pinned narration provenance. Evidence slides
+use a fixed composition with `zoompan` removed.
 
 ## Reproduction
 
