@@ -69,14 +69,19 @@ Official sources:
 - [ ] Publish the 159 MB V8 checkpoint as a release/model asset.
 - [ ] Verify the public checkpoint SHA256.
 - [ ] Clean-clone the public branch in a new directory.
+- [x] Reproduce the frozen local submission commit in a clean detached
+      worktree before publication.
 - [x] Run the CPU replay build and frozen-boundary verifier in the release
       worktree.
 - [x] Run the six competition replay Python tests.
 - [x] Run `go test ./...` for the Purify reference core.
-- [ ] Build the Evidence Console with Docker from the clean clone.
+- [x] Build and route-smoke the Evidence Console with Docker from the clean
+      detached worktree.
 - [x] Build and smoke-test the Evidence Console with Docker in the release
       worktree.
 - [x] Lint, build, and run all 20 Evidence Console tests with Node 22.
+- [x] Pin patched Web dependencies and obtain zero known `npm audit`
+      vulnerabilities in the clean worktree.
 - [ ] Verify every README command exactly as written.
 
 ## AMD Radeon evidence

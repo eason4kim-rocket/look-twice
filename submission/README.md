@@ -59,14 +59,17 @@ python3 -m unittest tests.test_competition_replay -v
 python3 scripts/verify_frozen_foundation.py
 cd purify_robotics && go test ./...
 cd showcase && npm run lint && npm test
+cd showcase && npm audit
 docker compose build
 cd submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice
 shasum -a 256 -c SHA256SUMS
 ```
 
-The Evidence Console was also started from the Docker image. The four app
-routes, report PDF, locked JSON, benchmark JSON, and social card all returned
-HTTP 200.
+The same checks were repeated from a clean detached worktree at the frozen
+submission commit. The Evidence Console was started from that clean Docker
+image; the four app routes, report PDF, locked JSON, benchmark JSON, and social
+card all returned HTTP 200. The final pinned Node dependency graph reported
+zero known `npm audit` vulnerabilities on 2026-08-03.
 
 ## Evidence boundary
 
