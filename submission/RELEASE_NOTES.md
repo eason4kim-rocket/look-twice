@@ -37,13 +37,16 @@ denominator.
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
 - `Look-Twice-V8-Technical-Report.pdf` - 10-page English technical report;
   SHA256
-  `401171516af795537a745d44bd5d6bdedbd032fca16378f166b2424961e4e39a`.
+  `3e3f699314e7e8ed4f06b74e252cb12f2c7dddd36db300de1297a9cd4599efbf`.
 
-The report was re-exported after the final entrant/team identity was confirmed
-as `Liu Liang`. This identity-only publication update does not change the
-frozen model, experiment results, evidence files, or final video. The video
-sidecar intentionally retains the earlier report SHA as the exact source used
-when rendering its report-page frames.
+The current report was re-exported after the final entrant/team identity was
+confirmed as `Liu Liang`, then extended with the locked-input evidence pack and
+the sustained exact-checkpoint Radeon telemetry supplement. These additive
+publication updates do not change the frozen model, one-shot locked result,
+calibration, thresholds, or final video. The video sidecar intentionally
+retains report SHA
+`9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`
+as the exact earlier report bytes used when rendering its report-page frames.
 
 The model-forward Radeon benchmark uses preloaded synthetic tensors and is not
 end-to-end robot latency. The separate seed-105400 confirmatory replay is
