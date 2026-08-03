@@ -5,7 +5,7 @@
   "status": "PREREGISTERED_BEFORE_ANY_CHALLENGE_EPISODE",
   "purpose": "Additive, no-retuning paired full-pipeline challenge of the already frozen V8 runtime",
   "public_binding": {
-    "runner_protocol_commit": "TO_BE_BOUND_BEFORE_RUN",
+    "runner_protocol_commit": "9e14cbb999824d35a21749f4ff420ab63f81847d",
     "preregistration_sha256_location": "RUN_MANIFEST.json",
     "preregistration_public_commit_location": "RUN_MANIFEST.json",
     "self_reference_boundary": "Commit A binds the finalized runner, protocol, and runner SHA; Commit B changes only this field to Commit A. RUN_MANIFEST externally records Commit B because a file cannot contain the hash of the commit that contains those same bytes"
