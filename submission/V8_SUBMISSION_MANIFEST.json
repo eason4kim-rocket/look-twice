@@ -136,6 +136,7 @@
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
+    "anonymous_public_branch_clone": "CPU verifier, 6/6 Python tests, task-utility derivation, Go tests, 20/20 Node tests, npm audit, package checksums, Docker build, and nine route checks passed",
     "pdf_visual_qa": "10/10 pages inspected",
     "browser_visual_qa": "desktop visual QA passed; public console/results hydration verified anonymously",
     "submission_surface_credential_scan": "passed",

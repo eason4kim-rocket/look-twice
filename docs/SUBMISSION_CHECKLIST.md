@@ -95,10 +95,10 @@ Official sources:
 ## Reproducibility
 
 - [x] Push `v8-competition-release` to the public source repository.
-- [ ] Verify the final branch HEAD from an anonymous clean clone.
+- [x] Verify the final branch HEAD from an anonymous clean clone.
 - [x] Publish the 159 MB V8 checkpoint at the stable release URL.
 - [x] Download the public checkpoint without credentials and verify its SHA256.
-- [ ] Clean-clone the public branch in a new directory.
+- [x] Clean-clone the public branch in a new directory.
 - [x] Reproduce the frozen local submission commit in a clean detached
       worktree before publication.
 - [x] Run the CPU replay build and frozen-boundary verifier in the release
