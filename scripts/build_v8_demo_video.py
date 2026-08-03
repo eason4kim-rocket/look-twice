@@ -56,7 +56,7 @@ OFFICIAL_STAGING = (
     / "submission"
     / "official-repo"
     / "submissions"
-    / "Track3-eason4kim-rocket-Look-Twice"
+    / "Track3-Liu-Liang-Look-Twice"
 )
 
 BG = (5, 13, 16)

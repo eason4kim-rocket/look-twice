@@ -4,7 +4,7 @@
 
 **Competition:** AMD AI DevMaster Hackathon 2026
 
-**Entrant:** eason4kim-rocket (solo entrant)
+**Entrant / team:** Liu Liang (solo entrant)
 
 **Release candidate:** `v8-frozen`
 
@@ -470,7 +470,8 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
 
 ## 14. Team and contributions
 
-**eason4kim-rocket - solo entrant**
+**Liu Liang - solo entrant.** GitHub:
+[@eason4kim-rocket](https://github.com/eason4kim-rocket)
 
 Project conception, simulation and robot loop, dataset protocol, V8 perception
 model, conformal calibration, Purify Go reference core, experiment execution,

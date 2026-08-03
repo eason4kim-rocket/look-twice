@@ -1,4 +1,4 @@
-# Track 3, eason4kim-rocket, Look Twice
+# Track 3, Liu Liang, Look Twice
 
 > **Owner-review preparation state - not yet filed:** the final 239-second
 > video, sidecar, report, public site, source branch, and official-fork branch
@@ -199,7 +199,8 @@ hashes are in the
 
 ## Team
 
-**eason4kim-rocket - solo entrant**
+**Liu Liang - solo entrant.** GitHub:
+[@eason4kim-rocket](https://github.com/eason4kim-rocket)
 
 Project conception, simulation and robot loop, dataset protocol, V8 perception
 model, conformal calibration, Purify Go reference core, experiment execution,

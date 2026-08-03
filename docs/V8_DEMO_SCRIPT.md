@@ -235,8 +235,8 @@ python3 scripts/build_v8_demo_video.py --work-dir /tmp/look-twice-v8-demo-work -
 Expected official-staging outputs:
 
 ```text
-submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4
-submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.manifest.json
+submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4
+submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.manifest.json
 ```
 
 Stable public target, published and verified without credentials:

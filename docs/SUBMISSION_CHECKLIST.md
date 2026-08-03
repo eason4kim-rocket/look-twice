@@ -7,8 +7,8 @@ official submission repository on 2026-08-03.
 
 **Official PR opened:** `false`
 
-**Entrant assumption:** `eason4kim-rocket` (solo entrant; human confirmation
-required)
+**Confirmed entrant/team:** `Liu Liang` (solo entrant; GitHub:
+`@eason4kim-rocket`)
 
 ## Governing facts
 
@@ -33,8 +33,9 @@ Official sources:
 - [ ] Confirm Luma registration approval.
 - [ ] Confirm AMD Developer Program membership for prize eligibility.
 - [ ] Confirm entrant is at least 18 or the age of majority.
-- [ ] Confirm `eason4kim-rocket` is the intended solo entrant/team label;
-      replace it consistently if registration uses another display name.
+- [x] Confirm `Liu Liang` is the registered solo entrant/team label.
+- [x] Keep the registration email private; do not publish it in the PR,
+      report, repository, video, or evidence site.
 - [ ] Confirm the registration email and phone are monitored for seven days
       after judging.
 
@@ -211,8 +212,7 @@ Stable targets:
       official fork and push it.
 - [x] Verify the refreshed official-fork branch contains only the 11 intended
       files (10 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
-- [ ] Use PR title `Track 3, eason4kim-rocket, Look Twice` unless the registered
-      team label differs.
+- [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.
 - [ ] Owner explicitly authorizes the official PR.
@@ -221,7 +221,7 @@ Stable targets:
 
 ## Final no-PR review packet
 
-- [ ] Entrant/team label confirmed.
+- [x] Entrant/team label confirmed as `Liu Liang`.
 - [x] Final MP4 and sidecar pass local QA for the recorded 239-second identity.
 - [ ] Owner completes final visual and audible review.
 - [x] Final `SHA256SUMS` verifies cleanly after identity propagation.

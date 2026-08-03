@@ -16,7 +16,6 @@ from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
-    CondPageBreak,
     Image,
     PageBreak,
     Paragraph,
@@ -319,7 +318,6 @@ def markdown_story(
         heading = re.match(r"^(##|###)\s+(.+)$", line)
         if heading:
             flush_paragraph()
-            story.append(CondPageBreak(30 * mm))
             story.append(
                 Paragraph(
                     inline_markup(heading.group(2)),
@@ -443,7 +441,7 @@ def build_cover(
             metrics,
             Spacer(1, 9),
             Paragraph(
-                "Entrant: eason4kim-rocket (solo) · Candidate: v8-frozen · "
+                "Entrant / team: Liu Liang (solo) · Candidate: v8-frozen · "
                 "Apache-2.0 · Simulation only · English submission",
                 styles["cover_meta"],
             ),
@@ -468,7 +466,7 @@ def main() -> int:
         topMargin=20 * mm,
         bottomMargin=18 * mm,
         title="Look Twice V8: Active Evidence Assurance for Physical AI",
-        author="eason4kim-rocket",
+        author="Liu Liang",
         subject="AMD AI DevMaster Hackathon 2026, Track 3 technical report",
         creator="Look Twice submission report builder",
     )

@@ -2,7 +2,9 @@
 
 **Track:** Track 3 - Physical AI
 
-**Entrant:** eason4kim-rocket (solo entrant)
+**Entrant / team:** Liu Liang (solo entrant)
+
+**GitHub:** [@eason4kim-rocket](https://github.com/eason4kim-rocket)
 
 **Project:** Active Evidence Assurance for Physical AI on AMD Radeon GPU
 

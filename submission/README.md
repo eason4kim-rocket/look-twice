@@ -10,12 +10,13 @@ render, links, entrant identity, and PR body.
 Official PR title assumption:
 
 ```text
-Track 3, eason4kim-rocket, Look Twice
+Track 3, Liu Liang, Look Twice
 ```
 
-The package currently assumes **eason4kim-rocket is a solo entrant**. Confirm
-this against the registration record before opening the PR. Submission
-deadline: **2026-08-06 23:59 UTC+8**.
+The confirmed entrant/team is **Liu Liang** (solo entrant). The GitHub account
+is **[@eason4kim-rocket](https://github.com/eason4kim-rocket)**; the private
+registration email is intentionally excluded from all public submission
+materials. Submission deadline: **2026-08-06 23:59 UTC+8**.
 
 ## Submission positioning
 
@@ -25,6 +26,12 @@ and sufficient for a scoped action. A denial produces a machine-readable
 `BeliefGap`; a scout acquires the missing view, and dual Python/Purify Go
 authorization either recovers useful motion, selects a disclosed detour, or
 fails closed.
+
+The concrete target application is warehouse AMR corridor traversal: a loaded
+carrier may use the direct route only after the action contract is satisfied;
+otherwise a scout obtains an independent side view and the system re-evaluates
+the route. All competition evidence is from recorded Genesis simulation on AMD
+Radeon. No real-robot, field-deployment, or sim-to-real result is claimed.
 
 The locked 12-world paired comparison is the central capability result:
 active repair qualified 11/12 direct routes versus 0/12 for passive
@@ -57,7 +64,7 @@ without credentials on 2026-08-03. No official competition PR was opened.
 2. Exact English PR body: `docs/SUBMISSION_DRAFT.md`
 3. Submission manifest: `submission/V8_SUBMISSION_MANIFEST.json`
 4. Official-repository directory:
-   `submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/`
+   `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/`
 5. Technical report source: `docs/V8_TECHNICAL_REPORT.md`
 6. Detailed reproduction guide: `docs/V8_REPRODUCTION.md`
 7. Final demo specification: `docs/V8_DEMO_SCRIPT.md`
@@ -70,11 +77,11 @@ without credentials on 2026-08-03. No official competition PR was opened.
 | Locked-open seal | `release/v8-frozen/results/LOCKED_TEST_OPENED.json` | `7bfe13d0d7e117f76286cb094711322b810dc44d40ddbd149bf1304713baba14` |
 | Task-utility derivation | `release/v8-derived/V8_TASK_UTILITY_DERIVATION.json` | `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b` |
 | ROCm model-forward benchmark | `release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json` | `282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156` |
-| Rendered 10-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde` |
+| Rendered 10-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `401171516af795537a745d44bd5d6bdedbd032fca16378f166b2424961e4e39a` |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
-| Final 3:59 demo | `submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
+| Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/` | final 10-file checksum manifest verified |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | final 10-file checksum manifest verified |
 
 ## Frozen checkpoint
 

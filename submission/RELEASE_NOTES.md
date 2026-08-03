@@ -37,7 +37,13 @@ denominator.
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
 - `Look-Twice-V8-Technical-Report.pdf` - 10-page English technical report;
   SHA256
-  `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`.
+  `401171516af795537a745d44bd5d6bdedbd032fca16378f166b2424961e4e39a`.
+
+The report was re-exported after the final entrant/team identity was confirmed
+as `Liu Liang`. This identity-only publication update does not change the
+frozen model, experiment results, evidence files, or final video. The video
+sidecar intentionally retains the earlier report SHA as the exact source used
+when rendering its report-page frames.
 
 The model-forward Radeon benchmark uses preloaded synthetic tensors and is not
 end-to-end robot latency. The separate seed-105400 confirmatory replay is

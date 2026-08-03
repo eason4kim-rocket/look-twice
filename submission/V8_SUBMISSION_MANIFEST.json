@@ -7,7 +7,7 @@
     "track": "Track 3 - Physical AI",
     "deadline": "2026-08-06T23:59:00+08:00",
     "required_language": "English",
-    "pr_title": "Track 3, eason4kim-rocket, Look Twice"
+    "pr_title": "Track 3, Liu Liang, Look Twice"
   },
   "submission_state": {
     "official_pr_opened": false,
@@ -15,13 +15,16 @@
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
     "public_targets_anonymously_verified": true,
-    "entrant_assumption": "eason4kim-rocket (solo entrant)",
-    "entrant_identity_review_required": true
+    "entrant_team_name": "Liu Liang",
+    "entrant_role": "solo entrant",
+    "entrant_github": "eason4kim-rocket",
+    "registration_email_public": false,
+    "entrant_identity_review_required": false
   },
   "candidate": {
     "candidate_id": "v8-frozen",
     "source_branch": "v8-competition-release",
-    "positioning": "Action assurance before action: convert insufficient evidence into a concrete next observation, then admit, detour, or fail closed under dual Python and Purify Go authorization.",
+    "positioning": "Action assurance before action for warehouse AMR corridor traversal: convert insufficient evidence into a concrete next observation, then admit, detour, or fail closed under dual Python and Purify Go authorization.",
     "simulation_only": true,
     "real_robot_claim": false,
     "safety_certification_claim": false,
@@ -74,29 +77,29 @@
     },
     "task_utility_derivation": {
       "path": "release/v8-derived/V8_TASK_UTILITY_DERIVATION.json",
-      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/evidence/V8_TASK_UTILITY_DERIVATION.json",
+      "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/V8_TASK_UTILITY_DERIVATION.json",
       "sha256": "f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b",
       "size_bytes": 4306
     },
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
-      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde",
-      "size_bytes": 1068138,
+      "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
+      "sha256": "401171516af795537a745d44bd5d6bdedbd032fca16378f166b2424961e4e39a",
+      "size_bytes": 1068371,
       "page_count": 10,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
       "publication_verified": true
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
-      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Evidence-Reel-30s.mp4",
+      "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Evidence-Reel-30s.mp4",
       "sha256": "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2",
       "size_bytes": 1006188
     },
     "final_demo_video": {
       "builder": "scripts/build_v8_demo_video.py",
-      "staged_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.mp4",
-      "sidecar_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/Look-Twice-V8-Demo.manifest.json",
+      "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4",
+      "sidecar_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.manifest.json",
       "duration_seconds": 239.0,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4",
       "sha256": "70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05",
@@ -122,8 +125,8 @@
       "size_bytes": 1757156
     },
     "official_repository_staging": {
-      "path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice",
-      "sha256s_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/SHA256SUMS",
+      "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
+      "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
       "status": "official_fork_branch_published_and_verified_no_pr"
     }
   },
@@ -136,7 +139,7 @@
     "release_target": "https://github.com/eason4kim-rocket/look-twice/releases/tag/v8-competition-candidate",
     "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07",
     "official_fork": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07",
-    "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-eason4kim-rocket-look-twice-v8",
+    "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8",
     "public_targets_anonymously_verified": true
   },
   "verification": {
@@ -155,16 +158,14 @@
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "official_repository_staging_checksums": "passed locally; all 10 packaged files verified",
     "public_distribution": "release assets, Pages site, source branch, report, checkpoint, and official-fork package published and verified without credentials",
-    "official_fork_branch": "11 intended files published at commit 6987afe; package checksums passed; official_pr_opened=false"
+    "official_fork_branch": "11 intended files published on the Liu Liang branch at commit bb76ade; package checksums passed; official_pr_opened=false"
   },
   "owner_review_items": [
-    "Confirm that the registered solo entrant or team display name is eason4kim-rocket; update the PR title and Team section if it differs.",
     "Complete owner visual and audible review of the final demo.",
     "Review the English PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
     "complete owner visual and audible review of the final 3:59 English demo",
-    "confirm registered entrant or team label",
     "obtain owner approval to open the official English submission PR"
   ]
 }
