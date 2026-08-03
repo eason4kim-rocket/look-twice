@@ -1,0 +1,42 @@
+{
+  "schema_version": "look-twice.additive-decision-dynamics-engineering-audit/v1",
+  "generated_at_utc": "2026-08-03T23:36:40Z",
+  "formal_denominator_contaminated": false,
+  "formal_seeds_observed_in_engineering_smoke": [],
+  "engineering_seeds": [170800, 170801, 170802],
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "failed",
+      "passed": 2,
+      "trials": 3,
+      "report_sha256": "ea91f18c610cd2d6c63f4de377dfcf3f68a5c256d8f81a629688f0712050fd4d",
+      "runner_sha256": "d7a88e1f0f1638a6df60c35d9668abda318fed60f8aa5e86cc7b9c690b7f4a2f",
+      "total_blocker_contact_rows": 0,
+      "total_active_pair_contact_rows": 1155,
+      "paired_mean_path_reduction_percent": 13.95523225122743,
+      "failure": "dual-blocked carrier detour crossed the parked scout side"
+    },
+    {
+      "attempt": 2,
+      "status": "passed",
+      "passed": 3,
+      "trials": 3,
+      "report_sha256": "4cc40b147255996d6d001db040daa027c46fba521de2f3bc0d709f17587c88b5",
+      "runner_sha256": "0ac80a5e33b3fb2b4fda6aade4f1110fe8d045b8622e3e16edb4b60a64e02a1a",
+      "total_blocker_contact_rows": 0,
+      "total_active_pair_contact_rows": 0,
+      "maximum_tilt_deg": 10.506109794421485,
+      "maximum_stationary_partner_drift_m": 0.020644052733889702,
+      "paired_mean_path_reduction_percent": 14.332389666999445
+    }
+  ],
+  "changes_before_protocol_freeze": [
+    "park the scout opposite the active outer-detour side in the dual-blocked case",
+    "add the symmetric parked-scout drift check during active carrier motion",
+    "separate the 2:1 engineering-smoke diagnostic reduction floor from the unchanged 29:1 formal floor"
+  ],
+  "formal_protocol_fixed_after_attempt": 2,
+  "formal_mean_path_reduction_floor_fraction": 0.15,
+  "formal_direct_pair_minimum_saving_m": 0.5
+}
