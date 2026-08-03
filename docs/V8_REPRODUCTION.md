@@ -56,6 +56,29 @@ has changed, verification fails. The final command derives paired task utility
 and a confirmatory cost ledger from already archived evidence; it does not run
 V8, reopen the locked split, or change model thresholds.
 
+### 2.1 Verify the input-only locked archive
+
+The archive is too large for the Git repository. Its stable identity, content
+counts, and evidence boundaries are recorded in
+`docs/V8_LOCKED_INPUT_EVIDENCE.md` and
+`release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json`.
+
+After obtaining the archive and sidecar, run:
+
+```bash
+python3 scripts/verify_v8_locked_input_pack.py \
+  --archive /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz \
+  --sidecar /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.sidecar.json \
+  --check-only
+```
+
+The verifier first checks the archive SHA256, then streams metadata and table
+entries without extracting arrays. It runs no model inference, does not reopen
+the locked split, and does not recompute the locked aggregate. This is
+input-only verification: the pack lacks the original 3,200 one-shot
+predictions and the 24 raw live full-chain episodes. Report summaries cannot
+reconstruct those missing outputs.
+
 ## 3. Inspect the authoritative result
 
 ```bash
@@ -230,6 +253,31 @@ The preflight requires Genesis 1.1.2, PyTorch 2.9.1+gitff65f5b, HIP
 with that competition-image PyTorch package. A generic PyPI PyTorch wheel is
 not an exact reproduction of the frozen runtime.
 
+### 7.2 Inspect the frozen ROCm telemetry
+
+The submission-time telemetry report is
+`release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json`. Verify its bytes:
+
+```bash
+shasum -a 256 release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json
+```
+
+Expected:
+
+```text
+0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9
+```
+
+It records a clean-GPU preflight followed by a 60.182-second synthetic,
+preloaded-tensor, FP32 frozen-model forward run at batch 8: 47 forwards, 376
+images, 61/61 GPU-use samples at 100%, 135.33 W mean graphics-package power,
+and 156 W p95 power.
+
+These are workload-specific telemetry measurements, not an accuracy test or
+end-to-end robot benchmark. The run excludes RGB-D preprocessing, Genesis
+simulation and rendering, Go fusion, I/O, and actuation. It did not open the
+locked split or change model weights, calibration, or thresholds.
+
 ## 8. Run a new non-locked Radeon episode
 
 After placing the verified checkpoint at `$V8_CHECKPOINT`, run:
@@ -282,11 +330,17 @@ Expected Purify binary SHA:
 
 ## 10. Reproducibility limits
 
-- The full train/validation/locked datasets are not committed to Git.
+- The full train/validation/locked datasets are not committed to Git. The
+  locked input archive is byte-identified and verifiable when supplied as a
+  separate release asset, but it is input-only: it lacks the original
+  predictions and raw locked live episodes.
 - The frozen model is a separately hosted 159 MB release asset.
 - The exact locked run is permanent and should not be regenerated.
 - A new execution can differ in wall-clock timing because the public replay
   does not pin the cloud scheduler or all system packages.
 - Statistical claims apply only to the declared simulated split.
+- Seeds 102500-102699 are a reserved challenge range from the same generator
+  family. V8 did not evaluate them; no OOD or out-of-distribution
+  generalization result is claimed.
 - The evidence website verifies recorded results; it does not run Genesis or
   infer new robot actions.

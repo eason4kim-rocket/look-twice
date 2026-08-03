@@ -69,7 +69,7 @@ Train       100000–101499   1500 worlds
 Validation  101500–101799    300 worlds
 Calibration 101800–102099    300 worlds
 Locked V8   102100–102499    400 worlds   # open once after freeze
-OOD Test    102500–102699    200 worlds
+Reserved    102500–102699    200 worlds (same generator family; not evaluated)
 ```
 
 **Forbidden:** any V7 train/val/cal/locked/smoke/matrix seeds (96000–98300, 95000–95019, 99000–99003, 99200–99203, 99300–99319).

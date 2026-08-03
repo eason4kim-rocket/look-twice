@@ -36,7 +36,15 @@ test("localizes all judge-facing route headings and controls", async () => {
   ]) {
     assert.match(home, new RegExp(expected));
   }
-  for (const expected of ["能力边界", "冻结身份", "诚实边界", "已验证"]) {
+  for (const expected of [
+    "锁定输入证据包",
+    "它不能建立什么",
+    "冻结 ROCm 遥测窗口",
+    "能力边界",
+    "冻结身份",
+    "诚实边界",
+    "已验证",
+  ]) {
     assert.match(results, new RegExp(expected));
   }
   for (const expected of ["回放优先的复现方式", "冻结 SHA 守卫", "原始证据"]) {

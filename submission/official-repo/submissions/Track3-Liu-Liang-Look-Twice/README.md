@@ -55,6 +55,7 @@ packaged SHA256 identities on 2026-08-03.
 4. Switch to passive mode and compare its safe detour.
 5. Open Results and trace every locked number to the public source JSON.
 6. Inspect the non-locked seed-105400 cost ledger for the operational trade.
+7. Inspect the locked-input manifest and sustained ROCm telemetry files.
 
 ## Why the result matters
 
@@ -105,6 +106,14 @@ inconclusive samples remain visible and are not forced into a class. The
 interactive seed-105400 replay is non-locked confirmatory evidence and is not
 substituted for the locked aggregate.
 
+The separately released pre-open input-and-label archive contains 400 worlds
+and 3,200 records and hashes to
+`0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba`.
+The packaged manifest verifies its structure and chronology without inference.
+This input-only pack does not contain the original one-shot prediction rows or
+24 raw full-chain episodes and cannot recompute the permanent result; no
+missing output was regenerated.
+
 ## AMD Radeon and ROCm
 
 The frozen environment used Genesis 1.1.2 on `gs.amdgpu`, PyTorch
@@ -118,6 +127,13 @@ The exact hash-pinned checkpoint passed a separate FP32 preloaded-tensor
 model-forward benchmark. Batch 1 measured 192.31 ms p50 and 199.18 ms p95;
 batch 8 measured 6.25 images/s with 668.38 MiB peak allocated memory. These are
 model-forward measurements, not end-to-end robot latency.
+
+A separate clean-preflight, 60.182-second batch-8 run archived raw `rocm-smi`
+telemetry for the exact checkpoint. All 61 samples reported 100% GPU use; mean
+graphics-package power was 135.33 W and p95 was 156 W. It forwarded 376
+synthetic preloaded FP32 images at 6.248 images/s. This supports only sustained
+Radeon model-forward execution: it is not an accuracy, locked, mission-energy,
+or end-to-end robot benchmark.
 
 ## Reproduction and identities
 
@@ -134,6 +150,12 @@ The immutable locked report must hash to:
 
 ```text
 5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb
+```
+
+The sustained ROCm telemetry must hash to:
+
+```text
+0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9
 ```
 
 The 239.000-second final demo is 9,032,035 bytes and must hash to:
@@ -153,6 +175,7 @@ voice; the disclosure is burned into the video. Chapter visuals use fixed
 composition with no `zoompan` motion.
 
 The compact [evidence directory](evidence/README.md) contains the scrubbed
-locked report, exact-checkpoint Radeon benchmark, frozen import manifest, and
-machine-readable task-utility derivation. All packaged file identities are
-listed in [SHA256SUMS](SHA256SUMS).
+locked report, exact-checkpoint Radeon benchmark, raw sustained telemetry,
+locked-input manifest, frozen import manifest, and machine-readable
+task-utility derivation. All packaged file identities are listed in
+[SHA256SUMS](SHA256SUMS).

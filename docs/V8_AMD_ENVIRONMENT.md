@@ -65,6 +65,7 @@ requiring access to the competition cloud instance.
 | Go fusion conformal identity | `d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97` |
 | Purify Go binary | `31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00` |
 | Locked report file | `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb` |
+| Frozen ROCm telemetry | `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9` |
 
 Public checkpoint asset:
 https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt
@@ -99,5 +100,43 @@ records 100 synchronized model forwards for each batch size.
 The benchmark covers only the frozen V8 vision model forward pass plus Python
 dispatch and synchronized ROCm execution. It excludes RGB-D preprocessing,
 Genesis simulation, Go evidence fusion, storage/network I/O, and closed-loop
-actuation. It is not an accuracy evaluation. GPU utilization is not claimed,
-and no performance value is inferred from V4-V7.
+actuation. It is not an accuracy evaluation. This latency report does not by
+itself support a GPU-utilization claim, and no performance value is inferred
+from V4-V7.
+
+## 60-second frozen ROCm telemetry
+
+Source: `release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json`.
+Report SHA256:
+`0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`.
+
+This separate submission-time run verified the exact frozen checkpoint before
+loading it. A clean-GPU preflight found no KFD compute processes and recorded
+0% GPU use and 0% VRAM allocation before model load. The measured workload was
+a sustained **synthetic, preloaded-tensor, FP32 model-forward benchmark** at
+batch 8 and 256 x 256 input resolution. It used 20 warm-up iterations,
+synchronized after every forward, and sampled `rocm-smi` once per second.
+
+| Measure | Recorded value |
+| --- | ---: |
+| Measured interval | 60.182 seconds |
+| Measured forwards | 47 |
+| Images forwarded | 376 |
+| Throughput | 6.2477 images/s |
+| GPU-use samples | 61/61 at 100% |
+| Mean graphics-package power | 135.33 W |
+| p95 graphics-package power | 156 W |
+
+The 61/61 result supports a utilization claim only for this controlled frozen
+model-forward workload. It is not end-to-end robot throughput or latency: it
+excludes RGB-D preprocessing, Genesis simulation and rendering, Go evidence
+fusion, I/O, and actuation. It is not an accuracy evaluation, did not access
+or open the locked split, and did not modify model weights, calibration, or
+thresholds.
+
+## Challenge-range terminology
+
+The historical `ood_test` label for seeds 102500-102699 refers only to a
+reserved challenge range from the same generator family. V8 did not evaluate
+that range, and neither the latency benchmark nor the telemetry run changes
+that boundary. No OOD or out-of-distribution generalization result is claimed.

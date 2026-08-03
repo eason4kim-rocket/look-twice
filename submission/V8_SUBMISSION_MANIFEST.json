@@ -28,7 +28,13 @@
     "simulation_only": true,
     "real_robot_claim": false,
     "safety_certification_claim": false,
-    "external_upstream_pr_claim": false
+    "external_upstream_pr_claim": false,
+    "ood_result_claim": false,
+    "reserved_challenge_range": {
+      "seeds": "102500-102699",
+      "generator_family": "same as the declared V8 generator family",
+      "evaluated_for_v8": false
+    }
   },
   "headline_evidence": {
     "locked_same_world_pairs": 12,
@@ -75,6 +81,38 @@
       "path": "release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json",
       "sha256": "282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156"
     },
+    "rocm_sustained_telemetry": {
+      "path": "release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json",
+      "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/V8_FROZEN_ROCM_TELEMETRY.json",
+      "sha256": "0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9",
+      "size_bytes": 24757,
+      "workload": "60-second synthetic preloaded-tensor FP32 frozen-model forward at batch 8",
+      "clean_gpu_preflight": true,
+      "gpu_use_samples_at_100_percent": "61/61",
+      "mean_graphics_package_power_w": 135.327868852459,
+      "p95_graphics_package_power_w": 156.0,
+      "not_end_to_end": true,
+      "not_accuracy_evaluation": true,
+      "locked_test_opened": false
+    },
+    "locked_input_evidence_pack": {
+      "archive_name": "v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
+      "archive_sha256": "0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba",
+      "archive_size_bytes": 1019307579,
+      "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
+      "sidecar_sha256": "eaecfd450b807183aa0b26fad1cb6fc792202eda54d3abbcd8332f6373a84766",
+      "manifest_path": "release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json",
+      "staged_manifest_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/V8_LOCKED_INPUT_PACK_MANIFEST.json",
+      "manifest_file_sha256": "421a0b1e2ebcfd20a84742a799e461fe060587fa2fc33438dfbf8cfc42f90818",
+      "manifest_content_sha256": "ed6f1bbf27aea692ba5e4b47cb7a1fb1e216e0978a473d70d0192bb2eb2a9d30",
+      "worlds": 400,
+      "metadata_records": 3200,
+      "evidence_class": "pre-open inputs and labels only",
+      "contains_original_one_shot_predictions": false,
+      "contains_24_raw_locked_live_episodes": false,
+      "recomputes_locked_result": false,
+      "publication_verified": true
+    },
     "task_utility_derivation": {
       "path": "release/v8-derived/V8_TASK_UTILITY_DERIVATION.json",
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/V8_TASK_UTILITY_DERIVATION.json",
@@ -84,8 +122,8 @@
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "401171516af795537a745d44bd5d6bdedbd032fca16378f166b2424961e4e39a",
-      "size_bytes": 1068371,
+      "sha256": "3e3f699314e7e8ed4f06b74e252cb12f2c7dddd36db300de1297a9cd4599efbf",
+      "size_bytes": 1069862,
       "page_count": 10,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
       "publication_verified": true
@@ -127,7 +165,7 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "status": "official_fork_branch_published_and_verified_no_pr"
+      "status": "staged_and_checksums_verified_refresh_pending_no_pr"
     }
   },
   "links": {
@@ -146,19 +184,21 @@
     "frozen_foundation": "passed",
     "python_replay_tests": "6/6 passed",
     "go_tests": "passed",
-    "node_22_site_tests": "20/20 passed",
+    "node_22_site_tests": "23/23 passed",
     "node_22_lint": "passed",
     "node_dependency_audit": "0 known vulnerabilities",
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
     "pdf_visual_qa": "10/10 pages inspected",
-    "browser_visual_qa": "prepared build passed desktop visual QA; final public routes and static assets verified without credentials",
+    "browser_visual_qa": "prepared build passed desktop and mobile visual QA; refreshed public-route verification pending",
     "submission_surface_credential_scan": "passed",
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
-    "official_repository_staging_checksums": "passed locally; all 10 packaged files verified",
-    "public_distribution": "release assets, Pages site, source branch, report, checkpoint, and official-fork package published and verified without credentials",
-    "official_fork_branch": "11 intended files published on the Liu Liang branch at commit bb76ade; package checksums passed; official_pr_opened=false"
+    "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
+    "rocm_telemetry_helper_tests": "3/3 passed; formal 60-second report validated",
+    "official_repository_staging_checksums": "passed locally; all 12 packaged files verified",
+    "public_distribution": "locked archive, sidecar, checksum, report, video, and checkpoint release assets published and verified without credentials; source, Pages, and official-fork refresh pending",
+    "official_fork_branch": "previous 11-file package remains published at commit bb76ade; refreshed 13-file package pending; official_pr_opened=false"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",

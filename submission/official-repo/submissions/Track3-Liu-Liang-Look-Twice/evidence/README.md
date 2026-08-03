@@ -14,6 +14,11 @@ archive.
   population counts, discipline flags, and timestamps are preserved.
 - `V8_FROZEN_INFERENCE_BENCHMARK.json` records the exact-checkpoint FP32
   preloaded-tensor model-forward benchmark on the captured Radeon/ROCm host.
+- `V8_FROZEN_ROCM_TELEMETRY.json` records a clean-GPU preflight followed by 61
+  raw `rocm-smi` samples during a 60-second exact-checkpoint model-forward run.
+- `V8_LOCKED_INPUT_PACK_MANIFEST.json` verifies the separately released
+  pre-open 400-world, 3,200-record input-and-label archive without model
+  inference, array extraction, or a locked-test rerun.
 - `V8_FROZEN_IMPORT_MANIFEST.json` identifies the 21 guarded source and
   evidence files used by the deterministic repository verifier.
 - `V8_TASK_UTILITY_DERIVATION.json` derives the paired locked task-utility table
@@ -55,6 +60,9 @@ scout, not lower total distance or latency.
 | Final demo builder sidecar | `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb` |
 | Task-utility derivation | `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b` |
 | Radeon model-forward benchmark | `282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156` |
+| Sustained Radeon telemetry | `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9` |
+| Locked input archive | `0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba` |
+| Locked input manifest file | `421a0b1e2ebcfd20a84742a799e461fe060587fa2fc33438dfbf8cfc42f90818` |
 | Vision conformal artifact | `ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f` |
 | Go-fusion conformal artifact | `d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97` |
 | Purify Linux reference binary | `31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00` |
@@ -73,6 +81,8 @@ can be compared with the immutable source report in the dedicated repository.
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4>
 - Frozen checkpoint:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt>
+- Locked input-and-label archive:
+  <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz>
 
 The 239-second replacement MP4, sidecar, and report were downloaded from these
 stable targets without credentials and matched the packaged SHA256 identities
@@ -86,8 +96,13 @@ on 2026-08-03.
   inconclusive samples remain visible.
 - Model-forward timing excludes preprocessing, Genesis, Go fusion, I/O, and
   actuation.
-- No locked aggregate path-length, latency, energy, or utilization claim is
-  made.
+- The input supplement lacks original per-sample predictions and 24 raw locked
+  episodes; it does not reconstruct or recompute the one-shot run.
+- The 61/61 utilization result applies only to the disclosed synthetic,
+  preloaded FP32 model-forward workload. No locked aggregate path-length,
+  latency, mission-energy, or end-to-end utilization claim is made.
+- Seeds 102500-102699 are an unevaluated same-generator-family reserved range,
+  not V8 OOD evidence.
 - Demo narration is AI-generated with OpenAI `gpt-4o-mini-tts`, using the
   `cedar` voice and an on-screen disclosure. Chapter visuals use fixed
   composition with no `zoompan` motion.

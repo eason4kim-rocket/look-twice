@@ -65,6 +65,23 @@ not rerun and the locked split was not reopened. The public replay is a
 recorded non-locked confirmatory episode. It illustrates the evaluated
 mechanism but is not substituted for the locked population.
 
+### Additive locked-input evidence
+
+The original pre-open locked input-and-label archive is now available as a
+[972 MiB release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz).
+Its SHA256 is
+`0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba`.
+The streaming verifier checks all 400 worlds, 3,200 metadata records, 22,800
+file members, labels, seeds, paths, sidecar chronology, and permanent-result
+hashes without extracting arrays or running inference. See the
+[evidence note](docs/V8_LOCKED_INPUT_EVIDENCE.md) and
+[manifest](release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json).
+
+This is an input-only supplement. The preserved archive does not contain the
+original 3,200 one-shot prediction rows or the 24 raw full-chain episodes, so
+it cannot reconstruct or recompute the permanent aggregate. Those files were
+not regenerated, and the locked split was not reopened.
+
 ## Task value: recover direct motion, shift carrier burden
 
 Safe refusal is the baseline. In the 12 paired locked worlds, the passive
@@ -124,6 +141,17 @@ memory. These are model-forward numbers, not Genesis or closed-loop latency.
 See the
 [benchmark JSON](release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json).
 
+A second, preregistered 60-second run adds sustained ROCm telemetry for the
+same exact checkpoint and batch-8 workload. The clean preflight found 0% GPU
+use, 0% VRAM allocation, and no KFD process before model load. During 60.182
+seconds of synchronized forwards, all 61 `rocm-smi` samples reported 100% GPU
+use; mean graphics-package power was 135.33 W and p95 was 156 W. The run
+processed 376 images (6.248 images/s). It still measures only synthetic,
+preloaded FP32 model forwards - not accuracy, Genesis, preprocessing, the Go
+gate, I/O, actuation, energy per mission, or end-to-end robot latency. See the
+[raw telemetry JSON](release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json),
+SHA256 `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`.
+
 ## Reproduce the submitted evidence
 
 ### CPU-only evidence audit
@@ -138,6 +166,16 @@ python3 scripts/verify_frozen_foundation.py
 
 This verifies guarded source and artifact hashes, two public EpisodeBundles,
 their source episode identities, and the single-use locked report import.
+
+To audit the separately downloaded locked-input release asset without loading
+the model or extracting the archive:
+
+```bash
+python3 scripts/verify_v8_locked_input_pack.py \
+  --archive /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz \
+  --sidecar /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.sidecar.json \
+  --check-only
+```
 
 ### Run the evidence console
 
@@ -168,7 +206,7 @@ and verify SHA256
 | Criterion | Evidence |
 | --- | --- |
 | Robot capability performance - 30 | Same-world paired evidence: active 11/12 direct versus passive 0/12 (+91.7 pp), with 12/12 mission completion for both policies and 0/24 unsafe crossings. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D model inference, ROCm tensor path, and frozen environment identities. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D model inference, frozen environment identities, an exact-checkpoint benchmark, and 61-sample sustained ROCm utilization/power telemetry. |
 | Innovation and originality - 20 | Lineage-aware Claims, conformal action qualification, dual authorization, BeliefGap-driven active repair, and signed receipts. |
 | Real-world application value - 20 | An evidence-assurance layer for warehouse AMRs and other robots operating under sensor correlation, conflict, and partial observability. |
 | Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. No external upstream PR is claimed. |
@@ -179,6 +217,8 @@ and verify SHA256
 - [Rendered technical report PDF](output/pdf/Look-Twice-V8-Technical-Report.pdf)
 - [Detailed reproduction guide](docs/V8_REPRODUCTION.md)
 - [Architecture and evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md)
+- [Locked-input evidence note](docs/V8_LOCKED_INPUT_EVIDENCE.md)
+- [Sustained ROCm telemetry](release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json)
 - [English 3-5 minute demo script](docs/V8_DEMO_SCRIPT.md)
 - [Final 3:59 English workflow demo](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4)
 - [Official PR body draft](docs/SUBMISSION_DRAFT.md)
@@ -197,6 +237,10 @@ and verify SHA256
 - `scripts/build_competition_replays.py` - deterministic public replay builder;
 - `scripts/benchmark_v8_frozen_inference.py` - hash-pinned ROCm model-forward
   benchmark;
+- `scripts/benchmark_v8_frozen_telemetry.py` - clean-preflight 60-second ROCm
+  utilization, power, temperature, and throughput evidence;
+- `scripts/verify_v8_locked_input_pack.py` - streaming archive and chronology
+  verifier that performs no inference or extraction;
 - `scripts/derive_v8_task_utility.py` - locked paired-route and guarded replay
   cost derivation without rerunning V8;
 - `scripts/verify_v8_rocm_environment.py` - exact ROCm core identity preflight;
@@ -206,7 +250,9 @@ and verify SHA256
 
 V8 is the only competition candidate. Later Integrity Shield R1/R2 and V9
 experiments do not alter the V8 result and are not promoted into the headline
-tables. Source-recovery completion is not treated as a calibration pass. See
+tables. Seeds 102500-102699 are only a reserved challenge range from the same
+generator family; they were not evaluated and are not presented as OOD
+evidence. Source-recovery completion is not treated as a calibration pass. See
 [V8 evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md).
 
 Apache-2.0. `NOTICE` defines the public Purify reference-core boundary.

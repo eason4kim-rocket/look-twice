@@ -140,6 +140,65 @@
   color: var(--cyan-bright);
   font: 600 8px var(--font-mono);
 }
+.evidence-pack-grid .archive-identity {
+  justify-content: space-between;
+}
+.archive-identity code {
+  display: block;
+  margin-top: 22px;
+  overflow-wrap: anywhere;
+  color: var(--cyan-bright);
+  font: 500 10px/1.55 var(--font-mono);
+}
+.evidence-boundary-grid {
+  margin: 0 0 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.evidence-boundary-grid article {
+  padding: 18px;
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+.evidence-boundary-grid b {
+  color: var(--green);
+  font: 600 8px var(--font-mono);
+  letter-spacing: .07em;
+}
+.evidence-boundary-grid .boundary-warning b { color: var(--amber); }
+.evidence-boundary-grid p {
+  margin: 12px 0 0;
+  color: #a5b1b2;
+  font-size: 11px;
+  line-height: 1.65;
+}
+.benchmark-panel > .range-boundary {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-left: 2px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  background: rgba(230,168,61,.07);
+  color: #bdc6c6;
+}
+.evidence-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.evidence-links a {
+  padding: 9px 11px;
+  border: 1px solid var(--line-dark);
+  border-radius: 999px;
+  color: var(--cyan-bright);
+  font: 600 7px var(--font-mono);
+  letter-spacing: .03em;
+}
+.evidence-links a:hover { border-color: var(--cyan-bright); }
+.telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.telemetry-grid .telemetry-throughput { grid-column: 1 / -1; }
+.telemetry-grid .telemetry-throughput strong { font-size: clamp(30px, 3.1vw, 46px); }
 .capability-list { border-top: 1px solid var(--line); }
 .capability-list div {
   padding: 19px 2px;
@@ -206,6 +265,7 @@
   .results-metrics { padding: 16px 22px 64px; }
   .results-metrics article { min-height: 250px; padding: 26px; }
   .result-section { padding: 72px 22px; }
-  .audit-grid, .benchmark-grid { grid-template-columns: 1fr; }
+  .audit-grid, .benchmark-grid, .evidence-boundary-grid { grid-template-columns: 1fr; }
+  .telemetry-grid .telemetry-throughput { grid-column: auto; }
   .limits > div:last-child { grid-template-columns: 1fr; }
 }

@@ -52,8 +52,10 @@ Official sources:
       loaded-carrier travel -23.24% through scout burden transfer.
 - [x] Disclose that seed 105400 total robot travel increased 24.32% and does
       not support a total-distance or latency reduction claim.
-- [x] Keep locked aggregate, non-locked replay, and non-locked model-forward
-      benchmark scopes visibly separate.
+- [x] Keep locked aggregate, input-only supplement, non-locked replay, and
+      model-forward benchmark/telemetry scopes visibly separate.
+- [x] State that seeds 102500-102699 are an unevaluated reserved range from the
+      same generator family, not V8 OOD evidence.
 - [x] State simulation-only, kinematic-motion, and no-safety-certification
       boundaries.
 - [x] Make no external upstream PR claim.
@@ -72,6 +74,9 @@ Official sources:
       non-decisive samples remain visible.
 - [x] Deterministic task-utility derivation verifies locked and confirmatory
       source hashes without rerunning V8 or reopening the test.
+- [x] Verify the pre-open 400-world input-and-label archive without extraction
+      or inference; disclose that original predictions and 24 raw episodes are
+      not present and were not regenerated.
 
 ## English submission materials
 
@@ -94,7 +99,7 @@ Official sources:
       README.
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
-- [x] Regenerate final `SHA256SUMS` and verify all 10 packaged files.
+- [x] Regenerate final `SHA256SUMS` and verify all 12 packaged files.
 
 ## Reproducibility
 
@@ -110,6 +115,10 @@ Official sources:
       worktree.
 - [x] Run all six competition replay Python tests.
 - [x] Run the deterministic task-utility derivation and verify its SHA256.
+- [x] Run all five locked-input verifier tests and all three ROCm telemetry
+      helper tests.
+- [x] Stream-verify the real 1,019,307,579-byte locked input archive: 400
+      worlds, 3,200 metadata records, no extraction, no inference.
 - [x] Run `go test ./...` for the Purify reference core.
 - [x] Add exact ROCm dependency and environment preflight files.
 - [x] Build and route-smoke the Evidence Console with Docker.
@@ -129,7 +138,9 @@ Official sources:
 - [x] State that the benchmark uses preloaded synthetic tensors and measures
       model forward only, not end-to-end robot latency.
 - [x] Do not quote V4-V7 performance as V8 performance.
-- [x] Make no GPU-utilization claim without archived telemetry.
+- [x] Archive a clean-preflight 60-second exact-checkpoint ROCm telemetry run.
+- [x] Limit the 61/61 100%-GPU-use claim to the disclosed synthetic,
+      preloaded FP32 model-forward window; do not call it end-to-end.
 
 ## Website and public URLs
 
@@ -147,10 +158,13 @@ Stable targets:
 - [x] Results contains the complete locked offline/live metrics, +91.7 pp
       paired result, and separate seed-105400 cost ledger.
 - [x] Results contains the exact AMD execution evidence and scope boundary.
+- [x] Results contains the input-only locked archive and 60-second telemetry
+      supplements, with missing-output and non-OOD boundaries visible.
 - [x] Site links the final report, source branch, checkpoint, and video targets.
 - [x] Rebuilt, linted, tested, and inspected the prepared site.
-- [x] Publish the updated public Pages site with HTTPS enforced.
-- [x] Verify all routes, client hydration, and binary assets without sign-in.
+- [ ] Publish the refreshed public Pages site with HTTPS enforced.
+- [ ] Verify all refreshed routes, client hydration, and binary assets without
+      sign-in.
 - [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
 - [x] Download the replacement assets without sign-in and verify both hashes.
 
@@ -208,10 +222,10 @@ Stable targets:
       index, report PDF, compact evidence, and preview.
 - [x] Add the locally verified demo artifact and unchanged stable target URL.
 - [x] Regenerate and verify staging checksums for the 239-second identity.
-- [x] Copy the refreshed staged directory into the dedicated branch of the
+- [ ] Copy the refreshed staged directory into the dedicated branch of the
       official fork and push it.
-- [x] Verify the refreshed official-fork branch contains only the 11 intended
-      files (10 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
+- [ ] Verify the refreshed official-fork branch contains only the 13 intended
+      files (12 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.
@@ -227,6 +241,6 @@ Stable targets:
 - [x] Final `SHA256SUMS` verifies cleanly after identity propagation.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
-- [x] Refreshed official-fork branch contains only intended submission files.
+- [ ] Refreshed official-fork branch contains only intended submission files.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
 - [x] No official PR exists before explicit owner approval.

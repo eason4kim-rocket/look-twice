@@ -144,7 +144,7 @@ Each sample contains:
 | Validation | 101500-101799 | 300 | Checkpoint selection only |
 | Vision calibration | 101800-102099 | 300 | Split-conformal vision artifact |
 | Locked test | 102100-102499 | 400 | Opened once after the runtime freeze |
-| OOD test | 102500-102699 | 200 | Declared out-of-domain analysis |
+| Reserved challenge range | 102500-102699 | 200 | Same generator family; not evaluated |
 
 The selected checkpoint records 12,000 training pairs and 2,400 validation
 pairs. The locked report contains 3,200 corridor samples: 1,560 blocked and
@@ -154,6 +154,10 @@ A separate Go-fusion calibration collection used seeds 105000-105199 and
 contained 400 corridor rows with both classes represented. Development and
 confirmatory full-chain smokes used disjoint seeds 105300-105311 and
 105400-105411. The locked split was not used by these steps.
+
+The reserved range changes seeds but not the generator family by itself. It
+was not evaluated for V8 and is not presented as OOD or domain-generalization
+evidence.
 
 ## 4. V8 perception model
 
@@ -271,6 +275,21 @@ GPU-utilization claim is made. The machine-readable report is
 `release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json`, with SHA256
 `282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156`.
 
+### 6.2 Sustained ROCm telemetry
+
+An additive 60-second batch-8 run used the same checkpoint, source hashes,
+preloaded FP32 tensors, and synchronized forward scope. Its hard preflight
+recorded 0% GPU use, 0% VRAM allocation, and no KFD process before model load.
+Across 60.182 measured seconds, 61/61 `rocm-smi` samples reported 100% GPU use;
+mean graphics-package power was 135.33 W, p95 power was 156 W, and 376 images
+were processed at 6.248 images/s.
+
+This supports a sustained Radeon execution claim only. It is not an accuracy
+run or locked-test rerun and excludes Genesis, preprocessing, Go fusion, I/O,
+actuation, mission energy, and end-to-end robot latency. The raw samples are in
+`release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json`, SHA256
+`0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`.
+
 ## 7. Evaluation protocol
 
 ### 7.1 Freeze and open discipline
@@ -363,6 +382,16 @@ The authoritative locked report file SHA256 is
 The open-seal SHA256 is
 `7bfe13d0d7e117f76286cb094711322b810dc44d40ddbd149bf1304713baba14`.
 
+An additive pre-open input-and-label archive preserves the exact 400-world,
+3,200-record locked population. A streaming verifier checked its 1,019,307,579
+bytes, SHA256
+`0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba`,
+all 22,800 file members, seed and label counts, path hygiene, sidecar chronology,
+and permanent-result identities without extracting arrays or running the
+model. This pack is input-only: it does not contain the original 3,200
+one-shot prediction rows or 24 raw full-chain episodes and therefore cannot
+recompute the permanent aggregate. Those missing outputs were not regenerated.
+
 ## 9. Innovation and technical contributions
 
 1. **Lineage-aware evidence accounting.** The system counts physical roots,
@@ -406,6 +435,8 @@ incident review, and future assurance tooling.
 - CPU-only Docker Evidence Console;
 - source-linked replay bundles and 30-second evidence reel;
 - English technical report and detailed reproduction guide;
+- a release-hosted pre-open locked input-and-label pack with streaming verifier;
+- exact-checkpoint sustained ROCm utilization and power telemetry;
 - final 3:59 English workflow video with fixed-composition visuals and
   AI-generated OpenAI Cedar narration;
 - public 159,592,901-byte frozen checkpoint release asset.
@@ -433,6 +464,14 @@ python3 scripts/verify_frozen_foundation.py
 python3 scripts/derive_v8_task_utility.py
 ```
 
+The separately downloaded locked-input pack can be checked without inference:
+
+```bash
+python3 scripts/verify_v8_locked_input_pack.py \
+  --archive /path/to/locked.tar.gz --sidecar /path/to/locked.sidecar.json \
+  --check-only
+```
+
 The evidence website can be rebuilt with:
 
 ```bash
@@ -458,6 +497,11 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
 - Statistical claims apply only to the declared simulated distributions.
 - The public replay is a non-locked confirmatory example, not the locked
   aggregate.
+- The locked-input supplement contains inputs and labels, not the original
+  per-sample predictions or 24 raw full-chain episodes; it does not reconstruct
+  the one-shot run.
+- Seeds 102500-102699 are a reserved range from the same generator family;
+  they were not evaluated and are not claimed as OOD evidence.
 - The frozen 159 MB checkpoint is distributed as a GitHub release asset because
   it exceeds GitHub's normal 100 MB blob limit; its SHA must be verified before
   use.

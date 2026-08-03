@@ -46,13 +46,14 @@ benchmark samples and does not require a live GPU.
 5. Switch to passive mode and compare its safe detour.
 6. Open Results and follow the locked metric links to source JSON.
 7. Inspect the separate seed-105400 cost ledger for the operational trade.
+8. Inspect the locked-input manifest and sustained Radeon telemetry supplement.
 
 ## Official Track 3 judging map
 
 | Criterion | Evidence in this submission |
 | --- | --- |
 | Robot capability performance - 30 | Same-world paired evidence: active 11/12 direct versus passive 0/12 (+91.7 pp); both policies completed 12/12 missions; unsafe crossing and fallback 0/24. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, RGB-D rendering, tensor preprocessing, and the 39.8M-parameter spatial RGB-D model on PyTorch ROCm/HIP 7.2. Hash-pinned FP32 model-forward benchmark: batch-1 p50 192.31 ms; batch-8 throughput 6.25 images/s. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, RGB-D rendering, tensor preprocessing, and the 39.8M-parameter spatial RGB-D model on PyTorch ROCm/HIP 7.2. Exact-checkpoint benchmark plus a clean-preflight 60-second run with 61/61 ROCm samples at 100% GPU use. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
 | Real-world application value - 20 | An auditable evidence-assurance boundary for warehouse AMRs and other robots operating under correlation, conflict, and partial observability. |
 | Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. No external upstream PR is claimed. |
@@ -97,6 +98,15 @@ has SHA256
 The paired comparison is descriptive evidence for this fixed seed suite, not a
 population or real-world generalization.
 
+The original pre-open input-and-label archive is published as a 1,019,307,579-
+byte release asset with SHA256
+`0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba`.
+Its streaming verifier passed 400 worlds, 3,200 metadata records, 22,800 file
+members, label/seed/path checks, sidecar chronology, and permanent-result hash
+binding without inference or extraction. This is input-only evidence: it does
+not contain the original one-shot prediction rows or 24 raw full-chain
+episodes and cannot recompute the permanent result. Nothing was regenerated.
+
 ## Task-value cost ledger
 
 On the guarded non-locked confirmatory replay at seed 105400, active repair
@@ -130,6 +140,15 @@ Genesis, Go fusion, I/O, and actuation and are not end-to-end latency. Source:
 (SHA256
 `282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156`).
 
+The supplemental 60-second batch-8 telemetry run began with 0% GPU use, 0%
+VRAM allocation, and no KFD process. All 61 measured `rocm-smi` samples
+reported 100% GPU use; mean graphics-package power was 135.33 W, p95 power was
+156 W, and throughput was 6.248 images/s. It used synthetic preloaded FP32
+tensors and is neither an accuracy run nor an end-to-end latency/energy claim.
+[Raw telemetry](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json)
+has SHA256
+`0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`.
+
 ## Deliverables
 
 | Requirement | Location |
@@ -142,6 +161,8 @@ Genesis, Go fusion, I/O, and actuation and are not end-to-end latency. Source:
 | Frozen evidence | [V8 archive](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-frozen) · [import manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/V8_FROZEN_IMPORT_MANIFEST.json) |
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |
+| Sustained ROCm telemetry | [raw 60-second JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json) |
+| Locked input evidence | [972 MiB archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz) · [manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json) · [boundary note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_LOCKED_INPUT_EVIDENCE.md) |
 | Frozen checkpoint | [159 MB release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt) |
 | Demo video | [3:59 English MP4 - stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4) |
 | Short evidence reel | [30-second preview](https://eason4kim-rocket.github.io/media/look-twice-replay-30s.mp4) |
@@ -169,6 +190,15 @@ python3 scripts/verify_frozen_foundation.py
 python3 scripts/derive_v8_task_utility.py
 ```
 
+Optional no-inference locked-input audit after downloading the archive and its
+sidecar:
+
+```bash
+python3 scripts/verify_v8_locked_input_pack.py \
+  --archive /path/to/locked.tar.gz --sidecar /path/to/locked.sidecar.json \
+  --check-only
+```
+
 Local Evidence Console:
 
 ```bash
@@ -191,6 +221,10 @@ hashes are in the
 - Simulation only; no real-robot, sim-to-real, or safety-certification claim.
 - The public replay is a non-locked confirmatory example, not the locked
   aggregate.
+- The locked-input supplement is input-only; original per-sample predictions
+  and 24 raw full-chain episodes are unavailable and were not regenerated.
+- Seeds 102500-102699 are an unevaluated reserved range from the same generator
+  family, not V8 OOD evidence.
 - The public evidence path uses a kinematic Genesis motion backend.
 - The 159 MB checkpoint is published as a release asset and must match SHA256
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`.

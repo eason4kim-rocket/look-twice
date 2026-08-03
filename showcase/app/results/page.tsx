@@ -110,6 +110,19 @@ type TaskUtilityReport = {
 
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
+const lockedInputEvidence = {
+  archiveSha256: "0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba",
+  archiveUrl:
+    "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
+  noteUrl:
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_LOCKED_INPUT_EVIDENCE.md",
+  manifestUrl:
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json",
+};
+
+const rocmTelemetryUrl =
+  "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json";
+
 export default function ResultsPage() {
   return <SiteShell><Results /></SiteShell>;
 }
@@ -163,6 +176,38 @@ function Results() {
         <article className="seal-card"><span>{zh ? "冻结纪律" : "FREEZE DISCIPLINE"}</span><strong>{locked.passed && locked.permanent ? "PASS" : "CHECK"}</strong><small>{zh ? "无重调参 · 无重拟合 · 无视觉重训" : "no retune · no refit · no vision retrain"}</small></article>
       </div>
     </section>}
+    <section className="result-section locked-input-evidence">
+      <div className="result-title">
+        <span>{zh ? "锁定输入证据包" : "LOCKED INPUT EVIDENCE PACK"}</span>
+        <h2>{zh ? "冻结结果不变；输入与标签总体现在可供审计。" : "The frozen result stays unchanged. Its input and label population is now auditable."}</h2>
+        <p>{zh ? "归档包含正式开启前生成的 400 个世界与 3,200 条元数据记录，对应 locked report 的相同种子范围与标签数量。" : "The archive contains 400 worlds and 3,200 metadata records generated before the formal open, matching the locked report's seed range and label counts."}</p>
+      </div>
+      <div className="benchmark-panel evidence-pack-panel">
+        <div className="benchmark-tags"><span>PRE-OPEN SIDECAR</span><span>INPUT + LABEL ONLY</span><span>0 INFERENCE RUNS</span><span>SHA256 VERIFIED</span></div>
+        <div className="benchmark-grid evidence-pack-grid">
+          <article><span>{zh ? "世界" : "WORLDS"}</span><strong>400</strong></article>
+          <article><span>{zh ? "元数据记录" : "METADATA RECORDS"}</span><strong>3,200</strong></article>
+          <article><span>{zh ? "BLOCKED / CLEAR" : "BLOCKED / CLEAR"}</span><strong>1,560<small> / 1,640</small></strong></article>
+          <article className="archive-identity"><span>{zh ? "归档 SHA256" : "ARCHIVE SHA256"}</span><code title={lockedInputEvidence.archiveSha256}>{lockedInputEvidence.archiveSha256}</code></article>
+        </div>
+        <div className="evidence-boundary-grid">
+          <article>
+            <b>{zh ? "它建立了什么" : "WHAT IT ESTABLISHES"}</b>
+            <p>{zh ? "一个字节身份明确、路径中立的输入与标签归档；包含运行时合法的 RGB、噪声深度与走廊掩码，以及仅用于评估的标签产物。" : "A byte-identified, path-neutral input-and-label archive with runtime-legal RGB, noisy depth and corridor masks, plus evaluation-only label artifacts."}</p>
+          </article>
+          <article className="boundary-warning">
+            <b>{zh ? "它不能建立什么" : "WHAT IT CANNOT ESTABLISH"}</b>
+            <p>{zh ? "它不含原始 one-shot 逐样本预测，也不含 24 个原始 locked live 回合。因此它不能复算 1.000 指标或重建原始 one-shot 执行。" : "It does not contain the original one-shot per-sample predictions or the 24 raw locked live episodes. It cannot recompute the 1.000 metrics or reconstruct the original one-shot execution."}</p>
+          </article>
+        </div>
+        <p className="range-boundary">{zh ? "种子 102500–102699 只是来自相同生成器家族的预留挑战范围，未被评测；本项目不将其表述为 OOD 证据。预开启时间来自第一方 sidecar，并非外部时间戳认证。" : "Seeds 102500–102699 are a reserved challenge range from the same generator family and were not evaluated; they are not presented as OOD evidence. Pre-open chronology comes from a first-party sidecar, not an external timestamp authority."}</p>
+        <div className="evidence-links">
+          <a href={lockedInputEvidence.archiveUrl} target="_blank" rel="noreferrer">{zh ? "下载 1,019,307,579 字节归档 ↗" : "DOWNLOAD 1,019,307,579-BYTE ARCHIVE ↗"}</a>
+          <a href={lockedInputEvidence.noteUrl} target="_blank" rel="noreferrer">{zh ? "阅读证据说明 ↗" : "READ EVIDENCE NOTE ↗"}</a>
+          <a href={lockedInputEvidence.manifestUrl} target="_blank" rel="noreferrer">{zh ? "检查路径中立 MANIFEST ↗" : "INSPECT PATH-NEUTRAL MANIFEST ↗"}</a>
+        </div>
+      </div>
+    </section>
     {utility && <section className="result-section utility-evidence">
       <div className="result-title"><span>{zh ? "锁定成对任务效用" : "LOCKED PAIRED TASK UTILITY"}</span><h2>{zh ? "安全拒绝是底线；主动修证让有用行动重新发生。" : "Safe refusal is the baseline. Active repair earns useful action back."}</h2><p>{zh ? "12 个相同世界、两种策略成对比较；24 个回合均从初始拒绝开始。" : "Twelve identical paired worlds, two policies; all 24 episodes began with the same initial denial."}</p></div>
       <div className="benchmark-panel">
@@ -191,6 +236,25 @@ function Results() {
         <a href="/data/source/V8_FROZEN_INFERENCE_BENCHMARK.json" target="_blank">{zh ? "查看基准 JSON ↗" : "BENCHMARK JSON ↗"}</a>
       </div>
     </section>}
+    <section className="result-section rocm-telemetry-evidence">
+      <div className="result-title">
+        <span>{zh ? "冻结 ROCm 遥测窗口" : "FROZEN ROCm TELEMETRY WINDOW"}</span>
+        <h2>{zh ? "持续一分钟的受控前向负载，GPU 全程有据可查。" : "One sustained minute of controlled forwards, with the GPU accounted for."}</h2>
+        <p>{zh ? "独立的提交期测量；准确 checkpoint 在加载前通过 SHA 校验，clean preflight 在模型加载前记录到零 KFD 计算进程、0% GPU 使用率和 0% VRAM 分配。" : "A separate submission-time measurement. The exact checkpoint passed SHA verification before load; a clean preflight recorded zero KFD compute processes, 0% GPU use and 0% VRAM allocation before model load."}</p>
+      </div>
+      <div className="benchmark-panel telemetry-panel">
+        <div className="benchmark-tags"><span>CLEAN PREFLIGHT</span><span>BATCH 8</span><span>FP32</span><span>20 WARM-UP</span><span>1 Hz TELEMETRY</span></div>
+        <div className="benchmark-grid telemetry-grid">
+          <article><span>{zh ? "测量窗口" : "MEASURED WINDOW"}</span><strong>60.182<small> s</small></strong></article>
+          <article><span>{zh ? "GPU 使用率采样" : "GPU-USE SAMPLES"}</span><strong>61<small>/61 @ 100%</small></strong></article>
+          <article><span>{zh ? "平均封装功率" : "MEAN PACKAGE POWER"}</span><strong>135.33<small> W</small></strong></article>
+          <article><span>{zh ? "P95 封装功率" : "P95 PACKAGE POWER"}</span><strong>156<small> W</small></strong></article>
+          <article className="telemetry-throughput"><span>{zh ? "BATCH 8 图像 / 窗口" : "BATCH 8 IMAGES / WINDOW"}</span><strong>376<small> / 60.182 s</small></strong></article>
+        </div>
+        <p>{zh ? "该窗口仅测量持续的合成、预加载张量、FP32 冻结模型前向，包含 Python 调度和同步 ROCm 执行。它排除 RGB-D 预处理、Genesis 仿真与渲染、Go 证据融合、I/O 和动作执行；既不是端到端性能，也不是准确率评测。" : "This window measures only sustained synthetic, preloaded-tensor, FP32 frozen-model forwards, including Python dispatch and synchronized ROCm execution. It excludes RGB-D preprocessing, Genesis simulation and rendering, Go evidence fusion, I/O and actuation; it is neither end-to-end performance nor an accuracy evaluation."}</p>
+        <a href={rocmTelemetryUrl} target="_blank" rel="noreferrer">{zh ? "查看 61 条遥测记录与方法 JSON ↗" : "INSPECT 61 TELEMETRY SAMPLES AND METHOD JSON ↗"}</a>
+      </div>
+    </section>
     <section className="result-section"><div className="result-title"><span>{zh ? "能力边界" : "CAPABILITY ENVELOPE"}</span><h2>{zh ? "通过的不是单一模型，而是端到端动作保障链。" : "The evaluated unit is the end-to-end action assurance chain."}</h2></div><div className="capability-list">{profile.capabilities.map((capability, index) => <div key={capability}><b>{String(index + 1).padStart(2, "0")}</b><span>{capabilityLabels[capability]?.[zh ? "zh" : "en"] || capability.replaceAll("_", " ")}</span><i>{zh ? "已验证" : "VERIFIED"}</i></div>)}</div></section>
     <section className="result-section identities"><div className="result-title"><span>{zh ? "冻结身份" : "FROZEN IDENTITIES"}</span><h2>{zh ? "模型、校准与授权内核均可追溯。" : "Model, calibration and authorization identities are traceable."}</h2></div><div>{profile.artifact_identities.map((artifact) => <p key={artifact.artifact}><span>{artifactLabels[artifact.artifact]?.[zh ? "zh" : "en"] || artifact.artifact.replaceAll("_", " ")}</span><code>{artifact.sha256}</code></p>)}</div></section>
     <section className="result-section limits"><div className="result-title"><span>{zh ? "诚实边界" : "HONEST BOUNDARY"}</span><h2>{zh ? "我们明确系统做到了什么，也明确没有声称什么。" : "The boundary is part of the result."}</h2></div><div>{profile.limitations.map((limitation, index) => <article key={limitation.en}><b>0{index + 1}</b><p>{zh ? limitation.zh : limitation.en}</p></article>)}</div></section>

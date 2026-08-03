@@ -40,6 +40,38 @@ The authoritative report is
 
 These numbers may be used in the README, report, website, video, and PR body.
 
+### Locked input archive (input-only)
+
+The additive input-evidence pack is documented in
+`docs/V8_LOCKED_INPUT_EVIDENCE.md`; its path-neutral manifest is
+`release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json`.
+
+- Archive: 1,019,307,579 bytes, SHA256
+  `0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba`.
+- Sidecar SHA256:
+  `eaecfd450b807183aa0b26fad1cb6fc792202eda54d3abbcd8332f6373a84766`.
+- Manifest content identity:
+  `ed6f1bbf27aea692ba5e4b47cb7a1fb1e216e0978a473d70d0192bb2eb2a9d30`.
+- Population: 400 seeds and 3,200 metadata records, with all 3,600 JSON
+  records checked and no machine-local absolute paths.
+
+Verify a local copy without extracting it or running inference:
+
+```bash
+python3 scripts/verify_v8_locked_input_pack.py \
+  --archive /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz \
+  --sidecar /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.sidecar.json \
+  --check-only
+```
+
+This is an **input-only** evidence class. The verifier performs no model
+inference, does not reopen or rerun the locked split, and does not recompute
+the locked aggregate. The archive does not contain the original 3,200
+one-shot per-sample predictions or the 24 raw live full-chain episode files;
+the permanent report contains summaries, not substitutes for those raw
+outputs. The sidecar timestamp is first-party provenance and a post-run public
+binding, not an external timestamp authority.
+
 ### Submission-time derivation
 
 `release/v8-derived/V8_TASK_UTILITY_DERIVATION.json` reads only the permanent
@@ -72,6 +104,27 @@ locked open:
   fallback.
 
 They may be described as pre-locked checks, not locked results.
+
+### Frozen ROCm telemetry
+
+`release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json` (SHA256
+`0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`)
+records a clean-GPU preflight and a 60.182-second sustained synthetic,
+preloaded-tensor, FP32 model-forward workload at batch 8. It forwarded 376
+images; all 61/61 telemetry samples reported 100% GPU use, with 135.33 W mean
+and 156 W p95 graphics-package power.
+
+This telemetry applies only to the exact frozen model-forward workload. It is
+not end-to-end robot latency or throughput, excludes preprocessing, Genesis,
+Go fusion, I/O, and actuation, and is not an accuracy result. It did not open
+the locked split or change model weights, calibration, or thresholds.
+
+### Reserved challenge range
+
+The historical `ood_test` label for seeds 102500-102699 denotes only a
+**reserved challenge range** from the **same generator family**. V8 did not
+evaluate that range. No OOD or out-of-distribution generalization result is
+claimed.
 
 ## Public replay status
 
@@ -123,6 +176,8 @@ silently omitted from the research archive.
   presentation artifact, not the locked aggregate.
 - The locked result is an internal one-shot simulated evaluation, not a safety
   certification.
+- The locked input evidence pack is input-only; original one-shot predictions
+  and raw locked live episodes are not available in that pack.
 - The 159 MB frozen checkpoint is identified by SHA and distributed as a
   GitHub release asset because it exceeds GitHub's 100 MB file limit.
 - No external upstream contribution is claimed.
