@@ -252,8 +252,9 @@
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
     "rocm_telemetry_helper_tests": "3/3 passed; separate 60-second model-forward telemetry report validated",
+    "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
     "official_repository_staging_checksums": "passed locally and on the published branch; 19 checksummed artifacts verified (20 total files including SHA256SUMS); checksum-index SHA256 76c0fb8733afc16aa502ff63bda99fc94dd7dac8ea5557d6dc7dfb2bdea19dce",
-    "github_actions_ci": "run 30797817113 passed; Python, Purify Go, and showcase jobs all green",
+    "github_actions_ci": "functional evidence commit c97f8db0fc942a679ebc493beb06f419e7c16996; run 30808919006 passed; Python, Purify Go, and showcase jobs all green",
     "github_pages_deployment": "commit 02a55e0c979af98cb338edb7e8f83c9e97dfc780; Pages run 30808802226 completed successfully; routes and hashed client assets verified without credentials",
     "public_distribution": "release assets, refreshed Pages site, source branch, report, checkpoint, and official-fork package published and verified without credentials",
     "official_fork_branch": "20 intended files published on the Liu Liang branch at commit a004dbde9f439adde9787e188af8b1873382e2f9; 19 checksum entries passed; official_pr_opened=false"
