@@ -59,7 +59,8 @@ function HomeContent() {
           <div className="truth-strip">
             <span>{zh ? "AMD 全流程墙钟遥测" : "AMD FULL-WALL TELEMETRY"}</span>
             <span>{zh ? "仅限仿真" : "SIMULATION ONLY"}</span>
-            <span>{zh ? "一台共享 GENESIS 底盘" : "ONE SHARED GENESIS CHASSIS"}</span>
+            <span>{zh ? "冻结策略：一台共享 GENESIS 底盘" : "FROZEN POLICY: ONE SHARED GENESIS CHASSIS"}</span>
+            <span>{zh ? "独立补充：双刚体动力学 20/20" : "SEPARATE DYNAMICS: DUAL RIGID BODIES 20/20"}</span>
           </div>
         </div>
         <div className="hero-system" aria-label={zh ? "Look Twice 系统状态" : "Look Twice system status"}>
@@ -115,7 +116,7 @@ function HomeContent() {
         <div className="platform-row">
           <div><span>AMD GPU</span><p>{zh ? "加速 Genesis RGB-D、空间视觉推理与实验矩阵。" : "Accelerates Genesis RGB-D, spatial vision inference and experiment matrices."}</p></div>
           <div><span>PURIFY</span><p>{zh ? "检查校准、谱系、独立根与动作合同，并签发门控回执（GateReceipt）。" : "Checks calibration, lineage, independent roots and the action contract, then signs the GateReceipt."}</p></div>
-          <div><span>{zh ? "诚实边界" : "BOUNDARY"}</span><p>{zh ? "同生成器、运动学仿真；Carrier 与 Scout 是一台共享 Genesis 底盘上的两个逻辑角色，不声称双真机或安全认证。" : "Same-generator kinematic simulation. Carrier and Scout are logical roles on one shared Genesis chassis—not two physical robots or a safety certification."}</p></div>
+          <div><span>{zh ? "诚实边界" : "BOUNDARY"}</span><p>{zh ? "冻结完整策略仍是共享底盘运动学。另有 20-seed 非锁定补充验证两个独立非固定刚体的轮驱运动；它不是策略重跑、双真机或安全认证。" : "The frozen full policy remains shared-chassis kinematic. A separate 20-seed non-locked supplement validates wheel motion by two non-fixed rigid bodies; it is not a policy rerun, two physical robots or a safety certification."}</p></div>
         </div>
       </section>
 

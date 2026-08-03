@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { SiteShell, useLanguage } from "../components/SiteShell";
 import { challengeEvidence } from "../lib/challengeEvidence";
+import {
+  dynamicsEvidence,
+  type DynamicsReport,
+} from "../lib/dynamicsEvidence";
 import type { ReleaseProfile } from "../lib/types";
 import "./results.css";
 
@@ -193,6 +197,7 @@ function Results() {
   const [benchmark, setBenchmark] = useState<BenchmarkReport | null>(null);
   const [utility, setUtility] = useState<TaskUtilityReport | null>(null);
   const [challenge, setChallenge] = useState<ChallengeReport | null>(null);
+  const [dynamics, setDynamics] = useState<DynamicsReport | null>(null);
   useEffect(() => {
     fetch("/data/manifest.json").then((response) => response.json()).then((manifest) => {
       const selected = manifest.profiles.find(
@@ -224,6 +229,13 @@ function Results() {
       })
       .then(setChallenge)
       .catch(() => setChallenge(null));
+    fetch(dynamicsEvidence.reportUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("dynamics report unavailable");
+        return response.json();
+      })
+      .then(setDynamics)
+      .catch(() => setDynamics(null));
   }, []);
   if (!profile || !challenge) return <div className="loading">{zh ? "正在加载已验证挑战证据…" : "LOADING VERIFIED CHALLENGE EVIDENCE…"}</div>;
   const batchOne = benchmark?.results.find((item) => item.batch_size === 1);
@@ -238,6 +250,11 @@ function Results() {
     (1 - burden.loaded_carrier.active.mean / burden.loaded_carrier.passive.mean) * 100;
   const teamIncrease =
     (burden.total_team.active.mean / burden.total_team.passive.mean - 1) * 100;
+  const dynamicsPoseWrites =
+    dynamics?.trials.reduce(
+      (total, trial) => total + trial.script_entity_set_pos_calls_after_build,
+      0,
+    ) ?? 0;
   return <main>
     <header className="page-header challenge-page-header"><div><span className="eyebrow">{zh ? "公开预注册挑战 / 独立验证通过" : "PUBLICLY PREREGISTERED CHALLENGE / INDEPENDENTLY VERIFIED"}</span><h1>{zh ? "结果，带着回执。" : "Results, with receipts."}</h1></div><p>{zh ? "首屏是 30 个同生成器世界、60 个预注册回合的挑战结果。原 12-pair permanent locked test 与旧 synthetic 60s 前向演示在下方分开保留。" : "The first evidence tier is the preregistered 30-world, 60-episode same-generator challenge. The original 12-pair permanent locked test and the older synthetic 60s forward demo remain explicitly separate below."}</p></header>
     <section className="result-section challenge-primary-evidence">
@@ -297,6 +314,41 @@ function Results() {
         </div>
       </div>
     </section>
+    {dynamics?.summary.all_passed && <section className="result-section dynamics-evidence">
+      <div className="result-title">
+        <span>{zh ? "独立补充 · 双实体刚体动力学" : "SEPARATE ADDITIVE · DUAL-BODY RIGID DYNAMICS"}</span>
+        <h2>{zh ? "两个非固定实体；只用轮速驱动；20 个固定种子全通过。" : "Two non-fixed bodies. Wheel actuation only. All 20 fixed seeds passed."}</h2>
+        <p>{zh ? "该补充回答一个窄问题：逻辑 Carrier 与 Scout 能否另行实例化为两个 Genesis 刚体并完成有界仓储运动。它不是冻结 V8 策略重跑，也不替换上方 29/30 主结果。" : "This supplement answers one narrow question: can the logical Carrier and Scout roles also be instantiated as two Genesis rigid bodies and complete bounded warehouse motion? It is not a frozen-policy rerun and does not replace the 29/30 primary result above."}</p>
+      </div>
+      <div className="benchmark-panel dynamics-panel">
+        <div className="benchmark-tags"><span>ADDITIVE NON-LOCKED</span><span>20 FIXED SEEDS</span><span>AMD ROCm</span><span>REMOTE + LOCAL VERIFIER PASS</span></div>
+        <div className="benchmark-grid dynamics-grid">
+          <article><span>{zh ? "通过" : "PASSED"}</span><strong>{dynamics.summary.passed}<small>/{dynamics.summary.trials}</small></strong></article>
+          <article><span>{zh ? "非固定机器人实体" : "NON-FIXED ROBOT ENTITIES"}</span><strong>{dynamics.summary.distinct_non_fixed_robot_entities}</strong></article>
+          <article><span>{zh ? "障碍物 / 双车接触行" : "BLOCKER / PAIR CONTACT ROWS"}</span><strong>{dynamics.summary.total_obstacle_contact_rows}<small> / {dynamics.summary.total_pair_robot_contact_rows}</small></strong></article>
+          <article><span>{zh ? "BUILD 后脚本位姿写入" : "SCRIPT POSE WRITES AFTER BUILD"}</span><strong>{dynamicsPoseWrites}</strong></article>
+        </div>
+        <div className="dynamics-audit-grid">
+          <article><b>{zh ? "稳定性" : "STABILITY"}</b><strong>{dynamics.summary.maximum_tilt_deg.toFixed(2)}°</strong><p>{zh ? `最大倾角；固定上限 20°。最大静止伙伴漂移 ${(dynamics.summary.maximum_stationary_partner_drift_m * 100).toFixed(2)} cm，上限 8 cm。` : `Maximum tilt against a fixed 20° ceiling. Maximum parked-partner drift was ${(dynamics.summary.maximum_stationary_partner_drift_m * 100).toFixed(2)} cm against an 8 cm ceiling.`}</p></article>
+          <article><b>{zh ? "有界真实运动" : "BOUNDED NONTRIVIAL MOTION"}</b><strong>{dynamics.summary.mean_carrier_path_m.toFixed(2)}<small> m</small></strong><p>{zh ? `载荷车平均路径；Scout 平均 ${dynamics.summary.mean_scout_path_m.toFixed(2)} m。后构建唯一驱动 API 是 ${dynamics.protocol.post_build_actuation_api}。` : `Mean carrier path; the scout mean was ${dynamics.summary.mean_scout_path_m.toFixed(2)} m. The only post-build actuation API was ${dynamics.protocol.post_build_actuation_api}.`}</p></article>
+          <article className="boundary-warning"><b>{zh ? "解释边界" : "INTERPRETATION BOUNDARY"}</b><strong>{zh ? "顺序驱动" : "SEQUENTIAL PHASES"}</strong><p>{zh ? "先驱动 Scout、Carrier 保持停车；再驱动 Carrier、Scout 保持停车。这证明双实体轮驱动力学，不证明完整策略已迁移为双机同时协作，也不是真机结果。" : "The scout moved while the carrier stayed parked, then the carrier moved while the scout stayed parked. This validates dual-body wheel dynamics—not a full-policy conversion to simultaneous cooperative control, and not a physical-robot result."}</p></article>
+          <article><b>{zh ? "恢复透明度" : "RECOVERY TRANSPARENCY"}</b><strong>3600 → 10800<small> s</small></strong><p>{zh ? "第一次只有外部 watchdog 超时，未写报告、未观察 seed 结果。第二次仅增加 watchdog；代码、20 seeds、阈值完全不变。" : "Attempt 1 hit only the external watchdog before any report or seed outcome was observed. Attempt 2 changed only that watchdog; code, 20 seeds and thresholds stayed fixed."}</p></article>
+        </div>
+        <div className="challenge-identities dynamics-identities">
+          <span><b>REPORT SHA256</b><code>{dynamicsEvidence.reportSha256}</code></span>
+          <span><b>RECOVERY AUDIT SHA256</b><code>{dynamicsEvidence.recoveryAuditSha256}</code></span>
+          <span><b>SOURCE COMMIT</b><code>{dynamicsEvidence.sourceCommit}</code></span>
+        </div>
+        <div className="evidence-links">
+          <a href={dynamicsEvidence.reportUrl} target="_blank">{zh ? "机器报告 ↗" : "MACHINE REPORT ↗"}</a>
+          <a href={dynamicsEvidence.timeoutAuditUrl} target="_blank">{zh ? "超时审计 ↗" : "TIMEOUT AUDIT ↗"}</a>
+          <a href={dynamicsEvidence.recoveryAuditUrl} target="_blank">{zh ? "RECOVERY 审计 ↗" : "RECOVERY AUDIT ↗"}</a>
+          <a href={dynamicsEvidence.checksumsUrl} target="_blank">SHA256SUMS ↗</a>
+          <a href={dynamicsEvidence.protocolUrl} target="_blank" rel="noreferrer">{zh ? "固定协议 ↗" : "FIXED PROTOCOL ↗"}</a>
+          <a href={dynamicsEvidence.resultNoteUrl} target="_blank" rel="noreferrer">{zh ? "结果说明 ↗" : "RESULT NOTE ↗"}</a>
+        </div>
+      </div>
+    </section>}
     <div className="evidence-tier-note"><span>{zh ? "原始永久锁定证据 · 与上方挑战分开" : "ORIGINAL PERMANENT LOCKED EVIDENCE · SEPARATE FROM THE CHALLENGE ABOVE"}</span><p>{zh ? "以下 11/12、0/24 与 3,200-sample 结果仍按原报告保留，不由新挑战覆盖。" : "The 11/12, 0/24 and 3,200-sample results below remain attached to their original report; the new challenge does not overwrite them."}</p></div>
     <section className="results-metrics">{profile.headline_metrics.map((metric) => <article key={metric.metric_id}><span>{zh ? metric.label.zh : metric.label.en}</span><strong>{metric.value}<small>/{metric.denominator}</small></strong><a href="/data/source/LOCKED_TEST_REPORT.json" target="_blank">{zh ? "查看源 JSON ↗" : "SOURCE JSON ↗"}</a></article>)}</section>
     {locked && <section className="result-section offline-evidence">

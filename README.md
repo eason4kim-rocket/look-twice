@@ -32,7 +32,8 @@ deployment or a certified safety controller.
    Python and Purify admission -> direct route.
 3. Compare the passive replay: the same initial denial produces a safe detour.
 4. Inspect the [frozen results](https://eason4kim-rocket.github.io/results/)
-   and open the linked source JSON.
+   and open the linked source JSON, including the separate 20/20 dual-body
+   rigid-dynamics supplement.
 5. Use the CPU-only audit below to verify the replay bundles and frozen SHA
    boundary locally.
 
@@ -157,6 +158,37 @@ The older replay ledger remains in the
 [task-utility derivation](release/v8-derived/V8_TASK_UTILITY_DERIVATION.json),
 SHA256 `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
 
+## Separate additive dual-body rigid dynamics
+
+A predeclared submission-time supplement tests a narrower implementation
+boundary without changing the frozen V8 endpoint. Across fixed seeds
+`160820-160839`, one Genesis scene instantiated **40 distinct non-fixed robot
+entities**: one loaded carrier and one scout per seed. The scout moved first
+while its carrier stayed parked; the carrier then followed the clear corridor
+while its scout stayed parked. The only post-build actuation API was wheel-DOF
+`control_dofs_velocity`.
+
+The complete Radeon/ROCm run passed **20/20** seeds with zero trial-blocker
+contact rows, zero carrier/scout pair-contact rows, and zero script pose writes
+after `scene.build()`. Maximum body tilt was 10.750 degrees and maximum parked
+partner drift was 0.018061 m. Mean paths were 1.645 m for the scout and 4.760 m
+for the carrier. The report passed the same verifier on the Radeon host and
+locally and hashes to
+`8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+
+The first whole-process attempt hit an external 3,600-second watchdog before
+writing a report or exposing any seed result. Recovery changed only that
+watchdog to 10,800 seconds; commit, code and URDF bytes, fixed seeds, protocol,
+and thresholds remained identical. Both attempts are retained in the sealed
+directory. See the [result note](docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md),
+[fixed protocol](docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_PROTOCOL.md), and
+[machine report](release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json).
+
+This is additive, non-locked evidence with `formal_result_eligible=false`. It
+shows bounded wheel-actuated motion by two separate rigid bodies; it is not a
+rerun of the frozen active/passive policy, simultaneous cooperative-policy
+control, physical-robot validation, or sim-to-real evidence.
+
 ## What is novel
 
 - **Evidence lineage, not sensor counting.** RGB and depth from one capture
@@ -217,6 +249,12 @@ Purify Go receipts; totals were 268 RGB-D observations, 134 vision proposals,
 and 268 Go invocations/receipts. These remain kinematic simulation results,
 not control-loop latency, energy per mission, or physical actuation evidence.
 
+The dual-body supplement separately ran Genesis 1.1.2 with `gs.amdgpu`,
+PyTorch 2.9.1 and HIP 7.2 on the same Radeon class. It uses physics-based
+non-fixed URDF bodies and wheel-joint velocity control rather than the frozen
+policy's kinematic role poses. Its 4,299.992-second execution is an acceptance
+run, not a throughput, energy, or control-loop-latency benchmark.
+
 ## Reproduce the submitted evidence
 
 ### CPU-only evidence audit
@@ -257,6 +295,16 @@ python3 scripts/verify_v8_frozen_challenge.py \
 The deterministic verification file must hash to
 `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`.
 
+To verify the separate dual-body report and recovery chain without a GPU:
+
+```bash
+cd release/v8-derived/dual_body_dynamics_160820_160839
+shasum -a 256 -c SHA256SUMS
+cd ../../..
+python3 scripts/verify_v8_additive_dual_body_dynamics.py \
+  release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json
+```
+
 ### Run the evidence console
 
 ```bash
@@ -285,17 +333,18 @@ and verify SHA256
 
 | Criterion | Evidence |
 | --- | --- |
-| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Additive preregistered 30-world supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D inference, exact-checkpoint benchmark, and 844 samples across the complete 1,685.5-second/60-episode Genesis + checkpoint + Go challenge wall. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Additive preregistered 30-world supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate non-locked rigid-dynamics bar: 20/20 fixed seeds, 40 non-fixed robot entities, zero blocker/pair contacts and zero post-build pose writes. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D inference, exact-checkpoint benchmark, 844 samples across the complete 1,685.5-second/60-episode Genesis + checkpoint + Go challenge wall, and a 4,299.992-second dual-body wheel-dynamics acceptance run. |
 | Innovation and originality - 20 | Lineage-aware Claims, conformal action qualification, dual authorization, BeliefGap-driven active repair, and signed receipts. |
 | Real-world application value - 20 | Warehouse AMR burden trade measured over 30 pairs: active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%, with all missions completed safely. |
-| Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. No external upstream PR is claimed. |
+| Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. A focused Genesis URDF inertial-origin fix and required regression test are prepared locally with baseline-fail/patch-pass evidence; no public external PR is claimed until owner approval. |
 
 ## Submission deliverables
 
 - [English V8 technical report](docs/V8_TECHNICAL_REPORT.md)
 - [One-page V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md)
 - [Preregistered 30-world challenge report](release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json)
+- [Verified 20-seed dual-body dynamics result](docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md)
 - [Independently verified raw challenge archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz)
 - [Rendered technical report PDF](output/pdf/Look-Twice-V8-Technical-Report.pdf)
 - [Detailed reproduction guide](docs/V8_REPRODUCTION.md)
@@ -327,6 +376,10 @@ and verify SHA256
 - `scripts/derive_v8_task_utility.py` - locked paired-route and guarded replay
   cost derivation without rerunning V8;
 - `scripts/verify_v8_rocm_environment.py` - exact ROCm core identity preflight;
+- `scripts/run_v8_additive_dual_body_dynamics.py` - fixed-seed, wheel-actuated
+  dual-body rigid-dynamics supplement;
+- `scripts/verify_v8_additive_dual_body_dynamics.py` - fail-closed report,
+  source-identity, AMD-environment, and all-seed verifier;
 - `scripts/verify_frozen_foundation.py` - frozen-boundary verifier.
 
 ## Evidence boundary
@@ -338,5 +391,10 @@ preregistered same-generator supplement; seeds 102530-102699 remain
 unevaluated. Neither subset is presented as OOD evidence. Source-recovery
 completion is not treated as a calibration pass. See
 [V8 evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md).
+
+The 20-seed dual-body rigid-dynamics result is a separate submission-time,
+non-locked supplement. It does not overwrite the shared-chassis kinematic
+realization used by the frozen V8 policy and does not become a new formal
+endpoint.
 
 Apache-2.0. `NOTICE` defines the public Purify reference-core boundary.

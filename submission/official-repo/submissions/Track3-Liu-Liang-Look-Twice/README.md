@@ -31,6 +31,10 @@ sim-to-real transfer, or safety certification.
   [packaged copy](V8-Frozen-Challenge-Judge-Card.md)
 - Post-hoc descriptive offline route-feasibility audit:
   [packaged JSON](evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json)
+- Separate additive dual-body dynamics result:
+  [machine report](evidence/dual_body_dynamics_160820_160839/REPORT.json) ·
+  [recovery audit](evidence/dual_body_dynamics_160820_160839/RECOVERY_EXECUTION_AUDIT.json) ·
+  [checksums](evidence/dual_body_dynamics_160820_160839/SHA256SUMS)
 - Independent machine verification:
   [packaged JSON](evidence/challenge_102500_102529/VERIFICATION.json) ·
   [stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json)
@@ -54,7 +58,7 @@ sim-to-real transfer, or safety certification.
 The 30-second file is a silent evidence preview. The 3:59 MP4 is the complete
 narrated workflow demonstration. The replacement MP4 and sidecar were
 downloaded from their stable release targets without credentials and matched
-the packaged SHA256 identities on 2026-08-03. The final 12-page report is
+the packaged SHA256 identities on 2026-08-03. The final 13-page report is
 packaged here and bound by `SHA256SUMS`; its release URL is the publication
 target.
 
@@ -69,7 +73,9 @@ target.
 4. Confirm that direct travel requires Python **and** Purify Go admission.
 5. Inspect the 844-sample full-wall Radeon telemetry and 30-world
    carrier/scout burden table.
-6. Open Results and trace the permanent locked numbers separately.
+6. Inspect the separately labeled 20/20 dual-body wheel-dynamics acceptance
+   result and its retained timeout/recovery chain.
+7. Open Results and trace the permanent locked numbers separately.
 
 ## Why the result matters
 
@@ -127,6 +133,32 @@ Genesis chassis, not two physical robots or simultaneous dual-body dynamics.
 
 This supplement is same-generator and non-locked. It is not a second locked
 open, OOD result, rigid-body test, or physical-robot result.
+
+## Separate additive dual-body rigid dynamics
+
+A fixed submission-time protocol tested one narrow implementation gap without
+rerunning or relabeling the frozen policy endpoint. Seeds `160820-160839`
+instantiated a loaded carrier and a scout as separate non-fixed Genesis URDF
+bodies: **40 distinct robot entities** across 20 non-overlapping scenes. The
+scout moved while the carrier stayed parked, then the carrier moved while the
+scout stayed parked. The only post-build actuation API was wheel-DOF
+`control_dofs_velocity`; the script made no pose write after `scene.build()`.
+
+The AMD Radeon/ROCm acceptance run passed **20/20** fixed seeds with zero
+trial-blocker contact rows, zero carrier/scout pair-contact rows, and zero
+post-build pose writes. Maximum tilt was 10.750 degrees, maximum parked-partner
+drift was 0.018061 m, and mean scout/carrier paths were 1.645/4.760 m. The
+byte-identical report passed the same verifier remotely and locally and hashes
+to `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+
+The first whole-process attempt reached only an external 3,600-second watchdog
+before any report or seed result was observed. Recovery changed only that
+watchdog to 10,800 seconds; source commit, runner/URDF bytes, fixed seeds,
+protocol, and thresholds stayed unchanged. Both audits are packaged. This is
+additive, non-locked evidence with `formal_result_eligible=false`: it validates
+bounded wheel motion by two rigid bodies, not a frozen-policy rerun,
+simultaneous cooperative control, a physical robot, sim-to-real transfer, or
+safety certification.
 
 ## Frozen V8 result
 
@@ -189,6 +221,11 @@ frozen checkpoint; totals were 268 RGB-D observations, 134 vision proposals,
 and 268 real Go invocations/receipts. These are kinematic simulation and full
 subprocess-wall measurements, not physical energy or control-loop latency.
 
+The dual-body supplement separately retained a 4,299.992-second Genesis
+1.1.2/`gs.amdgpu` execution on the Radeon host. This is a fixed-seed acceptance
+bar, not throughput, mission energy, control-loop latency, or a physical-device
+benchmark.
+
 ## Reproduction and identities
 
 The dedicated source branch provides a deterministic CPU evidence audit,
@@ -231,6 +268,7 @@ copies. Verify the complete official package from this directory with:
 sha256sum -c SHA256SUMS
 jq -e '.passed == true and (.errors | length) == 0' \
   evidence/challenge_102500_102529/VERIFICATION.json
+shasum -a 256 -c evidence/dual_body_dynamics_160820_160839/SHA256SUMS
 ```
 
 The 239.000-second final demo is 9,032,035 bytes and must hash to:
@@ -253,7 +291,8 @@ The compact [evidence directory](evidence/README.md) contains the scrubbed
 locked report, exact-checkpoint Radeon benchmark, raw sustained telemetry,
 locked-input manifest, frozen import manifest, machine-readable task-utility
 derivation, and the preregistered challenge report, run manifest, full-wall
-ROCm telemetry, independent verification, and raw-archive checksum index.
+ROCm telemetry, independent verification, raw-archive checksum index, plus the
+separately labeled dual-body report and timeout/recovery audit chain.
 The machine-readable [package manifest](SUBMISSION_PACKAGE.json) states the
 included payload and evidence boundaries. Every packaged regular file except
 the checksum index itself is bound by [SHA256SUMS](SHA256SUMS).

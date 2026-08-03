@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-submission-package/v1",
-  "generated_on": "2026-08-03",
-  "status": "review_ready_no_pr",
+  "generated_on": "2026-08-04",
+  "status": "local_review_packet_ready_no_pr",
   "competition": {
     "name": "AMD AI DevMaster Hackathon 2026",
     "track": "Track 3 - Physical AI",
@@ -15,6 +15,11 @@
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
     "public_targets_anonymously_verified": true,
+    "additive_source_refresh_published": false,
+    "additive_pages_refresh_deployed": false,
+    "additive_report_release_asset_replaced": false,
+    "additive_official_fork_refresh_pushed": false,
+    "external_upstream_issue_or_pr_opened": false,
     "entrant_team_name": "Liu Liang",
     "entrant_role": "solo entrant",
     "entrant_github": "eason4kim-rocket",
@@ -94,6 +99,42 @@
     "not_simultaneous_dual_body_dynamics": true,
     "interpretation_limit": "Kinematic same-generator simulated evidence; not locked, OOD, physical-robot, energy, latency, throughput, or physical-duty-cycle evidence."
   },
+  "additive_dual_body_dynamics": {
+    "evidence_class": "additive non-locked rigid-dynamics acceptance supplement",
+    "formal_result_eligible": false,
+    "seed_range": "160820-160839",
+    "fixed_seeds": 20,
+    "passed": "20/20",
+    "failed": 0,
+    "non_fixed_robot_entities": 40,
+    "trial_blocker_contact_rows": 0,
+    "carrier_scout_pair_contact_rows": 0,
+    "post_build_script_pose_writes": 0,
+    "post_build_actuation_api": "control_dofs_velocity only",
+    "motion_phases": "sequential scout motion, then carrier motion; partner parked in each phase",
+    "maximum_tilt_deg": 10.749535905470491,
+    "maximum_parked_partner_drift_m": 0.01806064719744134,
+    "mean_scout_path_m": 1.6449826981579758,
+    "mean_carrier_path_m": 4.760431209504988,
+    "source_commit": "c17c3a17904af34ba514d68e6e5ad8d1d96a353b",
+    "report_sha256": "8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110",
+    "first_attempt": {
+      "status": "infrastructure watchdog timeout",
+      "watchdog_seconds": 3600,
+      "process_exit": 124,
+      "report_observed": false,
+      "per_seed_outcomes_observed": 0,
+      "audit_sha256": "711547fb5f0ab928ae5cc8b6195f4e0e964a98f6df44dfa2955c67e624705d55"
+    },
+    "recovery": {
+      "watchdog_seconds": 10800,
+      "only_changed_field": "outer infrastructure watchdog",
+      "seeds_retried_replaced_or_resampled": 0,
+      "audit_sha256": "6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e"
+    },
+    "report_verified_remotely_and_locally": true,
+    "interpretation_limit": "Bounded sequential wheel motion by two non-fixed rigid bodies; not a frozen-policy rerun, simultaneous cooperative control, physical-robot validation, sim-to-real evidence, safety certification, throughput, mission energy, or control-loop latency."
+  },
   "confirmatory_cost_ledger": {
     "seed": 105400,
     "formal_result_eligible": false,
@@ -171,6 +212,22 @@
       "oracle_available_to_controller": false,
       "preregistered_endpoint": false
     },
+    "additive_dual_body_dynamics": {
+      "report_path": "release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json",
+      "staged_report_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/dual_body_dynamics_160820_160839/REPORT.json",
+      "report_sha256": "8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110",
+      "report_size_bytes": 414490,
+      "timeout_audit_path": "release/v8-derived/dual_body_dynamics_160820_160839/ATTEMPT_1_TIMEOUT_AUDIT.json",
+      "timeout_audit_sha256": "711547fb5f0ab928ae5cc8b6195f4e0e964a98f6df44dfa2955c67e624705d55",
+      "recovery_audit_path": "release/v8-derived/dual_body_dynamics_160820_160839/RECOVERY_EXECUTION_AUDIT.json",
+      "recovery_audit_sha256": "6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e",
+      "directory_sha256sums_path": "release/v8-derived/dual_body_dynamics_160820_160839/SHA256SUMS",
+      "directory_sha256sums_sha256": "6470aaab8fa8ffc1132f7aea7fd0869a3e0a084bcae92d615d920730079204f2",
+      "remote_verifier_passed": true,
+      "local_verifier_passed": true,
+      "publication_verified": false,
+      "publication_state": "local review identity; not pushed or deployed"
+    },
     "locked_input_evidence_pack": {
       "archive_name": "v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
       "archive_sha256": "0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba",
@@ -198,11 +255,12 @@
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa",
-      "size_bytes": 1077809,
-      "page_count": 12,
+      "sha256": "43b605b870994a809a175e88b8b424ec152ceb386e423bcbd542373d3338207e",
+      "size_bytes": 1081757,
+      "page_count": 13,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
-      "publication_verified": true
+      "publication_verified": false,
+      "publication_state": "local additive identity; stable URL still serves earlier baseline pending owner approval"
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -241,7 +299,10 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "status": "official_fork_branch_published_and_verified_no_pr"
+      "checksummed_artifacts": 24,
+      "total_regular_files_including_sha256sums": 25,
+      "sha256s_sha256": "2c7ff96ab01eb0994ed31ad4457439325314bf289ceccfa1130980d2e89dd4dd",
+      "status": "local_additive_refresh_ready_no_push_no_pr"
     }
   },
   "links": {
@@ -254,38 +315,44 @@
     "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07",
     "official_fork": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07",
     "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8",
-    "public_targets_anonymously_verified": true
+    "public_targets_anonymously_verified": true,
+    "additive_refresh_publicly_verified": false
   },
   "verification": {
     "frozen_foundation": "passed",
     "python_replay_tests": "6/6 passed",
     "go_tests": "passed",
-    "node_22_site_tests": "27/27 passed",
+    "node_22_site_tests": "31/31 passed",
     "node_22_lint": "passed",
     "node_dependency_audit": "0 known vulnerabilities",
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
-    "pdf_visual_qa": "12/12 pages inspected",
-    "browser_visual_qa": "prior prepared build passed hydrated desktop and mobile visual QA; refreshed challenge build passed production rendering, route, and referenced-client-asset checks; in-app browser session was unavailable for a refreshed visual re-check",
+    "pdf_visual_qa": "13/13 pages inspected after final regeneration",
+    "browser_visual_qa": "refreshed additive home and Results pages passed hydrated desktop inspection; the separate dual-body card, scope boundary, report/audit links, and checksum identities rendered correctly; no site-origin console errors",
     "submission_surface_credential_scan": "passed",
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
     "rocm_telemetry_helper_tests": "3/3 passed; separate 60-second model-forward telemetry report validated",
     "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
     "feasibility_audit_tests": "10/10 passed; derived artifact matched the 30 archived active episodes and preserved the 29/30 formal primary",
-    "official_repository_staging_checksums": "passed locally and on official-fork branch 32cff1a1e77952e689f4730ff21b8a8a8ad01a63; 20 checksummed artifacts verified (21 total files including SHA256SUMS); checksum-index SHA256 223d8290072d71b182427d1ad4a0c6f8d174608e02994ed6a2ebe929d79d1108",
+    "additive_dynamics_tests": "7/7 unit and verifier tests passed; remote and local report verification passed; 20/20 formal seeds, failed 0",
+    "official_repository_staging_checksums": "24 checksummed artifacts passed locally (25 total files including SHA256SUMS); checksum-index SHA256 2c7ff96ab01eb0994ed31ad4457439325314bf289ceccfa1130980d2e89dd4dd; additive refresh not pushed",
     "github_actions_ci": "functional feasibility-audit commit 5d929f8f223a184b3670c4be51f8256e127ebd6c; run 30811281217 passed; Python, Purify Go, and showcase jobs all green",
     "github_pages_deployment": "commit dd741c24d7264e292c755d1547d4943dd2389333; Pages run 30811406679 completed successfully; four routes, feasibility JSON, PDF, and referenced client assets verified without credentials",
-    "public_distribution": "feasibility audit, refreshed Pages site, source branch, report PDF release asset, and official-fork package published and verified without credentials",
-    "official_fork_branch": "21 intended files published on the Liu Liang branch at commit 32cff1a1e77952e689f4730ff21b8a8a8ad01a63; 20 checksum entries passed; official_pr_opened=false"
+    "public_distribution": "previous challenge/feasibility baseline remains public and anonymously verified; additive dynamics source, site, 13-page PDF, and 25-file package are local only pending owner approval",
+    "official_fork_branch": "public branch remains at the earlier 21-file baseline commit 32cff1a1e77952e689f4730ff21b8a8a8ad01a63; local 25-file additive refresh is verified but unpushed; official_pr_opened=false"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",
-    "Review the English PR body and authorize opening the official PR."
+    "Review the additive source/site/PDF/official-package diff and authorize or reject publication.",
+    "Review the prepared Genesis issue and PR packet and authorize or reject upstream publication.",
+    "Review the English competition PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
     "complete owner visual and audible review of the final 3:59 English demo",
+    "obtain owner approval to publish and anonymously verify the additive source/site/PDF/official-fork refresh",
+    "obtain separate owner approval before filing the Genesis upstream issue or PR",
     "obtain owner approval to open the official English submission PR"
   ]
 }

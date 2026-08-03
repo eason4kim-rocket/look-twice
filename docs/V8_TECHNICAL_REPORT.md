@@ -9,7 +9,7 @@
 **Release candidate:** `v8-frozen`
 
 **License:** Apache-2.0
-**Report date:** 2026-08-03
+**Report date:** 2026-08-04
 
 ## Executive summary
 
@@ -57,8 +57,13 @@ Consequently, 30/30 active route outcomes matched offline feasibility. Oracle
 labels were never available to the controller, and this is not a preregistered
 endpoint.
 
-The result is simulation-only and uses a kinematic Genesis motion backend. It
-does not claim real-robot validation or safety certification.
+The frozen policy result is simulation-only and uses a kinematic Genesis
+motion backend. A separate submission-time dual-body supplement instantiated
+40 non-fixed carrier/scout entities and passed a fixed 20-seed wheel-dynamics
+bar with zero blocker or pair contacts and zero post-build script pose writes.
+It is additive, non-locked, and not a rerun or replacement of the frozen
+policy endpoint. Neither evidence class claims real-robot validation or safety
+certification.
 
 ## 1. Target application
 
@@ -335,6 +340,26 @@ control-loop latency, mission energy, or hardware-utilization optimization
 claims. The retained telemetry is
 `release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json`.
 
+### 6.4 Additive dual-body rigid-dynamics execution
+
+The frozen V8 policy realizes carrier and scout as distinct logical poses on
+one shared kinematic chassis. To test the narrower actuation gap separately, a
+fixed submission-time protocol instantiated one loaded carrier and one scout
+as distinct non-fixed Genesis URDF bodies for each of 20 seeds. All 40 robot
+entities shared one non-overlapping scene. After `scene.build()`, the script
+used only wheel-DOF `control_dofs_velocity`; it issued no entity pose writes.
+
+The complete run used Genesis 1.1.2 on `gs.amdgpu`, PyTorch
+2.9.1+gitff65f5b, and HIP 7.2.53211-e1a6bc5663. It ran for 4,299.992 seconds
+and passed 20/20 fixed seeds. This is an acceptance execution, not a
+throughput, energy, or control-loop-latency benchmark.
+
+The first whole-process attempt reached an external 3,600-second watchdog
+before the script wrote its single end-of-run report; no per-seed outcome was
+observed. Recovery increased only that external watchdog to 10,800 seconds.
+Source commit, runner and URDF bytes, seeds, protocol values, and thresholds
+were unchanged. Both attempt records are retained.
+
 ## 7. Evaluation protocol
 
 ### 7.1 Freeze and open discipline
@@ -478,7 +503,34 @@ The derivation is machine-readable at
 `release/v8-derived/V8_TASK_UTILITY_DERIVATION.json`, SHA256
 `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
 
-### 8.5 Evidence identity
+### 8.5 Additive 20-seed dual-body rigid dynamics
+
+| Fixed check | Result |
+| --- | ---: |
+| Confirmatory seeds | 20 / 20 passed |
+| Distinct non-fixed robot entities | 40 |
+| Carrier / scout reached | 20 / 20; 20 / 20 |
+| Trial-blocker / carrier-scout contact rows | 0 / 0 |
+| Script entity pose writes after build | 0 |
+| Maximum body tilt | 10.750 degrees (limit 20) |
+| Maximum parked-partner drift | 0.018061 m (limit 0.08) |
+| Minimum scout / carrier path | 0.940847 / 4.746561 m |
+| Maximum scout / carrier goal error | 0.139779 / 0.139922 m (limit 0.14) |
+
+The goal-error maximum sits close to the fixed stopping tolerance because the
+controller stops on first entry into the 0.14 m goal region; it is not
+presented as a large-margin result. All stability, parked-drift, nontrivial
+path, contact, and source-boundary checks passed. The same report was accepted
+by the verifier on the Radeon host and locally.
+
+The report has SHA256
+`8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+It establishes bounded sequential wheel motion by separate carrier and scout
+rigid bodies. It does not establish a full-policy conversion to simultaneous
+two-robot control, physical-robot transfer, dynamic-obstacle response, energy
+savings, or a new formal V8 endpoint.
+
+### 8.6 Evidence identity
 
 The authoritative locked report file SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
@@ -524,6 +576,10 @@ and reproduces the compact challenge report exactly from raw episode records.
 8. **Public one-shot challenge binding.** A before/after commit pair fixes the
    protocol and code before evaluation, while a checksum-complete raw archive
    supports independent recomputation of every reported challenge endpoint.
+9. **Explicit dual-body actuation audit.** A separate predeclared 20-seed bar
+   instantiates carrier and scout as non-fixed rigid bodies, binds wheel-only
+   post-build actuation and fail-closed stability/contact checks, and retains a
+   transparent infrastructure-timeout recovery chain.
 
 ## 10. Real-world value
 
@@ -553,6 +609,8 @@ incident review, and future assurance tooling.
 - a publicly preregistered 30-world same-generator challenge with 60 raw
   episodes, full-wall ROCm telemetry, recursive checksums, and an independent
   validator;
+- a separately verified 20-seed dual-body rigid-dynamics report with 40
+  non-fixed entities, timeout/recovery audits, and sealed checksums;
 - a one-page English Frozen Challenge Judge Card;
 - final 3:59 English workflow video with fixed-composition visuals and
   AI-generated OpenAI Cedar narration;
@@ -609,6 +667,14 @@ The evidence website can be rebuilt with:
 docker compose up --build
 ```
 
+The additive dual-body report can be checked without a GPU:
+
+```bash
+DYN=release/v8-derived/dual_body_dynamics_160820_160839
+(cd "$DYN" && shasum -a 256 -c SHA256SUMS)
+python3 scripts/verify_v8_additive_dual_body_dynamics.py "$DYN/REPORT.json"
+```
+
 The standalone contract core is tested with:
 
 ```bash
@@ -630,9 +696,11 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
   aggregate.
 - The 30-world challenge is an additive publicly preregistered same-generator
   supplement, not part of the permanent locked result and not an OOD claim.
-- Carrier and scout are separate logical-role poses, viewpoints, and capture
-  roots on one shared Genesis chassis. The evidence does not demonstrate two
-  physical devices or simultaneous dual-body dynamics.
+- Carrier and scout in the frozen policy are separate logical-role poses,
+  viewpoints, and capture roots on one shared Genesis chassis. A separate
+  20-seed supplement demonstrates bounded sequential wheel motion by two
+  non-fixed rigid bodies, but not a full-policy conversion, simultaneous
+  cooperative control, or two physical devices.
 - Receipt-level agreement in the challenge is 250/268 (93.3%). All 18
   disagreements were vetoed by Go and remained fail-closed.
 - The locked-input supplement contains inputs and labels, not the original
@@ -648,7 +716,9 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
 - The public Purify core is a contest reference implementation, not the private
   Purify product or a compatibility commitment.
 - Later Integrity Shield R1/R2 and V9 research is not promoted into V8 claims.
-- No external upstream contribution is claimed.
+- A focused Genesis URDF inertial-origin parser fix and required regression
+  test are prepared locally with baseline-fail/patch-pass evidence. No public
+  external upstream contribution is claimed until owner approval.
 
 ## 14. Team and contributions
 
@@ -661,11 +731,7 @@ evidence integrity, website, documentation, and submission packaging.
 
 ## References
 
-1. AMD AI DevMaster Hackathon official event page:
-   https://huggingface.co/blog/LeRobot-worldwide-hackathon/amd-ai-devmaster
-2. Official submission repository:
-   https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07
-3. Genesis physics simulation framework:
-   https://github.com/Genesis-Embodied-AI/Genesis
-4. AMD ROCm documentation:
-   https://rocm.docs.amd.com/
+1. [AMD AI DevMaster Hackathon official event page](https://huggingface.co/blog/LeRobot-worldwide-hackathon/amd-ai-devmaster)
+2. [Official submission repository](https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07)
+3. [Genesis physics simulation framework](https://github.com/Genesis-Embodied-AI/Genesis)
+4. [AMD ROCm documentation](https://rocm.docs.amd.com/)

@@ -3,7 +3,8 @@
 This release carries the hash-pinned assets for the English Track 3
 owner-review package. The 239-second replacement assets were downloaded without
 credentials and identity-verified on 2026-08-03. No competition PR has been
-opened.
+opened. The additive dynamics/source/site/report refresh described below is
+prepared locally and has not replaced the public release assets yet.
 
 Look Twice is a pre-action evidence-assurance layer for embodied AI. A denied
 Action Contract becomes a machine-readable `BeliefGap`; a scout acquires the
@@ -54,6 +55,22 @@ Carrier and scout are two logical roles on one shared Genesis chassis, not two
 physical devices or simultaneous dual-body dynamics. Loaded-carrier logical
 path fell 22.5%, while total logical-role team path rose 24.0%.
 
+## Separate additive dual-body dynamics
+
+A fixed, non-locked Radeon/ROCm acceptance run instantiated a carrier and scout
+as separate non-fixed Genesis URDF bodies. All 20/20 fixed seeds passed: 40
+robot entities, zero trial-blocker contact rows, zero carrier/scout pair-contact
+rows, and zero post-build script pose writes. Maximum tilt was 10.750 degrees,
+maximum parked-partner drift was 0.018061 m, and mean scout/carrier paths were
+1.645/4.760 m. The first whole-process attempt reached only an external
+3,600-second watchdog before any report or per-seed result was observed;
+recovery changed only that watchdog to 10,800 seconds. Report SHA256:
+`8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+
+This supplement validates bounded sequential wheel motion by two rigid bodies.
+It is not a frozen-policy rerun, simultaneous cooperative control, a physical
+robot, sim-to-real evidence, or safety certification.
+
 ## Release assets
 
 - `v8_seg_v3_selected_ep22_7b158726f9c0.pt` - frozen 159,592,901-byte
@@ -65,9 +82,9 @@ path fell 22.5%, while total logical-role team path rose 24.0%.
 - `Look-Twice-V8-Demo.manifest.json` - machine-readable video identity and
   chapter/evidence boundary; SHA256
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
-- `Look-Twice-V8-Technical-Report.pdf` - 12-page English technical report;
+- `Look-Twice-V8-Technical-Report.pdf` - 13-page English technical report;
   SHA256
-  `d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa`.
+  `43b605b870994a809a175e88b8b424ec152ceb386e423bcbd542373d3338207e`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
@@ -81,7 +98,8 @@ path fell 22.5%, while total logical-role team path rose 24.0%.
 The current report was re-exported after the final entrant/team identity was
 confirmed as `Liu Liang`, then extended with the locked-input evidence pack and
 the sustained exact-checkpoint Radeon telemetry and preregistered challenge
-supplements. These additive publication updates do not change the frozen
+supplements, plus the separately labeled dual-body dynamics acceptance result.
+These additive publication updates do not change the frozen
 model, one-shot locked result, calibration, thresholds, or final video. The
 video sidecar intentionally
 retains report SHA

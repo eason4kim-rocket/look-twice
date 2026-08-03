@@ -3,9 +3,10 @@
 This directory is the English-only owner-review handoff for the AMD AI
 DevMaster Hackathon 2026, Track 3 - Physical AI.
 
-**Current state:** review-ready package assembly; `official_pr_opened=false`.
-No official competition PR may be opened until the owner reviews the final
-render, links, entrant identity, and PR body.
+**Current state:** local additive review packet ready;
+`official_pr_opened=false`. No source push, Pages deployment, release-asset
+replacement, official-fork push, competition PR, or Genesis upstream PR for
+this refresh may occur until the owner reviews and authorizes it.
 
 Official PR title assumption:
 
@@ -70,11 +71,11 @@ zero, and fallback was false.
 | Challenge independent verification | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json> |
 | Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 
-These are the stable final targets. The 239-second replacement, updated report,
-source branch, release assets, and refreshed official-fork package were
-published and verified without credentials on 2026-08-03. The refreshed Pages
-site was also deployed and anonymously route-verified. No official competition
-PR was opened.
+These stable targets currently serve the previously verified public baseline.
+The 239-second demo remains public and hash-verified. The new dual-body report,
+13-page technical report, refreshed site, source branch update, release-PDF
+replacement, and 25-file official-fork package remain local pending owner
+approval. No official competition or Genesis upstream PR is open.
 
 ## Handoff map
 
@@ -88,6 +89,11 @@ PR was opened.
 7. Final demo specification: `docs/V8_DEMO_SCRIPT.md`
 8. Preregistered challenge Judge Card:
    `docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md`
+9. Additive dynamics result and recovery note:
+   `docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md`
+10. Prepared Genesis upstream review packet:
+    local sibling review directory; intentionally excluded from the public
+    competition package until owner approval.
 
 ## Primary competition artifacts
 
@@ -105,11 +111,14 @@ PR was opened.
 | Challenge verification | `release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json` | `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940` |
 | Challenge raw archive | release asset, 3,188,824 bytes | `171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2` |
 | Post-hoc challenge feasibility audit | `release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` | `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434` |
-| Rendered 12-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa` |
+| Additive dual-body report | `release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json` | `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110` |
+| Dual-body timeout audit | `release/v8-derived/dual_body_dynamics_160820_160839/ATTEMPT_1_TIMEOUT_AUDIT.json` | `711547fb5f0ab928ae5cc8b6195f4e0e964a98f6df44dfa2955c67e624705d55` |
+| Dual-body recovery audit | `release/v8-derived/dual_body_dynamics_160820_160839/RECOVERY_EXECUTION_AUDIT.json` | `6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e` |
+| Rendered 13-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `43b605b870994a809a175e88b8b424ec152ceb386e423bcbd542373d3338207e` |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 20 checksummed artifacts verified; 21 total files including `SHA256SUMS` |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 24 checksummed artifacts verified locally; 25 total files including `SHA256SUMS`; no additive push or PR |
 
 ## Frozen checkpoint
 
@@ -131,12 +140,17 @@ python3 scripts/verify_frozen_foundation.py
 python3 scripts/derive_v8_task_utility.py
 python3 -m unittest tests.test_v8_locked_input_pack tests.test_benchmark_v8_frozen_telemetry -v
 python3 -m unittest tests.test_run_v8_frozen_challenge tests.test_verify_v8_frozen_challenge -v
+python3 -m unittest tests.test_run_v8_additive_dual_body_dynamics tests.test_verify_v8_additive_dual_body_dynamics -v
+python3 scripts/verify_v8_additive_dual_body_dynamics.py \
+  release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json
 cd purify_robotics && go test ./...
 cd showcase && npm run lint && npm test && npm audit
 docker compose build
 ```
 
-The Evidence Console build passed 26/26 tests and reported zero known
+The refreshed Evidence Console build passed 31/31 tests, lint, production
+build, and hydrated desktop visual inspection. The previous dependency audit
+reported zero known
 dependency vulnerabilities. The frozen verifier reported all 21 guarded files
 green, and the task-utility derivation matched the fixed locked and
 confirmatory source hashes without reopening the test. The input-pack verifier
@@ -174,6 +188,13 @@ two-second samples across the complete 1,685.5-second subprocess wall,
 including idle; it is not control-loop latency. See
 `docs/V8_EVIDENCE_BOUNDARY.md`.
 
+The additive dual-body supplement is also simulation-only and non-locked. It
+passed 20/20 fixed seeds with 40 non-fixed robot entities, zero blocker/pair
+contact rows, and zero post-build pose writes. It validates bounded sequential
+wheel motion by two rigid bodies; it does not rerun the frozen policy,
+demonstrate simultaneous cooperative control, or establish a physical-robot or
+safety result.
+
 ## Final owner-review gate
 
 - [ ] Confirm the registered entrant/team label and eligibility items.
@@ -182,8 +203,10 @@ including idle; it is not control-loop latency. See
       `V8_SUBMISSION_MANIFEST.json`.
 - [x] Regenerate and verify the official-directory `SHA256SUMS` after every
       final artifact is in place.
-- [x] Publish the final replacement assets, then verify the Pages site, source
-      branch, PDF, checkpoint, and video without
-      sign-in.
+- [x] Preserve and anonymously verify the existing public baseline assets.
+- [ ] After owner approval, publish the additive source/site/PDF/package
+      refresh and verify every stable target without sign-in.
 - [ ] Review the official-fork branch diff and the English PR body.
+- [ ] Review the prepared Genesis issue/PR packet and authorize or reject
+      upstream publication.
 - [ ] Explicitly authorize opening the official competition PR.

@@ -420,7 +420,37 @@ export V8_CHECKPOINT=/absolute/path/v8_seg_v3_selected_ep22_7b158726f9c0.pt
 This is a reproduction episode. It must not overwrite the archived episode or
 locked report.
 
-## 9. Verify artifact identities
+## 9. Verify the additive dual-body dynamics supplement
+
+The complete report can be audited without Genesis or a GPU:
+
+```bash
+cd release/v8-derived/dual_body_dynamics_160820_160839
+shasum -a 256 -c SHA256SUMS
+cd ../../..
+python3 scripts/verify_v8_additive_dual_body_dynamics.py \
+  release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json
+```
+
+Expected output:
+
+```text
+PASS: additive dual-body dynamics 20/20 report_sha256=8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110
+```
+
+The report is submission-time, additive, and non-locked. It binds the fixed
+seeds `160820-160839`, source commit, runner and URDF hashes, Radeon/ROCm
+environment, all per-seed checks, and aggregate rollups. Its first whole-run
+attempt hit only an external 3,600-second watchdog before any report or seed
+outcome was observed. The recovery audit verifies that attempt 2 changed only
+the watchdog to 10,800 seconds; code, seeds, protocol, and thresholds did not
+change.
+
+The original Radeon command is in
+`docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_PROTOCOL.md`. Running it again creates a
+new non-locked reproduction and must not overwrite the sealed report.
+
+## 10. Verify artifact identities
 
 ```bash
 shasum -a 256 "$V8_CHECKPOINT"
@@ -440,7 +470,7 @@ Expected Purify binary SHA:
 31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00
 ```
 
-## 10. Reproducibility limits
+## 11. Reproducibility limits
 
 - The full train/validation/locked datasets are not committed to Git. The
   locked input archive is byte-identified and verifiable when supplied as a
@@ -457,7 +487,9 @@ Expected Purify binary SHA:
   is claimed.
 - Challenge carrier/scout measurements are logical-role kinematic burden on
   one shared chassis, not simultaneous dual-body dynamics or two physical
-  devices.
+  devices. The separate 20-seed dynamics supplement uses two non-fixed rigid
+  bodies with sequential wheel actuation; it is not a rerun of the full frozen
+  policy or a physical-robot result.
 - Challenge receipt-level Python/Go agreement is 250/268 (93.3%); all 18
   mismatches were Go vetoes with effective authorization kept fail-closed.
 - Full-wall telemetry includes idle and covers complete episode subprocesses;

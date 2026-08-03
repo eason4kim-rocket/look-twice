@@ -360,7 +360,7 @@ def draw_cover(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     canvas.setFillColor(colors.HexColor("#91A0A1"))
     canvas.setFont("LTMono", 6.5)
     canvas.drawString(20 * mm, 11 * mm, "LOOK TWICE · V8 FROZEN · TRACK 3 PHYSICAL AI")
-    canvas.drawRightString(width - 20 * mm, 11 * mm, "2026-08-03")
+    canvas.drawRightString(width - 20 * mm, 11 * mm, "2026-08-04")
     canvas.restoreState()
 
 
@@ -450,7 +450,9 @@ def build_cover(
             Paragraph(
                 "* Post-hoc descriptive oracle audit: 29/29 worlds with a clear corridor "
                 "went direct; the sole dual-blocked world safely detoured.<br/>"
-                "The preregistered primary remains active 29/30 versus passive 0/30.",
+                "The preregistered primary remains active 29/30 versus passive 0/30.<br/>"
+                "Separate additive evidence: 20/20 fixed dual-body dynamics seeds; "
+                "not a frozen-policy rerun or physical-robot result.",
                 audit_note_style,
             ),
             Spacer(1, 6),

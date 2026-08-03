@@ -1,9 +1,10 @@
 # Track 3, Liu Liang, Look Twice
 
 > **Owner-review preparation state - not yet filed:** the final 239-second
-> video, sidecar, report, public site, source branch, and official-fork branch
-> are published at stable review targets and were verified without credentials.
-> No competition PR is open.
+> video and the existing V8 review targets are public and anonymously verified.
+> The new dual-body evidence, refreshed report/site/package, and Genesis
+> upstream fix are prepared locally for owner review. No competition or
+> external upstream PR is open.
 
 ## Project
 
@@ -48,17 +49,18 @@ benchmark samples and does not require a live GPU.
 5. Switch to passive mode and compare its safe detour.
 6. Inspect the challenge's 844-sample full-wall ROCm telemetry and 30-world
    carrier/scout burden table.
-7. Open Results and follow the permanent locked metrics separately.
+7. Open Results and inspect the separate 20/20 dual-body rigid-dynamics card.
+8. Follow the permanent locked metrics separately.
 
 ## Official Track 3 judging map
 
 | Criterion | Evidence in this submission |
 | --- | --- |
-| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The supplement retains 844 `rocm-smi` samples across the complete 1,685.5-second wall of 60 Genesis + checkpoint + Go episodes. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate non-locked dynamics bar: 20/20 fixed seeds, 40 non-fixed robot entities, zero blocker/pair contacts and zero post-build pose writes. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate wheel-dynamics acceptance run retained a 4,299.992-second Radeon execution and source-bound report. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
 | Real-world application value - 20 | Across 30 warehouse pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%, with all missions completed safely. |
-| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. No external upstream PR is claimed. |
+| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. A focused Genesis URDF inertial-origin fix plus required regression test is prepared locally with baseline-fail/patch-pass evidence; no public external PR is claimed until owner approval. |
 
 ## Verified frozen result
 
@@ -160,6 +162,31 @@ energy, or latency. Carrier and scout are distinct logical poses and capture
 roots on one shared Genesis chassis, not two physical robots or simultaneous
 dual-body dynamics.
 
+## Separate additive dual-body rigid dynamics
+
+A fixed submission-time protocol then tested that narrow realization gap
+without rerunning the policy endpoint. Seeds `160820-160839` instantiated one
+loaded carrier and one scout each as separate non-fixed Genesis URDF bodies:
+**40 robot entities** in one non-overlapping scene. The scout and carrier moved
+in sequential phases using wheel-DOF velocity targets only; the script issued
+no entity pose write after `scene.build()`.
+
+The Radeon run passed **20/20** fixed seeds with zero trial-blocker contacts,
+zero carrier/scout pair contacts, and zero post-build pose writes. Maximum
+tilt was 10.750 degrees and maximum parked-partner drift was 0.018061 m. The
+source-bound report passed the same verifier remotely and locally and hashes
+to `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+
+Attempt 1 reached an external 3,600-second watchdog before any report or seed
+outcome was observed. Recovery changed only that watchdog to 10,800 seconds;
+commit, runner/URDF bytes, seeds, protocol, and thresholds were unchanged. The
+failed infrastructure attempt is retained beside the completed report.
+
+This result is additive, non-locked, and `formal_result_eligible=false`. It
+validates bounded wheel motion by two rigid bodies, not a full-policy
+conversion to simultaneous cooperative control, a physical robot, or
+sim-to-real transfer.
+
 ## What runs on the AMD Radeon GPU
 
 | Stage | Execution |
@@ -207,6 +234,7 @@ control-loop latency or physical energy per mission.
 | --- | --- |
 | One-page challenge Judge Card | [public preregistration, result, AMD telemetry, application burden, and verifier](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md) |
 | Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [post-hoc feasibility audit](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
+| Dual-body dynamics evidence | [20-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md) · [machine report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json) · timeout/recovery audits and `SHA256SUMS` in the same directory |
 | Technical report | [release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf) · [source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md) |
 | Project source code | [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |
@@ -263,6 +291,16 @@ python3 scripts/verify_v8_locked_input_pack.py \
   --check-only
 ```
 
+Dual-body report and recovery-chain audit, also without a GPU:
+
+```bash
+cd release/v8-derived/dual_body_dynamics_160820_160839
+shasum -a 256 -c SHA256SUMS
+cd ../../..
+python3 scripts/verify_v8_additive_dual_body_dynamics.py \
+  release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json
+```
+
 Local Evidence Console:
 
 ```bash
@@ -291,12 +329,15 @@ hashes are in the
   supplement; seeds 102530-102699 remain unevaluated. Neither is V8 OOD
   evidence.
 - The public evidence path uses a kinematic Genesis motion backend.
-- Carrier and scout are logical-role poses on one shared Genesis chassis, not
-  two physical devices or simultaneous dual-body dynamics.
+- Carrier and scout in the frozen policy are logical-role poses on one shared
+  Genesis chassis. A separate additive 20-seed supplement validates bounded
+  sequential wheel motion by two non-fixed rigid bodies, but it is not a
+  full-policy rerun, simultaneous cooperative control, or two physical devices.
 - The 159 MB checkpoint is published as a release asset and must match SHA256
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`.
 - Later Integrity Shield R1/R2 and V9 research is not promoted into V8.
-- No external upstream contribution is claimed.
+- A focused Genesis parser fix and regression test are ready locally. No
+  public external upstream contribution is claimed until owner approval.
 
 ## Team
 

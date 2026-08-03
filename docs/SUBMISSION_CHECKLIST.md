@@ -1,9 +1,9 @@
 # Look Twice V8 Competition Submission Checklist
 
 Verified against the official event page, governing Rules and Conditions, and
-official submission repository on 2026-08-03.
+official submission repository on 2026-08-04.
 
-**Owner-review state:** `public_review_packet_ready_no_pr`
+**Owner-review state:** `local_review_packet_ready_no_pr`
 
 **Official PR opened:** `false`
 
@@ -75,14 +75,22 @@ Official sources:
 - [x] Label the mismatch localization as post-hoc descriptive: all 18 were
       active corridor-B evaluations with one qualifying Go root and
       `{clear, blocked}`; no selected crossing was authorized by a mismatch.
-- [x] Disclose that carrier and scout are two logical roles on one shared
-      Genesis chassis, not two physical devices or simultaneous dual-body
-      dynamics.
+- [x] Disclose that the frozen policy realizes carrier and scout as two logical
+      roles on one shared Genesis chassis.
+- [x] Keep the separate 20-seed dual-body rigid-dynamics supplement additive,
+      non-locked, and `formal_result_eligible=false`; do not relabel it as a
+      frozen-policy rerun, simultaneous cooperative control, or real robot.
+- [x] Report the fixed dynamics denominator exactly: 20/20 seeds, 40 non-fixed
+      entities, zero blocker/pair contacts, and zero post-build pose writes.
+- [x] Retain the 3,600-second infrastructure-timeout audit and disclose that
+      recovery changed only the outer watchdog to 10,800 seconds, with no seed
+      result observed, retried, replaced, or resampled.
 - [x] State the aggregate challenge task ledger in both directions:
       loaded-carrier logical path -22.5%, total logical-role team path +24.0%.
 - [x] State simulation-only, kinematic-motion, and no-safety-certification
       boundaries.
-- [x] Make no external upstream PR claim.
+- [x] Make no public external upstream PR claim before owner approval; describe
+      the Genesis fix only as locally prepared.
 
 ## V8 evidence freeze
 
@@ -109,6 +117,13 @@ Official sources:
       every other emitted result file.
 - [x] Independently recompute and verify the complete challenge report with
       zero validation errors.
+- [x] Fix dual-body smoke seeds and confirmatory seeds before the formal run;
+      exclude all three engineering-smoke seeds.
+- [x] Run the fixed 20-seed dual-body bar on AMD ROCm: 20/20 passed, failed
+      list empty, process exit 0.
+- [x] Verify the byte-identical dual-body report both remotely and locally.
+- [x] Seal report, timeout audit, recovery audit, and directory checksums at
+      report SHA256 `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
 
 ## English submission materials
 
@@ -116,7 +131,7 @@ Official sources:
 - [x] One-page frozen-challenge Judge Card with the public-before-execution
       binding, result, safety, AMD execution, task trade, and honest scope.
 - [x] V8 technical report source in `docs/V8_TECHNICAL_REPORT.md`.
-- [x] Rendered 12-page technical report PDF, visually inspected page by page.
+- [x] Rendered 13-page technical report PDF, visually inspected page by page.
 - [x] Detailed V8 reproduction guide.
 - [x] AMD environment and workload boundary.
 - [x] Evidence claim boundary.
@@ -133,8 +148,8 @@ Official sources:
       README.
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
-- [x] Regenerate final `SHA256SUMS` and verify all 20 checksummed artifacts
-      (21 total files including `SHA256SUMS`).
+- [x] Regenerate final local `SHA256SUMS` and verify all 24 checksummed
+      artifacts (25 total files including `SHA256SUMS`).
 
 ## Reproducibility
 
@@ -163,9 +178,11 @@ Official sources:
 - [x] Run `go test ./...` for the Purify reference core.
 - [x] Add exact ROCm dependency and environment preflight files.
 - [x] Build and route-smoke the Evidence Console with Docker.
-- [x] Lint, build, and run all 26 Evidence Console tests with Node 22.
+- [x] Lint, production-build, and run all 31 Evidence Console tests with Node
+      22; visually inspect the hydrated home and dynamics Results sections.
 - [x] Pin patched Web dependencies and obtain zero known `npm audit`
       vulnerabilities.
+- [x] Run all seven additive dynamics unit/verifier tests and Ruff checks.
 - [ ] Verify every README command exactly as written from the public clean
       clone.
 
@@ -188,6 +205,10 @@ Official sources:
 - [x] Limit that broader record to complete Python + Genesis live RGB-D +
       frozen checkpoint + Purify Go subprocess execution; do not call it
       control-loop latency, mission energy, or physical duty cycle.
+- [x] Archive the separate 4,299.992-second dual-body Radeon acceptance run and
+      bind Genesis, PyTorch, HIP, GPU, runner, and URDF identities.
+- [x] State that the dynamics execution is an acceptance bar, not throughput,
+      mission energy, control-loop latency, or a physical-device benchmark.
 
 ## Website and public URLs
 
@@ -207,8 +228,13 @@ Stable targets:
 - [x] Results contains the exact AMD execution evidence and scope boundary.
 - [x] Results contains the input-only locked archive and 60-second telemetry
       supplements, with missing-output and non-OOD boundaries visible.
+- [x] Prepare a separate dual-body Results card sourced from byte-identical
+      report and audit copies, while preserving the frozen shared-chassis
+      boundary.
 - [x] Site links the final report, source branch, checkpoint, and video targets.
-- [x] Rebuilt, linted, tested, and inspected the prepared site.
+- [x] Rebuild, lint, run all 31 tests, and visually inspect the refreshed
+      dynamics site locally; no site deployment was made.
+- [ ] Publish the refreshed dynamics site only after owner approval.
 - [x] Publish the refreshed public Pages site with HTTPS enforced.
 - [x] Verify all refreshed routes and referenced client/binary assets without
       sign-in.
@@ -262,18 +288,49 @@ Stable targets:
 - [ ] Confirm all datasets and assets have legal, licensing, and ethical use.
 - [x] Repeat metadata/privacy inspection for the final 3:59 video.
 
+## Genesis upstream contribution
+
+- [x] Reproduce the omitted-URDF-inertial-origin bug on official Genesis
+      `main` and identify the parser/finalization boundary.
+- [x] Implement a two-file minimal fix: missing origin on an existing inertial
+      becomes the identity transform; a fully absent inertial keeps the
+      geometry fallback.
+- [x] Add a `required` parser regression test covering mass, identity inertial
+      frame, and a non-diagonal symmetric inertia tensor.
+- [x] Record official-main failure and patch success; run Ruff check, Ruff
+      format check, and `git diff --check`.
+- [x] Search open and closed Genesis issues/PRs for exact duplicates.
+- [x] Prepare exact English issue body, PR body, validation record, and
+      publication sequence locally.
+- [x] Keep the local patch at commit
+      `e5d4b5592a156352b8319de83e16ba73e30a3afe` with a clean worktree.
+- [x] Identify merged PR #2499 as the related prior change and position this
+      patch as a narrow follow-up to the current parser/finalizer regression,
+      not an unacknowledged duplicate.
+- [x] Confirm GitHub authentication and that no personal Genesis fork, issue,
+      branch push, or PR exists yet.
+- [ ] Owner explicitly authorizes external upstream publication.
+- [ ] Re-fetch official main, repeat duplicate search, file the issue, push the
+      exact patch to a fork, and open the linked upstream PR.
+- [ ] After publication, update judging materials with the real open/unmerged
+      issue/PR URLs and CI state; do not claim merge or acceptance.
+
 ## Official submission repository
 
 - [x] Fork `AMD-DEV-CONTEST/Radeon-hackathon-2026-07`.
 - [x] Stage an English submission directory locally containing the judge-facing
       index, report PDF, compact evidence, and preview.
 - [x] Add the locally verified demo artifact and unchanged stable target URL.
-- [x] Regenerate and verify staging checksums for the 239-second identity.
-- [x] Copy the refreshed staged directory into the dedicated branch of the
-      official fork and push it.
-- [x] Verify the refreshed official-fork branch at commit
-      `32cff1a1e77952e689f4730ff21b8a8a8ad01a63` contains only the 21 intended
-      files (20 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
+- [x] Add the 13-page report and the four-file dual-body report/recovery chain
+      to the local official-repository staging directory.
+- [x] Regenerate and verify 24 local checksum entries (25 total files including
+      `SHA256SUMS`); checksum-index SHA256
+      `2c7ff96ab01eb0994ed31ad4457439325314bf289ceccfa1130980d2e89dd4dd`.
+- [x] Preserve the previously published official-fork baseline at commit
+      `32cff1a1e77952e689f4730ff21b8a8a8ad01a63` without opening a PR.
+- [ ] After owner approval, push the 25-file additive refresh to the dedicated
+      official-fork branch; do not imply the current public baseline contains
+      the new dynamics files.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.
@@ -286,9 +343,12 @@ Stable targets:
 - [x] Entrant/team label confirmed as `Liu Liang`.
 - [x] Final MP4 and sidecar pass local QA for the recorded 239-second identity.
 - [ ] Owner completes final visual and audible review.
-- [x] Final `SHA256SUMS` verifies cleanly after identity propagation.
+- [x] Final local 24-entry `SHA256SUMS` verifies cleanly after identity
+      propagation.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
-- [x] Refreshed official-fork branch contains only intended submission files.
+- [x] Local official-fork worktree contains only the intended 25-file refresh;
+      the public branch remains at the earlier 21-file baseline pending owner
+      approval.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
 - [x] No official PR exists before explicit owner approval.

@@ -209,6 +209,42 @@ latency, mission energy, physical duty cycle, or rigid-body/real-robot
 validation. It does not replace or broaden the separate synthetic
 model-forward telemetry claim above.
 
+### Submission-time dual-body rigid-dynamics supplement
+
+The fixed protocol in `docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_PROTOCOL.md` was
+written before the confirmatory range `160820:160840` ran. Engineering-smoke
+seeds `160800-160802` were excluded. The complete report is
+`release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json`, SHA256
+`8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+
+Allowed claims are:
+
+- 20/20 fixed seeds passed and failed seeds were empty;
+- 40 distinct non-fixed robot entities were instantiated, one loaded carrier
+  and one scout per seed;
+- the only post-build actuation API was wheel-DOF
+  `control_dofs_velocity`;
+- total trial-blocker contacts, carrier/scout pair contacts, and script entity
+  pose writes after build were all zero;
+- maximum tilt was 10.749536 degrees and maximum parked-partner drift was
+  0.018061 m;
+- the same report passed the source-bound verifier on the Radeon host and
+  locally.
+
+Attempt 1 ended at the external 3,600-second watchdog before the script wrote
+its end-of-run report. It exposed no seed outcome. Recovery restarted the
+whole process with only the watchdog increased to 10,800 seconds; source
+commit `c17c3a17904af34ba514d68e6e5ad8d1d96a353b`, source bytes, seeds,
+parameters, and thresholds were unchanged. No seed was individually retried,
+replaced, or resampled. The timeout audit, recovery audit, report, and
+directory-level `SHA256SUMS` are retained together.
+
+This evidence class is **submission-time, additive, non-locked**, and the
+report declares `formal_result_eligible=false`. It does not rerun or convert
+the full frozen V8 active/passive policy, change its shared-chassis kinematic
+realization, prove simultaneous cooperative-policy control, or establish a
+physical-robot, sim-to-real, energy, throughput, or safety result.
+
 ### Reserved challenge range status
 
 The historical `ood_test` label for seeds 102500-102699 denotes only a
@@ -275,7 +311,9 @@ silently omitted from the research archive.
 - The public replay uses a kinematic Genesis motion backend.
 - The preregistered challenge also uses the kinematic motion backend; its
   carrier and scout are two logical roles on one shared chassis, not two
-  physical robots or simultaneous dual-body dynamics.
+  physical robots or simultaneous dual-body dynamics. A separate additive
+  20-seed supplement validates bounded sequential wheel motion by two
+  non-fixed rigid bodies, but it is not a full-policy rerun.
 - The public replay episode carries `formal_result_eligible=false`; it is a
   presentation artifact, not the locked aggregate.
 - The 30-world challenge is a same-generator non-locked supplement, not a
@@ -290,7 +328,9 @@ silently omitted from the research archive.
   and raw locked live episodes are not available in that pack.
 - The 159 MB frozen checkpoint is identified by SHA and distributed as a
   GitHub release asset because it exceeds GitHub's 100 MB file limit.
-- No external upstream contribution is claimed.
+- A focused Genesis parser fix and regression test are prepared locally with
+  baseline-fail/patch-pass evidence. No public external upstream contribution
+  is claimed until owner approval and publication.
 
 ## Claim approval rule
 

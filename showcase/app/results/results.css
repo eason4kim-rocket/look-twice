@@ -99,6 +99,45 @@
   white-space: nowrap;
 }
 .challenge-links a:first-child { border-color: rgba(41,206,200,.45); }
+.dynamics-evidence { background: rgba(24,170,167,.035); }
+.dynamics-panel { border: 1px solid rgba(121,207,103,.24); }
+.dynamics-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dynamics-grid article { min-height: 155px; }
+.dynamics-audit-grid {
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.dynamics-audit-grid article {
+  min-height: 185px;
+  padding: 20px;
+  border: 1px solid var(--line-dark);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+.dynamics-audit-grid b {
+  display: block;
+  color: var(--green);
+  font: 650 8px var(--font-mono);
+  letter-spacing: .07em;
+}
+.dynamics-audit-grid strong {
+  display: block;
+  margin-top: 22px;
+  color: var(--cyan-bright);
+  font: 600 clamp(25px, 2.5vw, 38px)/1 var(--font-mono);
+  letter-spacing: -.055em;
+}
+.dynamics-audit-grid strong small { color: #91a0a1; font-size: .45em; }
+.dynamics-audit-grid p {
+  margin: 14px 0 0;
+  color: #a5b1b2;
+  font-size: 11px;
+  line-height: 1.68;
+}
+.dynamics-audit-grid .boundary-warning b { color: var(--amber); }
+.dynamics-identities { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .evidence-tier-note {
   padding: 34px clamp(24px, 5vw, 88px) 0;
   display: flex;
@@ -384,14 +423,16 @@
   .feasibility-proof article { border-right: 0; border-bottom: 1px solid var(--line-dark); }
   .feasibility-proof article:nth-child(3) { border-bottom: 0; }
   .challenge-primary-grid { grid-template-columns: repeat(2, 1fr); }
+  .dynamics-grid { grid-template-columns: repeat(2, 1fr); }
   .evidence-tier-note { align-items: flex-start; flex-direction: column; gap: 10px; }
 }
 @media (max-width: 580px) {
   .results-metrics { padding: 16px 22px 64px; }
   .results-metrics article { min-height: 250px; padding: 26px; }
   .result-section { padding: 72px 22px; }
-  .audit-grid, .benchmark-grid, .evidence-boundary-grid, .challenge-audit-grid, .challenge-identities { grid-template-columns: 1fr; }
+  .audit-grid, .benchmark-grid, .evidence-boundary-grid, .challenge-audit-grid, .challenge-identities, .dynamics-audit-grid { grid-template-columns: 1fr; }
   .challenge-primary-grid { grid-template-columns: 1fr; }
+  .dynamics-grid { grid-template-columns: 1fr; }
   .telemetry-grid .telemetry-throughput { grid-column: auto; }
   .limits > div:last-child { grid-template-columns: 1fr; }
 }

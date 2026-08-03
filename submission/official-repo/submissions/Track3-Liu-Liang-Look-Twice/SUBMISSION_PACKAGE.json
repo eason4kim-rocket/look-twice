@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-official-submission-package/v1",
   "package_id": "Track3-Liu-Liang-Look-Twice",
-  "generated_at_utc": "2026-08-03T11:49:13Z",
+  "generated_at_utc": "2026-08-03T18:48:48Z",
   "track": "Track 3 - Physical AI",
   "entry": {
     "project_name": "Look Twice V8",
@@ -61,11 +61,50 @@
       "offline_feasibility_consistent_route_outcomes": "30/30",
       "does_not_relabel_detour_as_direct": true
     },
+    "additive_dual_body_dynamics": {
+      "evidence_class": "additive non-locked rigid-dynamics acceptance supplement",
+      "formal_result_eligible": false,
+      "seed_range": [
+        160820,
+        160839
+      ],
+      "fixed_seeds": 20,
+      "passed": 20,
+      "failed": 0,
+      "non_fixed_robot_entities": 40,
+      "trial_blocker_contact_rows": 0,
+      "carrier_scout_pair_contact_rows": 0,
+      "post_build_script_pose_writes": 0,
+      "post_build_actuation_api": "control_dofs_velocity only",
+      "motion_phases": "sequential scout motion, then carrier motion; partner parked in each phase",
+      "maximum_tilt_deg": 10.749535905470491,
+      "maximum_parked_partner_drift_m": 0.01806064719744134,
+      "mean_scout_path_m": 1.6449826981579758,
+      "mean_carrier_path_m": 4.760431209504988,
+      "source_commit": "c17c3a17904af34ba514d68e6e5ad8d1d96a353b",
+      "report_sha256": "8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110",
+      "first_attempt": {
+        "status": "infrastructure watchdog timeout",
+        "watchdog_seconds": 3600,
+        "process_exit": 124,
+        "report_observed": false,
+        "per_seed_outcomes_observed": 0,
+        "audit_sha256": "711547fb5f0ab928ae5cc8b6195f4e0e964a98f6df44dfa2955c67e624705d55"
+      },
+      "recovery": {
+        "watchdog_seconds": 10800,
+        "only_changed_field": "outer infrastructure watchdog",
+        "seeds_retried_replaced_or_resampled": 0,
+        "audit_sha256": "6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e"
+      },
+      "interpretation_limit": "Validates bounded sequential wheel motion by two non-fixed rigid bodies; not a frozen-policy rerun, simultaneous cooperative control, physical-robot result, sim-to-real result, safety certification, throughput, mission-energy, or control-loop-latency benchmark."
+    },
     "simulation_scope": {
-      "backend": "Genesis 1.1.2 kinematic simulation on AMD ROCm",
-      "agent_realization": "carrier and scout are logical-role poses and capture roots on one shared Genesis chassis",
+      "backend": "Frozen policy: Genesis 1.1.2 kinematic simulation on AMD ROCm; separate additive supplement: non-fixed rigid-body wheel dynamics",
+      "frozen_policy_agent_realization": "carrier and scout are logical-role poses and capture roots on one shared Genesis chassis",
       "not_two_physical_devices": true,
-      "not_simultaneous_dual_body_dynamics": true,
+      "frozen_policy_not_simultaneous_dual_body_dynamics": true,
+      "separate_additive_dual_body_dynamics_packaged": true,
       "not_physical_robot_validation": true,
       "not_sim_to_real_validation": true,
       "not_safety_certification": true
@@ -93,14 +132,14 @@
     {
       "path": "Look-Twice-V8-Technical-Report.pdf",
       "role": "technical report",
-      "size_bytes": 1077809,
-      "sha256": "d73e47c53a6e87cd8e8546592465753746513cf31fd4e5b0a1b8dd4747e614aa"
+      "size_bytes": 1081757,
+      "sha256": "43b605b870994a809a175e88b8b424ec152ceb386e423bcbd542373d3338207e"
     },
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 12022,
-      "sha256": "09b31011f529eaf20aa30af078715dc37d52c2512f15514115ebe8870af9b916"
+      "size_bytes": 14413,
+      "sha256": "1a3c2295de5a1ca9208c254d37dc65bc0ee77f41ca4b2d3b762c0a469eb558af"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
@@ -117,8 +156,8 @@
     {
       "path": "evidence/README.md",
       "role": "compact evidence index and boundary ledger",
-      "size_bytes": 11988,
-      "sha256": "8bbf31dfd6be6a5b53cfbfbbf9c7a1eb5d6b4929a77a50f35e517cc6fdcffe37"
+      "size_bytes": 14536,
+      "sha256": "1f009cd8b6c58097f5bd14deb28776793078ec685e9c0d9f827ab769fb2ea798"
     },
     {
       "path": "evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
@@ -155,6 +194,30 @@
       "role": "locked and seed-105400 task-utility derivation",
       "size_bytes": 4306,
       "sha256": "f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b"
+    },
+    {
+      "path": "evidence/dual_body_dynamics_160820_160839/ATTEMPT_1_TIMEOUT_AUDIT.json",
+      "role": "retained first-attempt infrastructure-timeout audit",
+      "size_bytes": 1880,
+      "sha256": "711547fb5f0ab928ae5cc8b6195f4e0e964a98f6df44dfa2955c67e624705d55"
+    },
+    {
+      "path": "evidence/dual_body_dynamics_160820_160839/RECOVERY_EXECUTION_AUDIT.json",
+      "role": "dual-body recovery execution and unchanged-protocol binding",
+      "size_bytes": 2804,
+      "sha256": "6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e"
+    },
+    {
+      "path": "evidence/dual_body_dynamics_160820_160839/REPORT.json",
+      "role": "20-seed additive dual-body rigid-dynamics report",
+      "size_bytes": 414490,
+      "sha256": "8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110"
+    },
+    {
+      "path": "evidence/dual_body_dynamics_160820_160839/SHA256SUMS",
+      "role": "dual-body report and attempt-chain checksum index",
+      "size_bytes": 269,
+      "sha256": "6470aaab8fa8ffc1132f7aea7fd0869a3e0a084bcae92d615d920730079204f2"
     },
     {
       "path": "evidence/challenge_102500_102529/CHALLENGE_REPORT.json",
