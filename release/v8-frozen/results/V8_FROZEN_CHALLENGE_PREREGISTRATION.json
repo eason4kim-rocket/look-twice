@@ -1,0 +1,281 @@
+{
+  "schema_version": "look-twice.v8-frozen-challenge-preregistration/v1",
+  "tag": "V8_FROZEN_CHALLENGE_102500_102529",
+  "created_utc": "2026-08-03T09:10:56Z",
+  "status": "PREREGISTERED_BEFORE_ANY_CHALLENGE_EPISODE",
+  "purpose": "Additive, no-retuning paired full-pipeline challenge of the already frozen V8 runtime",
+  "public_binding": {
+    "runner_protocol_commit": "TO_BE_BOUND_BEFORE_RUN",
+    "preregistration_sha256_location": "RUN_MANIFEST.json",
+    "preregistration_public_commit_location": "RUN_MANIFEST.json",
+    "self_reference_boundary": "Commit A binds the finalized runner, protocol, and runner SHA; Commit B changes only this field to Commit A. RUN_MANIFEST externally records Commit B because a file cannot contain the hash of the commit that contains those same bytes"
+  },
+  "population_boundary": {
+    "generator_family": "same_generator_as_v8_spatial_dataset_v1",
+    "historical_range_label": "reserved_challenge_range_not_ood",
+    "reserved_parent_range": [
+      102500,
+      102699
+    ],
+    "challenge_subset": [
+      102500,
+      102529
+    ],
+    "claim": "Thirty previously reserved worlds from the same generator family; not an OOD or population-generalization claim"
+  },
+  "design": {
+    "profile": "independent-noise",
+    "seed_start": 102500,
+    "seed_end": 102529,
+    "seed_order": "strictly_ascending",
+    "n_worlds": 30,
+    "policies": [
+      "purify-active-vision",
+      "purify-passive"
+    ],
+    "n_episodes": 60,
+    "paired_by_seed": true,
+    "within_seed_order_rule": {
+      "even_seed": [
+        "purify-passive",
+        "purify-active-vision"
+      ],
+      "odd_seed": [
+        "purify-active-vision",
+        "purify-passive"
+      ],
+      "reason": "Deterministic parity balancing fixed before execution; never changed in response to an outcome"
+    },
+    "attempts_per_seed_policy": 1,
+    "retry_count_allowed": 0,
+    "early_stopping_allowed": false,
+    "continue_after_bad_outcome": true,
+    "publish_every_attempt": true,
+    "retuning_allowed": false,
+    "threshold_changes_allowed": false,
+    "checkpoint_changes_allowed": false,
+    "seed_substitution_allowed": false
+  },
+  "identities": {
+    "runner_path": "scripts/run_v8_frozen_challenge.py",
+    "runner_sha256": "668732e2a10f3e79d2fda13ce304a789247b362126425a9398853de864f021bf",
+    "validator_path": "scripts/verify_v8_frozen_challenge.py",
+    "validator_sha256": "c45ffb55cc6c95638f138f929d80ba812eabb6d3c0b217f69fcaf59d4be0a4d7",
+    "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+    "vision_conformal_artifact_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+    "go_conformal_artifact_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+    "purify_binary_sha256": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00",
+    "identity_freeze_manifest_path": "release/v8-frozen/results/V8_IDENTITY_FREEZE_MANIFEST.json",
+    "source_tree_fingerprint_sha256": "983d7d373a3eedc6f6204e91d2d63b95a7e563506add24d37ee5a30c95aa71a9",
+    "runtime_source_closure": {
+      "manifest_path": "release/v8-frozen/results/V8_CHALLENGE_RUNTIME_SOURCE_MANIFEST.json",
+      "manifest_sha256": "018f064f0361e59371e6694d7909da8639960f41f2ef158687c8e65e24d45c2f",
+      "tree_fingerprint_sha256": "abc1b6810aed6dc19a127069b9b5d5f044def24f35c9a13602f7f5096742b1be",
+      "file_count": 30,
+      "python_file_count": 29,
+      "static_asset_file_count": 1,
+      "root_entrypoint": "src/look_twice_v7.py",
+      "exact_python_file_set_required": true,
+      "source_origin_git_commit": "aadd429d2da9de690a361218c40c9dfb22b04eb2"
+    },
+    "critical_source_files": [
+      {
+        "path": "src/v6_episode.py",
+        "sha256": "3259bff66582cb34d98a70307b79084f0af89b48a64320fdd0bad71d16c2120f"
+      },
+      {
+        "path": "src/v7_episode.py",
+        "sha256": "9a83b0b15e1625159189b82f48f38b0f087957c2bc9f4f70a9376f2ef6b0ae3e"
+      },
+      {
+        "path": "src/v7_vision_claims.py",
+        "sha256": "929034e3dabdb820523a0719729dc77e85ec89934c68712f574232385c23cfe8"
+      },
+      {
+        "path": "src/v8_go_fusion_claims.py",
+        "sha256": "ffecd808b2b1feec30f94d5d9085c0b9dc173d535d0efa724ea1b5bc23bfd18e"
+      },
+      {
+        "path": "src/v8_runtime_calibration.py",
+        "sha256": "300286d56c24f7377a87add86a6ecdd64c3f02025f80acbb2ff819bc46648d14"
+      },
+      {
+        "path": "src/v8_seg_v3_model.py",
+        "sha256": "30892e644dcdffafc3bd0e928653b74d29a7724d0844ce0284b1448b9cbda649"
+      },
+      {
+        "path": "src/v8_spatial_runtime.py",
+        "sha256": "095956aa68ccbf8d2c62c47c216be113c89366dfdd86099031a506b66b0d71b2"
+      },
+      {
+        "path": "src/look_twice_v7.py",
+        "sha256": "09013bcea0c200c87c6bf8c40d1d78a300cafbbdc26807ba8fb9137c6ebb8754"
+      },
+      {
+        "path": "src/purify_bridge.py",
+        "sha256": "2224f75ed49346741ddbebcac64187a7dd72710e9b73468de78938bce3752700"
+      },
+      {
+        "path": "scripts/v8_go_fusion_v2_pipeline.py",
+        "sha256": "4e25d7aa7e6e8d96b341308f414129aa90b12283319977e7cd5dbd18b1f896b6"
+      },
+      {
+        "path": "scripts/v8_go_fusion_v3_pipeline.py",
+        "sha256": "d360a3f29393350607e616ebc73077ecdc38872aedaf2ba3a92c54f4cb1f4524"
+      },
+      {
+        "path": "scripts/v8_go_fusion_v3_rerun_smokes.py",
+        "sha256": "076b59941ffb028a4bed303a1b090a4a1f5ad744848f99e0e6b9d5dba17f0a3a"
+      },
+      {
+        "path": "scripts/v8_go_fusion_v3_preflight.py",
+        "sha256": "b5562cd24f9f41688eb71f3ac8aedf3b7644971bebde4d7952cfbfcf3e82a55d"
+      }
+    ]
+  },
+  "episode_contract": {
+    "schema_version": "look-twice.episode/v7",
+    "filename_templates": {
+      "purify-active-vision": "episodes/active__independent-noise__{seed}.json",
+      "purify-passive": "episodes/passive__independent-noise__{seed}.json"
+    },
+    "required_environment": {
+      "runtime": "genesis-amd",
+      "formal_result_eligible": false,
+      "physics_backend": "kinematic",
+      "genesis": "1.1.2",
+      "genesis_backend": "gs.amdgpu",
+      "torch": "2.9.1+gitff65f5b",
+      "rocm": "7.2.53211-e1a6bc5663",
+      "gpu": "AMD Radeon Graphics",
+      "v6": true,
+      "v6_motion_backend": "kinematic",
+      "device": "cuda:0",
+      "claims_mode": "genesis_rgbd_multi_agent_v6",
+      "dual_agent": true,
+      "world_homology": "v6_oracle_obstacles",
+      "artifact_inputs_eligible": true,
+      "genesis_live_rgbd": true
+    },
+    "agent_scope": {
+      "agent_realization": "single_shared_genesis_chassis_with_separate_logical_role_poses",
+      "not_simultaneous_dual_body_dynamics": true,
+      "distinct_logical_role_poses_viewpoints_and_capture_roots": true,
+      "not_two_physical_devices": true
+    },
+    "scope_disclosure": "Full Look Twice perception-evidence-gate-planning pipeline with live Genesis RGB-D on AMD ROCm; robot motion is the declared kinematic backend, not rigid-body contact dynamics and not a physical-robot test"
+  },
+  "endpoints": {
+    "primary": {
+      "name": "full_chain_direct_rate_difference",
+      "active_event": "mission success and metrics.route_mode == 'direct' and metrics.used_detour == false and metrics.selected_corridor is a non-empty string and at least one gate_receipt has python_admitted == purify_go_admitted == effective_admit == true, action == 'cross_corridor', and corridor_id == metrics.selected_corridor",
+      "passive_event": "mission success and metrics.route_mode == 'direct' and metrics.used_detour == false and metrics.selected_corridor is a non-empty string and at least one gate_receipt has python_admitted == purify_go_admitted == effective_admit == true, action == 'cross_corridor', and corridor_id == metrics.selected_corridor",
+      "effect": "active_rate_minus_passive_rate",
+      "uncertainty": "two-sided 95% Wilson score interval for each policy rate",
+      "paired_test": "two-sided exact McNemar test over the 30 seed pairs",
+      "success_threshold": null
+    },
+    "secondary": [
+      "mission_success",
+      "unsafe_episode",
+      "fallback_used",
+      "python_go_gate_agreement",
+      "initial_gate_denied",
+      "repair_attempted",
+      "purify_invoked",
+      "environment_contract_valid",
+      "route_only_direct",
+      "full_pipeline_denominator",
+      "logical_role_kinematic_operational_burden"
+    ],
+    "multiplicity": "Secondary endpoints are descriptive; no multiplicity-adjusted confirmatory claims",
+    "operational_burden": {
+      "source": "sum motion_segments[].path_length by agent_id within each raw episode",
+      "loaded_carrier": "Report active and passive mean/median plus the 30 paired active-minus-passive deltas",
+      "active_scout": "Report active-policy scout path length mean and median",
+      "total_team": "Report active and passive mean/median plus the 30 paired active-minus-passive deltas",
+      "scope": "Same-generator logical-role kinematic burden only; carrier and scout have distinct logical poses, viewpoints, and capture roots on one shared Genesis chassis realization",
+      "prohibited_inferences": [
+        "energy",
+        "throughput",
+        "wall-clock latency",
+        "physical robot duty cycle",
+        "two physical devices or simultaneous dual-body dynamics"
+      ]
+    },
+    "full_pipeline_denominator": [
+      "all 60 expected raw episodes",
+      "episodes with Genesis live RGB-D",
+      "episodes with the frozen checkpoint loaded",
+      "episodes and receipt totals with Purify Go invoked",
+      "episodes with at least one Purify Go receipt",
+      "episodes with world alignment passed",
+      "raw RGB-D observation count total and per-episode mean",
+      "vision proposal count total and per-episode mean",
+      "Purify invocation count total"
+    ]
+  },
+  "telemetry_contract": {
+    "artifact": "ROCM_TELEMETRY.json",
+    "scope": "entire_challenge_subprocess_wall",
+    "sample_interval_seconds": 2.0,
+    "sample_interval_seconds_max": 2.0,
+    "require_sample_before_or_at_subprocess_start": true,
+    "require_sample_after_or_at_subprocess_end": true,
+    "require_continuous_sampling": true,
+    "max_gap_multiplier": 2.5,
+    "max_gap_slack_seconds": 0.5,
+    "max_gap_seconds": 5.5,
+    "gpu_busy_threshold_percent": 1.0,
+    "percentile_method": "nearest_rank_ceil_p_times_n",
+    "include_zero_percent_idle_samples": true,
+    "sampler_errors_allowed": 0,
+    "challenge_subprocess_exit_code": 0,
+    "preflight_requires_no_other_kfd_processes": true
+  },
+  "subprocess_wall_contract": {
+    "attempt_manifest_path": "RUN_MANIFEST.json:execution.attempts",
+    "attempt_fields": [
+      "seed",
+      "policy",
+      "started_monotonic_ns",
+      "ended_monotonic_ns",
+      "wall_seconds",
+      "exit_code"
+    ],
+    "attempt_count": 60,
+    "attempt_order": "the fixed parity-balanced execution order",
+    "exit_code_required": 0,
+    "positive_wall_required": true,
+    "episode_timeout_seconds": 300,
+    "timeout_process_group": true,
+    "timeout_signal_sequence": [
+      {"signal": "SIGTERM", "at_timeout_seconds": 300},
+      {"grace_seconds": 10},
+      {"signal": "SIGKILL", "if_still_running": true}
+    ],
+    "timeout_outcome_preserved": true,
+    "continue_after_timeout": true,
+    "retry_after_timeout": false,
+    "fixed_subprocess_environment": {
+      "PATH_prepend": "/opt/venv/bin",
+      "MIOPEN_FIND_MODE": "FAST"
+    },
+    "scope": "Each value covers its complete Python plus Genesis plus checkpoint plus episode subprocess wall; it is not control-loop latency"
+  },
+  "reporting_contract": {
+    "raw_episode_files": 60,
+    "raw_failures_preserved": true,
+    "required_artifacts": [
+      "RUN_MANIFEST.json",
+      "ROCM_TELEMETRY.json",
+      "CHALLENGE_REPORT.json",
+      "raw/PRESTART_BINDING.json",
+      "SHA256SUMS"
+    ],
+    "checksum_scope": "SHA256SUMS must bind every regular file recursively under the results directory except SHA256SUMS itself, including all raw preflight records, logs, stderr, stdout, preserved errors, episodes, manifests, telemetry, and reports",
+    "validator": "scripts/verify_v8_frozen_challenge.py",
+    "no_result_may_be_deleted_replaced_or_rerun": true,
+    "no_gate_or_promotion_language": true
+  }
+}
