@@ -32,8 +32,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         : storedLocale === "zh" || storedLocale === "en"
           ? storedLocale
           : "en";
-    setLanguage(nextLanguage);
-    setReady(true);
+    const stateTimer = window.setTimeout(() => {
+      setLanguage(nextLanguage);
+      setReady(true);
+    }, 0);
+    return () => window.clearTimeout(stateTimer);
   }, []);
 
   useEffect(() => {

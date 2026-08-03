@@ -52,9 +52,12 @@ export function EvidenceConsole() {
     requestedReplay.current = query.get("replay") || "";
     requestedAutoplay.current = query.get("autoplay") === "1";
     const isCinematic = query.get("cinematic") === "1";
-    setCinematic(isCinematic);
+    const stateTimer = window.setTimeout(() => setCinematic(isCinematic), 0);
     document.documentElement.classList.toggle("cinematic-page", isCinematic);
-    return () => document.documentElement.classList.remove("cinematic-page");
+    return () => {
+      window.clearTimeout(stateTimer);
+      document.documentElement.classList.remove("cinematic-page");
+    };
   }, []);
 
   useEffect(() => {

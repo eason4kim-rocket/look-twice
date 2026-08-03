@@ -4,19 +4,172 @@
   "title": "Look Twice ReleaseProfile v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "candidate_id", "display_name", "tagline", "capabilities", "headline_metrics", "artifact_identities", "limitations", "experiment_links", "default_replays", "profile_sha256"],
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "display_name",
+    "tagline",
+    "capabilities",
+    "headline_metrics",
+    "artifact_identities",
+    "limitations",
+    "experiment_links",
+    "default_replays",
+    "profile_sha256"
+  ],
   "properties": {
-    "schema_version": {"const": "look-twice.release-profile/v1"},
-    "candidate_id": {"type": "string", "minLength": 1},
-    "display_name": {"type": "string", "minLength": 1},
-    "tagline": {"$ref": "#/$defs/localized"},
-    "capabilities": {"type": "array", "items": {"type": "string"}},
-    "headline_metrics": {"type": "array", "items": {"type": "object"}},
-    "artifact_identities": {"type": "array", "items": {"type": "object", "required": ["artifact", "sha256"], "properties": {"artifact": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}},
-    "limitations": {"type": "array", "items": {"$ref": "#/$defs/localized"}},
-    "experiment_links": {"type": "array", "items": {"type": "object"}},
-    "default_replays": {"type": "array", "items": {"type": "string"}, "minItems": 1},
-    "profile_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    "schema_version": {
+      "const": "look-twice.release-profile/v1"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tagline": {
+      "$ref": "#/$defs/localized"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "headline_metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/headline_metric"
+      },
+      "minItems": 1
+    },
+    "artifact_identities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_identity"
+      },
+      "minItems": 1
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/localized"
+      },
+      "minItems": 1
+    },
+    "experiment_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      },
+      "minItems": 1
+    },
+    "default_replays": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "profile_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
   },
-  "$defs": {"localized": {"type": "object", "additionalProperties": false, "required": ["en", "zh"], "properties": {"en": {"type": "string", "minLength": 1}, "zh": {"type": "string", "minLength": 1}}}}
+  "$defs": {
+    "localized": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "en",
+        "zh"
+      ],
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zh": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "headline_metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_id",
+        "value",
+        "denominator",
+        "label",
+        "source"
+      ],
+      "properties": {
+        "metric_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "number"
+        },
+        "denominator": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "label": {
+          "$ref": "#/$defs/localized"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "artifact_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "sha256"
+      ],
+      "properties": {
+        "artifact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "href"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
 }

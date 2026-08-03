@@ -1,0 +1,90 @@
+{
+  "schema_version": "look-twice.v8-submission-package/v1",
+  "generated_on": "2026-08-03",
+  "status": "pre_submission_package",
+  "competition": {
+    "name": "AMD AI DevMaster Hackathon 2026",
+    "track": "Track 3 - Physical AI",
+    "deadline": "2026-08-06T23:59:00+08:00",
+    "required_language": "English",
+    "pr_title": "Track 3, eason4kim-rocket, Look Twice"
+  },
+  "candidate": {
+    "candidate_id": "v8-frozen",
+    "source_branch": "v8-competition-release",
+    "entrant_assumption": "eason4kim-rocket (solo entrant)",
+    "simulation_only": true,
+    "real_robot_claim": false,
+    "safety_certification_claim": false
+  },
+  "artifacts": {
+    "locked_report": {
+      "path": "release/v8-frozen/results/LOCKED_TEST_REPORT.json",
+      "sha256": "5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb"
+    },
+    "locked_open_seal": {
+      "path": "release/v8-frozen/results/LOCKED_TEST_OPENED.json",
+      "sha256": "7bfe13d0d7e117f76286cb094711322b810dc44d40ddbd149bf1304713baba14"
+    },
+    "frozen_checkpoint": {
+      "sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+      "size_bytes": 159592901,
+      "public_url": null
+    },
+    "rocm_benchmark": {
+      "path": "release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json",
+      "sha256": "282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156"
+    },
+    "technical_report_pdf": {
+      "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
+      "sha256": "23c5edc768cb9d831ac90089bad00bf664c8e5bfcaae5d4472aa3666c9e52b15",
+      "size_bytes": 1063764
+    },
+    "short_evidence_reel": {
+      "path": "showcase/public/media/look-twice-replay-30s.mp4",
+      "sha256": "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2",
+      "size_bytes": 1006188
+    },
+    "social_preview": {
+      "path": "showcase/public/og.png",
+      "sha256": "524b222272abdff4316b7fc302ea385c1d74572095894fcba712bfdd13288d0e",
+      "size_bytes": 1757156
+    },
+    "official_repository_staging": {
+      "path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice",
+      "sha256s_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/SHA256SUMS",
+      "status": "ready_except_final_video_url_and_registered_team_confirmation"
+    },
+    "final_demo_video": {
+      "public_url": null,
+      "sha256": null,
+      "status": "required_before_submission"
+    }
+  },
+  "links": {
+    "source_repository": "https://github.com/eason4kim-rocket/look-twice",
+    "public_evidence_console": "https://look-twice-evidence-console.eason1319.workers.dev/",
+    "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07"
+  },
+  "verification": {
+    "frozen_foundation": "passed",
+    "python_replay_tests": "6/6 passed",
+    "go_tests": "passed",
+    "node_22_site_tests": "20/20 passed",
+    "node_22_lint": "passed",
+    "production_build": "passed",
+    "docker_build_and_route_smoke": "passed",
+    "pdf_visual_qa": "9/9 pages inspected",
+    "browser_visual_qa": "desktop and mobile passed",
+    "official_repository_staging_checksums": "passed",
+    "submission_surface_credential_scan": "passed"
+  },
+  "release_blockers": [
+    "confirm registered team display name",
+    "push public V8 source branch and logged-out verify",
+    "publish public frozen-checkpoint mirror",
+    "record and publish final 3-5 minute English demo video",
+    "insert final video and checkpoint URLs into PR body",
+    "open official English submission PR"
+  ]
+}

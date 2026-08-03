@@ -5,6 +5,7 @@ outputs/
 bin/
 *.test
 .DS_Store
+tmp/
 
 # V7 full episode dumps (local archive; keep summaries/status in git)
 results/v7-gpu-archive/**/*.json

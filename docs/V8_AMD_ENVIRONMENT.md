@@ -1,0 +1,89 @@
+# V8 AMD Radeon and ROCm Environment
+
+This record separates the environment captured with the frozen V8 result from
+a read-only availability check performed during submission preparation.
+
+## Frozen evaluation environment
+
+Source: `release/v8-frozen/results/V8_IDENTITY_FREEZE_MANIFEST.json` and the
+archived V8 episode environment blocks.
+
+| Component | Value |
+| --- | --- |
+| Platform | Linux 6.8.0-79, x86_64, glibc 2.39 |
+| Python | 3.12.3 |
+| PyTorch | 2.9.1+gitff65f5b |
+| HIP / ROCm | 7.2.53211-e1a6bc5663 |
+| GPU name reported to PyTorch | AMD Radeon Graphics |
+| GPU ISA | gfx1100 |
+| Genesis | 1.1.2 |
+| Genesis backend | `gs.amdgpu` |
+| PyTorch device | `cuda:0` |
+
+PyTorch retains the `cuda` device namespace for its ROCm backend; `cuda:0` in
+these reports means the Radeon/HIP device, not an NVIDIA GPU.
+
+## Submission-preparation availability check
+
+A read-only check on 2026-08-03 confirmed the same Radeon Cloud host class:
+
+- `gfx1100` Radeon device;
+- 51,522,830,336 bytes of VRAM (approximately 48 GiB);
+- PyTorch 2.9.1 ROCm build;
+- HIP 7.2.53211-e1a6bc5663;
+- Genesis 1.1.2.
+
+Unique hardware identifiers, hostnames, SSH details, and local paths are not
+published as competition evidence.
+
+## GPU workload boundary
+
+The Radeon GPU executes:
+
+- Genesis physics/simulation stepping through `gs.amdgpu`;
+- RGB, depth, and segmentation-proxy rendering;
+- RGB-D tensor preprocessing;
+- the V8 spatially grounded segmentation and traversability model;
+- candidate observation evaluation used by the closed loop.
+
+The CPU executes:
+
+- the standalone Purify Go action-contract gate;
+- canonical receipt hashing;
+- replay packaging and the public evidence website.
+
+The public website is intentionally CPU-only because it replays recorded AMD
+GPU evidence. This design lets judges inspect the exact evidence chain without
+requiring access to the competition cloud instance.
+
+## Identity evidence
+
+| Artifact | SHA256 |
+| --- | --- |
+| Vision checkpoint | `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783` |
+| Vision conformal identity | `ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f` |
+| Go fusion conformal identity | `d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97` |
+| Purify Go binary | `31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00` |
+| Locked report file | `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb` |
+
+## Frozen-model inference benchmark
+
+Source: `release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json`.
+Report SHA256:
+`282b0a1bf5180d9aca75cb068b60100222eb07bf6aea9fc8a2ca46c655b14156`.
+
+The benchmark verifies the checkpoint SHA before loading it, uses FP32 tensors
+already resident on the Radeon GPU, performs 20 warm-up iterations, and then
+records 100 synchronized model forwards for each batch size.
+
+| Batch | p50 | p95 | Throughput | Peak allocated |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 192.31 ms | 199.18 ms | 5.18 images/s | 313.63 MiB |
+| 4 | 659.08 ms | 667.85 ms | 6.06 images/s | 465.38 MiB |
+| 8 | 1,279.72 ms | 1,288.29 ms | 6.25 images/s | 668.38 MiB |
+
+The benchmark covers only the frozen V8 vision model forward pass plus Python
+dispatch and synchronized ROCm execution. It excludes RGB-D preprocessing,
+Genesis simulation, Go evidence fusion, storage/network I/O, and closed-loop
+actuation. It is not an accuracy evaluation. GPU utilization is not claimed,
+and no performance value is inferred from V4-V7.

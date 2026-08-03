@@ -7,19 +7,22 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const mono = IBM_Plex_Mono({ variable: "--font-mono", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://look-twice-evidence-console.eason1319.workers.dev"),
   title: { default: "Look Twice — Active Evidence Assurance", template: "%s · Look Twice" },
   description: "A Purify-powered active evidence assurance layer for Physical AI on AMD GPU.",
+  alternates: { canonical: "/" },
   openGraph: {
+    url: "https://look-twice-evidence-console.eason1319.workers.dev/",
     type: "website",
     title: "Look Twice — Active Evidence Assurance",
     description:
       "A robot should not act on evidence it cannot defend. Watch the 30-second Purify-qualified repair loop.",
     images: [
       {
-        url: "/media/look-twice-replay-30s.poster.webp",
-        width: 1920,
-        height: 1080,
-        alt: "Look Twice recorded trajectory replay",
+        url: "https://look-twice-evidence-console.eason1319.workers.dev/og.png",
+        width: 1730,
+        height: 909,
+        alt: "Look Twice active evidence assurance for Track 3 Physical AI",
       },
     ],
   },
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
     title: "Look Twice — Active Evidence Assurance",
     description:
       "Claim → Purify → active evidence repair → qualified physical action.",
-    images: ["/media/look-twice-replay-30s.poster.webp"],
+    images: ["https://look-twice-evidence-console.eason1319.workers.dev/og.png"],
   },
 };
 
