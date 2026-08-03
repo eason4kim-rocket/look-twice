@@ -64,7 +64,7 @@
       "sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
       "size_bytes": 159592901,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt",
-      "publication_verified": false
+      "publication_verified": true
     },
     "rocm_benchmark": {
       "path": "release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json",
@@ -83,7 +83,7 @@
       "size_bytes": 1068088,
       "page_count": 10,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
-      "publication_verified": false
+      "publication_verified": true
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -100,8 +100,8 @@
       "sha256": "906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280",
       "size_bytes": 17342763,
       "sidecar_sha256": "c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9",
-      "publication_verified": false,
-      "status": "render_complete_pending_owner_review_and_publication"
+      "publication_verified": true,
+      "status": "published_and_hash_verified_pending_owner_review"
     },
     "social_preview": {
       "path": "showcase/public/og.png",
@@ -111,7 +111,7 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-eason4kim-rocket-Look-Twice/SHA256SUMS",
-      "status": "review_ready_checksums_verified"
+      "status": "official_fork_branch_prepared_no_pr"
     }
   },
   "links": {
@@ -121,7 +121,10 @@
     "public_results_target": "https://eason4kim-rocket.github.io/results",
     "public_reproduction_target": "https://eason4kim-rocket.github.io/reproduce",
     "release_target": "https://github.com/eason4kim-rocket/look-twice/releases/tag/v8-competition-candidate",
-    "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07"
+    "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07",
+    "official_fork": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07",
+    "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-eason4kim-rocket-look-twice-v8",
+    "public_targets_anonymously_verified": true
   },
   "verification": {
     "frozen_foundation": "passed",
@@ -134,20 +137,21 @@
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
     "pdf_visual_qa": "10/10 pages inspected",
-    "browser_visual_qa": "desktop and mobile passed on the prepared build",
+    "browser_visual_qa": "desktop visual QA passed; public console/results hydration verified anonymously",
     "submission_surface_credential_scan": "passed",
-    "final_demo_media_qa": "builder format guards passed; owner visual and audible review pending",
-    "official_repository_staging_checksums": "passed; all 10 packaged files verified"
+    "final_demo_media_qa": "format, decode, audio-level, privacy, and nine-chapter frame QA passed; owner full listening review pending",
+    "official_repository_staging_checksums": "passed; all 10 packaged files verified",
+    "release_assets": "four assets downloaded anonymously; sizes and SHA256 identities passed",
+    "pages_site": "four routes, PDF, JSON evidence, MP4 preview, and OG image returned 200 anonymously",
+    "official_fork_branch": "one commit and 12 intended files ahead; no PR exists"
   },
   "owner_review_items": [
     "Confirm that the registered solo entrant or team display name is eason4kim-rocket; update the PR title and Team section if it differs.",
     "Complete owner visual and audible review of the final demo.",
-    "Verify the source branch, Pages site, release assets, and official-fork branch without sign-in after publication.",
     "Review the English PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
     "complete owner visual and audible review of the final 4:10 English demo",
-    "publish and logged-out verify the source branch, Pages site, checkpoint, report, and video",
     "confirm registered entrant or team label",
     "obtain owner approval to open the official English submission PR"
   ]

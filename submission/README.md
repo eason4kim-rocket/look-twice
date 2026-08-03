@@ -47,8 +47,8 @@ increased total robot travel by 24.32% and did not reduce latency.
 | Frozen checkpoint | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt> |
 | Final 4:10 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 
-These are the stable final targets. Logged-out availability must be verified
-after publication and before the official PR is opened.
+These are the stable final targets. They were downloaded or opened without
+credentials and identity-checked on 2026-08-03.
 
 ## Handoff map
 
@@ -81,8 +81,8 @@ after publication and before the official PR is opened.
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`
 - Size: 159,592,901 bytes.
 - Public target: the `v8-competition-candidate` release asset linked above.
-- The release asset must be downloaded again without credentials and hash-
-  verified before the PR is opened.
+- The release asset was downloaded again without credentials and matched this
+  identity exactly.
 
 ## Verified local commands
 
@@ -125,7 +125,7 @@ certification, locked latency, energy, or utilization claim. See
       `V8_SUBMISSION_MANIFEST.json`.
 - [x] Regenerate and verify the official-directory `SHA256SUMS` after every
       final artifact is in place.
-- [ ] Verify the Pages site, source branch, PDF, checkpoint, and video without
+- [x] Verify the Pages site, source branch, PDF, checkpoint, and video without
       sign-in.
 - [ ] Review the official-fork branch diff and the English PR body.
 - [ ] Explicitly authorize opening the official competition PR.

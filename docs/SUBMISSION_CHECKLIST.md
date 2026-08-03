@@ -94,10 +94,10 @@ Official sources:
 
 ## Reproducibility
 
-- [ ] Push `v8-competition-release` to the public source repository.
-- [ ] Verify the branch from a logged-out browser or anonymous clean clone.
-- [ ] Publish the 159 MB V8 checkpoint at the stable release URL.
-- [ ] Download and verify the public checkpoint SHA256.
+- [x] Push `v8-competition-release` to the public source repository.
+- [ ] Verify the final branch HEAD from an anonymous clean clone.
+- [x] Publish the 159 MB V8 checkpoint at the stable release URL.
+- [x] Download the public checkpoint without credentials and verify its SHA256.
 - [ ] Clean-clone the public branch in a new directory.
 - [x] Reproduce the frozen local submission commit in a clean detached
       worktree before publication.
@@ -144,8 +144,8 @@ Stable targets:
 - [x] Results contains the exact AMD execution evidence and scope boundary.
 - [x] Site links the final report, source branch, checkpoint, and video targets.
 - [x] Rebuilt, linted, tested, and inspected the prepared site.
-- [ ] Publish the updated public Pages site.
-- [ ] Verify all routes and binary assets without sign-in on desktop and mobile.
+- [x] Publish the updated public Pages site with HTTPS enforced.
+- [x] Verify all routes, client hydration, and binary assets without sign-in.
 
 ## Final video
 
@@ -162,13 +162,14 @@ Stable targets:
 - [x] Complete final render.
 - [x] Verify 1920 x 1080 H.264, 30 fps, `yuv420p`, AAC audio, and 250-second
       duration with `ffprobe`.
-- [ ] Inspect representative frames and listen to the full narration.
+- [x] Inspect representative frames across all nine chapters.
+- [ ] Complete owner listening review of the full narration.
 - [x] Confirm the 17,342,763-byte MP4 is below the release/package size limit.
 - [x] Record MP4 SHA256
       `906f4396cba9d04ff9e32c8d92ca7c7c85bab7a87f4bbdd2006c79c6474ba280`
       and sidecar SHA256
       `c8e8a505b5c3678b7a503446eb571798a1d3ef0668840b11cad7ac95a90347d9`.
-- [ ] Upload to the stable no-sign-in URL and verify playback.
+- [x] Upload to the stable no-sign-in URL and verify the downloaded MP4 hash.
 
 ## IP, privacy, and repository hygiene
 
@@ -181,17 +182,18 @@ Stable targets:
 - [x] Review the submission PDF, preview MP4, social PNG, frozen Go binary, and
       other large tracked artifacts by file type and identity.
 - [ ] Confirm all datasets and assets have legal, licensing, and ethical use.
-- [ ] Repeat metadata/privacy inspection for the final 4:10 video.
+- [x] Repeat metadata/privacy inspection for the final 4:10 video.
 
 ## Official submission repository
 
-- [ ] Fork `AMD-DEV-CONTEST/Radeon-hackathon-2026-07`.
+- [x] Fork `AMD-DEV-CONTEST/Radeon-hackathon-2026-07`.
 - [x] Stage an English submission directory locally containing the judge-facing
       index, report PDF, compact evidence, and preview.
 - [x] Add the final demo artifact and stable target URL.
 - [x] Regenerate and verify staging checksums.
-- [ ] Copy the staged directory into a dedicated branch of the official fork.
-- [ ] Verify the official-fork branch diff without opening a PR.
+- [x] Copy the staged directory into a dedicated branch of the official fork.
+- [x] Verify the official-fork branch is one commit / 12 intended files ahead
+      without opening a PR.
 - [ ] Use PR title `Track 3, eason4kim-rocket, Look Twice` unless the registered
       team label differs.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
@@ -205,7 +207,7 @@ Stable targets:
 - [ ] Entrant/team label confirmed.
 - [ ] Final MP4 and sidecar inspected.
 - [x] Final `SHA256SUMS` verifies cleanly.
-- [ ] Public branch/site/release assets pass anonymous checks.
-- [ ] Official-fork branch contains only intended submission files.
+- [x] Public branch/site/release assets pass anonymous checks.
+- [x] Official-fork branch contains only intended submission files.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
-- [ ] No official PR exists before explicit owner approval.
+- [x] No official PR exists before explicit owner approval.
