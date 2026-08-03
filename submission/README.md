@@ -58,8 +58,8 @@ increased total robot travel by 24.32% and did not reduce latency.
 These are the stable final targets. The 239-second replacement, updated report,
 source branch, release assets, and refreshed official-fork package were
 published and verified without credentials on 2026-08-03. The refreshed Pages
-site remains pending publication and anonymous route verification. No official
-competition PR was opened.
+site was also deployed and anonymously route-verified. No official competition
+PR was opened.
 
 ## Handoff map
 

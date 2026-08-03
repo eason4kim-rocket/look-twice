@@ -1,5 +1,7 @@
 # Look Twice V8: Active Evidence Assurance for Physical AI
 
+[![CPU contract tests](https://github.com/eason4kim-rocket/look-twice/actions/workflows/ci.yml/badge.svg?branch=v8-competition-release)](https://github.com/eason4kim-rocket/look-twice/actions/workflows/ci.yml?query=branch%3Av8-competition-release)
+
 Look Twice is a pre-action evidence-assurance layer for embodied AI, not
 another perception leaderboard. It asks not only what the model predicts, but
 whether the evidence is independent, fresh, calibrated, and sufficient for the

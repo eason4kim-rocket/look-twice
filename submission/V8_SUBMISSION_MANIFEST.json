@@ -14,7 +14,7 @@
     "official_pr_opening_authorized": false,
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
-    "public_targets_anonymously_verified": false,
+    "public_targets_anonymously_verified": true,
     "entrant_team_name": "Liu Liang",
     "entrant_role": "solo entrant",
     "entrant_github": "eason4kim-rocket",
@@ -178,7 +178,7 @@
     "official_submission_repository": "https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07",
     "official_fork": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07",
     "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8",
-    "public_targets_anonymously_verified": false
+    "public_targets_anonymously_verified": true
   },
   "verification": {
     "frozen_foundation": "passed",
@@ -191,13 +191,15 @@
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
     "pdf_visual_qa": "10/10 pages inspected",
-    "browser_visual_qa": "prepared build passed desktop and mobile visual QA; refreshed public-route verification pending",
+    "browser_visual_qa": "prepared build passed hydrated desktop and mobile visual QA; refreshed public routes and referenced client assets verified without credentials",
     "submission_surface_credential_scan": "passed",
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
     "rocm_telemetry_helper_tests": "3/3 passed; formal 60-second report validated",
     "official_repository_staging_checksums": "passed locally and on the published branch; 12 checksummed artifacts verified (13 total files including SHA256SUMS)",
-    "public_distribution": "locked archive, sidecar, checksum, report, video, and checkpoint release assets plus source and official-fork refresh published and verified without credentials; refreshed Pages route verification pending",
+    "github_actions_ci": "run 30797817113 passed; Python, Purify Go, and showcase jobs all green",
+    "github_pages_deployment": "commit d4eeed5c8f79f5f402d8c361875990956946f868 built successfully; routes and hashed client assets verified without credentials",
+    "public_distribution": "release assets, refreshed Pages site, source branch, report, checkpoint, and official-fork package published and verified without credentials",
     "official_fork_branch": "13 intended files published on the Liu Liang branch at commit 286420ece6e744877dd4089d4585f14825c43469; 12 checksum entries passed; official_pr_opened=false"
   },
   "owner_review_items": [

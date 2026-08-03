@@ -163,8 +163,8 @@ Stable targets:
       supplements, with missing-output and non-OOD boundaries visible.
 - [x] Site links the final report, source branch, checkpoint, and video targets.
 - [x] Rebuilt, linted, tested, and inspected the prepared site.
-- [ ] Publish the refreshed public Pages site with HTTPS enforced.
-- [ ] Verify all refreshed routes, client hydration, and binary assets without
+- [x] Publish the refreshed public Pages site with HTTPS enforced.
+- [x] Verify all refreshed routes, client hydration, and binary assets without
       sign-in.
 - [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
 - [x] Download the replacement assets without sign-in and verify both hashes.
