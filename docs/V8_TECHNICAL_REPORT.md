@@ -39,6 +39,16 @@ is a paired direct-route gain of 91.7 percentage points. Both policies
 completed 12/12 missions; the 24 policy runs contained zero unsafe crossings,
 zero unplanned fallbacks, and 24/24 Python/Go decision agreement.
 
+An additive challenge was then bound publicly before execution, without model,
+calibration, threshold, seed, retry, or stopping-rule changes. Across 30
+previously untouched same-generator worlds, active repair achieved 29/30
+full-chain direct routes versus 0/30 for passive control, a paired gain of 96.7
+percentage points (exact two-sided McNemar p=3.73e-9). All 60 episodes completed
+with zero unsafe crossings and zero fallbacks. The complete 195-file raw result,
+full subprocess-wall AMD telemetry, checksums, and an independent recomputation
+validator are public. This supplement is not called locked, OOD, or real-world
+evidence.
+
 The result is simulation-only and uses a kinematic Genesis motion backend. It
 does not claim real-robot validation or safety certification.
 
@@ -144,7 +154,8 @@ Each sample contains:
 | Validation | 101500-101799 | 300 | Checkpoint selection only |
 | Vision calibration | 101800-102099 | 300 | Split-conformal vision artifact |
 | Locked test | 102100-102499 | 400 | Opened once after the runtime freeze |
-| Reserved challenge range | 102500-102699 | 200 | Same generator family; not evaluated |
+| Preregistered challenge | 102500-102529 | 30 | Same generator family; evaluated once after public binding |
+| Remaining challenge reserve | 102530-102699 | 170 | Same generator family; not evaluated |
 
 The selected checkpoint records 12,000 training pairs and 2,400 validation
 pairs. The locked report contains 3,200 corridor samples: 1,560 blocked and
@@ -155,9 +166,10 @@ contained 400 corridor rows with both classes represented. Development and
 confirmatory full-chain smokes used disjoint seeds 105300-105311 and
 105400-105411. The locked split was not used by these steps.
 
-The reserved range changes seeds but not the generator family by itself. It
-was not evaluated for V8 and is not presented as OOD or domain-generalization
-evidence.
+The challenge subset changed seeds but not the generator family. Seeds
+102500-102529 were evaluated once under the public frozen-challenge protocol;
+seeds 102530-102699 remain unevaluated. Neither subset is presented as OOD or
+domain-generalization evidence.
 
 ## 4. V8 perception model
 
@@ -236,7 +248,7 @@ active repair can recover a shorter direct route when the evidence supports it.
 
 The intended operational trade is specific: move a low-risk scout to repair
 evidence so a loaded carrier can avoid a conservative detour. It is not a claim
-that active repair reduces total multi-robot travel or wall-clock time.
+that active repair reduces total logical-role team travel or wall-clock time.
 
 ## 6. AMD Radeon GPU and ROCm use
 
@@ -290,6 +302,31 @@ actuation, mission energy, and end-to-end robot latency. The raw samples are in
 `release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json`, SHA256
 `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`.
 
+### 6.3 Frozen-challenge full-pipeline telemetry
+
+Unlike the isolated throughput runs above, the 30-world challenge retained
+two-second `rocm-smi` samples across the complete Python, Genesis, checkpoint,
+and episode-subprocess wall. All 60 episodes used live Genesis RGB-D, loaded
+the frozen checkpoint, and emitted Purify Go receipts. The run produced 268
+RGB-D observations, 134 vision proposals, and 268 Go invocations and receipts.
+
+| Metric | Full-wall result |
+| --- | ---: |
+| Episodes | 60 / 60 valid |
+| Measured subprocess wall | 1,685.5 s |
+| ROCm samples | 844 at 2 s intervals |
+| GPU use, mean / median / p95 / max | 19.4 / 0 / 95 / 100% |
+| VRAM allocation, p95 / max | 2 / 2% |
+| Graphics package power, mean / p95 / max | 35.7 / 81 / 109 W |
+| Active subprocess wall, mean / p95 | 29.92 / 31.16 s |
+| Passive subprocess wall, mean / p95 | 26.26 / 26.70 s |
+
+Zero-percent idle samples are deliberately included. These measurements show
+that the recorded challenge used the full Radeon pipeline; they are not
+control-loop latency, mission energy, or hardware-utilization optimization
+claims. The retained telemetry is
+`release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json`.
+
 ## 7. Evaluation protocol
 
 ### 7.1 Freeze and open discipline
@@ -315,6 +352,23 @@ For each of 12 locked seeds, the passive and active policies run in the same
 scenario family. The report checks initial denial, active repair, final direct
 qualification, passive detour, unsafe crossing, unplanned fallback, Purify
 invocation, and policy-shape invariants.
+
+### 7.4 Publicly preregistered frozen challenge
+
+Before any challenge episode ran, Commit A published the protocol, runner,
+validator, seed range 102500-102529, metrics, stopping rules, and failure
+handling. Commit B then bound the exact Commit A hash and changed only that
+field. The public timestamps were 2026-08-03 10:01:53Z and 10:02:22Z.
+
+The runner attempted each of 30 worlds exactly once for each policy, retained
+timeouts and nonzero exits as results, and prohibited retry, replacement seed,
+or early stopping. The primary endpoint was deliberately stricter than route
+choice: a full-chain direct outcome required mission success, direct routing
+without detour, a nonempty executed corridor, and a same-corridor receipt on
+which Python, Purify Go, and the effective gate all admitted. A separate
+validator read the 60 raw episode records, recomputed the report without
+loading the checkpoint or running an episode, and returned `passed=true` with
+zero errors.
 
 ## 8. Results
 
@@ -353,7 +407,42 @@ removed. Among the 11 discordant direct-route pairs, all 11 favored active
 repair. An exact two-sided McNemar test gives p=0.0009766; this is descriptive
 evidence for the fixed seed suite, not a population or real-world guarantee.
 
-### 8.3 Guarded confirmatory cost ledger
+### 8.3 Preregistered 30-world frozen challenge
+
+| Metric | Result |
+| --- | ---: |
+| Valid paired worlds / episodes | 30 / 60 |
+| Active full-chain direct routes | 29 / 30 (96.7%) |
+| Active Wilson 95% interval | 83.3-99.4% |
+| Passive full-chain direct routes | 0 / 30 |
+| Passive Wilson 95% interval | 0-11.4% |
+| Paired direct-route gain | +96.7 percentage points |
+| Exact two-sided McNemar | p=3.73e-9 |
+| Mission completion | 60 / 60 |
+| Unsafe crossings / fallbacks | 0 / 60; 0 / 60 |
+| Live RGB-D / checkpoint / Go receipt | 60 / 60 each |
+| Receipt-level Python/Go agreement | 250 / 268 (93.3%) |
+
+The single active non-direct case, seed 102515, completed safely by detour and
+remained in the denominator. All 18 receipt disagreements were
+Python-admit/Go-deny with `effective_admit=false`; none opened the gate. Every
+disagreement was then examined in a post-hoc descriptive audit, not a
+preregistered endpoint. All shared the same signature: active policy, corridor
+B, only one Go-qualified measurement root, and the inconclusive Go set
+`{clear, blocked}`. Four concerned a corridor not finally selected; 14 were
+transient evaluations before a later selected-corridor joint admit. The audit
+changed no runtime, calibration, or threshold. Each of the 29 active direct
+successes had a same-corridor receipt on which Python, Go, and the effective
+authorization were jointly true.
+
+The operational burden moved in the intended warehouse direction but was not
+free. Mean loaded-carrier logical path fell from 6.404 to 4.961 (-22.5%), while
+the active scout added 2.980. Mean total logical-role team path therefore rose
+from 6.404 to 7.941 (+24.0%). These are kinematic logical-role paths on one
+shared Genesis chassis, not energy, throughput, latency, physical duty cycle,
+or simultaneous two-robot dynamics.
+
+### 8.4 Guarded confirmatory cost ledger
 
 The non-locked seed 105400 replay includes trajectory lengths and is guarded by
 the frozen import manifest. It is kinematic simulation and carries
@@ -375,7 +464,7 @@ The derivation is machine-readable at
 `release/v8-derived/V8_TASK_UTILITY_DERIVATION.json`, SHA256
 `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
 
-### 8.4 Evidence identity
+### 8.5 Evidence identity
 
 The authoritative locked report file SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
@@ -391,6 +480,13 @@ and permanent-result identities without extracting arrays or running the
 model. This pack is input-only: it does not contain the original 3,200
 one-shot prediction rows or 24 raw full-chain episodes and therefore cannot
 recompute the permanent aggregate. Those missing outputs were not regenerated.
+
+The additive challenge raw archive contains 195 files and has SHA256
+`171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2`.
+Its internal `SHA256SUMS` covers every other regular file (194/194). The
+independent validation report has SHA256
+`942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`
+and reproduces the compact challenge report exactly from raw episode records.
 
 ## 9. Innovation and technical contributions
 
@@ -411,6 +507,9 @@ recompute the permanent aggregate. Those missing outputs were not regenerated.
 7. **Explicit task-cost accounting.** The submission distinguishes loaded
    carrier burden from total team motion, so active repair is not presented as
    a free speed or energy improvement.
+8. **Public one-shot challenge binding.** A before/after commit pair fixes the
+   protocol and code before evaluation, while a checksum-complete raw archive
+   supports independent recomputation of every reported challenge endpoint.
 
 ## 10. Real-world value
 
@@ -437,6 +536,10 @@ incident review, and future assurance tooling.
 - English technical report and detailed reproduction guide;
 - a release-hosted pre-open locked input-and-label pack with streaming verifier;
 - exact-checkpoint sustained ROCm utilization and power telemetry;
+- a publicly preregistered 30-world same-generator challenge with 60 raw
+  episodes, full-wall ROCm telemetry, recursive checksums, and an independent
+  validator;
+- a one-page English Frozen Challenge Judge Card;
 - final 3:59 English workflow video with fixed-composition visuals and
   AI-generated OpenAI Cedar narration;
 - public 159,592,901-byte frozen checkpoint release asset.
@@ -472,6 +575,20 @@ python3 scripts/verify_v8_locked_input_pack.py \
   --check-only
 ```
 
+The preregistered challenge can be recomputed from its complete raw archive:
+
+```bash
+curl -LO https://github.com/eason4kim-rocket/look-twice/releases/download/\
+v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz
+tar -xzf v8-frozen-challenge-102500-102529.raw.tar.gz
+python3 scripts/verify_v8_frozen_challenge.py \
+  --results-dir v8-frozen-challenge-102500-102529 \
+  --preregistration release/v8-frozen/results/\
+V8_FROZEN_CHALLENGE_PREREGISTRATION.json \
+  --repo-root . \
+  --output v8-frozen-challenge-102500-102529.LOCAL-VERIFICATION.json
+```
+
 The evidence website can be rebuilt with:
 
 ```bash
@@ -497,11 +614,18 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
 - Statistical claims apply only to the declared simulated distributions.
 - The public replay is a non-locked confirmatory example, not the locked
   aggregate.
+- The 30-world challenge is an additive publicly preregistered same-generator
+  supplement, not part of the permanent locked result and not an OOD claim.
+- Carrier and scout are separate logical-role poses, viewpoints, and capture
+  roots on one shared Genesis chassis. The evidence does not demonstrate two
+  physical devices or simultaneous dual-body dynamics.
+- Receipt-level agreement in the challenge is 250/268 (93.3%). All 18
+  disagreements were vetoed by Go and remained fail-closed.
 - The locked-input supplement contains inputs and labels, not the original
   per-sample predictions or 24 raw full-chain episodes; it does not reconstruct
   the one-shot run.
-- Seeds 102500-102699 are a reserved range from the same generator family;
-  they were not evaluated and are not claimed as OOD evidence.
+- Seeds 102500-102529 were evaluated once under the public challenge protocol;
+  seeds 102530-102699 remain unevaluated. Neither is claimed as OOD evidence.
 - The frozen 159 MB checkpoint is distributed as a GitHub release asset because
   it exceeds GitHub's normal 100 MB blob limit; its SHA must be verified before
   use.

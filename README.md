@@ -24,8 +24,11 @@ deployment or a certified safety controller.
 
 ## 90-second judge path
 
-1. Open the public [Evidence Console](https://eason4kim-rocket.github.io/).
-2. Play the active replay: initial denial -> independent side-view capture ->
+1. Read the one-page [V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md):
+   public preregistration, 30 paired worlds, AMD full-wall telemetry, application
+   burden, raw archive, and one-command verification.
+2. Open the public [Evidence Console](https://eason4kim-rocket.github.io/) and
+   play the active replay: initial denial -> independent side-view capture ->
    Python and Purify admission -> direct route.
 3. Compare the passive replay: the same initial denial produces a safe detour.
 4. Inspect the [frozen results](https://eason4kim-rocket.github.io/results/)
@@ -67,6 +70,38 @@ not rerun and the locked split was not reopened. The public replay is a
 recorded non-locked confirmatory episode. It illustrates the evaluated
 mechanism but is not substituted for the locked population.
 
+### Preregistered frozen challenge supplement
+
+After the locked result was permanent, a public two-commit preregistration
+fixed the runner, validator, identities, seeds `102500-102529`, policy order,
+full-chain endpoint, telemetry, and no-retry rule before any challenge episode.
+All 60 episodes completed on Genesis live RGB-D and AMD ROCm and passed the
+independent validator:
+
+| Same-generator challenge endpoint | Active | Passive |
+| --- | ---: | ---: |
+| Full-chain direct | 29 / 30 (96.7%) | 0 / 30 (0.0%) |
+| Wilson 95% interval | 83.3-99.4% | 0.0-11.4% |
+| Mission success | 30 / 30 | 30 / 30 |
+| Unsafe episode | 0 / 30 | 0 / 30 |
+| Fallback | 0 / 30 | 0 / 30 |
+
+The paired difference is **+96.7 percentage points** with exact two-sided
+McNemar `p = 3.73e-9`. Full-chain direct requires mission success, direct
+motion without detour, and Python + Purify Go + effective authorization for the
+corridor actually executed. The sole active non-direct world remained safe and
+completed by detour.
+
+Receipt-level Python/Purify Go agreement was **250/268 (93.3%)**. All 18
+differences were Python-admit/Go-deny and remained fail-closed with
+`effective_admit=false`; no selected crossing relied on a disagreement.
+
+This is an additive **same-generator non-locked** challenge, not a second
+locked open, OOD result, rigid-body test, or physical-robot claim. See the
+[Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md),
+[machine report](release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json),
+and [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz).
+
 ### Additive locked-input evidence
 
 The original pre-open locked input-and-label archive is now available as a
@@ -93,15 +128,22 @@ percentage-point gain with zero recorded unsafe crossings or fallbacks across
 all 24 policy runs. Seed 102105 remained conservative and stays in the
 denominator.
 
-The guarded non-locked seed 105400 replay provides a narrower cost ledger.
-Active repair reduced loaded-carrier travel from 6.404 m to 4.915 m (-23.24%)
-while both policies delivered the payload without a recorded collision. This
-was not a free speedup: the scout traveled 3.046 m, total robot travel rose
-from 6.404 m to 7.961 m, and the active episode took more steps. The value
-claim is burden shifting from a loaded carrier to a diagnostic scout, not lower
-total distance or latency.
+The 30-world preregistered challenge now provides the aggregate logical-role
+cost ledger. Active repair reduced mean loaded-carrier path from 6.404 to 4.961
+(-1.443, **-22.5%**). This was not free: mean scout path was 2.980 and total
+logical-role team path rose from 6.404 to 7.941 (+1.538, **+24.0%**). The value
+claim is burden shifting from a loaded carrier to diagnostic scouting, not
+lower total motion, energy, or latency. Carrier and scout are separate logical
+poses and capture roots on one shared Genesis chassis, not two physical robots
+or simultaneous dual-body dynamics.
 
-Source: [task-utility derivation](release/v8-derived/V8_TASK_UTILITY_DERIVATION.json),
+The older guarded non-locked seed 105400 replay remains the visual example; it
+is not substituted for either the permanent locked aggregate or the new
+preregistered 30-world supplement.
+
+Challenge source: [validated 30-world report](release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json).
+The older replay ledger remains in the
+[task-utility derivation](release/v8-derived/V8_TASK_UTILITY_DERIVATION.json),
 SHA256 `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
 
 ## What is novel
@@ -143,7 +185,7 @@ memory. These are model-forward numbers, not Genesis or closed-loop latency.
 See the
 [benchmark JSON](release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json).
 
-A second, preregistered 60-second run adds sustained ROCm telemetry for the
+A separate 60-second run adds sustained ROCm telemetry for the
 same exact checkpoint and batch-8 workload. The clean preflight found 0% GPU
 use, 0% VRAM allocation, and no KFD process before model load. During 60.182
 seconds of synchronized forwards, all 61 `rocm-smi` samples reported 100% GPU
@@ -153,6 +195,16 @@ preloaded FP32 model forwards - not accuracy, Genesis, preprocessing, the Go
 gate, I/O, actuation, energy per mission, or end-to-end robot latency. See the
 [raw telemetry JSON](release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json),
 SHA256 `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9`.
+
+The new frozen challenge adds **full-pipeline** telemetry rather than another
+model-forward loop. Across the complete 1,685.5-second wall of all 60 fresh
+Genesis subprocesses, 844 two-second `rocm-smi` samples were retained,
+including idle: GPU use mean/median/p95/max was 19.4/0/95/100%, VRAM p95/max
+was 2/2%, and graphics-package power mean/p95/max was 35.7/81/109 W. All 60
+episodes loaded the frozen checkpoint, used live Genesis RGB-D, and emitted
+Purify Go receipts; totals were 268 RGB-D observations, 134 vision proposals,
+and 268 Go invocations/receipts. These remain kinematic simulation results,
+not control-loop latency, energy per mission, or physical actuation evidence.
 
 ## Reproduce the submitted evidence
 
@@ -178,6 +230,21 @@ python3 scripts/verify_v8_locked_input_pack.py \
   --sidecar /path/to/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.sidecar.json \
   --check-only
 ```
+
+To reproduce the independent frozen-challenge verification, download and
+extract the [raw challenge archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz),
+then run:
+
+```bash
+python3 scripts/verify_v8_frozen_challenge.py \
+  --results-dir v8-frozen-challenge-102500-102529 \
+  --preregistration release/v8-frozen/results/V8_FROZEN_CHALLENGE_PREREGISTRATION.json \
+  --repo-root . \
+  --output v8-frozen-challenge-102500-102529.LOCAL-VERIFICATION.json
+```
+
+The deterministic verification file must hash to
+`942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`.
 
 ### Run the evidence console
 
@@ -207,15 +274,18 @@ and verify SHA256
 
 | Criterion | Evidence |
 | --- | --- |
-| Robot capability performance - 30 | Same-world paired evidence: active 11/12 direct versus passive 0/12 (+91.7 pp), with 12/12 mission completion for both policies and 0/24 unsafe crossings. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D model inference, frozen environment identities, an exact-checkpoint benchmark, and 61-sample sustained ROCm utilization/power telemetry. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Additive preregistered 30-world supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D inference, exact-checkpoint benchmark, and 844 samples across the complete 1,685.5-second/60-episode Genesis + checkpoint + Go challenge wall. |
 | Innovation and originality - 20 | Lineage-aware Claims, conformal action qualification, dual authorization, BeliefGap-driven active repair, and signed receipts. |
-| Real-world application value - 20 | An evidence-assurance layer for warehouse AMRs and other robots operating under sensor correlation, conflict, and partial observability. |
+| Real-world application value - 20 | Warehouse AMR burden trade measured over 30 pairs: active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%, with all missions completed safely. |
 | Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. No external upstream PR is claimed. |
 
 ## Submission deliverables
 
 - [English V8 technical report](docs/V8_TECHNICAL_REPORT.md)
+- [One-page V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md)
+- [Preregistered 30-world challenge report](release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json)
+- [Independently verified raw challenge archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz)
 - [Rendered technical report PDF](output/pdf/Look-Twice-V8-Technical-Report.pdf)
 - [Detailed reproduction guide](docs/V8_REPRODUCTION.md)
 - [Architecture and evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md)
@@ -252,9 +322,10 @@ and verify SHA256
 
 V8 is the only competition candidate. Later Integrity Shield R1/R2 and V9
 experiments do not alter the V8 result and are not promoted into the headline
-tables. Seeds 102500-102699 are only a reserved challenge range from the same
-generator family; they were not evaluated and are not presented as OOD
-evidence. Source-recovery completion is not treated as a calibration pass. See
+tables. Seeds 102500-102529 were used exactly once for the publicly
+preregistered same-generator supplement; seeds 102530-102699 remain
+unevaluated. Neither subset is presented as OOD evidence. Source-recovery
+completion is not treated as a calibration pass. See
 [V8 evidence boundary](docs/V8_EVIDENCE_BOUNDARY.md).
 
 Apache-2.0. `NOTICE` defines the public Purify reference-core boundary.

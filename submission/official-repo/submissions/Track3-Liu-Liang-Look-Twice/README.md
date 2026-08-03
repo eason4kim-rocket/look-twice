@@ -27,6 +27,13 @@ sim-to-real transfer, or safety certification.
 
 ## Judge-first links
 
+- One-page frozen challenge Judge Card:
+  [packaged copy](V8-Frozen-Challenge-Judge-Card.md)
+- Independent machine verification:
+  [packaged JSON](evidence/challenge_102500_102529/VERIFICATION.json) ·
+  [stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json)
+- Independently verified 30-world raw archive:
+  <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz>
 - Evidence Console target: <https://eason4kim-rocket.github.io/>
 - Frozen-results target: <https://eason4kim-rocket.github.io/results>
 - Reproduction target: <https://eason4kim-rocket.github.io/reproduce>
@@ -43,19 +50,24 @@ sim-to-real transfer, or safety certification.
   [Look-Twice-V8-Evidence-Reel-30s.mp4](Look-Twice-V8-Evidence-Reel-30s.mp4)
 
 The 30-second file is a silent evidence preview. The 3:59 MP4 is the complete
-narrated workflow demonstration. The replacement MP4, sidecar, and report were
-downloaded from the stable release targets without credentials and matched the
-packaged SHA256 identities on 2026-08-03.
+narrated workflow demonstration. The replacement MP4 and sidecar were
+downloaded from their stable release targets without credentials and matched
+the packaged SHA256 identities on 2026-08-03. The final 12-page report is
+packaged here and bound by `SHA256SUMS`; its release URL is the publication
+target.
 
 ## 90-second judge path
 
-1. Play the active replay and inspect the initial Action Contract denial.
-2. Follow the `BeliefGap` to the scout's independent side-view RGB-D capture.
-3. Confirm that direct travel requires Python **and** Purify Go admission.
-4. Switch to passive mode and compare its safe detour.
-5. Open Results and trace every locked number to the public source JSON.
-6. Inspect the non-locked seed-105400 cost ledger for the operational trade.
-7. Inspect the locked-input manifest and sustained ROCm telemetry files.
+1. Open the [packaged Judge Card](V8-Frozen-Challenge-Judge-Card.md) and confirm
+   Commit A/Commit B preceded all 60 episodes.
+2. Check active 29/30 versus passive 0/30, the exact paired test, and the
+   zero-error [independent verification](evidence/challenge_102500_102529/VERIFICATION.json).
+3. Play the active replay and inspect the denial, `BeliefGap`, and independent
+   side-view RGB-D capture.
+4. Confirm that direct travel requires Python **and** Purify Go admission.
+5. Inspect the 844-sample full-wall Radeon telemetry and 30-world
+   carrier/scout burden table.
+6. Open Results and trace the permanent locked numbers separately.
 
 ## Why the result matters
 
@@ -74,14 +86,35 @@ use on the fixed 12-world locked suite. One active seed remained conservative
 and detoured; it stays in the denominator. This is descriptive evidence for
 the predeclared suite, not a population or real-world generalization.
 
-The guarded non-locked confirmatory replay at seed `105400` adds a deliberately
-separate task-cost ledger. Active repair reduced loaded-carrier travel from
-6.404 m to 4.915 m (-23.24%), while both policies delivered the payload without
-a recorded collision. The scout traveled 3.046 m, so total robot travel
-increased from 6.404 m to 7.961 m (+24.32%) and the active run took more steps.
-The supported operational claim is narrower and useful: Look Twice can shift
-movement burden away from the loaded carrier to a scout; it does not reduce
-total distance or latency.
+After that result was permanent, a public two-commit preregistration fixed 30
+untouched same-generator worlds, two policies, runner and validator SHAs,
+balanced order, full-chain endpoint, full-wall telemetry, and no retries before
+execution:
+
+| Preregistered supplement | Active repair | Passive baseline |
+| --- | ---: | ---: |
+| Full-chain direct | 29 / 30 (96.7%) | 0 / 30 (0.0%) |
+| Wilson 95% CI | 83.3-99.4% | 0.0-11.4% |
+| Mission complete | 30 / 30 | 30 / 30 |
+| Unsafe / fallback | 0 / 30; 0 / 30 | 0 / 30; 0 / 30 |
+
+The paired gain is **+96.7 percentage points** with exact two-sided McNemar
+`p=3.73e-9`. The sole active non-direct world remained safe and completed by
+detour. All 60 episodes and the independent validator passed without a retry.
+
+Receipt-level Python/Purify Go agreement was **250/268 (93.3%)**. All 18
+differences were Python-admit/Go-deny and remained fail-closed with
+`effective_admit=false`; no selected crossing relied on a disagreement.
+
+Across these 30 pairs, active repair reduced mean loaded-carrier logical path
+from 6.404 to 4.961 (**-22.5%**). The scout added 2.980 path and total
+logical-role path rose from 6.404 to 7.941 (**+24.0%**). The supported claim is
+burden shifting to diagnostic scouting, not lower total motion, energy, or
+latency. Carrier and scout are logical poses and capture roots on one shared
+Genesis chassis, not two physical robots or simultaneous dual-body dynamics.
+
+This supplement is same-generator and non-locked. It is not a second locked
+open, OOD result, rigid-body test, or physical-robot result.
 
 ## Frozen V8 result
 
@@ -135,6 +168,15 @@ synthetic preloaded FP32 images at 6.248 images/s. This supports only sustained
 Radeon model-forward execution: it is not an accuracy, locked, mission-energy,
 or end-to-end robot benchmark.
 
+The 30-world supplement adds complete pipeline-wall evidence. It retained 844
+two-second `rocm-smi` samples across 1,685.5 seconds of 60 Genesis + frozen
+checkpoint + Purify Go subprocesses, including idle. GPU use
+mean/median/p95/max was 19.4/0/95/100%; VRAM p95/max was 2/2%; package power
+mean/p95/max was 35.7/81/109 W. All 60 episodes used live Genesis RGB-D and the
+frozen checkpoint; totals were 268 RGB-D observations, 134 vision proposals,
+and 268 real Go invocations/receipts. These are kinematic simulation and full
+subprocess-wall measurements, not physical energy or control-loop latency.
+
 ## Reproduction and identities
 
 The dedicated source branch provides a deterministic CPU evidence audit,
@@ -158,6 +200,27 @@ The sustained ROCm telemetry must hash to:
 0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9
 ```
 
+The frozen-challenge raw archive must hash to:
+
+```text
+171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2
+```
+
+The deterministic independent verification must hash to:
+
+```text
+942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940
+```
+
+The packaged machine-evidence files are byte-identical to the compact source
+copies. Verify the complete official package from this directory with:
+
+```bash
+sha256sum -c SHA256SUMS
+jq -e '.passed == true and (.errors | length) == 0' \
+  evidence/challenge_102500_102529/VERIFICATION.json
+```
+
 The 239.000-second final demo is 9,032,035 bytes and must hash to:
 
 ```text
@@ -176,6 +239,9 @@ composition with no `zoompan` motion.
 
 The compact [evidence directory](evidence/README.md) contains the scrubbed
 locked report, exact-checkpoint Radeon benchmark, raw sustained telemetry,
-locked-input manifest, frozen import manifest, and machine-readable
-task-utility derivation. All packaged file identities are listed in
-[SHA256SUMS](SHA256SUMS).
+locked-input manifest, frozen import manifest, machine-readable task-utility
+derivation, and the preregistered challenge report, run manifest, full-wall
+ROCm telemetry, independent verification, and raw-archive checksum index.
+The machine-readable [package manifest](SUBMISSION_PACKAGE.json) states the
+included payload and evidence boundaries. Every packaged regular file except
+the checksum index itself is bound by [SHA256SUMS](SHA256SUMS).

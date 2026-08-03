@@ -69,8 +69,16 @@ Train       100000–101499   1500 worlds
 Validation  101500–101799    300 worlds
 Calibration 101800–102099    300 worlds
 Locked V8   102100–102499    400 worlds   # open once after freeze
-Reserved    102500–102699    200 worlds (same generator family; not evaluated)
+Reserved    102500–102699    200 worlds (same generator family; see status below)
 ```
+
+The line above records the original design-time reservation. Later, after the
+V8 model, calibration, thresholds, and runtime identities were frozen, seeds
+`102500-102529` were publicly preregistered and evaluated exactly once per
+policy as an additive **same-generator non-locked supplement**. Seeds
+`102530-102699` remain unevaluated. This is not OOD, population-generalization,
+rigid-body, or physical-robot evidence; see
+`V8_FROZEN_CHALLENGE_PROTOCOL.md`.
 
 **Forbidden:** any V7 train/val/cal/locked/smoke/matrix seeds (96000–98300, 95000–95019, 99000–99003, 99200–99203, 99300–99319).
 

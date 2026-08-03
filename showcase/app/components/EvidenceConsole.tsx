@@ -12,6 +12,7 @@ import {
   togglePlayback,
 } from "../lib/replayTimeline";
 import type { EpisodeBundle, ReleaseProfile } from "../lib/types";
+import { challengeEvidence } from "../lib/challengeEvidence";
 import { useLanguage } from "./SiteShell";
 import { WorldReplay3D } from "./WorldReplay3D";
 import "./industrial-console.css";
@@ -207,6 +208,25 @@ export function EvidenceConsole() {
   return (
     <main className={"console-wrap " + (cinematic ? "cinematic" : "")}>
       {!cinematic && (
+        <section className="challenge-ribbon" aria-label={tx("Publicly preregistered challenge result", "公开预注册挑战结果")}>
+          <div className="challenge-ribbon-title">
+            <span>{tx("PREREGISTERED AGGREGATE · SEPARATE FROM THE NON-LOCKED CONFIRMATORY REPLAY", "预注册聚合结果 · 与下方非锁定 confirmatory replay 分开")}</span>
+            <b>{tx("PUBLICLY PREREGISTERED · SAME GENERATOR · NOT OOD · ONE SHARED CHASSIS", "公开预注册 · 同生成器 · 非 OOD · 一台共享底盘")}</b>
+          </div>
+          <div className="challenge-ribbon-metrics">
+            <div><strong>29<small>/30</small></strong><span>{tx("active full-chain direct · passive 0/30", "主动全链直行 · 被动 0/30")}</span></div>
+            <div><strong>p=3.73×10<sup>−9</sup></strong><span>{tx("exact two-sided McNemar", "双侧精确 McNemar")}</span></div>
+            <div><strong>60<small>/60</small></strong><span>{tx("mission success · 0 unsafe · 0 fallback", "任务成功 · 0 unsafe · 0 fallback")}</span></div>
+            <div><strong>93.3%</strong><span>{tx("250/268 receipts agree · 18 Go fail-closed", "250/268 回执一致 · 18 次 Go 失效关闭")}</span></div>
+          </div>
+          <div className="challenge-ribbon-links">
+            <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{tx("JUDGE CARD ↗", "评委卡 ↗")}</a>
+            <a href={challengeEvidence.rawArchiveUrl}>{tx("RAW ARCHIVE ↗", "原始归档 ↗")}</a>
+            <a href={challengeEvidence.verificationUrl}>{tx("VERIFICATION ↗", "验证回执 ↗")}</a>
+          </div>
+        </section>
+      )}
+      {!cinematic && (
         <div className="console-toolbar">
           <label>
             <span>{tx("ACTIVE CANDIDATE", "当前候选")}</span>
@@ -241,9 +261,9 @@ export function EvidenceConsole() {
             </select>
           </label>
           <div className="evidence-labels">
-            <span>{tx("RECORDED AMD GPU EVIDENCE", "录制的 AMD GPU 证据")}</span>
+            <span>{tx("SELECTED REPLAY: NON-LOCKED CONFIRMATORY · SEED 105400", "所选回放：非锁定 confirmatory · seed 105400")}</span>
             <span>{tx("SIMULATION ONLY", "仅限仿真")}</span>
-            <span>{tx("FROZEN ARTIFACT", "冻结产物")}</span>
+            <span>{tx("REPLAY ≠ 30-WORLD AGGREGATE", "回放 ≠ 30-world 聚合结果")}</span>
           </div>
         </div>
       )}

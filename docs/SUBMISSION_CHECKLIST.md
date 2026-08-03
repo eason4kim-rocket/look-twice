@@ -45,17 +45,36 @@ Official sources:
       action, complementary to perception, planning, and simulation.
 - [x] Lead with the locked paired capability result: active direct 11/12 versus
       passive direct 0/12, a +91.7 percentage-point gain.
+- [x] Present the preregistered 30-world challenge as an additive
+      same-generator non-locked supplement: active full-chain direct 29/30
+      versus passive 0/30, a +96.7 percentage-point paired gain.
 - [x] Retain the one conservative active detour in the denominator.
 - [x] State that the paired result is descriptive for the fixed 12-world suite,
       not a population or real-world generalization.
+- [x] Retain challenge seed 102515 as the sole active non-direct case and state
+      that it completed safely by detour.
 - [x] State the non-locked seed-105400 application-value finding narrowly:
       loaded-carrier travel -23.24% through scout burden transfer.
 - [x] Disclose that seed 105400 total robot travel increased 24.32% and does
       not support a total-distance or latency reduction claim.
 - [x] Keep locked aggregate, input-only supplement, non-locked replay, and
       model-forward benchmark/telemetry scopes visibly separate.
-- [x] State that seeds 102500-102699 are an unevaluated reserved range from the
-      same generator family, not V8 OOD evidence.
+- [x] Keep the preregistered challenge and its full-subprocess-wall telemetry
+      separate from the locked aggregate, replay, and synthetic model-forward
+      telemetry.
+- [x] State that seeds 102500-102529 were evaluated once in the additive
+      same-generator non-locked challenge; seeds 102530-102699 remain
+      unevaluated; neither is V8 OOD evidence.
+- [x] Disclose receipt-level Python/Go agreement as 250/268 (93.3%) and all 18
+      mismatches as Go vetoes with `effective_admit=false`.
+- [x] Label the mismatch localization as post-hoc descriptive: all 18 were
+      active corridor-B evaluations with one qualifying Go root and
+      `{clear, blocked}`; no selected crossing was authorized by a mismatch.
+- [x] Disclose that carrier and scout are two logical roles on one shared
+      Genesis chassis, not two physical devices or simultaneous dual-body
+      dynamics.
+- [x] State the aggregate challenge task ledger in both directions:
+      loaded-carrier logical path -22.5%, total logical-role team path +24.0%.
 - [x] State simulation-only, kinematic-motion, and no-safety-certification
       boundaries.
 - [x] Make no external upstream PR claim.
@@ -77,12 +96,22 @@ Official sources:
 - [x] Verify the pre-open 400-world input-and-label archive without extraction
       or inference; disclose that original predictions and 24 raw episodes are
       not present and were not regenerated.
+- [x] Publicly bind the finalized challenge protocol, runner, validator, seed
+      schedule, endpoints, and frozen identities before execution.
+- [x] Run all 60 preregistered challenge cells exactly once with zero retries,
+      replacement seeds, early stopping, retuning, or threshold changes.
+- [x] Preserve and recursively checksum all 60 raw challenge episodes and
+      every other emitted result file.
+- [x] Independently recompute and verify the complete challenge report with
+      zero validation errors.
 
 ## English submission materials
 
 - [x] Root V8 README with a 90-second judge path.
+- [x] One-page frozen-challenge Judge Card with the public-before-execution
+      binding, result, safety, AMD execution, task trade, and honest scope.
 - [x] V8 technical report source in `docs/V8_TECHNICAL_REPORT.md`.
-- [x] Rendered 10-page technical report PDF, visually inspected page by page.
+- [x] Rendered 12-page technical report PDF, visually inspected page by page.
 - [x] Detailed V8 reproduction guide.
 - [x] AMD environment and workload boundary.
 - [x] Evidence claim boundary.
@@ -99,8 +128,8 @@ Official sources:
       README.
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
-- [x] Regenerate final `SHA256SUMS` and verify all 12 checksummed artifacts
-      (13 total files including `SHA256SUMS`).
+- [x] Regenerate final `SHA256SUMS` and verify all 19 checksummed artifacts
+      (20 total files including `SHA256SUMS`).
 
 ## Reproducibility
 
@@ -118,12 +147,18 @@ Official sources:
 - [x] Run the deterministic task-utility derivation and verify its SHA256.
 - [x] Run all five locked-input verifier tests and all three ROCm telemetry
       helper tests.
+- [x] Run all 31 challenge runner/validator tests; together with the three
+      ROCm telemetry helper tests, 34 combined tests passed. Preserve the
+      frozen runner and validator source identities.
+- [x] Reproduce the challenge validator output from the public raw archive in
+      a clean local extraction; verification SHA256
+      `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`.
 - [x] Stream-verify the real 1,019,307,579-byte locked input archive: 400
       worlds, 3,200 metadata records, no extraction, no inference.
 - [x] Run `go test ./...` for the Purify reference core.
 - [x] Add exact ROCm dependency and environment preflight files.
 - [x] Build and route-smoke the Evidence Console with Docker.
-- [x] Lint, build, and run all 23 Evidence Console tests with Node 22.
+- [x] Lint, build, and run all 26 Evidence Console tests with Node 22.
 - [x] Pin patched Web dependencies and obtain zero known `npm audit`
       vulnerabilities.
 - [ ] Verify every README command exactly as written from the public clean
@@ -142,6 +177,12 @@ Official sources:
 - [x] Archive a clean-preflight 60-second exact-checkpoint ROCm telemetry run.
 - [x] Limit the 61/61 100%-GPU-use claim to the disclosed synthetic,
       preloaded FP32 model-forward window; do not call it end-to-end.
+- [x] Archive a separate full-subprocess-wall challenge telemetry record: 844
+      two-second samples across 1,685.5 seconds for all 60 episodes, including
+      idle.
+- [x] Limit that broader record to complete Python + Genesis live RGB-D +
+      frozen checkpoint + Purify Go subprocess execution; do not call it
+      control-loop latency, mission energy, or physical duty cycle.
 
 ## Website and public URLs
 
@@ -164,7 +205,7 @@ Stable targets:
 - [x] Site links the final report, source branch, checkpoint, and video targets.
 - [x] Rebuilt, linted, tested, and inspected the prepared site.
 - [x] Publish the refreshed public Pages site with HTTPS enforced.
-- [x] Verify all refreshed routes, client hydration, and binary assets without
+- [x] Verify all refreshed routes and referenced client/binary assets without
       sign-in.
 - [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
 - [x] Download the replacement assets without sign-in and verify both hashes.
@@ -226,8 +267,8 @@ Stable targets:
 - [x] Copy the refreshed staged directory into the dedicated branch of the
       official fork and push it.
 - [x] Verify the refreshed official-fork branch at commit
-      `286420ece6e744877dd4089d4585f14825c43469` contains only the 13 intended
-      files (12 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
+      `a004dbde9f439adde9787e188af8b1873382e2f9` contains only the 20 intended
+      files (19 checksummed artifacts plus `SHA256SUMS`) without opening a PR.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.

@@ -36,10 +36,13 @@ Radeon. No real-robot, field-deployment, or sim-to-real result is claimed.
 The locked 12-world paired comparison is the central capability result:
 active repair qualified 11/12 direct routes versus 0/12 for passive
 (**+91.7 percentage points**), while both policies completed 12/12 missions
-and unsafe crossings/fallbacks remained 0/24. The non-locked seed-105400 cost
-ledger adds an honest application-value claim: active repair reduced loaded-
-carrier travel by 23.24% by moving evidence-acquisition burden to a scout, but
-increased total robot travel by 24.32% and did not reduce latency.
+and unsafe crossings/fallbacks remained 0/24. A separately preregistered
+30-world **same-generator non-locked supplement** produced 29/30 active
+full-chain direct versus 0/30 passive (+96.7 percentage points), with 60/60
+mission completion, zero unsafe episodes, and zero fallbacks. Its aggregate
+logical-role ledger reduced loaded-carrier path by 22.5% while total team path
+rose 24.0%. Carrier and scout are logical roles on one shared Genesis chassis,
+not two physical devices or simultaneous dual-body dynamics.
 
 ## Public target URLs
 
@@ -53,6 +56,8 @@ increased total robot travel by 24.32% and did not reduce latency.
 | Technical report PDF | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf> |
 | Frozen checkpoint | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt> |
 | Locked input-and-label archive | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz> |
+| Challenge raw archive | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz> |
+| Challenge independent verification | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json> |
 | Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 
 These are the stable final targets. The 239-second replacement, updated report,
@@ -71,6 +76,8 @@ PR was opened.
 5. Technical report source: `docs/V8_TECHNICAL_REPORT.md`
 6. Detailed reproduction guide: `docs/V8_REPRODUCTION.md`
 7. Final demo specification: `docs/V8_DEMO_SCRIPT.md`
+8. Preregistered challenge Judge Card:
+   `docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md`
 
 ## Primary competition artifacts
 
@@ -83,11 +90,15 @@ PR was opened.
 | Sustained ROCm telemetry | `release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json` | `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9` |
 | Locked input pack manifest | `release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json` | `421a0b1e2ebcfd20a84742a799e461fe060587fa2fc33438dfbf8cfc42f90818` |
 | Locked input archive | release asset, 1,019,307,579 bytes | `0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba` |
-| Rendered 10-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `3e3f699314e7e8ed4f06b74e252cb12f2c7dddd36db300de1297a9cd4599efbf` |
+| Challenge report | `release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json` | `59b5d464954e6e03ee4b65f689e93fd4e4ba836a6512509e98df0b7a94d186b0` |
+| Challenge full-wall telemetry | `release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json` | `463add74afa2c905cb7e63e7450f8761f3c6c3cd56ee9789633c7df0272860c0` |
+| Challenge verification | `release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json` | `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940` |
+| Challenge raw archive | release asset, 3,188,824 bytes | `171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2` |
+| Rendered 12-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `fa429b5989ef36b4844e32bcd343eeb867d317185e0ad372fa3cf2deaaab8d0a` |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 12 checksummed artifacts verified; 13 total files including `SHA256SUMS` |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 19 checksummed artifacts verified; 20 total files including `SHA256SUMS` |
 
 ## Frozen checkpoint
 
@@ -108,17 +119,21 @@ python3 -m unittest tests.test_competition_replay -v
 python3 scripts/verify_frozen_foundation.py
 python3 scripts/derive_v8_task_utility.py
 python3 -m unittest tests.test_v8_locked_input_pack tests.test_benchmark_v8_frozen_telemetry -v
+python3 -m unittest tests.test_run_v8_frozen_challenge tests.test_verify_v8_frozen_challenge -v
 cd purify_robotics && go test ./...
 cd showcase && npm run lint && npm test && npm audit
 docker compose build
 ```
 
-The Evidence Console build passed 23/23 tests and reported zero known
+The Evidence Console build passed 26/26 tests and reported zero known
 dependency vulnerabilities. The frozen verifier reported all 21 guarded files
 green, and the task-utility derivation matched the fixed locked and
 confirmatory source hashes without reopening the test. The input-pack verifier
 also checked the real 400-world archive without extracting it or running the
-model; the formal telemetry run did not access the locked split.
+model; the formal telemetry run did not access the locked split. The 31
+challenge runner/validator tests passed; together with the three telemetry
+helper tests, 34 combined tests passed. The independent validator recomputed
+the 30-pair result from the full 195-file raw archive with zero errors.
 
 The final demo render is 239.000 seconds and 9,032,035 bytes. Its SHA256 is
 `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`;
@@ -131,16 +146,21 @@ use fixed composition with no `zoompan` motion.
 ## Evidence boundary
 
 Only V8 is submitted. The locked aggregate, input-only pre-open supplement,
-non-locked seed-105400 replay, and separate model-forward Radeon measurements
-remain explicitly separated. The input supplement lacks the original
-one-shot predictions and 24 raw locked live episodes; it cannot reconstruct or
-recompute the permanent result. Seeds 102500-102699 are an unevaluated
-same-generator-family reserved range, not V8 OOD evidence.
+non-locked seed-105400 replay, preregistered same-generator challenge, and two
+Radeon telemetry classes remain explicitly separated. The input supplement
+lacks the original one-shot predictions and 24 raw locked live episodes; it
+cannot reconstruct or recompute the permanent result. Seeds 102500-102529 were
+evaluated once per policy in the additive challenge; seeds 102530-102699 remain
+unevaluated. Neither subset is V8 OOD evidence. Challenge Python/Go receipt
+agreement is 250/268 (93.3%); all 18 mismatches were Go vetoes with
+`effective_admit=false`.
 Integrity Shield R1/R2 and V9 are later research and do not change the locked
 V8 result. The submission makes no real-robot, sim-to-real, safety-
-certification, locked latency, mission-energy, or end-to-end utilization claim.
+certification, locked latency, mission-energy, or physical-duty-cycle claim.
 The 61/61 utilization result applies only to the disclosed synthetic,
-preloaded FP32 model-forward window. See
+preloaded FP32 model-forward window. Separate challenge telemetry contains 844
+two-second samples across the complete 1,685.5-second subprocess wall,
+including idle; it is not control-loop latency. See
 `docs/V8_EVIDENCE_BOUNDARY.md`.
 
 ## Final owner-review gate

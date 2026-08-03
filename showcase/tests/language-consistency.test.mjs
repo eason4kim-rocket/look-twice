@@ -39,7 +39,9 @@ test("localizes all judge-facing route headings and controls", async () => {
   for (const expected of [
     "锁定输入证据包",
     "它不能建立什么",
-    "冻结 ROCm 遥测窗口",
+    "公开预注册挑战",
+    "AMD 全流程墙钟遥测",
+    "旧版独立补充",
     "能力边界",
     "冻结身份",
     "诚实边界",
@@ -47,11 +49,12 @@ test("localizes all judge-facing route headings and controls", async () => {
   ]) {
     assert.match(results, new RegExp(expected));
   }
-  for (const expected of ["回放优先的复现方式", "冻结 SHA 守卫", "原始证据"]) {
+  for (const expected of ["挑战优先的复现方式", "预注册挑战", "冻结 SHA 守卫", "原始证据"]) {
     assert.match(reproduce, new RegExp(expected));
   }
   for (const expected of [
-    "录制的 AMD GPU 证据",
+    "公开预注册挑战结果",
+    "预注册聚合结果",
     "动作授权",
     "最终路线",
     "PYTHON 门控",

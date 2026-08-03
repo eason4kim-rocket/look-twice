@@ -182,6 +182,58 @@ h1 em { color: var(--cyan); font-style: normal; }
   font-size: clamp(16px, 1.25vw, 20px);
   line-height: 1.65;
 }
+.challenge-proof {
+  max-width: 760px;
+  margin-top: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(17,23,24,.12);
+  border-radius: 15px;
+  background: var(--paper-raised);
+  box-shadow: 0 14px 42px rgba(20,31,31,.07);
+}
+.challenge-proof-head {
+  min-height: 39px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--cyan);
+  font: 650 7px/1.4 var(--font-mono);
+  letter-spacing: .065em;
+}
+.challenge-proof-head b { color: #397a31; font-weight: 650; }
+.challenge-proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.challenge-proof-grid > div {
+  min-width: 0;
+  padding: 14px;
+  border-right: 1px solid var(--line);
+}
+.challenge-proof-grid > div:last-child { border: 0; }
+.challenge-proof-grid strong {
+  display: block;
+  color: var(--ink);
+  font: 600 28px/1 var(--font-mono);
+  letter-spacing: -.07em;
+}
+.challenge-proof-grid strong small { color: var(--muted); font-size: .5em; letter-spacing: 0; }
+.challenge-proof-grid strong sup { font-size: .48em; letter-spacing: 0; }
+.challenge-proof-grid span {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font: 600 7px/1.45 var(--font-mono);
+  text-transform: uppercase;
+}
+.challenge-proof-links {
+  padding: 10px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  border-top: 1px solid var(--line);
+}
+.challenge-proof-links a { color: var(--cyan); font: 650 7px var(--font-mono); }
 .hero-actions { display: flex; gap: 12px; margin: 38px 0 0; }
 .button {
   min-height: 50px;
@@ -463,6 +515,9 @@ footer {
   .hero-copy { padding: 70px 22px 64px; }
   h1 { font-size: 56px; }
   .hero-actions { flex-direction: column; align-items: stretch; }
+  .challenge-proof-head { align-items: flex-start; flex-direction: column; padding-top: 11px; padding-bottom: 11px; }
+  .challenge-proof-grid { grid-template-columns: 1fr; }
+  .challenge-proof-grid > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .hero-system { min-height: 520px; padding: 36px 22px; }
   .warehouse-map { height: 330px; }
   .contract-mini { grid-template-columns: 1fr; }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SiteShell, useLanguage } from "../components/SiteShell";
+import { challengeEvidence } from "../lib/challengeEvidence";
 import type { ReleaseProfile } from "../lib/types";
 import "./results.css";
 
@@ -108,6 +109,63 @@ type TaskUtilityReport = {
   };
 };
 
+type ChallengeRate = {
+  count: number;
+  total: number;
+  rate: number;
+  wilson_95: { lower: number; upper: number };
+};
+
+type ChallengeReport = {
+  schema_version: string;
+  preregistration_sha256: string;
+  analysis: {
+    evidence_scope: {
+      worlds: number;
+      paired_episodes: number;
+      seed_range: [number, number];
+      generator_family: string;
+      motion_backend: string;
+      not_ood: boolean;
+      not_physical_robot: boolean;
+      agent_realization: string;
+      not_simultaneous_dual_body_dynamics: boolean;
+    };
+    primary_endpoint: {
+      active: ChallengeRate;
+      passive: ChallengeRate;
+      active_minus_passive: { percentage_points: number };
+      exact_mcnemar_two_sided_p: number;
+    };
+    secondary_endpoints: {
+      mission_success: { all_episodes: ChallengeRate };
+      unsafe: { all_episodes: ChallengeRate };
+      fallback_used: { all_episodes: ChallengeRate };
+      python_go_gate_agreement: { comparable_receipts: ChallengeRate };
+    };
+    full_wall_rocm_telemetry: {
+      sample_count: number;
+      sample_interval_seconds: number;
+      measured_wall_seconds: number;
+      gpu_use_percent: { mean: number; p95: number; maximum: number };
+      gpu_busy_sample_rate: { busy_samples: number; total_samples: number; rate: number };
+      graphics_package_power_w: { mean: number; p95: number; maximum: number };
+      episode_subprocess_wall_seconds: { all: { mean: number; p95: number } };
+    };
+    logical_role_kinematic_operational_burden: {
+      loaded_carrier: {
+        active: { mean: number };
+        passive: { mean: number };
+      };
+      active_scout: { mean: number };
+      total_team: {
+        active: { mean: number };
+        passive: { mean: number };
+      };
+    };
+  };
+};
+
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
 const lockedInputEvidence = {
@@ -134,6 +192,7 @@ function Results() {
   const [locked, setLocked] = useState<LockedReport | null>(null);
   const [benchmark, setBenchmark] = useState<BenchmarkReport | null>(null);
   const [utility, setUtility] = useState<TaskUtilityReport | null>(null);
+  const [challenge, setChallenge] = useState<ChallengeReport | null>(null);
   useEffect(() => {
     fetch("/data/manifest.json").then((response) => response.json()).then((manifest) => {
       const selected = manifest.profiles.find(
@@ -158,12 +217,79 @@ function Results() {
       })
       .then(setUtility)
       .catch(() => setUtility(null));
+    fetch(challengeEvidence.reportUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("challenge report unavailable");
+        return response.json();
+      })
+      .then(setChallenge)
+      .catch(() => setChallenge(null));
   }, []);
-  if (!profile) return <div className="loading">{zh ? "正在加载冻结候选…" : "LOADING FROZEN PROFILE…"}</div>;
+  if (!profile || !challenge) return <div className="loading">{zh ? "正在加载已验证挑战证据…" : "LOADING VERIFIED CHALLENGE EVIDENCE…"}</div>;
   const batchOne = benchmark?.results.find((item) => item.batch_size === 1);
   const batchEight = benchmark?.results.find((item) => item.batch_size === 8);
+  const primary = challenge.analysis.primary_endpoint;
+  const challengeSafety = challenge.analysis.secondary_endpoints;
+  const receipts = challengeSafety.python_go_gate_agreement.comparable_receipts;
+  const receiptMismatches = receipts.total - receipts.count;
+  const challengeTelemetry = challenge.analysis.full_wall_rocm_telemetry;
+  const burden = challenge.analysis.logical_role_kinematic_operational_burden;
+  const carrierReduction =
+    (1 - burden.loaded_carrier.active.mean / burden.loaded_carrier.passive.mean) * 100;
+  const teamIncrease =
+    (burden.total_team.active.mean / burden.total_team.passive.mean - 1) * 100;
   return <main>
-    <header className="page-header"><div><span className="eyebrow">{zh ? "冻结证据 / 仅评测一次" : "FROZEN EVIDENCE / LOCKED ONCE"}</span><h1>{zh ? "结果，不靠口号。" : "Results, with receipts."}</h1></div><p>{zh ? "所有数字均从机器可读发布产物加载，并链接到锁定报告或哈希固定的 ROCm 基准。" : "Every number is loaded from a machine-readable release artifact and links to either the locked report or the hash-pinned ROCm benchmark."}</p></header>
+    <header className="page-header challenge-page-header"><div><span className="eyebrow">{zh ? "公开预注册挑战 / 独立验证通过" : "PUBLICLY PREREGISTERED CHALLENGE / INDEPENDENTLY VERIFIED"}</span><h1>{zh ? "结果，带着回执。" : "Results, with receipts."}</h1></div><p>{zh ? "首屏是 30 个同生成器世界、60 个预注册回合的挑战结果。原 12-pair permanent locked test 与旧 synthetic 60s 前向演示在下方分开保留。" : "The first evidence tier is the preregistered 30-world, 60-episode same-generator challenge. The original 12-pair permanent locked test and the older synthetic 60s forward demo remain explicitly separate below."}</p></header>
+    <section className="result-section challenge-primary-evidence">
+      <div className="result-title">
+        <span>{zh ? "主计分证据 · 30 个成对世界" : "PRIMARY SCORING EVIDENCE · 30 PAIRED WORLDS"}</span>
+        <h2>{zh ? "主动修证恢复直行；被动策略始终安全绕行。" : "Active repair restores direct action. Passive stays safe by detouring."}</h2>
+        <p>{zh ? `种子 ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} 在公开预注册之后仅评测一次。该挑战与原 12-pair locked test 分开，来自相同生成器家族，不是 OOD。` : `Seeds ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} were evaluated once after public preregistration. This challenge is separate from the original 12-pair locked test, comes from the same generator family, and is not OOD.`}</p>
+      </div>
+      <div className="benchmark-panel challenge-panel">
+        <div className="benchmark-tags"><span>PUBLIC PREREGISTRATION</span><span>30 PAIRED WORLDS</span><span>60 / 60 VALID</span><span>VERIFIER PASS</span></div>
+        <div className="benchmark-grid challenge-primary-grid">
+          <article><span>{zh ? "主动全链直行" : "ACTIVE FULL-CHAIN DIRECT"}</span><strong>{primary.active.count}<small>/{primary.active.total}</small></strong><i>95% Wilson 83.3–99.4%</i></article>
+          <article><span>{zh ? "被动全链直行" : "PASSIVE FULL-CHAIN DIRECT"}</span><strong>{primary.passive.count}<small>/{primary.passive.total}</small></strong><i>95% Wilson 0.0–11.4%</i></article>
+          <article><span>{zh ? "成对差值" : "PAIRED DIFFERENCE"}</span><strong>+{primary.active_minus_passive.percentage_points.toFixed(1)}<small> pp</small></strong><i>29 active-only · 1 neither</i></article>
+          <article><span>{zh ? "双侧精确 McNemar" : "EXACT TWO-SIDED McNEMAR"}</span><strong>3.725×10<sup>−9</sup></strong><i>p-value · no success threshold</i></article>
+        </div>
+        <div className="challenge-audit-grid">
+          <article>
+            <b>{zh ? "安全与完整分母" : "SAFETY + FULL DENOMINATOR"}</b>
+            <strong>{challengeSafety.mission_success.all_episodes.count}/{challengeSafety.mission_success.all_episodes.total}</strong>
+            <p>{zh ? `${challengeSafety.unsafe.all_episodes.count} unsafe · ${challengeSafety.fallback_used.all_episodes.count} fallback；60/60 均加载冻结 checkpoint、Genesis live RGB-D 与 Purify Go 回执。` : `${challengeSafety.unsafe.all_episodes.count} unsafe · ${challengeSafety.fallback_used.all_episodes.count} fallback; all 60 loaded the frozen checkpoint and produced Genesis live RGB-D plus Purify Go receipts.`}</p>
+          </article>
+          <article>
+            <b>{zh ? "回执一致与失效关闭" : "RECEIPT AGREEMENT + FAIL-CLOSED"}</b>
+            <strong>{(receipts.rate * 100).toFixed(1)}%</strong>
+            <p>{zh ? `${receipts.count}/${receipts.total} 个可比回执一致。事后描述性审计（不是预注册端点）：${receiptMismatches} 个差异全部出现在 active corridor B，Python=true、Go=false、effective=false；Go 只认到 1 个根并给出 {clear, blocked}。其中 4 个在未选走廊，14 个是最终 joint admit 前的临时评估；没有 selected crossing 靠差异授权。` : `${receipts.count}/${receipts.total} comparable receipts agree. Post-hoc descriptive audit (not a preregistered endpoint): all ${receiptMismatches} differences were active corridor B with Python=true, Go=false, effective=false; Go found one root and returned {clear, blocked}. Four were on the unselected corridor and 14 were transient checks before a later joint admit; no selected crossing relied on a disagreement.`}</p>
+          </article>
+          <article>
+            <b>{zh ? "AMD 全流程墙钟遥测" : "AMD FULL-WALL TELEMETRY"}</b>
+            <strong>{challengeTelemetry.sample_count}</strong>
+            <p>{zh ? `${challengeTelemetry.measured_wall_seconds.toFixed(3)} 秒，每 ${challengeTelemetry.sample_interval_seconds.toFixed(0)} 秒采样，包含 0% idle；GPU use 平均 ${challengeTelemetry.gpu_use_percent.mean.toFixed(1)}%、P95 ${challengeTelemetry.gpu_use_percent.p95.toFixed(0)}%。完整回合子进程 P95 ${challengeTelemetry.episode_subprocess_wall_seconds.all.p95.toFixed(3)} 秒，不是控制环延迟。` : `${challengeTelemetry.measured_wall_seconds.toFixed(3)} s at ${challengeTelemetry.sample_interval_seconds.toFixed(0)} s intervals, including 0% idle; GPU use mean ${challengeTelemetry.gpu_use_percent.mean.toFixed(1)}%, P95 ${challengeTelemetry.gpu_use_percent.p95.toFixed(0)}%. Complete episode-subprocess P95 was ${challengeTelemetry.episode_subprocess_wall_seconds.all.p95.toFixed(3)} s—not control-loop latency.`}</p>
+          </article>
+          <article className="boundary-warning">
+            <b>{zh ? "一个共享底盘的诚实边界" : "ONE-SHARED-CHASSIS BOUNDARY"}</b>
+            <strong>{zh ? "逻辑双角色" : "LOGICAL ROLES"}</strong>
+            <p>{zh ? `Carrier 与 Scout 是同一台共享 Genesis 底盘上的独立逻辑姿态、视角和采集根；不是双机同时动力学。运动学负担中，载荷车均值降低 ${carrierReduction.toFixed(1)}%，但团队总路径增加 ${teamIncrease.toFixed(1)}%，不等同能耗或吞吐提升。` : `Carrier and Scout are separate logical poses, viewpoints and capture roots on one shared Genesis chassis—not simultaneous two-body dynamics. Loaded-carrier mean path fell ${carrierReduction.toFixed(1)}%, while total team path rose ${teamIncrease.toFixed(1)}%; this is not an energy or throughput gain.`}</p>
+          </article>
+        </div>
+        <div className="challenge-identities">
+          <span><b>REPORT SHA256</b><code>{challengeEvidence.reportSha256}</code></span>
+          <span><b>RAW SHA256</b><code>{challengeEvidence.rawArchiveSha256}</code></span>
+          <span><b>VERIFICATION SHA256</b><code>{challengeEvidence.verificationSha256}</code></span>
+        </div>
+        <div className="evidence-links challenge-links">
+          <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开 90 秒评委卡 ↗" : "OPEN 90-SECOND JUDGE CARD ↗"}</a>
+          <a href={challengeEvidence.reportUrl} target="_blank">{zh ? "机器可读报告 ↗" : "MACHINE-READABLE REPORT ↗"}</a>
+          <a href={challengeEvidence.rawArchiveUrl}>{zh ? "下载原始归档 ↗" : "DOWNLOAD RAW ARCHIVE ↗"}</a>
+          <a href={challengeEvidence.verificationUrl}>{zh ? "独立验证 JSON ↗" : "INDEPENDENT VERIFICATION JSON ↗"}</a>
+        </div>
+      </div>
+    </section>
+    <div className="evidence-tier-note"><span>{zh ? "原始永久锁定证据 · 与上方挑战分开" : "ORIGINAL PERMANENT LOCKED EVIDENCE · SEPARATE FROM THE CHALLENGE ABOVE"}</span><p>{zh ? "以下 11/12、0/24 与 3,200-sample 结果仍按原报告保留，不由新挑战覆盖。" : "The 11/12, 0/24 and 3,200-sample results below remain attached to their original report; the new challenge does not overwrite them."}</p></div>
     <section className="results-metrics">{profile.headline_metrics.map((metric) => <article key={metric.metric_id}><span>{zh ? metric.label.zh : metric.label.en}</span><strong>{metric.value}<small>/{metric.denominator}</small></strong><a href="/data/source/LOCKED_TEST_REPORT.json" target="_blank">{zh ? "查看源 JSON ↗" : "SOURCE JSON ↗"}</a></article>)}</section>
     {locked && <section className="result-section offline-evidence">
       <div className="result-title"><span>{zh ? "锁定离线总体" : "LOCKED OFFLINE POPULATION"}</span><h2>{zh ? "完整分母，而不是精选演示。" : "The full denominator, not a cherry-picked replay."}</h2><p>{zh ? `种子 ${locked.offline.seed_range[0]}–${locked.offline.seed_range[1]}，${locked.offline.metrics.n_blocked.toLocaleString()} blocked / ${locked.offline.metrics.n_clear.toLocaleString()} clear。` : `Seeds ${locked.offline.seed_range[0]}–${locked.offline.seed_range[1]}; ${locked.offline.metrics.n_blocked.toLocaleString()} blocked and ${locked.offline.metrics.n_clear.toLocaleString()} clear samples.`}</p></div>
@@ -200,7 +326,7 @@ function Results() {
             <p>{zh ? "它不含原始 one-shot 逐样本预测，也不含 24 个原始 locked live 回合。因此它不能复算 1.000 指标或重建原始 one-shot 执行。" : "It does not contain the original one-shot per-sample predictions or the 24 raw locked live episodes. It cannot recompute the 1.000 metrics or reconstruct the original one-shot execution."}</p>
           </article>
         </div>
-        <p className="range-boundary">{zh ? "种子 102500–102699 只是来自相同生成器家族的预留挑战范围，未被评测；本项目不将其表述为 OOD 证据。预开启时间来自第一方 sidecar，并非外部时间戳认证。" : "Seeds 102500–102699 are a reserved challenge range from the same generator family and were not evaluated; they are not presented as OOD evidence. Pre-open chronology comes from a first-party sidecar, not an external timestamp authority."}</p>
+        <p className="range-boundary">{zh ? "预留范围同属一个生成器家族：102500–102529 已在公开预注册后评测一次；102530–102699 仍未评测。两者都不表述为 OOD。预开启时间来自第一方 sidecar，并非外部时间戳认证。" : "The reserved range belongs to the same generator family: seeds 102500–102529 were evaluated once after public preregistration; seeds 102530–102699 remain unevaluated. Neither is presented as OOD. Pre-open chronology comes from a first-party sidecar, not an external timestamp authority."}</p>
         <div className="evidence-links">
           <a href={lockedInputEvidence.archiveUrl} target="_blank" rel="noreferrer">{zh ? "下载 1,019,307,579 字节归档 ↗" : "DOWNLOAD 1,019,307,579-BYTE ARCHIVE ↗"}</a>
           <a href={lockedInputEvidence.noteUrl} target="_blank" rel="noreferrer">{zh ? "阅读证据说明 ↗" : "READ EVIDENCE NOTE ↗"}</a>
@@ -209,7 +335,7 @@ function Results() {
       </div>
     </section>
     {utility && <section className="result-section utility-evidence">
-      <div className="result-title"><span>{zh ? "锁定成对任务效用" : "LOCKED PAIRED TASK UTILITY"}</span><h2>{zh ? "安全拒绝是底线；主动修证让有用行动重新发生。" : "Safe refusal is the baseline. Active repair earns useful action back."}</h2><p>{zh ? "12 个相同世界、两种策略成对比较；24 个回合均从初始拒绝开始。" : "Twelve identical paired worlds, two policies; all 24 episodes began with the same initial denial."}</p></div>
+      <div className="result-title"><span>{zh ? "原始永久锁定 · 12-pair 任务效用" : "ORIGINAL PERMANENT LOCKED · 12-PAIR TASK UTILITY"}</span><h2>{zh ? "安全拒绝是底线；主动修证让有用行动重新发生。" : "Safe refusal is the baseline. Active repair earns useful action back."}</h2><p>{zh ? "这是原 12 个相同世界、两种策略的 permanent locked test，不是上方 30-world 预注册挑战。24 个回合均从初始拒绝开始。" : "This is the original permanent locked test across 12 identical paired worlds—not the 30-world preregistered challenge above. All 24 episodes began with the same initial denial."}</p></div>
       <div className="benchmark-panel">
         <div className="benchmark-tags"><span>LOCKED ONCE</span><span>12 PAIRED WORLDS</span><span>DERIVATION ONLY</span><span>NO V8 RERUN</span></div>
         <div className="benchmark-grid">
@@ -223,7 +349,7 @@ function Results() {
       </div>
     </section>}
     {benchmark && batchOne && batchEight && <section className="result-section rocm-evidence">
-      <div className="result-title"><span>{zh ? "AMD / ROCm 执行" : "AMD / ROCm EXECUTION"}</span><h2>{zh ? "同一冻结权重，单独测量模型前向。" : "The same frozen weights, measured as model forward only."}</h2><p>{benchmark.runtime.device_name} · {benchmark.runtime.gcn_arch_name} · HIP {benchmark.runtime.hip}</p></div>
+      <div className="result-title"><span>{zh ? "独立补充 · 模型前向基准" : "SEPARATE SUPPLEMENT · MODEL-FORWARD BENCHMARK"}</span><h2>{zh ? "同一冻结权重，单独测量模型前向。" : "The same frozen weights, measured as model forward only."}</h2><p>{benchmark.runtime.device_name} · {benchmark.runtime.gcn_arch_name} · HIP {benchmark.runtime.hip}</p></div>
       <div className="benchmark-panel">
         <div className="benchmark-tags"><span>{benchmark.method.precision.toUpperCase()}</span><span>{benchmark.method.warmup_iterations_per_batch} WARM-UP</span><span>{benchmark.method.measured_iterations_per_batch} MEASURED</span><span>{benchmark.checkpoint.hash_verified ? "SHA VERIFIED" : "SHA CHECK"}</span></div>
         <div className="benchmark-grid">
@@ -238,9 +364,9 @@ function Results() {
     </section>}
     <section className="result-section rocm-telemetry-evidence">
       <div className="result-title">
-        <span>{zh ? "冻结 ROCm 遥测窗口" : "FROZEN ROCm TELEMETRY WINDOW"}</span>
+        <span>{zh ? "旧版独立补充 · SYNTHETIC 60 秒前向演示" : "OLDER SEPARATE SUPPLEMENT · SYNTHETIC 60s FORWARD DEMO"}</span>
         <h2>{zh ? "持续一分钟的受控前向负载，GPU 全程有据可查。" : "One sustained minute of controlled forwards, with the GPU accounted for."}</h2>
-        <p>{zh ? "独立的提交期测量；准确 checkpoint 在加载前通过 SHA 校验，clean preflight 在模型加载前记录到零 KFD 计算进程、0% GPU 使用率和 0% VRAM 分配。" : "A separate submission-time measurement. The exact checkpoint passed SHA verification before load; a clean preflight recorded zero KFD compute processes, 0% GPU use and 0% VRAM allocation before model load."}</p>
+        <p>{zh ? "这是旧版、独立的提交期 synthetic forward-only 测量，不是上方预注册挑战的全流程墙钟遥测。准确 checkpoint 在加载前通过 SHA 校验，clean preflight 在模型加载前记录到零 KFD 计算进程、0% GPU 使用率和 0% VRAM 分配。" : "This is the older, separate submission-time synthetic forward-only measurement—not the preregistered challenge's full-wall telemetry above. The exact checkpoint passed SHA verification before load; a clean preflight recorded zero KFD compute processes, 0% GPU use and 0% VRAM allocation before model load."}</p>
       </div>
       <div className="benchmark-panel telemetry-panel">
         <div className="benchmark-tags"><span>CLEAN PREFLIGHT</span><span>BATCH 8</span><span>FP32</span><span>20 WARM-UP</span><span>1 Hz TELEMETRY</span></div>
@@ -258,6 +384,19 @@ function Results() {
     <section className="result-section"><div className="result-title"><span>{zh ? "能力边界" : "CAPABILITY ENVELOPE"}</span><h2>{zh ? "通过的不是单一模型，而是端到端动作保障链。" : "The evaluated unit is the end-to-end action assurance chain."}</h2></div><div className="capability-list">{profile.capabilities.map((capability, index) => <div key={capability}><b>{String(index + 1).padStart(2, "0")}</b><span>{capabilityLabels[capability]?.[zh ? "zh" : "en"] || capability.replaceAll("_", " ")}</span><i>{zh ? "已验证" : "VERIFIED"}</i></div>)}</div></section>
     <section className="result-section identities"><div className="result-title"><span>{zh ? "冻结身份" : "FROZEN IDENTITIES"}</span><h2>{zh ? "模型、校准与授权内核均可追溯。" : "Model, calibration and authorization identities are traceable."}</h2></div><div>{profile.artifact_identities.map((artifact) => <p key={artifact.artifact}><span>{artifactLabels[artifact.artifact]?.[zh ? "zh" : "en"] || artifact.artifact.replaceAll("_", " ")}</span><code>{artifact.sha256}</code></p>)}</div></section>
     <section className="result-section limits"><div className="result-title"><span>{zh ? "诚实边界" : "HONEST BOUNDARY"}</span><h2>{zh ? "我们明确系统做到了什么，也明确没有声称什么。" : "The boundary is part of the result."}</h2></div><div>{profile.limitations.map((limitation, index) => <article key={limitation.en}><b>0{index + 1}</b><p>{zh ? limitation.zh : limitation.en}</p></article>)}</div></section>
-    <section className="result-section report-download"><div className="result-title"><span>{zh ? "提交资料" : "SUBMISSION MATERIALS"}</span><h2>{zh ? "英文报告、原始数据与复现说明已归档。" : "English report, raw evidence and reproduction notes are packaged."}</h2></div><div><a className="report-primary" href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4" target="_blank">{zh ? "观看 3:59 英文演示 ↗" : "WATCH 3:59 ENGLISH DEMO ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release" target="_blank">{zh ? "打开冻结源码分支 ↗" : "OPEN FROZEN SOURCE BRANCH ↗"}</a><a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt" target="_blank">{zh ? "下载冻结模型 ↗" : "DOWNLOAD FROZEN CHECKPOINT ↗"}</a><a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a><a href="/media/look-twice-replay-30s.mp4">{zh ? "下载 30 秒证据短片 ↓" : "DOWNLOAD 30-SECOND EVIDENCE REEL ↓"}</a></div></section>
+    <section className="result-section report-download">
+      <div className="result-title"><span>{zh ? "提交资料" : "SUBMISSION MATERIALS"}</span><h2>{zh ? "评委卡、原始挑战数据、独立验证与复现说明均已归档。" : "The judge card, raw challenge evidence, independent verification and reproduction notes are packaged."}</h2></div>
+      <div>
+        <a className="report-primary" href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开 90 秒英文评委卡 ↗" : "OPEN 90-SECOND ENGLISH JUDGE CARD ↗"}</a>
+        <a href={challengeEvidence.rawArchiveUrl}>{zh ? "下载 30-world 原始挑战归档 ↗" : "DOWNLOAD 30-WORLD RAW CHALLENGE ARCHIVE ↗"}</a>
+        <a href={challengeEvidence.verificationUrl}>{zh ? "打开独立验证 JSON ↗" : "OPEN INDEPENDENT VERIFICATION JSON ↗"}</a>
+        <a href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a>
+        <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4" target="_blank">{zh ? "观看 3:59 英文演示 ↗" : "WATCH 3:59 ENGLISH DEMO ↗"}</a>
+        <a href="https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release" target="_blank">{zh ? "打开冻结源码分支 ↗" : "OPEN FROZEN SOURCE BRANCH ↗"}</a>
+        <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt" target="_blank">{zh ? "下载冻结模型 ↗" : "DOWNLOAD FROZEN CHECKPOINT ↗"}</a>
+        <a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a>
+        <a href="/media/look-twice-replay-30s.mp4">{zh ? "下载 30 秒证据短片 ↓" : "DOWNLOAD 30-SECOND EVIDENCE REEL ↓"}</a>
+      </div>
+    </section>
   </main>;
 }

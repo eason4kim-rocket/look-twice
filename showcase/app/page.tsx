@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { SiteShell, useLanguage } from "./components/SiteShell";
+import { challengeEvidence } from "./lib/challengeEvidence";
 
 const flow = [
   ["01", "Observe", "RGB-D claims arrive with time, scope, calibration and capture lineage.", "观察", "RGB-D 证据声明（Claim）携带时间、范围、校准与采集谱系。"],
@@ -31,14 +32,30 @@ function HomeContent() {
           <p className="hero-lead">{zh
             ? "Look Twice 将不稳定、冲突且同源的机器人观察，转化为可供物理动作依赖的可信事实；证据不足时，它主动修复证据。"
             : "Look Twice turns noisy, conflicting and correlated robot observations into action-qualified facts—and actively repairs evidence when confidence is not enough."}</p>
+          <div className="challenge-proof" aria-label={zh ? "公开预注册挑战结果" : "Publicly preregistered challenge result"}>
+            <div className="challenge-proof-head">
+              <span>{zh ? "公开预注册 · 同生成器挑战 · 非 OOD" : "PUBLICLY PREREGISTERED · SAME-GENERATOR CHALLENGE · NOT OOD"}</span>
+              <b>{zh ? "独立验证通过" : "INDEPENDENT VERIFICATION PASS"}</b>
+            </div>
+            <div className="challenge-proof-grid">
+              <div><strong>29<small>/30</small></strong><span>{zh ? "主动全链直行；被动 0/30" : "active full-chain direct; passive 0/30"}</span></div>
+              <div><strong>60<small>/60</small></strong><span>{zh ? "任务成功 · 0 unsafe · 0 fallback" : "mission success · 0 unsafe · 0 fallback"}</span></div>
+              <div><strong>3.73×10<sup>−9</sup></strong><span>{zh ? "双侧精确 McNemar p" : "two-sided exact McNemar p"}</span></div>
+            </div>
+            <div className="challenge-proof-links">
+              <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "90 秒评委卡 ↗" : "90-SECOND JUDGE CARD ↗"}</a>
+              <a href={challengeEvidence.rawArchiveUrl}>{zh ? "原始归档 ↗" : "RAW ARCHIVE ↗"}</a>
+              <a href={challengeEvidence.verificationUrl}>{zh ? "验证回执 ↗" : "VERIFICATION ↗"}</a>
+            </div>
+          </div>
           <div className="hero-actions">
             <Link className="button primary" href={href("/console")}>{zh ? "打开证据控制台" : "Open Evidence Console"}<span>↗</span></Link>
-            <Link className="button ghost" href={href("/results")}>{zh ? "查看冻结结果" : "Inspect frozen results"}</Link>
+            <Link className="button ghost" href={href("/results")}>{zh ? "查看挑战结果" : "Inspect challenge result"}</Link>
           </div>
           <div className="truth-strip">
-            <span>{zh ? "录制的 AMD GPU 证据" : "RECORDED AMD GPU EVIDENCE"}</span>
+            <span>{zh ? "AMD 全流程墙钟遥测" : "AMD FULL-WALL TELEMETRY"}</span>
             <span>{zh ? "仅限仿真" : "SIMULATION ONLY"}</span>
-            <span>{zh ? "无需在线 GPU" : "NO LIVE GPU REQUIRED"}</span>
+            <span>{zh ? "一台共享 GENESIS 底盘" : "ONE SHARED GENESIS CHASSIS"}</span>
           </div>
         </div>
         <div className="hero-system" aria-label={zh ? "Look Twice 系统状态" : "Look Twice system status"}>
@@ -82,19 +99,19 @@ function HomeContent() {
             <span>{zh ? "被动策略" : "PASSIVE"}</span>
             <h3>{zh ? "拒绝并绕行" : "Deny and detour"}</h3>
             <p>{zh ? "证据不足时保持安全，但为不确定性付出路线成本。" : "Stays safe under uncertainty, but pays with a longer route."}</p>
-            <b>{zh ? "锁定：0/12 直行 · 12/12 绕行" : "LOCKED: 0/12 DIRECT · 12/12 DETOUR"}</b>
+            <b>{zh ? "预注册挑战：0/30 全链直行" : "PREREGISTERED CHALLENGE: 0/30 FULL-CHAIN DIRECT"}</b>
           </article>
           <article className="active-policy">
             <span>{zh ? "主动策略" : "ACTIVE"}</span>
             <h3>{zh ? "换视角、修证据、再行动" : "Move, repair, then act"}</h3>
             <p>{zh ? "侦察车 Scout 获取独立侧视根；Python 与 Purify 同时准入后，载具 Carrier 才直接通行。" : "A scout acquires an independent side-view root. Only Python ∧ Purify admission unlocks the carrier."}</p>
-            <b>{zh ? "锁定：11/12 直行 · +91.7 个百分点" : "LOCKED: 11/12 DIRECT · +91.7 PP"}</b>
+            <b>{zh ? "预注册挑战：29/30 · +96.7 个百分点" : "PREREGISTERED CHALLENGE: 29/30 · +96.7 PP"}</b>
           </article>
         </div>
         <div className="platform-row">
           <div><span>AMD GPU</span><p>{zh ? "加速 Genesis RGB-D、空间视觉推理与实验矩阵。" : "Accelerates Genesis RGB-D, spatial vision inference and experiment matrices."}</p></div>
           <div><span>PURIFY</span><p>{zh ? "检查校准、谱系、独立根与动作合同，并签发门控回执（GateReceipt）。" : "Checks calibration, lineage, independent roots and the action contract, then signs the GateReceipt."}</p></div>
-          <div><span>{zh ? "诚实边界" : "BOUNDARY"}</span><p>{zh ? "录制的仿真证据；不声称真实机器人或安全认证。" : "Recorded simulation evidence; no real-robot or safety-certification claim."}</p></div>
+          <div><span>{zh ? "诚实边界" : "BOUNDARY"}</span><p>{zh ? "同生成器、运动学仿真；Carrier 与 Scout 是一台共享 Genesis 底盘上的两个逻辑角色，不声称双真机或安全认证。" : "Same-generator kinematic simulation. Carrier and Scout are logical roles on one shared Genesis chassis—not two physical robots or a safety certification."}</p></div>
         </div>
       </section>
 
@@ -114,7 +131,7 @@ function HomeContent() {
           </video>
           <div>
             <b>{zh ? "录制的 AMD GPU 证据回放" : "RECORDED AMD GPU EVIDENCE REPLAY"}</b>
-            <p>{zh ? "1920×1080 · 30 FPS · 无旁白 · 英文画面字幕（比赛默认）· 仅限仿真。全部状态来自同一回合证据包。" : "1920×1080 · 30 FPS · no narration · Simulation only. Every state comes from the same EpisodeBundle."}</p>
+            <p>{zh ? "1920×1080 · 30 FPS · 无旁白 · 英文画面字幕（比赛默认）· 仅限仿真。它回放独立的非锁定 seed 105400 confirmatory 回合；上方 30-world 聚合挑战与原 12-pair locked test 都是分开的证据。" : "1920×1080 · 30 FPS · no narration · Simulation only. This replays the separate non-locked seed 105400 confirmatory episode; both the 30-world aggregate above and the original 12-pair locked test are separate evidence."}</p>
             <a href="/media/look-twice-replay-30s.mp4" download>{zh ? "下载 MP4 ↓" : "DOWNLOAD MP4 ↓"}</a>
             <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4">{zh ? "观看 3:59 英文完整演示 ↗" : "WATCH THE 3:59 ENGLISH WORKFLOW DEMO ↗"}</a>
             <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt">{zh ? "下载冻结模型（SHA 固定）↗" : "DOWNLOAD THE SHA-PINNED CHECKPOINT ↗"}</a>
@@ -123,8 +140,8 @@ function HomeContent() {
       </section>
 
       <section className="section cta-band">
-        <div><span>{zh ? "仅评测一次 · 含完整回执" : "LOCKED ONCE · RECEIPTS INCLUDED"}</span><h2>{zh ? "看见每一条证据声明如何改变机器人的行动资格。" : "See exactly how each claim changes what the robot is allowed to do."}</h2></div>
-        <Link href={href("/console")} className="button primary">{zh ? "播放闭环" : "Play the evidence loop"}<span>→</span></Link>
+        <div><span>{zh ? "预注册挑战已验证 · 原锁定测试仍保留" : "PREREGISTERED CHALLENGE VERIFIED · ORIGINAL LOCKED TEST PRESERVED"}</span><h2>{zh ? "先审计 30-world 主结果，再看单回合闭环如何产生回执。" : "Audit the 30-world result, then inspect how one replay produces its receipts."}</h2></div>
+        <Link href={href("/results")} className="button primary">{zh ? "审计挑战" : "Audit the challenge"}<span>→</span></Link>
       </section>
     </main>
   );

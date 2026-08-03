@@ -404,9 +404,9 @@ def build_cover(
     )
     metric_data = [[
         Paragraph("3,200<br/><font size=\"5.8\" color=\"#91A0A1\">LOCKED SAMPLES</font>", metric_style),
-        Paragraph("11 / 12<br/><font size=\"5.8\" color=\"#91A0A1\">ACTIVE DIRECT</font>", metric_style),
-        Paragraph("0 / 24<br/><font size=\"5.8\" color=\"#91A0A1\">UNSAFE CROSSINGS</font>", metric_style),
-        Paragraph("EP 22<br/><font size=\"5.8\" color=\"#91A0A1\">FROZEN MODEL</font>", metric_style),
+        Paragraph("29 / 30<br/><font size=\"5.8\" color=\"#91A0A1\">ACTIVE CHALLENGE DIRECT</font>", metric_style),
+        Paragraph("60 / 60<br/><font size=\"5.8\" color=\"#91A0A1\">MISSION SUCCESS</font>", metric_style),
+        Paragraph("0 / 60<br/><font size=\"5.8\" color=\"#91A0A1\">UNSAFE OR FALLBACK</font>", metric_style),
     ]]
     metrics = Table(metric_data, colWidths=[available_width / 4] * 4)
     metrics.setStyle(

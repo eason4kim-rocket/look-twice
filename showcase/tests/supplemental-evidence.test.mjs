@@ -26,15 +26,16 @@ test("presents the locked archive as input-and-label evidence only", () => {
 });
 
 test("does not promote the reserved generator-family range as OOD evidence", () => {
-  assert.match(resultsSource, /Seeds 102500–102699 are a reserved challenge range/);
-  assert.match(resultsSource, /same generator family and were not evaluated/);
-  assert.match(resultsSource, /not presented as OOD evidence/);
+  assert.match(resultsSource, /were evaluated once after public preregistration/);
+  assert.match(resultsSource, /seeds 102530–102699 remain unevaluated/);
+  assert.match(resultsSource, /Neither is presented as OOD/);
   assert.doesNotMatch(resultsSource, /OOD test/i);
   assert.doesNotMatch(resultsSource, /out-of-domain (?:test|result|evaluation)/i);
 });
 
 test("scopes the frozen ROCm telemetry to its controlled workload", () => {
-  assert.match(resultsSource, /FROZEN ROCm TELEMETRY WINDOW/);
+  assert.match(resultsSource, /OLDER SEPARATE SUPPLEMENT · SYNTHETIC 60s FORWARD DEMO/);
+  assert.match(resultsSource, /not the preregistered challenge's full-wall telemetry above/);
   assert.match(resultsSource, /CLEAN PREFLIGHT/);
   assert.match(resultsSource, /61<small>\/61 @ 100%<\/small>/);
   assert.match(resultsSource, /135\.33<small> W<\/small>/);

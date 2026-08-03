@@ -96,7 +96,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <Link className={pathname === "/reproduce" ? "active" : ""} href={localizedHref("/reproduce")}>{zh?"复现":"Reproduce"}</Link>
         </nav>
         <div className="top-actions">
-          <span className="status-pill"><i /> {zh?"录制证据就绪":"Recorded evidence ready"}</span>
+          <span className="status-pill"><i /> {zh?"预注册挑战已验证":"Preregistered challenge verified"}</span>
           <button
             type="button"
             lang={zh ? "en" : "zh-CN"}
@@ -112,9 +112,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <footer>
         <div className="brand compact"><span className="brand-symbol" aria-hidden="true"><i/><i/></span><span>Look Twice</span></div>
         <p>{zh
-          ? "录制的 AMD GPU 证据 · 仅限仿真 · 冻结候选产物"
-          : "Recorded AMD GPU evidence · Simulation only · Frozen candidate artifact"}</p>
-        <span>Apache-2.0</span>
+          ? "公开预注册挑战已验证 · 同生成器仿真 · 一台共享底盘"
+          : "Publicly preregistered challenge verified · Same-generator simulation · One shared chassis"}</p>
+        <span>Liu Liang · {zh ? "个人参赛" : "Solo entrant"} · Apache-2.0</span>
       </footer>
     </div>
   );

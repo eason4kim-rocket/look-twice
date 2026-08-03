@@ -66,6 +66,9 @@ requiring access to the competition cloud instance.
 | Purify Go binary | `31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00` |
 | Locked report file | `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb` |
 | Frozen ROCm telemetry | `0ec12a92ac4e88a97d9068e40a06f72f9dd5ecaa16503c45e2d965d4d876dde9` |
+| Challenge report | `59b5d464954e6e03ee4b65f689e93fd4e4ba836a6512509e98df0b7a94d186b0` |
+| Challenge full-wall telemetry | `463add74afa2c905cb7e63e7450f8761f3c6c3cd56ee9789633c7df0272860c0` |
+| Challenge independent verification | `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940` |
 
 Public checkpoint asset:
 https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt
@@ -134,9 +137,40 @@ fusion, I/O, and actuation. It is not an accuracy evaluation, did not access
 or open the locked split, and did not modify model weights, calibration, or
 thresholds.
 
+## Preregistered challenge full-wall telemetry
+
+Source:
+`release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json`.
+Report SHA256:
+`463add74afa2c905cb7e63e7450f8761f3c6c3cd56ee9789633c7df0272860c0`.
+
+This is a distinct full-pipeline execution record for the additive
+same-generator non-locked challenge. It samples the entire challenge
+subprocess wall at a fixed two-second interval and retains idle samples rather
+than selecting model-forward-only windows.
+
+| Measure | Recorded value |
+| --- | ---: |
+| Challenge subprocess wall | 1,685.504 seconds |
+| Episode subprocesses | 60/60 |
+| ROCm samples | 844 |
+| GPU use mean / median / p95 / max | 19.4 / 0 / 95 / 100% |
+| VRAM allocation p95 / max | 2 / 2% |
+| Graphics-package power mean / p95 / max | 35.7 / 81 / 109 W |
+| Samples at or above 1% GPU use | 228/844 (27.0%) |
+
+All 60 episodes used Genesis live RGB-D, loaded the frozen checkpoint, and
+produced Purify Go receipts. The denominator includes complete Python +
+Genesis + checkpoint + episode subprocess execution, not only inference. It
+is not control-loop latency, mission energy, physical duty cycle, rigid-body
+contact validation, or a real-robot benchmark. Carrier and scout are logical
+roles on one shared Genesis chassis, not simultaneous dual-body dynamics.
+
 ## Challenge-range terminology
 
 The historical `ood_test` label for seeds 102500-102699 refers only to a
-reserved challenge range from the same generator family. V8 did not evaluate
-that range, and neither the latency benchmark nor the telemetry run changes
-that boundary. No OOD or out-of-distribution generalization result is claimed.
+reserved challenge range from the same generator family. Seeds 102500-102529
+were evaluated exactly once per policy in the publicly preregistered,
+same-generator non-locked supplement. Seeds 102530-102699 remain unevaluated.
+Neither telemetry class changes that boundary. No OOD, out-of-distribution, or
+population-generalization result is claimed.

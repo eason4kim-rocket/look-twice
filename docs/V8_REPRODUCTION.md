@@ -1,11 +1,13 @@
 # Look Twice V8 Reproducibility Guide
 
-This guide separates three reproducibility levels:
+This guide separates four reproducibility levels:
 
 1. CPU evidence audit - verifies submitted bundles, source identities, and the
    frozen V8 boundary.
-2. Local Evidence Console - rebuilds the exact judge-facing replay site.
-3. Radeon runtime replay - executes a new non-locked episode using the frozen
+2. Preregistered challenge audit - independently recomputes the additive
+   30-world same-generator result from all 60 raw episodes.
+3. Local Evidence Console - rebuilds the exact judge-facing replay site.
+4. Radeon runtime replay - executes a new non-locked episode using the frozen
    model and calibration artifacts.
 
 The locked result itself is permanent and is not rerun. A new execution must be
@@ -78,6 +80,71 @@ the locked split, and does not recompute the locked aggregate. This is
 input-only verification: the pack lacks the original 3,200 one-shot
 predictions and the 24 raw live full-chain episodes. Report summaries cannot
 reconstruct those missing outputs.
+
+### 2.2 Verify the preregistered challenge from all raw episodes
+
+This is a separate **same-generator non-locked supplement**, not a rerun or
+replacement of the permanent 12-pair locked result. Seeds `102500-102529` were
+publicly preregistered and each policy was attempted once per seed. Seeds
+`102530-102699` remain unevaluated. The result is neither OOD nor physical
+robot evidence.
+
+Download, authenticate, extract, and independently recompute it:
+
+```bash
+curl -LO https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz
+shasum -a 256 v8-frozen-challenge-102500-102529.raw.tar.gz
+tar -xzf v8-frozen-challenge-102500-102529.raw.tar.gz
+python3 scripts/verify_v8_frozen_challenge.py \
+  --results-dir v8-frozen-challenge-102500-102529 \
+  --preregistration release/v8-frozen/results/V8_FROZEN_CHALLENGE_PREREGISTRATION.json \
+  --repo-root . \
+  --output v8-frozen-challenge-102500-102529.LOCAL-VERIFICATION.json
+shasum -a 256 v8-frozen-challenge-102500-102529.LOCAL-VERIFICATION.json
+```
+
+Expected archive SHA256:
+
+```text
+171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2
+```
+
+Expected independent verification SHA256:
+
+```text
+942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940
+```
+
+The extracted directory has 195 regular files. Its internal `SHA256SUMS`
+binds every other file (194/194); validator output must remain outside that
+directory. The validator checks the public preregistration and frozen
+identities, exact seed/policy schedule, all raw episodes, Python/Go receipts,
+full-wall telemetry, recursive hashes, and recomputes the complete report.
+
+Expected headline recomputation:
+
+```text
+passed: true; errors: 0
+active full-chain direct: 29/30
+passive full-chain direct: 0/30
+mission success: 60/60
+unsafe: 0/60
+fallback: 0/60
+comparable Python/Go receipt agreement: 250/268 (93.3%)
+```
+
+All 18 receipt disagreements are Python-admit/Go-deny with
+`effective_admit=false`; no disagreement opens the gate. Carrier and scout are
+two logical roles with distinct poses/viewpoints on one shared Genesis
+chassis, not two physical devices or simultaneous dual-body dynamics.
+
+A post-hoc descriptive raw-archive audit localizes all 18 disagreements to
+active-policy corridor-B evaluations for which Go had one qualifying root and
+the conformal prediction set `{clear, blocked}`. Four corridors were not
+ultimately selected; the other 14 temporary evaluations were followed by a
+separate joint Python+Go admit before the selected direct crossing. No selected
+crossing was authorized by a mismatch. This localization changes no run,
+preregistered endpoint, calibration, or threshold.
 
 ## 3. Inspect the authoritative result
 
@@ -278,6 +345,32 @@ end-to-end robot benchmark. The run excludes RGB-D preprocessing, Genesis
 simulation and rendering, Go fusion, I/O, and actuation. It did not open the
 locked split or change model weights, calibration, or thresholds.
 
+### 7.3 Inspect the challenge full-wall ROCm telemetry
+
+The challenge telemetry is a second, broader execution record, not an
+extension of the synthetic model-forward measurement above:
+
+```bash
+shasum -a 256 \
+  release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json
+```
+
+Expected:
+
+```text
+463add74afa2c905cb7e63e7450f8761f3c6c3cd56ee9789633c7df0272860c0
+```
+
+It retains 844 two-second samples across the complete 1,685.5-second
+challenge subprocess wall, including idle, for all 60 episode subprocesses.
+GPU-use mean/median/p95/max is 19.4/0/95/100%; VRAM p95/max is 2/2%; graphics
+package power mean/p95/max is 35.7/81/109 W. The denominator includes Python,
+Genesis live RGB-D, the frozen checkpoint, and Purify Go execution.
+
+The recorded per-episode wall durations cover the complete subprocess, not
+control-loop latency. These values are not mission energy, physical duty
+cycle, rigid-body contact evidence, or a real-robot benchmark.
+
 ## 8. Run a new non-locked Radeon episode
 
 After placing the verified checkpoint at `$V8_CHECKPOINT`, run:
@@ -339,8 +432,16 @@ Expected Purify binary SHA:
 - A new execution can differ in wall-clock timing because the public replay
   does not pin the cloud scheduler or all system packages.
 - Statistical claims apply only to the declared simulated split.
-- Seeds 102500-102699 are a reserved challenge range from the same generator
-  family. V8 did not evaluate them; no OOD or out-of-distribution
-  generalization result is claimed.
+- Seeds 102500-102529 were evaluated exactly once per preregistered policy in
+  the additive same-generator non-locked challenge. Seeds 102530-102699 remain
+  unevaluated. No OOD, out-of-distribution, or population-generalization result
+  is claimed.
+- Challenge carrier/scout measurements are logical-role kinematic burden on
+  one shared chassis, not simultaneous dual-body dynamics or two physical
+  devices.
+- Challenge receipt-level Python/Go agreement is 250/268 (93.3%); all 18
+  mismatches were Go vetoes with effective authorization kept fail-closed.
+- Full-wall telemetry includes idle and covers complete episode subprocesses;
+  it is not control-loop latency, mission energy, or physical duty cycle.
 - The evidence website verifies recorded results; it does not run Genesis or
   infer new robot actions.
