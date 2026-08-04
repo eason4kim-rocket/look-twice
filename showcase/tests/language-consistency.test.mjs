@@ -42,6 +42,7 @@ test("localizes all judge-facing route headings and controls", async () => {
     "公开预注册挑战",
     "AMD 全流程墙钟遥测",
     "旧版独立补充",
+    "有界刚体运动（仿真）",
     "能力边界",
     "冻结身份",
     "诚实边界",
@@ -49,6 +50,7 @@ test("localizes all judge-facing route headings and controls", async () => {
   ]) {
     assert.match(results, new RegExp(expected));
   }
+  assert.doesNotMatch(results, /有界真实运动/);
   for (const expected of ["挑战优先的复现方式", "预注册挑战", "冻结 SHA 守卫", "原始证据"]) {
     assert.match(reproduce, new RegExp(expected));
   }
