@@ -69,6 +69,9 @@ DEFAULT_PROTOCOL = (
 DEFAULT_VERIFIER = (
     ROOT / "scripts" / "verify_v8_additive_decision_dynamics_recovery_v2.py"
 )
+DEFAULT_ENGINEERING_AUDIT = (
+    ROOT / "docs" / "V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_ENGINEERING_AUDIT.json"
+)
 
 
 def utc_now() -> str:
@@ -157,6 +160,7 @@ def bound_source_paths(input_report: Path) -> dict[str, Path]:
         "runner": Path(__file__).resolve(),
         "verifier": DEFAULT_VERIFIER,
         "fixed_protocol": DEFAULT_PROTOCOL,
+        "engineering_audit": DEFAULT_ENGINEERING_AUDIT,
         "v1_runner": ROOT / "scripts" / "run_v8_additive_decision_dynamics_bridge.py",
         "dual_body_helper": ROOT / "scripts" / "run_v8_additive_dual_body_dynamics.py",
         "scenario_source": ROOT / "src" / "v6_scenario.py",

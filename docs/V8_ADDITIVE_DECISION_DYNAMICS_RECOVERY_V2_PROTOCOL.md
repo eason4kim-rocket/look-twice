@@ -1,7 +1,7 @@
 # V8 additive decision-to-dynamics recovery V2 protocol
 
-**Status:** engineering candidate; must be fixed after excluded smoke and before
-any V2 formal seed is opened
+**Protocol fixed:** 2026-08-04 16:24:30 UTC, after excluded V2 engineering
+smoke and before any V2 formal seed was opened
 
 **Scope:** submission-time, additive, non-locked validation
 
@@ -63,8 +63,10 @@ DOFs.
 
 Before the first formal seed, the coordinator seals `SOURCE_BINDING.json` with
 the commit, initial clean-tree status, scientific parameters, immutable input
-identity, and SHA256 of every executable source, protocol, URDF and scenario
-file. Formal outputs are written outside the read-only source snapshot.
+identity, and SHA256 of every executable source, protocol, engineering audit,
+URDF and scenario file. Formal outputs are written outside the separate source
+snapshot. Every worker requires the same binding both before and after physics;
+the formal host also marks the source snapshot read-only before execution.
 
 For each seed, the coordinator:
 
@@ -117,6 +119,22 @@ Only synthetic seeds `170800`, `170801`, and `170802` may be used before the
 formal V2 binding. They cover corridor A direct, corridor B direct and the
 dual-blocked detour. Their artifacts and any code corrections precede the final
 protocol timestamp and are excluded from every formal count and claim.
+
+Engineering attempt 1 completed 3/3 and its report independently verified, but
+two workers faulted during Genesis interpreter-global teardown after their
+immutable checkpoints had already been published. The standalone verifier also
+required an explicit repository `PYTHONPATH`. Before this protocol was fixed,
+worker termination was changed to exit immediately after checkpoint
+`fsync`/exclusive publication, and the verifier added its repository root to
+the module path. Neither change touches physics or an outcome.
+
+Engineering attempt 2 then passed 3/3 in 115 seconds. All three workers exited
+zero; runner and verifier exited zero; blocker and active-pair contact rows were
+zero; maximum tilt was 10.4957 degrees; maximum parked-partner drift was
+0.020809 m. The report SHA256 is
+`965b90086bb1b15ba8831987fb4a3394ea8cd241fd6923e826117a4395f7e30e`.
+Full attempt identities are retained in
+`docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_ENGINEERING_AUDIT.json`.
 
 ## Fixed commands
 

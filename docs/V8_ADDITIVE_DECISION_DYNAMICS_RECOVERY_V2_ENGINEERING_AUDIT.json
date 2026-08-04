@@ -1,0 +1,96 @@
+{
+  "schema_version": "look-twice.additive-decision-dynamics-recovery-v2-engineering-audit/v1",
+  "generated_at_utc": "2026-08-04T16:24:30Z",
+  "formal_denominator_contaminated": false,
+  "formal_seeds_observed_in_v2_engineering": [],
+  "engineering_seeds": [170800, 170801, 170802],
+  "v1_runtime_trigger": {
+    "scientific_failure_observed": false,
+    "per_seed_outcomes_observed": false,
+    "attempts": [
+      {
+        "attempt": 1,
+        "source_commit": "fd52cb6edb1fbb65aa9ae57b9ee385391c6d5fcc",
+        "started_at_utc": "2026-08-03T23:39:15Z",
+        "ended_at_utc": "2026-08-04T03:39:16Z",
+        "outer_watchdog_seconds": 14400,
+        "terminal_reason": "external_watchdog_timeout",
+        "report_written": false
+      },
+      {
+        "attempt": 2,
+        "source_commit": "fd52cb6edb1fbb65aa9ae57b9ee385391c6d5fcc",
+        "started_at_utc": "2026-08-04T03:40:24Z",
+        "ended_at_utc": "2026-08-04T15:40:24Z",
+        "outer_watchdog_seconds": 43200,
+        "exit_code": 124,
+        "terminal_reason": "external_watchdog_timeout",
+        "report_written": false
+      },
+      {
+        "attempt": 3,
+        "source_commit": "fd52cb6edb1fbb65aa9ae57b9ee385391c6d5fcc",
+        "started_at_utc": "2026-08-04T15:47:31Z",
+        "outer_watchdog_seconds": 129600,
+        "state_when_v2_protocol_was_fixed": "running_without_report"
+      }
+    ]
+  },
+  "v2_engineering_attempts": [
+    {
+      "attempt": 1,
+      "source_commit": "ad5a4160d529a6d9da5af290f4d9741a7661bce5",
+      "started_at_utc": "2026-08-04T16:17:02Z",
+      "ended_at_utc": "2026-08-04T16:19:51Z",
+      "runner_exit_code": 0,
+      "passed": 3,
+      "trials": 3,
+      "report_sha256": "6710bb4d939d0f5a94a02cf88081185f65e51d2246becea3b3e3fcb97350f78a",
+      "remote_verifier_passed_with_explicit_pythonpath": true,
+      "checkpoint_sha256": [
+        "f3a889e5c2eab291da627718f1ff81dd89dd345783e1facad0b3556faba07d55",
+        "ce11d1aa3ebc639294913fbd0cf59b34c76748ace0a05fe0b2892dbd3df4d8e8",
+        "d2f10703eb09aabbe6cef851d26e3eb1ee74e8e7c8aae2a1128e500cf78fac0d"
+      ],
+      "worker_exit_codes": [-11, -11, 0],
+      "finding": "The first two immutable checkpoints were valid and verifier-accepted, but Genesis faulted during interpreter-global teardown after publication. The standalone verifier also required an explicit repository PYTHONPATH."
+    },
+    {
+      "attempt": 2,
+      "source_commit": "4ceabd239cd567a69eb9c154ebcb098dba73f50f",
+      "started_at_utc": "2026-08-04T16:22:02Z",
+      "ended_at_utc": "2026-08-04T16:23:57Z",
+      "wall_seconds": 115,
+      "runner_exit_code": 0,
+      "verifier_exit_code": 0,
+      "passed": 3,
+      "failed": 0,
+      "trials": 3,
+      "report_sha256": "965b90086bb1b15ba8831987fb4a3394ea8cd241fd6923e826117a4395f7e30e",
+      "checkpoint_sha256": [
+        "75d72862ec21d613f4e082fbade5907c79b9e1d9ada2e1003fe183560da8ea1e",
+        "63719da6b9886e0b92d85f9f93c6ac810fb882194d4bf5e968c9f5c27ff49720",
+        "aeda1430d5fff33793df244d0ab0f76bf67201a9e72d48ca466b7488d93cc293"
+      ],
+      "worker_exit_codes": [0, 0, 0],
+      "total_blocker_contact_rows": 0,
+      "total_active_pair_contact_rows": 0,
+      "maximum_tilt_deg": 10.495697335493816,
+      "maximum_stationary_partner_drift_m": 0.020808993685489528,
+      "paired_mean_path_reduction_percent": 14.308196962878375,
+      "engineering_smoke_reduction_floor_percent": 10.0
+    }
+  ],
+  "changes_before_formal_protocol_freeze": [
+    "execute one fixed seed per fresh Genesis subprocess while keeping each seed's complete active/passive paired scene",
+    "seal every completed pass or fail checkpoint with exclusive atomic publication and retain a fixed-order prefix for resume",
+    "add fail-closed source binding, preflight/postflight identity checks, progress ledger, attempt ledger and full-denominator verifier",
+    "make the standalone verifier add the repository root to its module search path",
+    "exit each isolated worker immediately after immutable checkpoint publication to avoid unrelated Genesis interpreter-global teardown faults"
+  ],
+  "formal_protocol_fixed_after_v2_engineering_attempt": 2,
+  "formal_seed_order": "102500:102530",
+  "formal_mean_path_reduction_floor_fraction": 0.15,
+  "formal_direct_pair_minimum_saving_m": 0.5,
+  "formal_v2_execution_started": false
+}
