@@ -882,7 +882,14 @@ def main() -> int:
             raise SystemExit("worker mode requires --worker-output and --binding")
         args.worker_output = args.worker_output.resolve()
         args.binding = args.binding.resolve()
-        return worker_main(args)
+        worker_exit = worker_main(args)
+        # Genesis 1.1.2 can fault during interpreter-global teardown after a
+        # complete ROCm scene. The immutable checkpoint is already fsynced and
+        # exclusively published here, so terminate the isolated worker without
+        # running unrelated process-global destructors.
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(worker_exit)
     if args.output_dir is None:
         raise SystemExit("coordinator mode requires --output-dir")
     return coordinator_main(args)
