@@ -3,7 +3,7 @@
 Verified against the official event page, governing Rules and Conditions, and
 official submission repository on 2026-08-04.
 
-**Owner-review state:** `local_review_packet_ready_no_pr`
+**Owner-review state:** `v2_owner_review_pending_no_pr`
 
 **Official PR opened:** `false`
 
@@ -48,6 +48,8 @@ Official sources:
 - [x] Present the preregistered 30-world challenge as an additive
       same-generator non-locked supplement: active full-chain direct 29/30
       versus passive 0/30, a +96.7 percentage-point paired gain.
+- [x] Keep active 29/30 versus passive 0/30 as the preregistered primary
+      endpoint; never relabel it as 30/30 from a later dynamics replay.
 - [x] Retain the one conservative active detour in the denominator.
 - [x] State that the paired result is descriptive for the fixed 12-world suite,
       not a population or real-world generalization.
@@ -85,6 +87,22 @@ Official sources:
 - [x] Retain the 3,600-second infrastructure-timeout audit and disclose that
       recovery changed only the outer watchdog to 10,800 seconds, with no seed
       result observed, retried, replaced, or resampled.
+- [x] Present decision-bound recovery V2 as a separate additive, non-locked,
+      simulation-only archived-decision replay: 30/30 fixed seeds across 30
+      independent three-body scenes, not one simultaneous 90-body scene.
+- [x] Report the V2 denominator and result exactly: 90 distinct non-fixed robot
+      instantiations across the run, all reached; 29 direct decisions plus one
+      safe detour; paired loaded-carrier path reduction 20.8183%; zero
+      blocker-contact and active-pair-contact rows; zero post-build pose writes.
+- [x] State that V2 consumes archived challenge decisions without rerunning the
+      perception-policy loop and does not demonstrate simultaneous cooperative
+      control, dynamic-obstacle response, a physical robot, sim-to-real, or a
+      safety-certified system.
+- [x] Disclose the V2 proof scope: the formal checksum index did not originally
+      bind attempts/progress/logs, and the formal source manifest omitted the
+      directly imported `src/v4_motion.py`. Treat the post-run tree audit and
+      complete package index as corroboration, not cryptographic proof of no
+      retry or a fully bound dependency closure.
 - [x] State the aggregate challenge task ledger in both directions:
       loaded-carrier logical path -22.5%, total logical-role team path +24.0%.
 - [x] State simulation-only, kinematic-motion, and no-safety-certification
@@ -124,6 +142,13 @@ Official sources:
 - [x] Verify the byte-identical dual-body report both remotely and locally.
 - [x] Seal report, timeout audit, recovery audit, and directory checksums at
       report SHA256 `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
+- [x] Fix the recovery V2 protocol before formal execution and preserve the
+      failed V1 history without relabeling its timeouts as scientific results.
+- [x] Verify the byte-identical V2 report remotely and locally: 30/30, report
+      SHA256 `1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+- [x] Preserve all 30 V2 checkpoints, the attempt ledger, worker logs, recovery
+      audit, provenance review, and both formal and complete-package checksum
+      indexes for owner review.
 
 ## English submission materials
 
@@ -131,7 +156,8 @@ Official sources:
 - [x] One-page frozen-challenge Judge Card with the public-before-execution
       binding, result, safety, AMD execution, task trade, and honest scope.
 - [x] V8 technical report source in `docs/V8_TECHNICAL_REPORT.md`.
-- [x] Rendered 13-page technical report PDF, visually inspected page by page.
+- [x] Rendered 15-page V2-integrated technical report PDF and visually
+      inspected every page after the final rebuild.
 - [x] Detailed V8 reproduction guide.
 - [x] AMD environment and workload boundary.
 - [x] Evidence claim boundary.
@@ -148,8 +174,17 @@ Official sources:
       README.
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
-- [x] Regenerate final local `SHA256SUMS` and verify all 24 checksummed
-      artifacts (25 total files including `SHA256SUMS`).
+- [x] Regenerate the final local `SHA256SUMS` and verify all 104 checksummed
+      artifacts (105 total files including `SHA256SUMS`); verify that the
+      machine manifest inventories all 103 payload files in its scope.
+- [x] Integrate the V2 result note and complete 80-file locally indexed
+      evidence directory.
+- [ ] Owner reviews the V2-integrated technical-report source and rebuilt PDF,
+      including its new identity, page count, and page-by-page visual QA.
+- [ ] Owner reviews the V2 Results/Reproduce site additions, byte-identity
+      tests, local production build, lint, and dependency audit before deploy.
+- [ ] Owner reviews the complete V2 evidence directory in official-package
+      staging, its regenerated manifest/checksums, and the exact package diff.
 
 ## Reproducibility
 
@@ -178,11 +213,16 @@ Official sources:
 - [x] Run `go test ./...` for the Purify reference core.
 - [x] Add exact ROCm dependency and environment preflight files.
 - [x] Build and route-smoke the Evidence Console with Docker.
-- [x] Lint, production-build, and run all 31 Evidence Console tests with Node
-      22; visually inspect the hydrated home and dynamics Results sections.
+- [x] Lint, production-build, and run all 35 Evidence Console tests with Node
+      22. The previous public baseline retains its hydrated visual inspection;
+      owner browser review of the local V2 hierarchy remains gated before deploy.
 - [x] Pin patched Web dependencies and obtain zero known `npm audit`
       vulnerabilities.
 - [x] Run all seven additive dynamics unit/verifier tests and Ruff checks.
+- [x] Run the recovery V2 report verifier on the Radeon host and on the
+      byte-identical local report; both accepted the 30/30 report SHA.
+- [ ] Owner reruns the formal and complete-package checksum indexes plus the V2
+      local verifier from the final integrated review tree.
 - [ ] Verify every README command exactly as written from the public clean
       clone.
 
@@ -209,6 +249,9 @@ Official sources:
       bind Genesis, PyTorch, HIP, GPU, runner, and URDF identities.
 - [x] State that the dynamics execution is an acceptance bar, not throughput,
       mission energy, control-loop latency, or a physical-device benchmark.
+- [x] Archive the separate recovery V2 execution as 30 fresh Genesis
+      subprocesses on AMD ROCm; keep its 1,101-second wall time as an
+      engineering record, not throughput or latency evidence.
 
 ## Website and public URLs
 
@@ -232,12 +275,17 @@ Stable targets:
       report and audit copies, while preserving the frozen shared-chassis
       boundary.
 - [x] Site links the final report, source branch, checkpoint, and video targets.
-- [x] Rebuild, lint, run all 31 tests, and visually inspect the refreshed
-      dynamics site locally; no site deployment was made.
+- [x] Rebuild, lint, run all 35 tests, and obtain a zero-vulnerability
+      dependency audit for the refreshed V2 site locally; no deployment was
+      made, and owner browser review remains gated before deployment.
+- [ ] Owner reviews the separate 30/30 decision-bound V2 Results card and
+      reproduction audit, including the 29/30 primary endpoint and the
+      non-simultaneous 90-body boundary, after all site checks pass.
 - [ ] Publish the refreshed dynamics site only after owner approval.
-- [x] Publish the refreshed public Pages site with HTTPS enforced.
-- [x] Verify all refreshed routes and referenced client/binary assets without
-      sign-in.
+- [x] Keep the previously published public baseline on Pages with HTTPS
+      enforced; do not describe the local V2 refresh as deployed.
+- [x] Verify the previous public baseline routes and referenced client/binary
+      assets without sign-in.
 - [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
 - [x] Download the replacement assets without sign-in and verify both hashes.
 
@@ -321,16 +369,23 @@ Stable targets:
 - [x] Stage an English submission directory locally containing the judge-facing
       index, report PDF, compact evidence, and preview.
 - [x] Add the locally verified demo artifact and unchanged stable target URL.
-- [x] Add the 13-page report and the four-file dual-body report/recovery chain
-      to the local official-repository staging directory.
-- [x] Regenerate and verify 24 local checksum entries (25 total files including
-      `SHA256SUMS`); checksum-index SHA256
-      `2c7ff96ab01eb0994ed31ad4457439325314bf289ceccfa1130980d2e89dd4dd`.
+- [x] Add the 15-page report, four-file dual-body report/recovery chain, and
+      complete 80-file decision-bound recovery V2 evidence directory to local
+      official-repository staging.
+- [x] Regenerate and verify 104 local checksum entries (105 total files
+      including `SHA256SUMS`); checksum-index SHA256
+      `e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9`.
 - [x] Preserve the previously published official-fork baseline at commit
       `32cff1a1e77952e689f4730ff21b8a8a8ad01a63` without opening a PR.
-- [ ] After owner approval, push the 25-file additive refresh to the dedicated
-      official-fork branch; do not imply the current public baseline contains
-      the new dynamics files.
+- [x] Add the complete decision-bound recovery V2 evidence directory, updated
+      report PDF, Judge Card, and README to the local official-package staging
+      tree; regenerate `SUBMISSION_PACKAGE.json` and top-level `SHA256SUMS`.
+- [x] Copy the staging directory byte-for-byte to the local official-fork
+      worktree and verify a clean `diff -qr` plus 104/104 package checksums
+      before any push.
+- [ ] After owner approval, push the reviewed V2-integrated refresh to the
+      dedicated official-fork branch; do not imply the current public baseline
+      contains the new dynamics files.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.
@@ -343,12 +398,14 @@ Stable targets:
 - [x] Entrant/team label confirmed as `Liu Liang`.
 - [x] Final MP4 and sidecar pass local QA for the recorded 239-second identity.
 - [ ] Owner completes final visual and audible review.
-- [x] Final local 24-entry `SHA256SUMS` verifies cleanly after identity
-      propagation.
+- [x] Final local 104-entry `SHA256SUMS` verifies cleanly after identity
+      propagation; the 103-entry package inventory has exact path coverage.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
-- [x] Local official-fork worktree contains only the intended 25-file refresh;
-      the public branch remains at the earlier 21-file baseline pending owner
-      approval.
+- [x] The public official-fork branch remains at its earlier baseline pending
+      owner approval; the final local staging package contains exactly 105
+      regular files.
+- [ ] Owner reviews the complete V2 evidence package, local verifier output,
+      rebuilt PDF, refreshed site, and exact official-package diff.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
 - [x] No official PR exists before explicit owner approval.

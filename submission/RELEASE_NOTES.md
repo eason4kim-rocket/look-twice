@@ -71,6 +71,46 @@ This supplement validates bounded sequential wheel motion by two rigid bodies.
 It is not a frozen-policy rerun, simultaneous cooperative control, a physical
 robot, sim-to-real evidence, or safety certification.
 
+## Separate additive decision-bound dynamics recovery V2
+
+A separately fixed recovery protocol replaces the earlier whole-run,
+all-or-nothing 90-body compute topology without changing the archived decisions, seed
+range, scene geometry, wheel controller, or acceptance bars. It replays the 29
+direct decisions and one safe-detour decision from seeds `102500-102529`,
+without rerunning the frozen perception-policy loop.
+
+The Radeon/ROCm execution passed **30/30** fixed seeds as 30 independent fresh
+Genesis scenes. Each scene contained an active scout, active loaded carrier,
+and passive loaded carrier. All **90/90** distinct non-fixed robot
+instantiations reached; this is not one simultaneous 90-body simulation. Mean
+active/passive loaded-carrier paths were 4.943529/6.243270 m, a paired
+reduction of **20.8183%**. Retained records contain zero blocker-contact rows,
+zero active carrier/scout contact rows, and zero post-build pose writes.
+
+The preregistered primary endpoint remains active **29/30** full-chain direct
+versus passive 0/30. V2 is additive, non-locked, simulation-only, and
+`formal_result_eligible=false`; it is not a frozen-policy rerun, simultaneous
+cooperative-control result, physical-robot or sim-to-real result, throughput
+benchmark, energy claim, or safety certification.
+
+The byte-identical report passed remote and local verification and hashes to
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+The complete local package index covers 79 retained evidence files and hashes
+to `24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540`.
+The retained attempt ledger and logs show 30 first-attempt completions with no
+completed-checkpoint rerun or seed replacement. The proof scope is narrower:
+the formal checksum index did not originally bind attempts/progress/logs, and
+the formal source manifest omitted the directly imported `src/v4_motion.py`.
+The post-run tree audit and package index are corroborating evidence, not
+cryptographic proof of continuous no-retry execution or a fully bound runtime
+dependency closure.
+
+The V2 evidence directory, local verifier, V2-integrated report PDF, website
+build, and regenerated 105-file official-repository package are complete and
+verified locally. Source publication, release-PDF replacement, deployment,
+official-fork push, and PR submission remain pending owner approval; none is
+authorized by these notes.
+
 ## Release assets
 
 - `v8_seg_v3_selected_ep22_7b158726f9c0.pt` - frozen 159,592,901-byte
@@ -82,9 +122,14 @@ robot, sim-to-real evidence, or safety certification.
 - `Look-Twice-V8-Demo.manifest.json` - machine-readable video identity and
   chapter/evidence boundary; SHA256
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
-- `Look-Twice-V8-Technical-Report.pdf` - 13-page English technical report;
-  SHA256
-  `43b605b870994a809a175e88b8b424ec152ceb386e423bcbd542373d3338207e`.
+- `Look-Twice-V8-Technical-Report.pdf` - local 15-page V2-integrated English
+  technical report replacement, 1,089,114 bytes; SHA256
+  `29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e`.
+- `decision_dynamics_recovery_v2_102500_102529/` - 80-file local owner-review
+  evidence directory with report, 30 checkpoints, attempt/progress records,
+  worker and execution logs, recovery/provenance audits, and formal/package
+  checksum indexes; included in the 105-file local official submission package
+  but not yet published.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
@@ -101,7 +146,11 @@ the sustained exact-checkpoint Radeon telemetry and preregistered challenge
 supplements, plus the separately labeled dual-body dynamics acceptance result.
 These additive publication updates do not change the frozen
 model, one-shot locked result, calibration, thresholds, or final video. The
-video sidecar intentionally
+decision-bound V2 evidence is a further local, separately labeled addition and
+likewise does not change those identities or the 29/30 preregistered endpoint.
+The V2-integrated PDF is the local replacement identity above; the stable
+release URL still serves the earlier public PDF until owner approval. The video
+sidecar intentionally
 retains report SHA
 `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`
 as the exact earlier report bytes used when rendering its report-page frames.

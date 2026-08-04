@@ -35,6 +35,11 @@ sim-to-real transfer, or safety certification.
   [machine report](evidence/dual_body_dynamics_160820_160839/REPORT.json) ·
   [recovery audit](evidence/dual_body_dynamics_160820_160839/RECOVERY_EXECUTION_AUDIT.json) ·
   [checksums](evidence/dual_body_dynamics_160820_160839/SHA256SUMS)
+- Separate additive decision-bound dynamics replay:
+  [30/30 machine report](evidence/decision_dynamics_recovery_v2_102500_102529/REPORT.json) ·
+  [execution audit](evidence/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json) ·
+  [proof-scope review](evidence/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json) ·
+  [complete package checksums](evidence/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS)
 - Independent machine verification:
   [packaged JSON](evidence/challenge_102500_102529/VERIFICATION.json) ·
   [stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json)
@@ -58,7 +63,7 @@ sim-to-real transfer, or safety certification.
 The 30-second file is a silent evidence preview. The 3:59 MP4 is the complete
 narrated workflow demonstration. The replacement MP4 and sidecar were
 downloaded from their stable release targets without credentials and matched
-the packaged SHA256 identities on 2026-08-03. The final 13-page report is
+the packaged SHA256 identities on 2026-08-03. The final 15-page report is
 packaged here and bound by `SHA256SUMS`; its release URL is the publication
 target.
 
@@ -73,9 +78,13 @@ target.
 4. Confirm that direct travel requires Python **and** Purify Go admission.
 5. Inspect the 844-sample full-wall Radeon telemetry and 30-world
    carrier/scout burden table.
-6. Inspect the separately labeled 20/20 dual-body wheel-dynamics acceptance
-   result and its retained timeout/recovery chain.
-7. Open Results and trace the permanent locked numbers separately.
+6. Inspect the separately labeled 30/30 decision-bound wheel-dynamics replay:
+   90/90 bodies reached across 30 independent scenes; 29/29 direct pairs kept
+   a physical carrier-path advantage; the one dual-blocked case safely
+   detoured.
+7. Inspect the earlier 20/20 dual-body wheel-dynamics component bar and its
+   retained timeout/recovery chain.
+8. Open Results and trace the permanent locked numbers separately.
 
 ## Why the result matters
 
@@ -160,6 +169,44 @@ bounded wheel motion by two rigid bodies, not a frozen-policy rerun,
 simultaneous cooperative control, a physical robot, sim-to-real transfer, or
 safety certification.
 
+## Separate additive decision-bound dynamics replay
+
+The fixed V2 protocol consumed the immutable archived decisions for seeds
+`102500-102529`: 29 direct decisions and the single safe outer detour at seed
+`102515`. Each seed ran serially in a fresh paired Genesis scene containing one
+active non-fixed scout, one active non-fixed loaded carrier, and one passive
+non-fixed loaded carrier. Across 30 independent scenes this instantiated 90
+distinct bodies; it was not one simultaneous 90-body scene.
+
+The AMD Radeon/ROCm run passed **30/30**. All 90/90 bodies were wheel-actuated
+and reached; all 29 direct pairs saved at least 0.50 m of loaded-carrier path;
+mean active/passive carrier paths were 4.943529/6.243270 m, a paired reduction
+of **20.8183%**. Recorded blocker and active carrier/scout contact rows were
+0/0; maximum tilt was 10.579607 degrees and maximum parked-partner drift was
+0.022329 m.
+
+V1's one-scene 90-body layout reached four-hour and 12-hour external watchdogs
+before writing any report. V2 kept seeds, archived decisions, within-seed
+geometry, controller, and thresholds fixed while changing the failure domain:
+one fresh subprocess and one atomic checkpoint per seed. The retained ledger
+shows 30 attempt-one worker exits at zero, with no observed retry or
+replacement. The report passed the frozen verifier remotely and locally and
+hashes to
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+
+The bundled provenance review deliberately records two proof-scope limits.
+The original inner checksum index did not cover attempts/progress/logs, and
+the source binding omitted the directly imported `src/v4_motion.py`. The
+complete outer package index now fixes every retained artifact, while a clean
+2,419-file post-run audit found no source difference. These facts corroborate
+the execution; they are not described as continuous cryptographic attestation.
+
+This is additive, non-locked, archived-decision simulation evidence with
+`formal_result_eligible=false`. It does not replace the frozen 29/30 primary,
+rerun live perception/policy inference, demonstrate simultaneous cooperation,
+dynamic-obstacle response, real-robot or sim-to-real validation, throughput,
+energy, or safety certification.
+
 ## Frozen V8 result
 
 V8 was opened once on an isolated locked split. No retuning, refitting, or
@@ -226,6 +273,10 @@ The dual-body supplement separately retained a 4,299.992-second Genesis
 bar, not throughput, mission energy, control-loop latency, or a physical-device
 benchmark.
 
+The decision-bound V2 replay used the same Radeon/ROCm software class with one
+fresh three-body scene per fixed seed. Its approximately 18-minute wall is an
+execution-audit fact only, not a throughput or latency benchmark.
+
 ## Reproduction and identities
 
 The dedicated source branch provides a deterministic CPU evidence audit,
@@ -269,6 +320,10 @@ sha256sum -c SHA256SUMS
 jq -e '.passed == true and (.errors | length) == 0' \
   evidence/challenge_102500_102529/VERIFICATION.json
 shasum -a 256 -c evidence/dual_body_dynamics_160820_160839/SHA256SUMS
+shasum -a 256 -c \
+  evidence/decision_dynamics_recovery_v2_102500_102529/SHA256SUMS
+shasum -a 256 -c \
+  evidence/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS
 ```
 
 The 239.000-second final demo is 9,032,035 bytes and must hash to:
@@ -291,8 +346,9 @@ The compact [evidence directory](evidence/README.md) contains the scrubbed
 locked report, exact-checkpoint Radeon benchmark, raw sustained telemetry,
 locked-input manifest, frozen import manifest, machine-readable task-utility
 derivation, and the preregistered challenge report, run manifest, full-wall
-ROCm telemetry, independent verification, raw-archive checksum index, plus the
-separately labeled dual-body report and timeout/recovery audit chain.
+ROCm telemetry, independent verification, raw-archive checksum index, the
+separately labeled dual-body report and timeout/recovery audit chain, plus the
+complete 30-seed decision-bound checkpoint/report/provenance package.
 The machine-readable [package manifest](SUBMISSION_PACKAGE.json) states the
 included payload and evidence boundaries. Every packaged regular file except
 the checksum index itself is bound by [SHA256SUMS](SHA256SUMS).

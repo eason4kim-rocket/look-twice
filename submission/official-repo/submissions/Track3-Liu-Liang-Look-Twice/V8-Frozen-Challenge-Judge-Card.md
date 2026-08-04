@@ -8,10 +8,12 @@ episodes · no retry, replacement seed, early stop, model change, calibration
 change, or threshold change.
 
 This is an additive, preregistered **same-generator non-locked supplement** to
-the permanent 12-pair V8 locked result. It is not an OOD, rigid-body, or
-physical-robot claim.
+the permanent 12-pair V8 locked result. Its primary endpoint is not an OOD,
+rigid-body, or physical-robot claim. A separate additive recovery V2 now tests
+the archived route decisions through bounded rigid-body actuation without
+changing that primary endpoint.
 
-## Five judge checks
+## Six judge checks
 
 | Check | Result | Machine evidence |
 |---|---|---|
@@ -20,6 +22,7 @@ physical-robot claim.
 | Mission and safety | **60/60 mission success**, **0/60 unsafe**, **0/60 fallback**. Across the 30 active records, unsafe was false, collision count was zero, and fallback was false. Seed `102515` remained safe and completed by detour because both corridors were oracle-blocked. All 18/268 Python/Go receipt disagreements were Python-admit/Go-deny with `effective_admit=false`; no disagreement opened the gate. In every disagreement, Go independently found only one qualifying root and the inconclusive set `{clear, blocked}`. | [packaged verification report](evidence/challenge_102500_102529/VERIFICATION.json) · [raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
 | AMD full-pipeline execution | **60/60** episodes used Genesis live RGB-D, the frozen checkpoint, and Purify Go receipts: 268 RGB-D observations, 134 vision proposals, and 268 Go invocations/receipts. Full subprocess-wall telemetry retained **844** two-second ROCm samples across **1,685.5 s**, including idle: GPU mean/median/p95/max **19.4/0/95/100%**; VRAM p95/max **2/2%**; package power mean/p95/max **35.7/81/109 W**. | [packaged ROCm telemetry](evidence/challenge_102500_102529/ROCM_TELEMETRY.json) |
 | Warehouse operational trade | Active scouting reduced loaded-carrier logical path from **6.404 to 4.961** (`−1.443`, **−22.5%**) while adding **2.980** scout path; total logical-role team path rose from **6.404 to 7.941** (`+1.538`, **+24.0%**). This is kinematic path burden, not energy, throughput, latency, or physical duty cycle. | [packaged per-seed and burden tables](evidence/challenge_102500_102529/CHALLENGE_REPORT.json) |
+| Additive decision-to-dynamics bridge | A separate fixed-denominator V2 replay consumed the archived decisions—**29 direct + 1 safe detour**—without rerunning perception or policy inference. It passed **30/30** across 30 serial, independent three-body scenes: **90/90** distinct non-fixed robot instantiations reached; all **29/29** direct carrier pairs saved at least 0.50 m; mean loaded-carrier path was **4.9435 m active vs 6.2433 m passive (−20.8183%)**; and counted blocker-contact and active carrier/scout contact rows were both **0**. The sole dual-blocked seed `102515` executed its declared safe outer detour. | [V2 result summary](README.md#separate-additive-decision-bound-dynamics-replay) · [packaged report](evidence/decision_dynamics_recovery_v2_102500_102529/REPORT.json) · [packaged scope audit](evidence/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json) |
 
 ## Scope that must travel with the result
 
@@ -37,6 +40,26 @@ physical-robot claim.
   and the inconclusive Go set `{clear, blocked}`. Four were on a non-selected
   corridor; 14 were transient evaluations before the final selected-corridor
   joint admit. This audit changed no runtime, calibration, or threshold.
+- The rigid-dynamics V2 is **additive, non-locked**, and declares
+  `formal_result_eligible=false`. It preserves the challenge primary at
+  **29/30**; 30/30 describes archived decision-to-actuation replay outcomes,
+  not a revised direct-route score.
+- V2 used 30 serial, independent scenes with three non-fixed bodies per scene.
+  Its 90 bodies are distinct instantiations across the run, not one
+  simultaneous 90-body scene, and the replay is not simultaneous cooperative
+  motion or a live perception-policy rerun.
+- V2 “zero contact” means zero counted Genesis contact rows in the fixed run,
+  not real-robot validation or safety certification. The 20.8183% result is a
+  paired loaded-carrier path reduction, not lower total team travel, energy,
+  task time, or throughput.
+- The V2 formal source binding omitted the directly imported
+  `src/v4_motion.py`; a post-run audit matched it to clean commit `b0c4f0d`,
+  but that is corroborating evidence rather than complete formal import-closure
+  attestation. The original inner V2 `SHA256SUMS` did not cover
+  `ATTEMPTS.jsonl`, `PROGRESS.json`, or worker logs. The retained records show
+  30 first-attempt, zero-exit workers and no observed retry or replacement;
+  they are not cryptographic proof that no additional unsealed attempt ever
+  existed.
 
 ## Clean-clone verification
 

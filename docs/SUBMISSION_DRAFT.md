@@ -2,9 +2,9 @@
 
 > **Owner-review preparation state - not yet filed:** the final 239-second
 > video and the existing V8 review targets are public and anonymously verified.
-> The new dual-body evidence, refreshed report/site/package, and Genesis
-> upstream fix are prepared locally for owner review. No competition or
-> external upstream PR is open.
+> The additive dynamics evidence, new 30/30 decision-bound recovery V2 packet,
+> refreshed report/site/official package, and Genesis upstream fix are prepared
+> locally for owner review. No competition or external upstream PR is open.
 
 ## Project
 
@@ -49,15 +49,18 @@ benchmark samples and does not require a live GPU.
 5. Switch to passive mode and compare its safe detour.
 6. Inspect the challenge's 844-sample full-wall ROCm telemetry and 30-world
    carrier/scout burden table.
-7. Open Results and inspect the separate 20/20 dual-body rigid-dynamics card.
-8. Follow the permanent locked metrics separately.
+7. Open Results and inspect the separate 30/30 decision-bound rigid-dynamics
+   card, then the earlier 20/20 dual-body acceptance card.
+8. Confirm that 30/30 is an archived-decision execution supplement and that
+   the preregistered primary endpoint remains active 29/30 versus passive 0/30.
+9. Follow the permanent locked metrics separately.
 
 ## Official Track 3 judging map
 
 | Criterion | Evidence in this submission |
 | --- | --- |
-| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate non-locked dynamics bar: 20/20 fixed seeds, 40 non-fixed robot entities, zero blocker/pair contacts and zero post-build pose writes. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate wheel-dynamics acceptance run retained a 4,299.992-second Radeon execution and source-bound report. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate additive decision-bound dynamics: 30/30 independent three-body scenes, all 90 distinct robot instantiations reached, 20.8183% paired loaded-carrier path reduction, and zero blocker/active-pair contact rows. This does not replace the 29/30 endpoint. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate 20/20 and 30/30 wheel-dynamics runs retain reports, disclosed source bindings, and local verifiers. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
 | Real-world application value - 20 | Across 30 warehouse pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%, with all missions completed safely. |
 | Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. A focused Genesis URDF inertial-origin fix plus required regression test is prepared locally with baseline-fail/patch-pass evidence; no public external PR is claimed until owner approval. |
@@ -187,6 +190,46 @@ validates bounded wheel motion by two rigid bodies, not a full-policy
 conversion to simultaneous cooperative control, a physical robot, or
 sim-to-real transfer.
 
+## Separate additive decision-bound dynamics recovery V2
+
+Recovery V2 closes a narrower decision-to-actuation gap without reopening the
+locked split or changing the preregistered challenge endpoint. It replays the
+immutable archived challenge decisions -- 29 direct corridor decisions and
+the single dual-blocked safe detour at seed `102515` -- without rerunning the
+frozen perception-policy loop.
+
+Seeds `102500-102529` ran as **30 independent Genesis scenes**, one fresh
+subprocess and one paired three-body scene per seed: an active scout, active
+loaded carrier, and passive loaded carrier. All **30/30** seeds passed and all
+**90/90** distinct non-fixed robot instantiations reached their goals. The 90
+bodies are counted across the 30 scenes; they were not simulated together in
+one simultaneous 90-body scene.
+
+Across the 29 archived direct decisions, every active/passive carrier pair
+saved at least 0.50 m. Mean active and passive loaded-carrier paths were 4.944
+m and 6.243 m, a paired reduction of **20.8183%**. The retained records contain
+zero blocker-contact rows, zero active carrier/scout contact rows, and zero
+post-build entity pose writes. The single archived safe-detour decision also
+reached its declared goal.
+
+This remains additive, non-locked, simulation-only evidence with
+`formal_result_eligible=false`. It does not turn the preregistered active
+**29/30** full-chain endpoint into 30/30, and it is not a frozen-policy rerun,
+simultaneous cooperative-control test, dynamic-obstacle test, physical-robot
+result, sim-to-real result, throughput claim, or safety certification.
+
+The report hashes to
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`
+and passed the same verifier on the Radeon host and local source snapshot. The
+retained attempt ledger and worker logs show 30 first-attempt completions with
+exit code zero, no completed-checkpoint rerun, and no seed replacement.
+Proof scope is narrower than those observations: the formal checksum index did
+not originally cover attempt, progress, or log files, and the formal source
+manifest omitted the directly imported `src/v4_motion.py`. A post-run tree
+audit and the complete package index provide corroboration, not cryptographic
+proof of continuous no-retry execution or a fully bound runtime dependency
+closure.
+
 ## What runs on the AMD Radeon GPU
 
 | Stage | Execution |
@@ -235,6 +278,7 @@ control-loop latency or physical energy per mission.
 | One-page challenge Judge Card | [public preregistration, result, AMD telemetry, application burden, and verifier](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md) |
 | Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [post-hoc feasibility audit](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
 | Dual-body dynamics evidence | [20-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md) · [machine report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json) · timeout/recovery audits and `SHA256SUMS` in the same directory |
+| Decision-bound dynamics V2 | [30-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [complete evidence directory](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-derived/decision_dynamics_recovery_v2_102500_102529) · formal and package checksum indexes, provenance review, and local verifier |
 | Technical report | [release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf) · [source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md) |
 | Project source code | [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |
@@ -301,6 +345,17 @@ python3 scripts/verify_v8_additive_dual_body_dynamics.py \
   release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json
 ```
 
+Decision-bound dynamics V2 package and report audit, also without a GPU:
+
+```bash
+cd release/v8-derived/decision_dynamics_recovery_v2_102500_102529
+shasum -a 256 -c SHA256SUMS
+shasum -a 256 -c PACKAGE_SHA256SUMS
+cd ../../..
+python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
+  release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json
+```
+
 Local Evidence Console:
 
 ```bash
@@ -333,6 +388,14 @@ hashes are in the
   Genesis chassis. A separate additive 20-seed supplement validates bounded
   sequential wheel motion by two non-fixed rigid bodies, but it is not a
   full-policy rerun, simultaneous cooperative control, or two physical devices.
+- The additive decision-bound recovery V2 replays archived decisions across 30
+  independent three-body scenes. Its 90 distinct bodies are not one
+  simultaneous 90-body scene, and its 30/30 execution result does not replace
+  the preregistered active 29/30 full-chain endpoint.
+- The V2 attempt ledger and logs show no retry or replacement, but the original
+  formal checksum set did not bind those files and the original source manifest
+  omitted one direct runtime dependency. The post-run review is corroborating
+  evidence, not cryptographic proof of no retry or complete dependency binding.
 - The 159 MB checkpoint is published as a release asset and must match SHA256
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`.
 - Later Integrity Shield R1/R2 and V9 research is not promoted into V8.

@@ -245,6 +245,66 @@ the full frozen V8 active/passive policy, change its shared-chassis kinematic
 realization, prove simultaneous cooperative-policy control, or establish a
 physical-robot, sim-to-real, energy, throughput, or safety result.
 
+### Submission-time decision-bound rigid-dynamics recovery V2
+
+The fixed recovery V2 protocol in
+`docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_PROTOCOL.md` was sealed after
+excluded engineering seeds `170800-170802` and before any formal V2 seed was
+opened. Its complete report is
+`release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json`,
+SHA256
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+
+This is a separate, additive replay of the immutable archived challenge
+decisions. It does not rerun perception or policy inference. The fixed mix
+remains 29 archived direct decisions plus the safe outer detour for the sole
+dual-blocked world, seed `102515`. Each seed ran serially in a fresh Genesis
+subprocess and a fresh three-body scene containing one active scout, one
+active loaded carrier, and one passive loaded carrier. The 90 non-fixed robot
+entities are therefore distinct instantiations across 30 independent scenes;
+they did not coexist in one 90-body scene or move as a simultaneous fleet.
+
+Allowed claims are:
+
+- 30/30 fixed seeds passed, with all 30 scouts, 30 active carriers, and 30
+  passive carriers reaching their goals under wheel-DOF velocity control;
+- all 29/29 direct active carriers saved at least 0.50 m against their paired
+  passive carrier; the observed minimum saving was 1.333621 m;
+- mean loaded-carrier path was 4.943529 m active versus 6.243270 m passive, a
+  paired reduction of 20.8183% against the fixed 15% floor;
+- the dual-blocked archived decision completed its declared safe outer
+  detour;
+- counted blocker-contact rows and active carrier/scout contact rows were both
+  zero, as were script-level entity pose writes after `scene.build()`;
+- maximum body tilt was 10.579607 degrees and maximum parked-partner drift was
+  0.022329 m; and
+- the same byte-identical report passed the source-aware verifier on the AMD
+  host and locally.
+
+This result closes a decision-to-actuation evidence gap, but it does not
+replace or upgrade the preregistered challenge primary endpoint. That endpoint
+remains active full-chain direct **29/30**, not 30/30. The V2 report declares
+`additive_non_locked=true` and `formal_result_eligible=false`. “Zero contact”
+means zero counted Genesis contact rows under this fixed instrumentation, not
+a general collision-free or certified-safety guarantee. The carrier-path
+reduction is not a reduction in total team travel, energy, task time, or
+throughput.
+
+The integrity evidence also has two explicit proof-scope limits. The formal
+`SOURCE_BINDING.json` binds the named protocol, runner, verifier, archived
+input, assets, scenario, and helper files, but omits the directly imported
+`src/v4_motion.py`; it is therefore not a complete transitive source closure.
+A post-run tree audit found that file byte-identical to clean commit
+`b0c4f0d33b0a2d0c647dda0b2b3b7c03279a511a`, which is corroborating evidence
+and does not retroactively expand the formal binding. The original inner
+`SHA256SUMS` binds `SOURCE_BINDING.json`, all 30 trial checkpoints, and
+`REPORT.json`, but not `ATTEMPTS.jsonl`, `PROGRESS.json`, or `WORKER_LOGS`.
+Those retained records were inspected and show 30 first-attempt, zero-exit
+worker completions with no observed retry or seed replacement; they must not
+be described as cryptographic proof that no additional unsealed attempt ever
+existed. The scope audit is retained as
+`release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json`.
+
 ### Reserved challenge range status
 
 The historical `ood_test` label for seeds 102500-102699 denotes only a
@@ -313,7 +373,9 @@ silently omitted from the research archive.
   carrier and scout are two logical roles on one shared chassis, not two
   physical robots or simultaneous dual-body dynamics. A separate additive
   20-seed supplement validates bounded sequential wheel motion by two
-  non-fixed rigid bodies, but it is not a full-policy rerun.
+  non-fixed rigid bodies. The separate 30-seed recovery V2 binds archived
+  challenge decisions to three non-fixed bodies per independent scene. Neither
+  supplement is a live full-policy rerun or simultaneous 90-body execution.
 - The public replay episode carries `formal_result_eligible=false`; it is a
   presentation artifact, not the locked aggregate.
 - The 30-world challenge is a same-generator non-locked supplement, not a

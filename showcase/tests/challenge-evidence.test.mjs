@@ -127,8 +127,17 @@ test("preregistered challenge telemetry, receipts and scope stay visible", async
     assert.doesNotMatch(page, /30\/30\s+(?:full-chain\s+)?direct/i);
     assert.doesNotMatch(page, /30\/30\s+preregistered/i);
   }
-  assert.match(home, /Post-hoc descriptive oracle-feasibility audit/);
+  assert.match(home, /PREREGISTERED PRIMARY · 30 PAIRED WORLDS/);
+  assert.match(home, /ACTIVE 29\/30 · PASSIVE 0\/30/);
+  assert.match(home, /Secondary post-hoc oracle audit/);
+  assert.ok(
+    home.indexOf("ACTIVE 29/30 · PASSIVE 0/30") <
+      home.indexOf("Secondary post-hoc oracle audit"),
+  );
   assert.match(results, /Post-hoc descriptive oracle audit, not a preregistered endpoint/);
+  assert.ok(
+    results.indexOf("challenge-primary-grid") < results.indexOf("feasibility-proof"),
+  );
   assert.match(consoleSource, /POST-HOC, NOT THE PREREGISTERED ENDPOINT/);
   assert.match(results, /250\/\{receipts\.total\}|250\/268|receipts\.count/);
   assert.match(results, /Post-hoc descriptive audit \(not a preregistered endpoint\)/);

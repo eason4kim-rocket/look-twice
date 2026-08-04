@@ -58,13 +58,20 @@ separate V2 protocol had been fixed and before V1 exposed a report or per-seed
 outcome. Those unsuccessful attempts remain archived and are not relabeled as
 V2 results.
 
-V2 changed the execution and persistence topology, not the scientific inputs
-or acceptance bar. It sealed one immutable checkpoint after every fixed seed,
-in order, before starting the next. The formal run completed all 30 workers on
-attempt 1 with exit code zero, no resume, no completed-checkpoint rerun, and no
-seed replacement. It ran from `2026-08-04T16:29:53Z` to
+V2 preserved the fixed seed cases, archived decisions, within-seed geometry,
+wheel controller, and acceptance bar while separately versioning the global
+solver, execution, and persistence topology. It exclusive-published one atomic
+checkpoint after every fixed seed, in order, before starting the next. The
+retained formal-run records show all 30 workers completed on attempt 1 with
+exit code zero, no resume, no completed-checkpoint rerun, and no seed
+replacement. It ran from `2026-08-04T16:29:53Z` to
 `2026-08-04T16:48:14Z`; the 18-minute duration is an engineering fact, not a
 throughput benchmark.
+
+The successful formal run did not exercise resume. The mechanism validates and
+skips an exact fixed-order checkpoint prefix, but this evidence does not claim
+transactional recovery across every possible coordinator crash or host-power
+loss boundary between checkpoint, ledger, report, and checksum publication.
 
 Both the Radeon host and the local frozen source snapshot independently
 accepted the byte-identical report:

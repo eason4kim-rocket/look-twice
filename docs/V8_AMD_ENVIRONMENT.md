@@ -69,6 +69,8 @@ requiring access to the competition cloud instance.
 | Challenge report | `59b5d464954e6e03ee4b65f689e93fd4e4ba836a6512509e98df0b7a94d186b0` |
 | Challenge full-wall telemetry | `463add74afa2c905cb7e63e7450f8761f3c6c3cd56ee9789633c7df0272860c0` |
 | Challenge independent verification | `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940` |
+| Decision-dynamics recovery V2 report | `1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99` |
+| Decision-dynamics recovery V2 source binding | `c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d` |
 
 Public checkpoint asset:
 https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt
@@ -165,6 +167,47 @@ Genesis + checkpoint + episode subprocess execution, not only inference. It
 is not control-loop latency, mission energy, physical duty cycle, rigid-body
 contact validation, or a real-robot benchmark. Carrier and scout are logical
 roles on one shared Genesis chassis, not simultaneous dual-body dynamics.
+
+## Decision-bound rigid-dynamics recovery V2
+
+Source:
+`release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json`.
+Report SHA256:
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+
+This separate submission-time run used Python 3.12.3, Genesis 1.1.2,
+PyTorch `2.9.1+gitff65f5b`, HIP `7.2.53211-e1a6bc5663`, and the requested
+`amdgpu` backend. All worker environment records were identical. One AMD GPU
+executed the fixed seeds serially, with one fresh Genesis subprocess and one
+independent three-body scene per seed. Each scene contained an active
+non-fixed scout, an active non-fixed loaded carrier, and a passive non-fixed
+loaded carrier. Thus the run instantiated 90 distinct non-fixed bodies across
+30 scenes, never 90 bodies in one simultaneous scene.
+
+The run consumed, rather than recomputed, the archived 29 direct decisions and
+one dual-blocked safe-detour decision. It passed 30/30: all 90 bodies reached,
+the 29/29 direct carrier pairs each retained at least 0.50 m of physical-path
+saving, and mean active loaded-carrier path was 20.8183% below the paired
+passive path. Counted blocker-contact and active carrier/scout contact rows
+were both zero. The only post-build actuation was wheel-DOF velocity control;
+script-level entity pose writes after build were zero.
+
+This is AMD rigid-dynamics execution evidence, not a live rerun of the frozen
+perception-policy loop. It is additive, non-locked, and declares
+`formal_result_eligible=false`; the frozen challenge primary remains 29/30.
+It is not simultaneous cooperative motion, dynamic-obstacle, real-robot,
+sim-to-real, energy, latency, throughput, or safety-certification evidence.
+The V2 directory contains no dedicated utilization or power telemetry, so no
+ROCm utilization or performance claim is inferred from its successful run.
+
+The formal source binding covers the listed V2 sources and clean commit
+`b0c4f0d`, but omits the directly imported `src/v4_motion.py`; a post-run audit
+matched that file to the commit, which is corroboration rather than an
+expanded formal binding. The original inner `SHA256SUMS` covers the source
+binding, 30 trial checkpoints, and report, but not the attempt ledger,
+progress file, or worker logs. Those retained records show 30 first-attempt
+workers with zero exit codes and no observed retry or replacement, but that
+observation is not a cryptographic proof over unsealed attempts.
 
 ## Challenge-range terminology
 

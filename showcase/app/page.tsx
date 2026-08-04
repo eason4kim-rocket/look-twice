@@ -32,19 +32,19 @@ function HomeContent() {
           <p className="hero-lead">{zh
             ? "Look Twice 将不稳定、冲突且同源的机器人观察，转化为可供物理动作依赖的可信事实；证据不足时，它主动修复证据。"
             : "Look Twice turns noisy, conflicting and correlated robot observations into action-qualified facts—and actively repairs evidence when confidence is not enough."}</p>
-          <div className="challenge-proof" aria-label={zh ? "预注册挑战结果与事后可行性审计" : "Preregistered challenge result and post-hoc feasibility audit"}>
+          <div className="challenge-proof" aria-label={zh ? "预注册主端点与事后可行性审计" : "Preregistered primary endpoint and post-hoc feasibility audit"}>
             <div className="challenge-proof-head">
-              <span>{zh ? "公开预注册挑战 · 独立验证通过" : "PUBLICLY PREREGISTERED CHALLENGE · INDEPENDENTLY VERIFIED"}</span>
-              <b>{zh ? "安全路线结果 30/30*" : "SAFE ROUTE OUTCOMES 30/30*"}</b>
+              <span>{zh ? "预注册主端点 · 30 个成对世界" : "PREREGISTERED PRIMARY · 30 PAIRED WORLDS"}</span>
+              <b>{zh ? "主动 29/30 · 被动 0/30" : "ACTIVE 29/30 · PASSIVE 0/30"}</b>
             </div>
             <div className="challenge-proof-grid">
-              <div><strong>29<small>/29</small></strong><span>{zh ? "有可通行走廊的世界全部安全直行" : "all worlds with a clear corridor went direct"}</span></div>
-              <div><strong>1<small>/1</small></strong><span>{zh ? "唯一双廊阻塞世界安全绕行" : "sole dual-blocked world safely detoured"}</span></div>
+              <div><strong>29<small>/30</small></strong><span>{zh ? "主动策略全链直行" : "active full-chain direct"}</span></div>
+              <div><strong>0<small>/30</small></strong><span>{zh ? "被动策略全链直行" : "passive full-chain direct"}</span></div>
               <div><strong>60<small>/60</small></strong><span>{zh ? "任务成功 · 0 unsafe · 0 fallback" : "mission success · 0 unsafe · 0 fallback"}</span></div>
             </div>
             <p className="challenge-proof-note">{zh
-              ? "* 事后描述性 oracle 可行性审计；oracle 从未提供给控制器，也不是预注册端点。预注册主端点仍为主动 29/30 对被动 0/30（p=3.73×10⁻⁹）。"
-              : "* Post-hoc descriptive oracle-feasibility audit; oracle was never available to the controller and this is not a preregistered endpoint. The preregistered primary remains active 29/30 versus passive 0/30 (p=3.73×10⁻⁹)."}</p>
+              ? "次级事后 oracle 审计：29/29 个存在 clear 走廊的世界直行，1/1 个双廊阻塞世界绕行，即 30/30 路线符合离线可行性。oracle 从未提供给控制器，也不是预注册端点。"
+              : "Secondary post-hoc oracle audit: 29/29 worlds with a clear corridor went direct and the 1/1 dual-blocked world detoured, so 30/30 routes matched offline feasibility. Oracle was never available to the controller; this is not a preregistered endpoint."}</p>
             <div className="challenge-proof-links">
               <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "90 秒评委卡 ↗" : "90-SECOND JUDGE CARD ↗"}</a>
               <a href={challengeEvidence.feasibilityAuditUrl} target="_blank" rel="noreferrer">{zh ? "可行性审计 ↗" : "FEASIBILITY AUDIT ↗"}</a>
@@ -60,7 +60,7 @@ function HomeContent() {
             <span>{zh ? "AMD 全流程墙钟遥测" : "AMD FULL-WALL TELEMETRY"}</span>
             <span>{zh ? "仅限仿真" : "SIMULATION ONLY"}</span>
             <span>{zh ? "冻结策略：一台共享 GENESIS 底盘" : "FROZEN POLICY: ONE SHARED GENESIS CHASSIS"}</span>
-            <span>{zh ? "独立补充：双刚体动力学 20/20" : "SEPARATE DYNAMICS: DUAL RIGID BODIES 20/20"}</span>
+            <span>{zh ? "独立补充：决策绑定动力学 30/30 · 90 实体/30 场景" : "SEPARATE DYNAMICS: 30/30 · 90 BODIES / 30 SCENES"}</span>
           </div>
         </div>
         <div className="hero-system" aria-label={zh ? "Look Twice 系统状态" : "Look Twice system status"}>
@@ -115,8 +115,8 @@ function HomeContent() {
         </div>
         <div className="platform-row">
           <div><span>AMD GPU</span><p>{zh ? "加速 Genesis RGB-D、空间视觉推理与实验矩阵。" : "Accelerates Genesis RGB-D, spatial vision inference and experiment matrices."}</p></div>
-          <div><span>PURIFY</span><p>{zh ? "检查校准、谱系、独立根与动作合同，并签发门控回执（GateReceipt）。" : "Checks calibration, lineage, independent roots and the action contract, then signs the GateReceipt."}</p></div>
-          <div><span>{zh ? "诚实边界" : "BOUNDARY"}</span><p>{zh ? "冻结完整策略仍是共享底盘运动学。另有 20-seed 非锁定补充验证两个独立非固定刚体的轮驱运动；它不是策略重跑、双真机或安全认证。" : "The frozen full policy remains shared-chassis kinematic. A separate 20-seed non-locked supplement validates wheel motion by two non-fixed rigid bodies; it is not a policy rerun, two physical robots or a safety certification."}</p></div>
+          <div><span>PURIFY</span><p>{zh ? "检查校准、谱系、独立根与动作合同，并生成规范化门控回执（GateReceipt）。" : "Checks calibration, lineage, independent roots and the action contract, then emits a canonical GateReceipt."}</p></div>
+          <div><span>{zh ? "诚实边界" : "BOUNDARY"}</span><p>{zh ? "冻结完整策略仍是共享底盘运动学。独立非锁定 V2 在 30 个串行三实体场景中回放归档决策并通过 30/30；它不是实时策略重跑、同场 90 实体、双真机或安全认证。" : "The frozen full policy remains shared-chassis kinematic. A separate non-locked V2 replay passed 30/30 archived decisions in 30 serial three-body scenes; it is not a live-policy rerun, one 90-body scene, two physical robots or a safety certification."}</p></div>
         </div>
       </section>
 

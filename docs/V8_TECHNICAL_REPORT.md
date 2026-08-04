@@ -62,8 +62,19 @@ motion backend. A separate submission-time dual-body supplement instantiated
 40 non-fixed carrier/scout entities and passed a fixed 20-seed wheel-dynamics
 bar with zero blocker or pair contacts and zero post-build script pose writes.
 It is additive, non-locked, and not a rerun or replacement of the frozen
-policy endpoint. Neither evidence class claims real-robot validation or safety
-certification.
+policy endpoint.
+
+A second additive decision-bound dynamics replay then consumed the immutable
+30 archived challenge outcomes--29 direct corridor decisions and the single
+dual-blocked safe detour at seed `102515`--without rerunning the live policy.
+It passed 30/30 fixed, serial Genesis/ROCm scenes: all 90/90 distinct non-fixed
+robot instantiations reached, mean loaded-carrier path fell from 6.2433 m
+passive to 4.9435 m active (20.8183%), blocker and active-pair contact rows
+were zero, maximum tilt was 10.5796 degrees, and maximum parked-partner drift
+was 0.022329 m. The 90 bodies are totals across 30 independent scenes, not one
+simultaneous 90-body execution. Both dynamics supplements remain non-locked,
+carry `formal_result_eligible=false`, and claim neither real-robot validation
+nor safety certification. The frozen primary remains 29/30 direct.
 
 ## 1. Target application
 
@@ -360,6 +371,24 @@ observed. Recovery increased only that external watchdog to 10,800 seconds.
 Source commit, runner and URDF bytes, seeds, protocol values, and thresholds
 were unchanged. Both attempt records are retained.
 
+### 6.5 Additive decision-bound rigid-dynamics execution
+
+The 20-seed supplement above establishes a component-level carrier/scout
+wheel-dynamics bar. A separate recovery V2 closes the narrower archived
+decision-to-actuation boundary for all 30 fixed challenge worlds. Each seed ran
+serially in a fresh `gs.amdgpu` subprocess containing one active scout, one
+active loaded carrier, and one passive loaded carrier. Active and passive
+replicas remained paired within the same scene; unrelated cross-seed bodies
+did not share a scene. Across the complete denominator, this instantiated 90
+distinct non-fixed robot bodies and sealed 30 per-seed checkpoints.
+
+The Radeon environment was Genesis 1.1.2, PyTorch 2.9.1+gitff65f5b, and HIP
+7.2.53211-e1a6bc5663. All 30 workers completed on attempt 1 with exit code
+zero. The retained approximately 18-minute wall is an execution-audit fact,
+not throughput, latency, utilization, or energy evidence. The replay used the
+archived route decision for each world; it did not rerun the frozen RGB-D
+perception-policy loop.
+
 ## 7. Evaluation protocol
 
 ### 7.1 Freeze and open discipline
@@ -457,8 +486,8 @@ evidence for the fixed seed suite, not a population or real-world guarantee.
 | Receipt-level Python/Go agreement | 250 / 268 (93.3%) |
 
 Formal primary stays active **29/30** versus passive **0/30** (exact McNemar
-**p=3.73e-9**). A descriptive post-hoc offline oracle audit—not available to
-the controller or preregistered—found **29/29** clear-corridor worlds direct via
+**p=3.73e-9**). A descriptive post-hoc offline oracle audit - not available to
+the controller or preregistered - found **29/29** clear-corridor worlds direct via
 a clear corridor; dual-blocked seed `102515` safely detoured. Thus **30/30 route
 outcomes matched offline feasibility** without relabeling; all 30 active
 records had zero unsafe crossings, collisions, and fallbacks.
@@ -530,7 +559,38 @@ rigid bodies. It does not establish a full-policy conversion to simultaneous
 two-robot control, physical-robot transfer, dynamic-obstacle response, energy
 savings, or a new formal V8 endpoint.
 
-### 8.6 Evidence identity
+### 8.6 Additive 30-seed decision-bound rigid dynamics
+
+| Fixed check | Result |
+| --- | ---: |
+| Fixed scenes / sealed checkpoints | 30 / 30 passed; 30 / 30 sealed |
+| Archived decision mix | 29 direct + 1 safe detour (`102515`) |
+| Distinct non-fixed robot instantiations | 90 across 30 serial scenes |
+| Scout / active carrier / passive carrier reached | 30 / 30 / 30 |
+| Mean active / passive loaded-carrier path | 4.943529 / 6.243270 m |
+| Paired mean loaded-carrier path reduction | **20.8183%** (floor 15%) |
+| Direct pairs saving at least 0.50 m | 29 / 29 |
+| Minimum direct-pair carrier saving | 1.333621 m |
+| Blocker / active carrier-scout contact rows | 0 / 0 |
+| Maximum body tilt | 10.579607 degrees (limit 20) |
+| Maximum parked-partner drift | 0.022329 m (limit 0.08) |
+| Maximum goal error | 0.139930 m (limit 0.14) |
+| Script entity pose writes after build | 0 |
+
+The controller stops on first entry into the fixed 0.14 m goal region, so the
+goal-error result is not presented as a large-margin endpoint. Every other
+predeclared per-trial and aggregate check also passed. This result binds the
+29 direct choices and the one safe-detour choice to wheel-actuated execution;
+it does not replace or upgrade the frozen 29/30 direct endpoint.
+
+The report SHA256 is
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+It is archived-decision simulation evidence across independent serial scenes,
+not a live-policy rerun, simultaneous cooperative execution, or one
+simultaneous 90-body scene. It is additive, non-locked, and explicitly records
+`formal_result_eligible=false`.
+
+### 8.7 Evidence identity
 
 The authoritative locked report file SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
@@ -553,6 +613,33 @@ Its internal `SHA256SUMS` covers every other regular file (194/194). The
 independent validation report has SHA256
 `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`
 and reproduces the compact challenge report exactly from raw episode records.
+
+The decision-bound V2 evidence directory is
+`release/v8-derived/decision_dynamics_recovery_v2_102500_102529`.
+Its complete report SHA256 is
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`;
+the source-binding SHA256 is
+`c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d`.
+The 79-entry post-run package checksum index has identity
+`PACKAGE_SHA=24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540`.
+
+Two proof-scope limits are preserved rather than hidden. The inner V2-run
+`SHA256SUMS` covered the source binding, 30 checkpoints, and report (32 files),
+but not `ATTEMPTS.jsonl`, `PROGRESS.json`, or worker logs. The retained attempt
+ledger and logs show exactly 30 attempt-1 completions with exit code zero, but
+the inner checksum and V2 attempt verifier alone are not a cryptographic
+proof that no additional unsealed attempt ever existed. The later package
+index fixes the identities of the retained 79-file package without
+retroactively expanding that original proof.
+
+Also, the V2-run source binding omitted the directly imported
+`src/v4_motion.py`. Its post-run working-tree and commit-`b0c4f0d` bytes both
+hash to
+`fd94a2d7b89cc3118e3ccf4ae2545f95c84e6596b48c7e79bf52f352935d0772`,
+and a clean 2,419-file post-run audit found no source difference or writable
+non-Git file. That is strong corroborating evidence, not signed continuous
+source attestation. `PROVENANCE_REVIEW.json` records both limits and the safe
+claim language.
 
 ## 9. Innovation and technical contributions
 
@@ -580,6 +667,10 @@ and reproduces the compact challenge report exactly from raw episode records.
    instantiates carrier and scout as non-fixed rigid bodies, binds wheel-only
    post-build actuation and fail-closed stability/contact checks, and retains a
    transparent infrastructure-timeout recovery chain.
+10. **Checkpointed decision-to-actuation bridge.** A second predeclared layout
+    binds every archived 30-world decision to a fresh paired rigid-body scene,
+    atomically seals the complete fixed-order denominator, and keeps recovery
+    observability separate from the frozen policy endpoint.
 
 ## 10. Real-world value
 
@@ -611,6 +702,9 @@ incident review, and future assurance tooling.
   validator;
 - a separately verified 20-seed dual-body rigid-dynamics report with 40
   non-fixed entities, timeout/recovery audits, and sealed checksums;
+- a separately verified 30-seed decision-bound rigid-dynamics replay with 90
+  distinct non-fixed instantiations, 30 atomic checkpoints, package-wide
+  checksums, and a disclosed post-run provenance-scope review;
 - a one-page English Frozen Challenge Judge Card;
 - final 3:59 English workflow video with fixed-composition visuals and
   AI-generated OpenAI Cedar narration;
@@ -675,6 +769,21 @@ DYN=release/v8-derived/dual_body_dynamics_160820_160839
 python3 scripts/verify_v8_additive_dual_body_dynamics.py "$DYN/REPORT.json"
 ```
 
+The additive decision-bound dynamics package can also be checked without a
+GPU. Verify the package index itself before trusting its 79 entries:
+
+```bash
+V2=release/v8-derived/decision_dynamics_recovery_v2_102500_102529
+PACKAGE_SHA=24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540
+printf '%s  %s\n' "$PACKAGE_SHA" "$V2/PACKAGE_SHA256SUMS" | shasum -a 256 -c -
+(cd "$V2" && shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
+  "$V2/REPORT.json"
+```
+
+Expected verifier output ends with `30/30` and report SHA256
+`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
+
 The standalone contract core is tested with:
 
 ```bash
@@ -701,6 +810,19 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
   20-seed supplement demonstrates bounded sequential wheel motion by two
   non-fixed rigid bodies, but not a full-policy conversion, simultaneous
   cooperative control, or two physical devices.
+- The 30-seed decision-bound dynamics replay consumes archived route outcomes;
+  it does not rerun live perception or policy inference. Its 90 bodies are
+  distinct instantiations across 30 independent serial scenes, not one
+  simultaneous 90-body scene. It is additive, non-locked,
+  `formal_result_eligible=false`, and is not dynamic-obstacle, real-robot,
+  sim-to-real, energy, throughput, or safety-certification evidence.
+- The V2 retained ledger shows 30 first-attempt worker completions and no
+  replacement. Its inner V2-run checksum/attempt-verifier scope did not cover
+  every attempt, progress, and log byte, so this observation is not promoted
+  into a cryptographic proof of the absence of any unsealed attempt.
+- The V2-run source binding omitted the direct `src/v4_motion.py` import.
+  Clean post-run tree and commit comparisons found byte identity and no source
+  difference, but they are corroboration rather than continuous attestation.
 - Receipt-level agreement in the challenge is 250/268 (93.3%). All 18
   disagreements were vetoed by Go and remained fail-closed.
 - The locked-input supplement contains inputs and labels, not the original

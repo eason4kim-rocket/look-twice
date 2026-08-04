@@ -1,6 +1,6 @@
 # Look Twice V8 Reproducibility Guide
 
-This guide separates four reproducibility levels:
+This guide separates five reproducibility levels:
 
 1. CPU evidence audit - verifies submitted bundles, source identities, and the
    frozen V8 boundary.
@@ -9,6 +9,9 @@ This guide separates four reproducibility levels:
 3. Local Evidence Console - rebuilds the exact judge-facing replay site.
 4. Radeon runtime replay - executes a new non-locked episode using the frozen
    model and calibration artifacts.
+5. Additive dynamics audit - verifies the earlier 20/20 component bar and the
+   separate 30/30 archived-decision wheel-dynamics package without rerunning
+   either sealed supplement.
 
 The locked result itself is permanent and is not rerun. A new execution must be
 reported as a reproduction or smoke, never as a second locked test.
@@ -450,7 +453,85 @@ The original Radeon command is in
 `docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_PROTOCOL.md`. Running it again creates a
 new non-locked reproduction and must not overwrite the sealed report.
 
-## 10. Verify artifact identities
+## 10. Verify the additive decision-bound dynamics replay
+
+This is separate from both the frozen primary and the earlier 20-seed
+component bar. It consumes the immutable archived challenge outcomes--29
+direct decisions and the safe detour at dual-blocked seed `102515`--without
+rerunning the perception-policy loop. Each seed used one fresh serial
+Genesis/ROCm scene containing an active scout, active loaded carrier, and
+passive loaded carrier. The 90 non-fixed bodies are totals across 30 scenes,
+not one simultaneous 90-body execution.
+
+First authenticate the 79-entry package checksum index, then verify every
+retained file and run the fail-closed report/checkpoint verifier:
+
+```bash
+V2=release/v8-derived/decision_dynamics_recovery_v2_102500_102529
+PACKAGE_SHA=24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540
+
+printf '%s  %s\n' "$PACKAGE_SHA" "$V2/PACKAGE_SHA256SUMS" | \
+  shasum -a 256 -c -
+(cd "$V2" && shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
+  "$V2/REPORT.json"
+```
+
+Expected final verifier line:
+
+```text
+PASS: additive decision-to-dynamics recovery V2 30/30 report_sha256=1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99
+```
+
+Expected result summary:
+
+```text
+decisions: 29 direct + 1 safe detour (seed 102515)
+sealed checkpoints / passed trials: 30/30 / 30/30
+scout / active carrier / passive carrier reached: 30/30 / 30/30 / 30/30
+mean active / passive loaded-carrier path: 4.943529 m / 6.243270 m
+paired mean path reduction: 20.8183%
+blocker / active-pair contact rows: 0 / 0
+maximum tilt / parked-partner drift: 10.579607 deg / 0.022329 m
+```
+
+The package index covers the report, source binding, all 30 checkpoints,
+attempt and progress ledgers, worker and execution logs, the recovery audit,
+and the post-run provenance review. `REPORT.json` remains
+`formal_result_eligible=false`. Running the protocol command again would create
+a new non-locked reproduction and must use a new output directory; it must not
+overwrite or append to this sealed package.
+
+### 10.1 Proof-scope disclosure
+
+The package preserves two limitations that a verifier should not silently
+upgrade into stronger claims:
+
+- The inner V2-run `SHA256SUMS` contains 32 entries--`SOURCE_BINDING.json`, 30
+  checkpoints, and `REPORT.json`--but did not originally include
+  `ATTEMPTS.jsonl`, `PROGRESS.json`, or worker logs. The retained ledger and
+  logs show exactly 30 attempt-1 completions, all exit code zero, with no
+  retry or replacement. The original inner checksum and V2 attempt
+  verifier alone are not a cryptographic proof that an additional unsealed
+  attempt never existed. `PACKAGE_SHA256SUMS` binds the currently retained
+  complete package; it does not retroactively change the original proof scope.
+- `SOURCE_BINDING.json` omitted the directly imported runtime dependency
+  `src/v4_motion.py`. A clean 2,419-file post-run tree audit found no source
+  difference or writable non-Git file, and both the worktree and commit
+  `b0c4f0d` copy hash to
+  `fd94a2d7b89cc3118e3ccf4ae2545f95c84e6596b48c7e79bf52f352935d0772`.
+  This is corroborating evidence, not a signed continuous-attestation claim.
+
+For the full interpretation and V1 watchdog history, inspect:
+
+```text
+docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md
+docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_PROTOCOL.md
+release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json
+release/v8-derived/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json
+```
+
+## 11. Verify artifact identities
 
 ```bash
 shasum -a 256 "$V8_CHECKPOINT"
@@ -470,7 +551,7 @@ Expected Purify binary SHA:
 31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00
 ```
 
-## 11. Reproducibility limits
+## 12. Reproducibility limits
 
 - The full train/validation/locked datasets are not committed to Git. The
   locked input archive is byte-identified and verifiable when supplied as a
@@ -490,6 +571,18 @@ Expected Purify binary SHA:
   devices. The separate 20-seed dynamics supplement uses two non-fixed rigid
   bodies with sequential wheel actuation; it is not a rerun of the full frozen
   policy or a physical-robot result.
+- The separate 30-seed decision-bound replay uses archived decisions in 30
+  independent serial three-body scenes. It does not run the live frozen
+  perception-policy loop, place 90 bodies in one simultaneous scene, or test
+  simultaneous cooperation or dynamic obstacles. It is additive, non-locked,
+  and `formal_result_eligible=false`.
+- The decision-bound replay supports a paired physical-path result only. It is
+  not real-robot, sim-to-real, energy, throughput, latency, or safety-
+  certification evidence.
+- The decision-bound package's inner attempt-verifier/checksum and source-
+  binding proof scopes have the two explicit limitations in Section 10.1;
+  post-run package and tree audits corroborate the retained evidence but do
+  not provide signed continuous attestation.
 - Challenge receipt-level Python/Go agreement is 250/268 (93.3%); all 18
   mismatches were Go vetoes with effective authorization kept fail-closed.
 - Full-wall telemetry includes idle and covers complete episode subprocesses;

@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-submission-package/v1",
-  "generated_on": "2026-08-04",
-  "status": "local_review_packet_ready_no_pr",
+  "generated_on": "2026-08-05",
+  "status": "v2_owner_review_pending_no_pr",
   "competition": {
     "name": "AMD AI DevMaster Hackathon 2026",
     "track": "Track 3 - Physical AI",
@@ -70,7 +70,7 @@
     "passive_full_chain_direct": "0/30",
     "passive_wilson_95_percent": "0-11.4",
     "paired_gain_percentage_points": 96.66666666666667,
-    "exact_mcnemar_two_sided_p": 3.725290298461914e-9,
+    "exact_mcnemar_two_sided_p": 3.725290298461914e-09,
     "mission_success": "60/60",
     "unsafe": "0/60",
     "fallback": "0/60",
@@ -134,6 +134,49 @@
     },
     "report_verified_remotely_and_locally": true,
     "interpretation_limit": "Bounded sequential wheel motion by two non-fixed rigid bodies; not a frozen-policy rerun, simultaneous cooperative control, physical-robot validation, sim-to-real evidence, safety certification, throughput, mission energy, or control-loop latency."
+  },
+  "additive_decision_bound_dynamics_recovery_v2": {
+    "evidence_class": "additive non-locked archived-decision rigid-dynamics supplement",
+    "formal_result_eligible": false,
+    "seed_range": [
+      102500,
+      102529
+    ],
+    "fixed_seeds": 30,
+    "passed": 30,
+    "failed": 0,
+    "active_direct_decisions": 29,
+    "active_safe_detours": 1,
+    "independent_serial_three_body_scenes": 30,
+    "distinct_non_fixed_robot_entities_across_run": 90,
+    "simultaneous_90_body_scene": false,
+    "active_scout_reached": 30,
+    "active_carrier_reached": 30,
+    "passive_carrier_reached": 30,
+    "mean_active_loaded_carrier_path_m": 4.9435286182785365,
+    "mean_passive_loaded_carrier_path_m": 6.243270157013467,
+    "paired_mean_loaded_carrier_path_reduction_percent": 20.818281221978634,
+    "direct_pairs_saving_at_least_0_50_m": "29/29",
+    "maximum_tilt_deg": 10.57960742366676,
+    "maximum_stationary_partner_drift_m": 0.022328848796049957,
+    "trial_blocker_contact_rows": 0,
+    "active_pair_contact_rows": 0,
+    "post_build_entity_pose_writes": 0,
+    "post_build_actuation_api": "control_dofs_velocity only",
+    "execution_layout": "one fixed seed per fresh Genesis subprocess, serially on one AMD GPU",
+    "v1_failure_mode": "12-hour outer watchdog exit 124 with no report and no per-seed result",
+    "v2_formal_wall_seconds": 1101,
+    "v2_formal_exit_code": 0,
+    "source_commit": "b0c4f0d33b0a2d0c647dda0b2b3b7c03279a511a",
+    "source_binding_sha256": "c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d",
+    "report_sha256": "1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99",
+    "remote_and_local_verifier_passed": true,
+    "observed_execution_ledger": "30 first-attempt worker completions; all worker exit codes 0; no completed-checkpoint rerun or seed replacement observed",
+    "proof_scope_limits": [
+      "The original formal checksum index did not cover ATTEMPTS.jsonl, PROGRESS.json, or worker/execution logs, so it is not cryptographic proof that no additional unsealed attempt ever existed.",
+      "The formal source binding omitted the directly imported src/v4_motion.py dependency, so it is not a complete import-closure attestation; a post-run clean-tree audit found matching worktree and commit bytes."
+    ],
+    "interpretation_limit": "Consumes archived route decisions without rerunning the frozen perception-policy loop; not simultaneous cooperative control, dynamic-obstacle evidence, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification."
   },
   "confirmatory_cost_ledger": {
     "seed": 105400,
@@ -228,6 +271,29 @@
       "publication_verified": false,
       "publication_state": "local review identity; not pushed or deployed"
     },
+    "additive_decision_bound_dynamics_recovery_v2": {
+      "report_path": "release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json",
+      "staged_report_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/decision_dynamics_recovery_v2_102500_102529/REPORT.json",
+      "report_sha256": "1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99",
+      "source_commit": "b0c4f0d33b0a2d0c647dda0b2b3b7c03279a511a",
+      "source_binding_path": "release/v8-derived/decision_dynamics_recovery_v2_102500_102529/SOURCE_BINDING.json",
+      "source_binding_sha256": "c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d",
+      "recovery_audit_path": "release/v8-derived/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json",
+      "recovery_audit_sha256": "344a948da49f89322f3486da2c025ee227dbf3454b33f7f8ab2f8acf6ea8eca4",
+      "provenance_review_path": "release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json",
+      "provenance_review_sha256": "4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7",
+      "formal_sha256sums_path": "release/v8-derived/decision_dynamics_recovery_v2_102500_102529/SHA256SUMS",
+      "formal_sha256sums_sha256": "dae4f7f694e3db14db9731e6292d2d7e28f98b6540eca485be9666947273d5be",
+      "formal_checksum_entries": 32,
+      "complete_sha256sums_path": "release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS",
+      "complete_sha256sums_sha256": "24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540",
+      "complete_checksum_entries": 79,
+      "regular_files": 80,
+      "remote_verifier_passed": true,
+      "local_byte_identical_verifier_passed": true,
+      "publication_verified": false,
+      "publication_state": "local owner-review identity; not pushed, deployed, released, or submitted"
+    },
     "locked_input_evidence_pack": {
       "archive_name": "v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
       "archive_sha256": "0933053f28aca5254f13eb2eb11ce16c2f488e1880e4e282b1e4dfd7d957cfba",
@@ -255,12 +321,12 @@
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "43b605b870994a809a175e88b8b424ec152ceb386e423bcbd542373d3338207e",
-      "size_bytes": 1081757,
-      "page_count": 13,
+      "sha256": "29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e",
+      "size_bytes": 1089114,
+      "page_count": 15,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
       "publication_verified": false,
-      "publication_state": "local additive identity; stable URL still serves earlier baseline pending owner approval"
+      "publication_state": "local V2-integrated identity; stable URL still serves the earlier public baseline pending owner approval"
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -299,10 +365,11 @@
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "checksummed_artifacts": 24,
-      "total_regular_files_including_sha256sums": 25,
-      "sha256s_sha256": "2c7ff96ab01eb0994ed31ad4457439325314bf289ceccfa1130980d2e89dd4dd",
-      "status": "local_additive_refresh_ready_no_push_no_pr"
+      "checksummed_artifacts": 104,
+      "total_regular_files_including_sha256sums": 105,
+      "sha256s_sha256": "e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9",
+      "status": "local_v2_refresh_ready_no_push_no_pr",
+      "manifest_inventory_entries": 103
     }
   },
   "links": {
@@ -322,14 +389,14 @@
     "frozen_foundation": "passed",
     "python_replay_tests": "6/6 passed",
     "go_tests": "passed",
-    "node_22_site_tests": "31/31 passed",
+    "node_22_site_tests": "35/35 passed",
     "node_22_lint": "passed",
     "node_dependency_audit": "0 known vulnerabilities",
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
-    "pdf_visual_qa": "13/13 pages inspected after final regeneration",
-    "browser_visual_qa": "refreshed additive home and Results pages passed hydrated desktop inspection; the separate dual-body card, scope boundary, report/audit links, and checksum identities rendered correctly; no site-origin console errors",
+    "pdf_visual_qa": "15/15 pages rendered and inspected after final regeneration",
+    "browser_visual_qa": "previous public baseline inspection retained; V2 local source, tests, lint, and production-build QA passed; owner browser review remains before deployment",
     "submission_surface_credential_scan": "passed",
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
@@ -337,21 +404,22 @@
     "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
     "feasibility_audit_tests": "10/10 passed; derived artifact matched the 30 archived active episodes and preserved the 29/30 formal primary",
     "additive_dynamics_tests": "7/7 unit and verifier tests passed; remote and local report verification passed; 20/20 formal seeds, failed 0",
-    "official_repository_staging_checksums": "24 checksummed artifacts passed locally (25 total files including SHA256SUMS); checksum-index SHA256 2c7ff96ab01eb0994ed31ad4457439325314bf289ceccfa1130980d2e89dd4dd; additive refresh not pushed",
+    "official_repository_staging_checksums": "104 checksummed artifacts passed locally (105 total files including SHA256SUMS); manifest inventory 103/103; checksum-index SHA256 e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9; V2 refresh not pushed",
     "github_actions_ci": "functional feasibility-audit commit 5d929f8f223a184b3670c4be51f8256e127ebd6c; run 30811281217 passed; Python, Purify Go, and showcase jobs all green",
     "github_pages_deployment": "commit dd741c24d7264e292c755d1547d4943dd2389333; Pages run 30811406679 completed successfully; four routes, feasibility JSON, PDF, and referenced client assets verified without credentials",
-    "public_distribution": "previous challenge/feasibility baseline remains public and anonymously verified; additive dynamics source, site, 13-page PDF, and 25-file package are local only pending owner approval",
-    "official_fork_branch": "public branch remains at the earlier 21-file baseline commit 32cff1a1e77952e689f4730ff21b8a8a8ad01a63; local 25-file additive refresh is verified but unpushed; official_pr_opened=false"
+    "public_distribution": "previous challenge/feasibility baseline remains public and anonymously verified; V2 source, site, 15-page PDF, and 105-file official package are local only pending owner approval",
+    "official_fork_branch": "public branch remains at the earlier baseline; the byte-identical local V2 package refresh is prepared on the local official-fork branch but unpushed; official_pr_opened=false",
+    "decision_dynamics_recovery_v2_tests": "16/16 runner and verifier tests passed; Ruff passed; formal remote and byte-identical local verifiers passed; 30/30 formal seeds, failed 0"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",
-    "Review the additive source/site/PDF/official-package diff and authorize or reject publication.",
+    "Review the locally verified V2 source/site/PDF/official-package diff and authorize or reject publication.",
     "Review the prepared Genesis issue and PR packet and authorize or reject upstream publication.",
     "Review the English competition PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
     "complete owner visual and audible review of the final 3:59 English demo",
-    "obtain owner approval to publish and anonymously verify the additive source/site/PDF/official-fork refresh",
+    "obtain owner approval to publish and anonymously verify the V2 source/site/PDF/official-fork refresh",
     "obtain separate owner approval before filing the Genesis upstream issue or PR",
     "obtain owner approval to open the official English submission PR"
   ]

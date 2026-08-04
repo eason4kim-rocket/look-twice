@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { SiteShell, useLanguage } from "../components/SiteShell";
 import { challengeEvidence } from "../lib/challengeEvidence";
 import {
+  decisionDynamicsEvidence,
+  type DecisionDynamicsReport,
+} from "../lib/decisionDynamicsEvidence";
+import {
   dynamicsEvidence,
   type DynamicsReport,
 } from "../lib/dynamicsEvidence";
@@ -197,6 +201,8 @@ function Results() {
   const [benchmark, setBenchmark] = useState<BenchmarkReport | null>(null);
   const [utility, setUtility] = useState<TaskUtilityReport | null>(null);
   const [challenge, setChallenge] = useState<ChallengeReport | null>(null);
+  const [decisionDynamics, setDecisionDynamics] =
+    useState<DecisionDynamicsReport | null>(null);
   const [dynamics, setDynamics] = useState<DynamicsReport | null>(null);
   useEffect(() => {
     fetch("/data/manifest.json").then((response) => response.json()).then((manifest) => {
@@ -236,6 +242,13 @@ function Results() {
       })
       .then(setDynamics)
       .catch(() => setDynamics(null));
+    fetch(decisionDynamicsEvidence.reportUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("decision dynamics report unavailable");
+        return response.json();
+      })
+      .then(setDecisionDynamics)
+      .catch(() => setDecisionDynamics(null));
   }, []);
   if (!profile || !challenge) return <div className="loading">{zh ? "正在加载已验证挑战证据…" : "LOADING VERIFIED CHALLENGE EVIDENCE…"}</div>;
   const batchOne = benchmark?.results.find((item) => item.batch_size === 1);
@@ -260,22 +273,22 @@ function Results() {
     <section className="result-section challenge-primary-evidence">
       <div className="result-title">
         <span>{zh ? "主计分证据 · 30 个成对世界" : "PRIMARY SCORING EVIDENCE · 30 PAIRED WORLDS"}</span>
-        <h2>{zh ? "能安全直行时全部直行；唯一双廊阻塞世界正确绕行。" : "Direct whenever physically feasible; detour when both corridors are blocked."}</h2>
+        <h2>{zh ? "主动修复恢复 29/30 全链直行；被动策略保持 0/30。" : "Active repair restored 29/30 full-chain direct; passive remained at 0/30."}</h2>
         <p>{zh ? `种子 ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} 在公开预注册之后仅评测一次。该挑战与原 12-pair locked test 分开，来自相同生成器家族，不是 OOD。` : `Seeds ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} were evaluated once after public preregistration. This challenge is separate from the original 12-pair locked test, comes from the same generator family, and is not OOD.`}</p>
       </div>
       <div className="benchmark-panel challenge-panel">
-        <div className="feasibility-proof">
-          <article><span>{zh ? "离线可行性一致路线结果*" : "OFFLINE FEASIBILITY-CONSISTENT ROUTES*"}</span><strong>30<small>/30</small></strong></article>
-          <article><span>{zh ? "存在 CLEAR 走廊时安全直行" : "DIRECT WITH AN ORACLE-CLEAR CORRIDOR"}</span><strong>29<small>/29</small></strong></article>
-          <article><span>{zh ? "双廊均阻塞时安全绕行" : "SAFE DETOUR WHEN BOTH WERE BLOCKED"}</span><strong>1<small>/1</small></strong></article>
-          <p>{zh ? "* 事后描述性 oracle 审计，不是预注册端点；oracle 从未提供给控制器。下方保留原预注册主端点 29/30 对 0/30。" : "* Post-hoc descriptive oracle audit, not a preregistered endpoint; oracle was never available to the controller. The original preregistered primary, 29/30 versus 0/30, remains below."}</p>
-        </div>
         <div className="benchmark-tags"><span>PUBLIC PREREGISTRATION</span><span>30 PAIRED WORLDS</span><span>60 / 60 VALID</span><span>VERIFIER PASS</span></div>
         <div className="benchmark-grid challenge-primary-grid">
           <article><span>{zh ? "主动全链直行" : "ACTIVE FULL-CHAIN DIRECT"}</span><strong>{primary.active.count}<small>/{primary.active.total}</small></strong><i>95% Wilson 83.3–99.4%</i></article>
           <article><span>{zh ? "被动全链直行" : "PASSIVE FULL-CHAIN DIRECT"}</span><strong>{primary.passive.count}<small>/{primary.passive.total}</small></strong><i>95% Wilson 0.0–11.4%</i></article>
           <article><span>{zh ? "成对差值" : "PAIRED DIFFERENCE"}</span><strong>+{primary.active_minus_passive.percentage_points.toFixed(1)}<small> pp</small></strong><i>29 active-only · 1 neither</i></article>
           <article><span>{zh ? "双侧精确 McNemar" : "EXACT TWO-SIDED McNEMAR"}</span><strong>3.725×10<sup>−9</sup></strong><i>p-value · no success threshold</i></article>
+        </div>
+        <div className="feasibility-proof">
+          <article><span>{zh ? "次级事后审计 · 离线可行性一致路线" : "SECONDARY POST-HOC AUDIT · FEASIBILITY-CONSISTENT ROUTES"}</span><strong>30<small>/30</small></strong></article>
+          <article><span>{zh ? "存在 CLEAR 走廊时安全直行" : "DIRECT WITH AN ORACLE-CLEAR CORRIDOR"}</span><strong>29<small>/29</small></strong></article>
+          <article><span>{zh ? "双廊均阻塞时安全绕行" : "SAFE DETOUR WHEN BOTH WERE BLOCKED"}</span><strong>1<small>/1</small></strong></article>
+          <p>{zh ? "* 事后描述性 oracle 审计，不是预注册端点；oracle 从未提供给控制器。上方预注册主端点保持 29/30 对 0/30。" : "* Post-hoc descriptive oracle audit, not a preregistered endpoint; oracle was never available to the controller. The preregistered primary above remains 29/30 versus 0/30."}</p>
         </div>
         <div className="challenge-audit-grid">
           <article>
@@ -314,6 +327,43 @@ function Results() {
         </div>
       </div>
     </section>
+    {decisionDynamics?.summary.all_passed && <section className="result-section dynamics-evidence">
+      <div className="result-title">
+        <span>{zh ? "独立补充 · 归档决策到轮驱动力学" : "SEPARATE ADDITIVE · ARCHIVED DECISIONS TO WHEEL DYNAMICS"}</span>
+        <h2>{zh ? "30/30 固定场景通过；90/90 非固定刚体到达；29/29 直行配对保留物理路径优势。" : "30/30 fixed scenes passed. 90/90 non-fixed bodies reached. All 29 direct pairs kept a physical path advantage."}</h2>
+        <p>{zh ? "V2 将已归档的 29 个直行决策与唯一安全绕行，分别绑定到 30 个独立 Genesis 三实体场景。它不是实时感知策略重跑，也不是同场 90 实体；上方预注册主端点仍为主动 29/30 对被动 0/30。" : "V2 binds the 29 archived direct decisions and the single safe detour to 30 independent three-body Genesis scenes. It is not a live perception-policy rerun or one simultaneous 90-body scene; the preregistered primary above remains active 29/30 versus passive 0/30."}</p>
+      </div>
+      <div className="benchmark-panel dynamics-panel">
+        <div className="benchmark-tags"><span>ADDITIVE NON-LOCKED</span><span>30 FIXED SEEDS</span><span>30 INDEPENDENT SCENES</span><span>REMOTE + LOCAL VERIFIER PASS</span></div>
+        <div className="benchmark-grid dynamics-grid">
+          <article><span>{zh ? "固定试验通过" : "FIXED TRIALS PASSED"}</span><strong>{decisionDynamics.summary.passed}<small>/{decisionDynamics.summary.trials}</small></strong></article>
+          <article><span>{zh ? "到达的非固定实体" : "NON-FIXED BODIES REACHED"}</span><strong>90<small>/90</small></strong></article>
+          <article><span>{zh ? "载荷车成对均值缩短" : "PAIRED MEAN CARRIER REDUCTION"}</span><strong>{decisionDynamics.summary.paired_mean_path_reduction_percent.toFixed(2)}<small>%</small></strong></article>
+          <article><span>{zh ? "BLOCKER / ACTIVE-PAIR 接触行" : "BLOCKER / ACTIVE-PAIR CONTACT ROWS"}</span><strong>{decisionDynamics.summary.total_blocker_contact_rows}<small> / {decisionDynamics.summary.total_active_pair_contact_rows}</small></strong></article>
+        </div>
+        <div className="dynamics-audit-grid">
+          <article><b>{zh ? "决策与到达完整性" : "DECISION + ARRIVAL COMPLETENESS"}</b><strong>{decisionDynamics.summary.active_direct_decisions}<small> direct</small> + {decisionDynamics.summary.active_safe_detours}<small> detour</small></strong><p>{zh ? "所有 30 个 Scout、30 个 active Carrier 与 30 个 passive Carrier 均以轮速驱动并到达。双廊阻塞 seed 102515 执行预声明安全外绕。" : "All 30 scouts, 30 active carriers and 30 passive carriers were wheel-actuated and reached. Dual-blocked seed 102515 executed the declared safe outer detour."}</p></article>
+          <article><b>{zh ? "成对载荷车负担" : "PAIRED LOADED-CARRIER BURDEN"}</b><strong>{decisionDynamics.summary.mean_active_loaded_carrier_path_m.toFixed(2)}<small> vs {decisionDynamics.summary.mean_passive_loaded_carrier_path_m.toFixed(2)} m</small></strong><p>{zh ? `${decisionDynamics.summary.direct_pairs_saving_at_least_0_50_m}/29 个直行配对全部至少节省 0.50 m。该结果不等同团队总路程、能耗、任务时间或吞吐改善。` : `${decisionDynamics.summary.direct_pairs_saving_at_least_0_50_m}/29 direct pairs each saved at least 0.50 m. This is not a claim about total team travel, energy, task time or throughput.`}</p></article>
+          <article><b>{zh ? "可恢复执行" : "RECOVERABLE EXECUTION"}</b><strong>30<small> sealed checkpoints</small></strong><p>{zh ? "V1 的 90 实体同场运行在 4 小时和 12 小时 watchdog 前均未写报告。V2 每完成一个固定 seed 即原子落盘；留存 ledger 显示 30 个 worker 均首次退出 0，无替换。" : "V1's one-scene 90-body layout wrote no report before its four- and 12-hour watchdogs. V2 atomically sealed every fixed seed; the retained ledger shows 30 first-attempt worker exits at zero, with no replacement."}</p></article>
+          <article className="boundary-warning"><b>{zh ? "证明范围已披露" : "PROOF SCOPE DISCLOSED"}</b><strong>{zh ? "观察证据 ≠ 完美证明" : "OBSERVED, NOT OVERCLAIMED"}</strong><p>{zh ? "原始 formal SHA 未覆盖 attempts/progress/logs，source binding 也漏列直接依赖 v4_motion.py。完整外层校验现已固定所有留存文件，且 2,419 文件的事后整树审计为 clean；这些是补强证据，不宣称连续密码学证明。" : "The original formal SHA omitted attempts/progress/logs, and source binding omitted the direct v4_motion.py dependency. A complete outer checksum now fixes every retained file and a 2,419-file post-run tree audit was clean; these corroborate the run without claiming continuous cryptographic attestation."}</p></article>
+        </div>
+        <div className="challenge-identities dynamics-identities">
+          <span><b>REPORT SHA256</b><code>{decisionDynamicsEvidence.reportSha256}</code></span>
+          <span><b>SOURCE BINDING SHA256</b><code>{decisionDynamicsEvidence.sourceBindingSha256}</code></span>
+          <span><b>PROVENANCE REVIEW SHA256</b><code>{decisionDynamicsEvidence.provenanceReviewSha256}</code></span>
+          <span><b>SOURCE COMMIT</b><code>{decisionDynamicsEvidence.sourceCommit}</code></span>
+        </div>
+        <div className="evidence-links">
+          <a href={decisionDynamicsEvidence.reportUrl} target="_blank">{zh ? "机器报告 ↗" : "MACHINE REPORT ↗"}</a>
+          <a href={decisionDynamicsEvidence.executionAuditUrl} target="_blank">{zh ? "执行审计 ↗" : "EXECUTION AUDIT ↗"}</a>
+          <a href={decisionDynamicsEvidence.provenanceReviewUrl} target="_blank">{zh ? "证明范围审计 ↗" : "PROVENANCE REVIEW ↗"}</a>
+          <a href={decisionDynamicsEvidence.packageChecksumsUrl} target="_blank">{zh ? "完整包校验 ↗" : "COMPLETE PACKAGE CHECKSUMS ↗"}</a>
+          <a href={decisionDynamicsEvidence.attemptsUrl} target="_blank">{zh ? "尝试账本 ↗" : "ATTEMPT LEDGER ↗"}</a>
+          <a href={decisionDynamicsEvidence.protocolUrl} target="_blank" rel="noreferrer">{zh ? "固定 V2 协议 ↗" : "FIXED V2 PROTOCOL ↗"}</a>
+          <a href={decisionDynamicsEvidence.resultNoteUrl} target="_blank" rel="noreferrer">{zh ? "结果说明 ↗" : "RESULT NOTE ↗"}</a>
+        </div>
+      </div>
+    </section>}
     {dynamics?.summary.all_passed && <section className="result-section dynamics-evidence">
       <div className="result-title">
         <span>{zh ? "独立补充 · 双实体刚体动力学" : "SEPARATE ADDITIVE · DUAL-BODY RIGID DYNAMICS"}</span>

@@ -1,6 +1,7 @@
 "use client";
 import { SiteShell, useLanguage } from "../components/SiteShell";
 import { challengeEvidence } from "../lib/challengeEvidence";
+import { decisionDynamicsEvidence } from "../lib/decisionDynamicsEvidence";
 import "./reproduce.css";
 
 export default function ReproducePage() {
@@ -45,6 +46,27 @@ python3 scripts/verify_v8_frozen_challenge.py \\
 shasum -a 256 v8-frozen-challenge-102500-102529.LOCAL-VERIFICATION.json`}</code></pre>
           <p><b>RAW</b><code>{challengeEvidence.rawArchiveSha256}</code></p>
           <p><b>VERIFICATION</b><code>{challengeEvidence.verificationSha256}</code></p>
+        </div>
+      </section>
+      <section className="challenge-repro">
+        <div>
+          <span>{zh ? "动力学 V2 · 无需 GPU 的完整复核" : "DYNAMICS V2 · COMPLETE GPU-FREE AUDIT"}</span>
+          <h2>{zh ? "30 个原子 checkpoint，30/30 报告，双层校验索引。" : "30 atomic checkpoints, one 30/30 report, and two checksum layers."}</h2>
+          <p>{zh ? "先检查 formal 核心文件，再检查包含尝试账本、进度、日志与事后证明范围审计的完整外层包；最后由冻结 verifier 重算每个 trial 和聚合门槛。" : "Check the formal core first, then the complete outer package containing the attempt ledger, progress, logs and post-run proof-scope review. The frozen verifier then recomputes every trial and aggregate threshold."}</p>
+          <div className="challenge-repro-links">
+            <a href={decisionDynamicsEvidence.reportUrl} target="_blank">{zh ? "30/30 报告 ↗" : "30/30 REPORT ↗"}</a>
+            <a href={decisionDynamicsEvidence.provenanceReviewUrl} target="_blank">{zh ? "证明范围审计 ↗" : "PROVENANCE REVIEW ↗"}</a>
+            <a href={decisionDynamicsEvidence.packageChecksumsUrl} target="_blank">{zh ? "完整包校验 ↗" : "PACKAGE CHECKSUMS ↗"}</a>
+          </div>
+        </div>
+        <div>
+          <pre><code>{`DYN=release/v8-derived/decision_dynamics_recovery_v2_102500_102529
+(cd "$DYN" && shasum -a 256 -c SHA256SUMS)
+(cd "$DYN" && shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \\
+  "$DYN/REPORT.json"`}</code></pre>
+          <p><b>REPORT</b><code>{decisionDynamicsEvidence.reportSha256}</code></p>
+          <p><b>PACKAGE INDEX</b><code>{decisionDynamicsEvidence.packageChecksumsSha256}</code></p>
         </div>
       </section>
       <section className="repro-grid">
