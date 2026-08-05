@@ -422,11 +422,10 @@ copies. Verify the complete official package from this directory with:
 sha256sum -c SHA256SUMS
 jq -e '.passed == true and (.errors | length) == 0' \
   evidence/challenge_102500_102529/VERIFICATION.json
-shasum -a 256 -c evidence/dual_body_dynamics_160820_160839/SHA256SUMS
-shasum -a 256 -c \
-  evidence/decision_dynamics_recovery_v2_102500_102529/SHA256SUMS
-shasum -a 256 -c \
-  evidence/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS
+(cd evidence/dual_body_dynamics_160820_160839 && \
+  shasum -a 256 -c SHA256SUMS)
+(cd evidence/decision_dynamics_recovery_v2_102500_102529 && \
+  shasum -a 256 -c SHA256SUMS && shasum -a 256 -c PACKAGE_SHA256SUMS)
 (cd evidence/decision_dynamics_single_scene_60_102500_102519 && \
   shasum -a 256 -c SHA256SUMS && shasum -a 256 -c PACKAGE_SHA256SUMS)
 (cd evidence/decision_dynamics_single_scene_30_suffix_102520_102529 && \
