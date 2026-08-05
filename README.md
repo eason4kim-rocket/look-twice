@@ -473,6 +473,14 @@ and verify SHA256
 | Real-world application value - 20 | In 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. V2 retained a 20.8183% paired loaded-carrier path reduction across 30 independent scenes; the two solver-scale shards retained a weighted 20.8439% reduction across the same fixed decisions. None is presented as energy or throughput evidence. |
 | Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. The PR is open and unmerged; no review, acceptance, or inclusion in an upstream release is claimed. |
 
+Publication state on 2026-08-05: the source branch, refreshed site, and final
+[18-page PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
+are public; the PDF SHA256 is
+`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
+The reviewed [personal competition-fork package](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice)
+is public at `bcc7a07`. No PR has been opened against the official AMD
+competition repository; that final action remains behind owner approval.
+
 ## Submission deliverables
 
 - [English V8 technical report](docs/V8_TECHNICAL_REPORT.md)
