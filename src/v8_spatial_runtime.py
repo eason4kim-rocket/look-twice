@@ -12,7 +12,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-import numpy as np
 import torch
 
 from v8_spatial_model import (
@@ -209,31 +208,34 @@ def load_spatial_runtime(
     return bundle
 
 
-@torch.no_grad()
-def predict_spatial(
-    bundle: Mapping[str, Any],
+def _prepare_geometry(
     *,
-    rgb: Any,
-    depth: Any,
-    corridor_mask: Any,
-    geom: torch.Tensor | None = None,
-    pose: Mapping[str, Any] | None = None,
-    corridor_id: str = "corridor_a",
-) -> dict[str, Any]:
-    device = str(bundle["device"])
-    model: SpatialRGBDModel = bundle["model"]  # type: ignore[assignment]
-    conf: SpatialConformal = bundle["conformal"]  # type: ignore[assignment]
-    x5 = rgb_depth_mask_to_tensor(rgb, depth, corridor_mask).unsqueeze(0).to(device)
+    device: str,
+    geom: torch.Tensor | None,
+    pose: Mapping[str, Any] | None,
+    corridor_id: str,
+) -> torch.Tensor:
     if geom is None:
         pose = pose or {}
         geom = geometry_vector(
-            camera_xyz=(float(pose.get("x", 0.0)), float(pose.get("y", 0.0)), 0.5),
+            camera_xyz=(
+                float(pose.get("x", 0.0)),
+                float(pose.get("y", 0.0)),
+                0.5,
+            ),
             yaw=float(pose.get("yaw", 0.0)),
             range_to_entry=1.0,
             corridor_id=corridor_id,
         )
-    g = geom.unsqueeze(0).to(device) if geom.ndim == 1 else geom.to(device)
-    out = model(x5, g)
+    return geom.unsqueeze(0).to(device) if geom.ndim == 1 else geom.to(device)
+
+
+def _prediction_from_output(
+    bundle: Mapping[str, Any],
+    out: Mapping[str, Any],
+) -> dict[str, Any]:
+    device = str(bundle["device"])
+    conf: SpatialConformal = bundle["conformal"]  # type: ignore[assignment]
     p_blocked = float(out["p_blocked"].reshape(-1)[0].item())
     pred_set = conf.predict_set(p_blocked)
     value = conf.value_from_set(pred_set)
@@ -257,6 +259,90 @@ def predict_spatial(
     }
 
 
+@torch.no_grad()
+def predict_spatial(
+    bundle: Mapping[str, Any],
+    *,
+    rgb: Any,
+    depth: Any,
+    corridor_mask: Any,
+    geom: torch.Tensor | None = None,
+    pose: Mapping[str, Any] | None = None,
+    corridor_id: str = "corridor_a",
+) -> dict[str, Any]:
+    device = str(bundle["device"])
+    model: SpatialRGBDModel = bundle["model"]  # type: ignore[assignment]
+    x5 = rgb_depth_mask_to_tensor(rgb, depth, corridor_mask).unsqueeze(0).to(device)
+    g = _prepare_geometry(
+        device=device,
+        geom=geom,
+        pose=pose,
+        corridor_id=corridor_id,
+    )
+    out = model(x5, g)
+    return _prediction_from_output(bundle, out)
+
+
+@torch.no_grad()
+def predict_spatial_ab_shared(
+    bundle: Mapping[str, Any],
+    *,
+    rgb: Any,
+    depth: Any,
+    corridor_mask_a: Any,
+    corridor_mask_b: Any,
+    geom_a: torch.Tensor | None = None,
+    geom_b: torch.Tensor | None = None,
+    pose_a: Mapping[str, Any] | None = None,
+    pose_b: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Predict corridor A/B from one RGB-D capture and one shared backbone pass.
+
+    This additive helper is deliberately restricted to the frozen seg-v3
+    architecture.  Older spatial checkpoints do not expose the audited
+    ``forward_ab_shared`` path and therefore fail closed instead of silently
+    falling back to two independent forwards.
+    """
+    if not bool(bundle.get("is_seg_v3")):
+        raise RuntimeError(
+            "shared A/B RGB-D prediction requires a seg-v3 runtime bundle"
+        )
+
+    model = bundle["model"]
+    forward_ab_shared = getattr(model, "forward_ab_shared", None)
+    if not callable(forward_ab_shared):
+        raise RuntimeError(
+            "seg-v3 runtime model does not expose forward_ab_shared (fail-closed)"
+        )
+
+    device = str(bundle["device"])
+    x_a = rgb_depth_mask_to_tensor(rgb, depth, corridor_mask_a).unsqueeze(0).to(device)
+    x_b = rgb_depth_mask_to_tensor(rgb, depth, corridor_mask_b).unsqueeze(0).to(device)
+    g_a = _prepare_geometry(
+        device=device,
+        geom=geom_a,
+        pose=pose_a,
+        corridor_id="corridor_a",
+    )
+    g_b = _prepare_geometry(
+        device=device,
+        geom=geom_b,
+        pose=pose_b,
+        corridor_id="corridor_b",
+    )
+    out_a, out_b = forward_ab_shared(
+        x_a,
+        g_a,
+        x_b,
+        g_b,
+        assume_shared_rgbd=True,
+    )
+    return (
+        _prediction_from_output(bundle, out_a),
+        _prediction_from_output(bundle, out_b),
+    )
+
+
 __all__ = (
     "SpatialConformal",
     "file_sha256",
@@ -264,6 +350,7 @@ __all__ = (
     "load_spatial_checkpoint",
     "load_spatial_runtime",
     "predict_spatial",
+    "predict_spatial_ab_shared",
     "MODEL_ID",
     "PREPROCESSING_VERSION",
 )

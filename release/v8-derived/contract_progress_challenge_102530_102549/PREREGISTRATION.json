@@ -1,0 +1,280 @@
+{
+  "schema_version": "look-twice.v8-contract-progress-challenge-preregistration/v1",
+  "status": "DRAFT_HASH_BINDING_REQUIRED_BEFORE_EXECUTION",
+  "created_utc": "TO_BE_SET_AT_PUBLIC_BINDING",
+  "protocol_path": "docs/V8_CONTRACT_PROGRESS_CHALLENGE_PROTOCOL.md",
+  "public_binding": {
+    "method": "two_commit_public_preregistration",
+    "remote_name": "origin",
+    "commit_a": "TO_BE_BOUND_TO_PUBLIC_COMMIT_A",
+    "commit_b": "SELF_NOT_EMBEDDED_CURRENT_CLEAN_HEAD_RECORDED_AT_PRESTART",
+    "commit_b_diff_from_a_may_only_change": "release/v8-derived/contract_progress_challenge_102530_102549/PREREGISTRATION.json",
+    "fresh_seed_opened_before_commit_b": false
+  },
+  "design": {
+    "seed_start": 102530,
+    "seed_end": 102549,
+    "seeds": [
+      102530,
+      102531,
+      102532,
+      102533,
+      102534,
+      102535,
+      102536,
+      102537,
+      102538,
+      102539,
+      102540,
+      102541,
+      102542,
+      102543,
+      102544,
+      102545,
+      102546,
+      102547,
+      102548,
+      102549
+    ],
+    "n_worlds": 20,
+    "n_episodes": 40,
+    "profile": "independent-noise",
+    "baseline_policy": "purify-active-vision",
+    "candidate_policy": "purify-active-contract-progress",
+    "candidate_policy_artifact_id": "v8-contract-progress-nbv/1",
+    "seed_order": "strictly_ascending",
+    "paired_by_seed": true,
+    "within_seed_order_rule": {
+      "even_seed": [
+        "purify-active-vision",
+        "purify-active-contract-progress"
+      ],
+      "odd_seed": [
+        "purify-active-contract-progress",
+        "purify-active-vision"
+      ]
+    },
+    "attempts_per_seed_policy": 1,
+    "retry_count_allowed": 0,
+    "seed_substitution_allowed": false,
+    "early_stopping_allowed": false,
+    "resume_allowed": false,
+    "continue_after_bad_outcome": true,
+    "persist_every_attempt_locally": true,
+    "retuning_allowed": false,
+    "checkpoint_changes_allowed": false,
+    "calibration_changes_allowed": false,
+    "gate_changes_allowed": false,
+    "threshold_changes_allowed": false,
+    "episode_timeout_seconds": 300
+  },
+  "candidate_algorithm_contract": {
+    "intervention_type": "compound_v8_system_intervention",
+    "intervention_pipeline": [
+      "one_initial_physical_rgbd_capture",
+      "one_shared_frozen_seg_v3_backbone_forward",
+      "two_corridor_scoped_roi_proposals",
+      "geometry_vision_physical_capture_root_unification",
+      "contract_debt_then_online_go_p_blocked_then_travel_nbv"
+    ],
+    "frozen_components": [
+      "seg_v3_checkpoint",
+      "vision_conformal_thresholds",
+      "go_conformal_thresholds",
+      "purify_gate_rules",
+      "world_generator",
+      "kinematic_motion_backend"
+    ],
+    "attribution": "overall_v8_plus_compound_intervention_not_planner_only_or_shared_capture_only",
+    "contract_debt_source": "latest_applicable_online_purify_go_receipt_distinct_measurement_roots_clause",
+    "corridor_order": [
+      "lower_repair_step_debt",
+      "lower_online_go_p_blocked",
+      "lower_public_geometry_scout_travel_distance",
+      "stable_deterministic_ties"
+    ],
+    "allowed_inputs": [
+      "current_corridor_scoped_purify_go_receipts",
+      "effective_python_go_decisions",
+      "public_map_geometry",
+      "current_robot_poses",
+      "public_candidate_actions",
+      "visit_history",
+      "online_claim_derived_confirmed_blocked_set",
+      "observations_taken",
+      "max_observations",
+      "side_observations_per_corridor",
+      "max_side_observation_budget_per_corridor"
+    ],
+    "forbidden_inputs": [
+      "scenario_seed",
+      "oracle_state",
+      "future_image",
+      "clean_segmentation",
+      "noise_realization",
+      "retry_outcome"
+    ],
+    "go_p_blocked_semantics": "online_receipt_value_not_oracle_occupancy_or_new_calibration",
+    "go_measurement_root_debt_definition": "max(required_roots_minus_actual_roots,0)",
+    "repair_step_debt_rule": "measurement_root_debt_if_positive_else_one_for_otherwise_repairable_denied_gate",
+    "chosen_ranking_debt_fields_required": true,
+    "malformed_missing_inapplicable_or_hard_deny_receipt": "fail_closed",
+    "fail_closed_delegation": "audited_frozen_v8_public_probe_or_safe_detour_only_never_direct_admission",
+    "chosen_ranking_go_p_blocked_required": true,
+    "chosen_ranking_go_receipt_sha256_required": true,
+    "evidence_request_receipt_rehash_and_decision_binding": true,
+    "go_receipt_time_binding": "evaluated_step_equals_strictly_increasing_evidence_request_current_step",
+    "authorized_execution_closure_required": true,
+    "terminal_budget_denied_side_view": "proposal_only_noop_after_exactly_three_authorized_side_views",
+    "safe_fallback_semantics": "final_route_control_noop_with_raw_safe_detour_proof"
+  },
+  "population_boundary": {
+    "generator_family": "same_generator_as_v8_spatial_dataset_v1",
+    "challenge_subset": [
+      102530,
+      102549
+    ],
+    "same_generator": true,
+    "non_locked": true,
+    "not_ood": true,
+    "not_physical_robot": true,
+    "formal_result_eligible": false
+  },
+  "runtime_contract": {
+    "runtime": "genesis-amd",
+    "motion_backend": "kinematic",
+    "device": "cuda:0",
+    "vision_backend": "torch_spatial_rgbd",
+    "repair_required": true,
+    "purify_go_gate": true,
+    "heuristic_fallback_allowed": false,
+    "audited_fail_closed_frozen_v8_probe_delegation_allowed": true,
+    "baseline_and_candidate_source_roots_must_differ": true,
+    "baseline_exact_python_file_set_required": true,
+    "baseline_exact_src_file_set_required": true,
+    "candidate_exact_git_tracked_src_closure_required": true,
+    "python_user_site_allowed": false,
+    "python_bytecode_writes_allowed": false,
+    "anonymous_public_remote_head_required": true,
+    "postrun_local_and_live_remote_revalidation_required": true,
+    "formal_output_outside_both_source_roots": true,
+    "frozen_go_binary_receipt_authentication_required": true,
+    "python_launcher_and_resolved_target_identity_required": true,
+    "attempt_fixed_argv_exact_reconstruction_required": true,
+    "clean_gpu_kfd_and_idle_preflight_required": true,
+    "attempt_artifacts_fsynced_before_attempt_record": true,
+    "go_authentication_adverse_result_report_required": true,
+    "malformed_episode_adverse_result_report_required": true,
+    "runner_attempt_integrity_is_provisional_until_frozen_go_auth": true,
+    "git_replace_objects_disabled": true,
+    "git_status_fsmonitor_and_untracked_cache_disabled": true,
+    "output_creation_only": true,
+    "raw_failures_retained": true,
+    "process_group_timeout_kill": true
+  },
+  "identities": {
+    "checkpoint_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+    "vision_conformal_file_sha256": "8ccce120c2321582d4c9ad6ead90bcd55c562f9808db105f79ae7a76b46aa213",
+    "vision_conformal_artifact_sha256": "ca4a7203eeeedbc0a155955237ffb884f7684a4431e894855f847ee69c5eed1f",
+    "go_conformal_file_sha256": "128d2c1a7c814b2f82f1bb660289026ae27f876434ae0c2add4a223242f59eac",
+    "go_conformal_artifact_sha256": "d72439827186d744de9a97306ebe1b1e15515b3cefaaa36727d53ac1ed402f97",
+    "purify_binary_sha256": "31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00",
+    "identity_manifest_file_sha256": "a7ecc586043f26f06daec73464b11146a6bba2832aa67c53c50ce67d2d315c7d",
+    "source_tree_fingerprint_sha256": "983d7d373a3eedc6f6204e91d2d63b95a7e563506add24d37ee5a30c95aa71a9",
+    "baseline_runtime_source_manifest_path": "release/v8-frozen/results/V8_CHALLENGE_RUNTIME_SOURCE_MANIFEST.json",
+    "baseline_runtime_source_manifest_file_sha256": "018f064f0361e59371e6694d7909da8639960f41f2ef158687c8e65e24d45c2f",
+    "baseline_runtime_source_tree_fingerprint_sha256": "abc1b6810aed6dc19a127069b9b5d5f044def24f35c9a13602f7f5096742b1be",
+    "candidate_tracked_src_tree_fingerprint_algorithm": "sha256 of lexicographically path-sorted lines formatted as '<file_sha256>  <relative_path>\\n' over the exact git-tracked src/** file set",
+    "candidate_tracked_src_file_count": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION",
+    "candidate_tracked_src_tree_fingerprint_sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION",
+    "runner_path": "scripts/run_v8_contract_progress_challenge.py",
+    "runner_sha256": "TO_BE_BOUND_AFTER_RUNNER_FINALIZATION",
+    "verifier_path": "scripts/verify_v8_contract_progress_challenge.py",
+    "verifier_sha256": "TO_BE_BOUND_AFTER_VERIFIER_FINALIZATION",
+    "candidate_source_files": [
+      {
+        "path": "src/v8_contract_progress_nbv.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      },
+      {
+        "path": "src/v8_spatial_runtime.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      },
+      {
+        "path": "src/v8_seg_v3_model.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      },
+      {
+        "path": "src/v7_vision_claims.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      },
+      {
+        "path": "src/v6_episode.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      },
+      {
+        "path": "src/v7_episode.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      },
+      {
+        "path": "src/look_twice_v7.py",
+        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+      }
+    ]
+  },
+  "mandatory_gates": {
+    "valid_attempts_required": 40,
+    "mission_success_required": 40,
+    "unsafe_allowed": 0,
+    "false_clear_allowed": 0,
+    "fallback_allowed": 0,
+    "collision_allowed": 0,
+    "exact_v8_identity_every_episode": true,
+    "purify_invoked_every_episode": true,
+    "candidate_policy_artifact_id_every_candidate_episode": true,
+    "repair_decision_selected_chosen_alignment_every_episode": true,
+    "candidate_selector_invoked_every_candidate_episode": true,
+    "candidate_selected_equals_chosen_action_every_decision": true,
+    "candidate_evidence_request_receipt_rehashed_every_decision": true,
+    "candidate_decision_steps_strictly_increasing": true,
+    "candidate_go_receipt_exactly_then_current_every_decision": true,
+    "candidate_authorized_execution_closure_every_episode": true,
+    "native_chosen_required_for_each_repairable_selector_decision": true,
+    "zero_native_allowed_only_for_strict_raw_no_repairable_delegation": true,
+    "delegated_policy_provenance_every_delegated_item": true,
+    "terminal_noop_only_under_exact_budget_and_route_proof": true,
+    "compound_intervention_raw_execution_every_candidate_episode": true,
+    "compound_initial_capture_raw_binding_every_candidate_episode": true,
+    "candidate_helper_absent_from_every_baseline_episode": true,
+    "every_chosen_side_view_has_same_corridor_go_p_blocked": true,
+    "every_chosen_side_view_has_same_corridor_go_receipt_binding": true,
+    "candidate_direct_count_not_below_baseline": true,
+    "paired_baseline_direct_to_candidate_nondirect_allowed": 0
+  },
+  "capability_gates": {
+    "scout_path_relative_reduction_min": 0.25,
+    "team_path_relative_reduction_min": 0.1,
+    "physical_capture_relative_reduction_min": 0.2,
+    "physical_capture_definition": "metrics.observation_count_equal_to_len_metrics.viewpoints_sequence",
+    "vision_proposals_are_not_physical_captures": true,
+    "denominator": "all_20_paired_worlds"
+  },
+  "reporting_contract": {
+    "raw_episode_files_expected": 40,
+    "per_seed_rows_required": 20,
+    "paired_deltas_required": true,
+    "mean_median_min_max_required": true,
+    "deterministic_paired_bootstrap_95_required": true,
+    "wilson_95_for_direct_rates_required": true,
+    "carrier_scout_team_path_required": true,
+    "physical_capture_and_vision_proposal_counts_separate": true,
+    "exact_path_set_required": true,
+    "sha256_index_required": true,
+    "postrun_immutable_binding_required": true,
+    "adverse_no_receipt_run_must_still_report": true,
+    "malformed_episode_must_still_report": true,
+    "runner_true_to_verifier_false_downgrade_must_still_report": true,
+    "no_result_may_be_deleted_replaced_or_rerun": true,
+    "sealed_pdf_or_submission_package_may_be_modified": false
+  }
+}

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import time
 from dataclasses import asdict, dataclass
 from typing import Any
@@ -121,6 +122,7 @@ POLICIES = (
     "naive",
     "purify-passive",
     "purify-active",
+    "purify-active-contract-progress",
     "purify-active-learned",
     "purify-active-dagger",
     "purify-random",
@@ -130,6 +132,7 @@ CLAIMS_MODE_GENESIS = "genesis_rgbd_multi_agent_v6"
 ACTIVE_REPAIR_POLICIES = frozenset(
     {
         "purify-active",
+        "purify-active-contract-progress",
         "purify-active-learned",
         "purify-active-dagger",
         "purify-random",
@@ -139,6 +142,7 @@ GATED_POLICIES = frozenset(
     {
         "purify-passive",
         "purify-active",
+        "purify-active-contract-progress",
         "purify-active-learned",
         "purify-active-dagger",
         "purify-random",
@@ -389,6 +393,8 @@ def run_v6_episode(
     vision_p_blocked: dict[str, float] = {}
     gate_receipts: list[dict[str, Any]] = []
     purify_go_receipts: list[dict[str, Any]] = []
+    # Candidate-only live state.  The baseline policies never read or emit it.
+    latest_purify_go_receipts: dict[str, dict[str, Any]] = {}
     evidence_requests: list[dict[str, Any]] = []
     repair_decisions: list[dict[str, Any]] = []
     motion_segments: list[dict[str, Any]] = []
@@ -431,11 +437,308 @@ def run_v6_episode(
     # re-probing a confirmed-blocked lane (not a gate-rule change).
     confirmed_blocked: set[str] = set()
     side_obs_per_corridor: dict[str, int] = {"corridor_a": 0, "corridor_b": 0}
+    contract_progress_delegation_count = 0
 
     policy = config.policy
     is_naive = policy == "naive"
     allows_repair = policy in ACTIVE_REPAIR_POLICIES
     requires_gate = policy in GATED_POLICIES
+
+    def _selector_corridor_audit(
+        selector_ranking: list[dict[str, Any]],
+    ) -> dict[str, dict[str, Any]]:
+        """Bind selector fail-closed state to the then-latest raw Go receipts."""
+        fallback = selector_ranking[0] if selector_ranking else {}
+        fail_closed_reasons = fallback.get("corridor_fail_closed_reasons") or {}
+        ranking_by_corridor: dict[str, dict[str, Any]] = {}
+        for item in selector_ranking:
+            action = item.get("action")
+            action = action if isinstance(action, dict) else {}
+            corridor_id = str(action.get("corridor_id") or "")
+            if (
+                corridor_id in ("corridor_a", "corridor_b")
+                and corridor_id not in ranking_by_corridor
+            ):
+                ranking_by_corridor[corridor_id] = item
+        result: dict[str, dict[str, Any]] = {}
+        for corridor_id in ("corridor_a", "corridor_b"):
+            receipt = latest_purify_go_receipts.get(corridor_id, {})
+            ranking_item = ranking_by_corridor.get(corridor_id, {})
+            result[corridor_id] = {
+                "go_receipt_sha256": receipt.get("receipt_sha256"),
+                "go_p_blocked": receipt.get("p_blocked"),
+                "roots_actual": ranking_item.get("go_distinct_roots_actual"),
+                "roots_required": ranking_item.get(
+                    "go_distinct_roots_required"
+                ),
+                "go_measurement_root_debt": ranking_item.get(
+                    "go_measurement_root_debt"
+                ),
+                "repair_step_debt": ranking_item.get("repair_step_debt"),
+                "fail_closed_reasons": list(
+                    fail_closed_reasons.get(corridor_id, [])
+                ),
+            }
+        return result
+
+    def _bind_delegated_go_p_blocked(
+        baseline_ranking: list[dict[str, Any]],
+        *,
+        selected_action: Any,
+        fail_closed_audit: dict[str, Any],
+    ) -> tuple[list[dict[str, Any]], bool]:
+        """Bind each delegated item to its own corridor's latest Go risk.
+
+        Returns ``(ranking, selected_side_view_fail_closed)``.  Missing or
+        malformed risk never borrows another corridor's value.  Non-corridor
+        safe fallback remains risk-not-applicable.
+        """
+        selected_name = str(getattr(selected_action, "name", "") or "")
+        selected_side_view_fail_closed = False
+        rewritten: list[dict[str, Any]] = []
+
+        def _nonnegative_int(value: Any) -> int | None:
+            if isinstance(value, bool):
+                return None
+            try:
+                parsed = int(value)
+                if float(value) != float(parsed) or parsed < 0:
+                    return None
+            except (TypeError, ValueError, OverflowError):
+                return None
+            return parsed
+
+        for raw_item in baseline_ranking:
+            item = dict(raw_item)
+            action = item.get("action")
+            action = action if isinstance(action, dict) else {}
+            action_name = str(action.get("name") or "")
+            action_kind = str(action.get("kind") or "")
+            corridor_id = str(action.get("corridor_id") or "")
+            # The frozen ranking does not get to carry a stale/multiple chosen
+            # marker into the delegated audit.  Chosen is derived solely from
+            # the action that this repair decision actually selected.
+            is_selected = bool(selected_name and action_name == selected_name)
+
+            go_p_blocked = None
+            go_p_valid = False
+            go_receipt_valid = False
+            go_receipt_structure_valid = False
+            go_root_clause_valid = False
+            go_p_reason = "not_applicable_non_corridor_action"
+            go_receipt_sha256 = None
+            go_roots_actual = None
+            go_roots_required = None
+            go_measurement_root_debt = None
+            repair_step_debt = None
+            if corridor_id in ("corridor_a", "corridor_b"):
+                go_receipt = latest_purify_go_receipts.get(corridor_id)
+                if not isinstance(go_receipt, dict):
+                    go_p_reason = "missing_latest_go_receipt"
+                else:
+                    raw_receipt_sha256 = go_receipt.get("receipt_sha256")
+                    if (
+                        isinstance(raw_receipt_sha256, str)
+                        and len(raw_receipt_sha256) == 64
+                        and all(
+                            char in "0123456789abcdefABCDEF"
+                            for char in raw_receipt_sha256
+                        )
+                    ):
+                        go_receipt_sha256 = raw_receipt_sha256
+                        go_receipt_valid = True
+                    raw_p = go_receipt.get("p_blocked")
+                    if isinstance(raw_p, bool) or not isinstance(
+                        raw_p, (int, float)
+                    ):
+                        go_p_reason = "missing_or_malformed_go_p_blocked"
+                    else:
+                        parsed_p = float(raw_p)
+                        if math.isfinite(parsed_p) and 0.0 <= parsed_p <= 1.0:
+                            go_p_blocked = parsed_p
+                            go_p_valid = True
+                            go_p_reason = "latest_same_corridor_go_receipt"
+                        else:
+                            go_p_reason = "go_p_blocked_out_of_range"
+                    if go_p_valid and not go_receipt_valid:
+                        go_p_reason = "missing_or_malformed_go_receipt_sha256"
+                    clauses = go_receipt.get("clauses")
+                    required_clause_names = {
+                        "prediction_set",
+                        "evidence_age",
+                        "distinct_measurement_roots",
+                        "modality_skew",
+                        "unresolved_conflicts",
+                        "calibration_applicable",
+                        "scope_match",
+                    }
+                    hard_pass_clause_names = {
+                        "evidence_age",
+                        "modality_skew",
+                        "unresolved_conflicts",
+                        "calibration_applicable",
+                        "scope_match",
+                    }
+                    clause_items = (
+                        [
+                            clause
+                            for clause in clauses
+                            if isinstance(clause, dict)
+                        ]
+                        if isinstance(clauses, (list, tuple))
+                        else []
+                    )
+                    clause_counts = {
+                        name: sum(
+                            clause.get("clause") == name
+                            for clause in clause_items
+                        )
+                        for name in required_clause_names
+                    }
+                    clauses_by_name = {
+                        str(clause.get("clause")): clause
+                        for clause in clause_items
+                        if clause.get("clause") in required_clause_names
+                    }
+                    scope = go_receipt.get("scope")
+                    prediction_set = go_receipt.get("prediction_set")
+                    prediction_labels = (
+                        {str(label) for label in prediction_set}
+                        if isinstance(
+                            prediction_set,
+                            (list, tuple, set, frozenset),
+                        )
+                        else set()
+                    )
+                    prediction_clause = clauses_by_name.get("prediction_set")
+                    prediction_clause_actual = (
+                        prediction_clause.get("actual")
+                        if isinstance(prediction_clause, dict)
+                        else None
+                    )
+                    prediction_clause_labels = (
+                        {str(label) for label in prediction_clause_actual}
+                        if isinstance(
+                            prediction_clause_actual,
+                            (list, tuple, set, frozenset),
+                        )
+                        else set()
+                    )
+                    go_receipt_structure_valid = bool(
+                        go_receipt.get("schema_version")
+                        == "purify.robotics.gate-receipt/v1"
+                        and go_receipt.get("_purify_invoked") is True
+                        and go_receipt.get("calibration_applicable") is True
+                        and str(go_receipt.get("decision") or "").lower()
+                        != "error"
+                        and not go_receipt.get("error")
+                        and isinstance(scope, dict)
+                        and scope.get("robot_id") == "carrier"
+                        and scope.get("payload_id") == "payload_loaded"
+                        and scope.get("region_id") == corridor_id
+                        and all(
+                            clause_counts[name] == 1
+                            for name in required_clause_names
+                        )
+                        and all(
+                            isinstance(
+                                clauses_by_name[name].get("passed"), bool
+                            )
+                            for name in required_clause_names
+                        )
+                        and all(
+                            clauses_by_name[name].get("passed") is True
+                            for name in hard_pass_clause_names
+                        )
+                        and bool(prediction_labels)
+                        and prediction_labels <= {"clear", "blocked"}
+                        and prediction_clause_labels == prediction_labels
+                    )
+                    root_clauses = [
+                        clause
+                        for clause in clause_items
+                        if clause.get("clause")
+                        == "distinct_measurement_roots"
+                    ]
+                    if len(root_clauses) == 1:
+                        go_roots_actual = _nonnegative_int(
+                            root_clauses[0].get("actual")
+                        )
+                        go_roots_required = _nonnegative_int(
+                            root_clauses[0].get("required")
+                        )
+                        if (
+                            go_roots_actual is not None
+                            and go_roots_required is not None
+                            and go_roots_required > 0
+                        ):
+                            go_root_clause_valid = True
+                            go_measurement_root_debt = max(
+                                go_roots_required - go_roots_actual, 0
+                            )
+                            repair_step_debt = max(
+                                go_measurement_root_debt, 1
+                            )
+                    if (
+                        go_p_valid
+                        and go_receipt_valid
+                        and not go_receipt_structure_valid
+                    ):
+                        go_p_reason = "untrustworthy_go_receipt_structure"
+                    elif (
+                        go_p_valid
+                        and go_receipt_valid
+                        and not go_root_clause_valid
+                    ):
+                        go_p_reason = "missing_or_malformed_go_root_clause"
+
+            if (
+                is_selected
+                and action_kind == "side_view"
+                and corridor_id in ("corridor_a", "corridor_b")
+                and not (
+                    go_p_valid
+                    and go_receipt_valid
+                    and go_receipt_structure_valid
+                    and go_root_clause_valid
+                )
+            ):
+                selected_side_view_fail_closed = True
+
+            item.update(
+                {
+                    "chosen": is_selected,
+                    "policy_artifact_id": "heuristic-v6/1",
+                    "delegating_policy_artifact_id": (
+                        "v8-contract-progress-nbv/1"
+                    ),
+                    "delegated_baseline_fail_closed": True,
+                    "go_p_blocked": go_p_blocked,
+                    "go_p_blocked_valid": go_p_valid,
+                    "go_p_blocked_source_corridor": corridor_id or None,
+                    "go_receipt_sha256": go_receipt_sha256,
+                    "go_receipt_sha256_valid": go_receipt_valid,
+                    "go_receipt_structure_valid": (
+                        go_receipt_structure_valid
+                    ),
+                    "go_p_blocked_receipt_sha256": go_receipt_sha256,
+                    "go_distinct_roots_actual": go_roots_actual,
+                    "go_distinct_roots_required": go_roots_required,
+                    "go_measurement_root_debt": go_measurement_root_debt,
+                    "repair_step_debt": repair_step_debt,
+                    "estimated_contract_completion_debt": repair_step_debt,
+                    "go_p_blocked_binding_reason": go_p_reason,
+                    "contract_progress_fail_closed_reason": (
+                        fail_closed_audit.get("selection_reason")
+                    ),
+                    "contract_progress_corridor_fail_closed_reasons": (
+                        fail_closed_audit.get("corridor_fail_closed_reasons")
+                    ),
+                }
+            )
+            rewritten.append(item)
+        return rewritten, selected_side_view_fail_closed
+
     learned_model = None
     learned_device = config.device if str(config.device).startswith("cuda") else "cpu"
     if policy in ("purify-active-learned", "purify-active-dagger"):
@@ -539,8 +842,163 @@ def run_v6_episode(
                 ttl=config.ttl_steps,
                 calibration_id=runtime_calibration_id,
             )
+        # Candidate-only initial observation: one physical RGB-D capture feeds a
+        # shared seg-v3 backbone and produces scoped A/B proposals.  Both claims
+        # retain the same physical capture/device root.  Frozen policies never
+        # enter this branch and continue through the byte-for-byte legacy path.
+        shared_initial_ab_done = False
+        if (
+            policy == "purify-active-contract-progress"
+            and config.vision_enabled
+            and str(config.vision_backend) == "torch_spatial_rgbd"
+            and capture_index == 0
+            and action_kind == "initial"
+            and raw_frame is not None
+        ):
+            import numpy as np
+
+            from v7_vision_claims import (
+                propose_vision_spatial_rgbd_ab_shared,
+                vision_proposal_to_claim_v2,
+            )
+            from v8_corridor_projection import corridor_mask_from_geometry
+
+            rgb = getattr(raw_frame, "rgb", None)
+            depth = getattr(raw_frame, "depth", None)
+            if rgb is None or depth is None:
+                raise RuntimeError(
+                    "contract-progress shared initial capture requires live RGB-D"
+                )
+            arr = np.asarray(rgb)
+            if arr.ndim < 2:
+                raise RuntimeError("contract-progress shared initial RGB is malformed")
+            h, w = arr.shape[:2]
+            # Preserve frozen A's exact input selection: use a raw-frame mask
+            # when supplied, otherwise the same public geometry projection.
+            mask_a = getattr(raw_frame, "corridor_mask", None)
+            mask_a_source = "raw_frame.corridor_mask"
+            if mask_a is None:
+                mask_a = getattr(raw_frame, "target_corridor_mask", None)
+                mask_a_source = "raw_frame.target_corridor_mask"
+            if mask_a is None:
+                mask_a = corridor_mask_from_geometry(
+                    h,
+                    w,
+                    corridor_id="corridor_a",
+                    public=public,
+                )
+                mask_a_source = "public_geometry_projection"
+            mask_b = corridor_mask_from_geometry(
+                h,
+                w,
+                corridor_id="corridor_b",
+                public=public,
+            )
+            if not bool(np.asarray(mask_a).any()) or not bool(
+                np.asarray(mask_b).any()
+            ):
+                raise RuntimeError(
+                    "contract-progress shared initial corridor masks are empty"
+                )
+
+            physical_capture_roots = {
+                str(c.capture_root_id)
+                for c in new_claims
+                if getattr(c, "has_known_measurement_root", False)
+            }
+            physical_device_roots = {
+                str(c.device_root_id)
+                for c in new_claims
+                if getattr(c, "has_known_measurement_root", False)
+            }
+            if len(physical_capture_roots) != 1 or len(physical_device_roots) != 1:
+                raise RuntimeError(
+                    "shared initial RGB-D must bind to exactly one physical "
+                    "capture/device root"
+                )
+            physical_capture_root = next(iter(physical_capture_roots))
+            physical_device_root = next(iter(physical_device_roots))
+            vision_device = (
+                config.device if str(config.device).startswith("cuda") else "cpu"
+            )
+            common_meta = {
+                "agent_id": agent_id,
+                "viewpoint": viewpoint_name,
+                "step": runtime.current_step,
+                "vision_source": "genesis_rgb",
+                "genesis_live_rgbd": True,
+            }
+            prop_a, prop_b = propose_vision_spatial_rgbd_ab_shared(
+                rgb,
+                depth=depth,
+                corridor_mask_a=mask_a,
+                corridor_mask_b=mask_b,
+                meta_a={**common_meta, "corridor_id": "corridor_a"},
+                meta_b={**common_meta, "corridor_id": "corridor_b"},
+                checkpoint=config.vision_checkpoint,
+                conformal_artifact=config.vision_conformal_artifact,
+                device=vision_device,
+            )
+            root_kind = _vision_root_kind(agent_id, viewpoint_name, capture_index)
+            shared_claims: list[RobotClaimV2] = []
+            for paired_cid, prop in (
+                ("corridor_a", prop_a),
+                ("corridor_b", prop_b),
+            ):
+                vclaim = vision_proposal_to_claim_v2(
+                    prop,
+                    agent_id=agent_id,
+                    corridor_id=paired_cid,
+                    step=runtime.current_step,
+                    ttl=config.ttl_steps,
+                    capture_root_id=physical_capture_root,
+                    device_root_id=physical_device_root,
+                    calibration_id=runtime_calibration_id,
+                )
+                if prop.p_blocked is not None:
+                    vision_p_blocked[str(vclaim.claim_id)] = float(prop.p_blocked)
+                shared_claims.append(vclaim)
+                audit = {
+                    "kind": "vision_proposal_v7",
+                    "vision_source": "genesis_rgb",
+                    "vision_backend": prop.backend,
+                    "observer_agent_id": agent_id,
+                    "corridor_id": paired_cid,
+                    "viewpoint": viewpoint_name,
+                    "vision_root_kind": root_kind,
+                    "tensor_device": prop.tensor_device or vision_device,
+                    "shared_initial_ab_capture": True,
+                    "shared_initial_a_mask_source": mask_a_source,
+                    "shared_initial_b_mask_source": "public_geometry_projection",
+                    "shared_geometry_pose_semantics": "legacy_default_empty",
+                    "physical_capture_root_bound": True,
+                    "physical_capture_root_id": physical_capture_root,
+                    "physical_device_root_id": physical_device_root,
+                    "shared_physical_capture_root_id": physical_capture_root,
+                    "shared_device_root_id": physical_device_root,
+                    **prop.to_dict(),
+                }
+                audit.setdefault("fallback_used", bool(prop.fallback_used))
+                audit.setdefault("checkpoint_loaded", bool(prop.checkpoint_loaded))
+                audit.setdefault("checkpoint_sha256", prop.checkpoint_sha256)
+                audit.setdefault(
+                    "conformal_artifact_sha256",
+                    prop.conformal_artifact_sha256,
+                )
+                audit.setdefault(
+                    "preprocessing_version", prop.preprocessing_version
+                )
+                audit.setdefault("p_blocked", prop.p_blocked)
+                audit.setdefault(
+                    "prediction_set",
+                    list(prop.prediction_set) if prop.prediction_set else [],
+                )
+                rgbd_audits.append(audit)
+            new_claims = list(new_claims) + shared_claims
+            shared_initial_ab_done = True
+
         # Optional v7 vision proposer (appends; does not replace geometry claims).
-        if config.vision_enabled:
+        if config.vision_enabled and not shared_initial_ab_done:
             from v7_vision_claims import (
                 propose_vision,
                 synthetic_rgb_for_label,
@@ -615,16 +1073,45 @@ def run_v6_episode(
             # V8 spatial: stamp claims with unified runtime calibration ID.
             # V7/heuristic: keep SENSOR_VERSION_V6 / default unless V8 mode active.
             vision_cal_id = runtime_calibration_id
+            vision_capture_root_id = (
+                f"vision-{root_kind}-{agent_id}-{capture_index}-"
+                f"{prop.input_sha256[:10]}"
+            )
+            vision_device_root_id = None
+            physical_capture_root_bound = False
+            if (
+                policy == "purify-active-contract-progress"
+                and raw_frame is not None
+            ):
+                physical_capture_roots = {
+                    str(c.capture_root_id)
+                    for c in new_claims
+                    if getattr(c, "has_known_measurement_root", False)
+                }
+                physical_device_roots = {
+                    str(c.device_root_id)
+                    for c in new_claims
+                    if getattr(c, "has_known_measurement_root", False)
+                }
+                if (
+                    len(physical_capture_roots) != 1
+                    or len(physical_device_roots) != 1
+                ):
+                    raise RuntimeError(
+                        "contract-progress RGB-D observation must bind geometry/"
+                        "vision to exactly one physical capture/device root"
+                    )
+                vision_capture_root_id = next(iter(physical_capture_roots))
+                vision_device_root_id = next(iter(physical_device_roots))
+                physical_capture_root_bound = True
             vclaim = vision_proposal_to_claim_v2(
                 prop,
                 agent_id=agent_id,
                 corridor_id=corridor_id,
                 step=runtime.current_step,
                 ttl=config.ttl_steps,
-                capture_root_id=(
-                    f"vision-{root_kind}-{agent_id}-{capture_index}-"
-                    f"{prop.input_sha256[:10]}"
-                ),
+                capture_root_id=vision_capture_root_id,
+                device_root_id=vision_device_root_id,
                 calibration_id=vision_cal_id,
             )
             if prop.p_blocked is not None:
@@ -641,6 +1128,14 @@ def run_v6_episode(
                 "tensor_device": prop.tensor_device or vision_device,
                 **prop.to_dict(),
             }
+            if physical_capture_root_bound:
+                audit.update(
+                    {
+                        "physical_capture_root_bound": True,
+                        "physical_capture_root_id": vision_capture_root_id,
+                        "physical_device_root_id": vision_device_root_id,
+                    }
+                )
             # Ensure required runtime-integration keys are always present.
             audit.setdefault("fallback_used", bool(prop.fallback_used))
             audit.setdefault("checkpoint_loaded", bool(prop.checkpoint_loaded))
@@ -848,6 +1343,12 @@ def run_v6_episode(
                 claims, contract, current_step=runtime.current_step, config=config
             )
             go_rec = _invoke_purify_go(cid, contract) if config.use_purify_go_gate else None
+            if policy == "purify-active-contract-progress":
+                if go_rec is None:
+                    # Never plan from a stale pre-error receipt.
+                    latest_purify_go_receipts.pop(cid, None)
+                else:
+                    latest_purify_go_receipts[cid] = dict(go_rec)
             go_admitted = bool(go_rec is not None and go_rec.get("admitted"))
             py_admitted = bool(py_dec.admitted)
 
@@ -919,12 +1420,88 @@ def run_v6_episode(
         repair_attempted = True
         for _ in range(config.max_observations):
             # Prefer repairable denied corridor (not hard-conflict A when B is open).
-            primary = _pick_primary_decision(
-                decisions,
-                confirmed_blocked=confirmed_blocked,
-                side_obs_per_corridor=side_obs_per_corridor,
-                max_side_per_corridor=2,
-            )
+            contract_progress_selected = None
+            contract_progress_ranking = None
+            contract_progress_selector_invoked = False
+            contract_progress_no_repairable_contract = False
+            contract_progress_selector_audit: dict[str, Any] = {}
+            contract_progress_selector_corridor_audit: dict[
+                str, dict[str, Any]
+            ] = {}
+            delegated_baseline_fail_closed = False
+            delegated_go_p_fail_closed = False
+            if policy == "purify-active-contract-progress":
+                from v6_repair import build_candidate_actions
+                from v8_contract_progress_nbv import (
+                    choose_contract_progress_action,
+                )
+
+                candidate_carrier_xy = (
+                    runtime.pose_of(CARRIER_ID).x,
+                    runtime.pose_of(CARRIER_ID).y,
+                )
+                candidate_scout_xy = (
+                    runtime.pose_of(SCOUT_ID).x,
+                    runtime.pose_of(SCOUT_ID).y,
+                )
+                candidate_actions = build_candidate_actions(
+                    public,
+                    carrier_xy=candidate_carrier_xy,
+                    scout_xy=candidate_scout_xy,
+                    visited=visited,
+                )
+                contract_progress_selected, contract_progress_ranking = (
+                    choose_contract_progress_action(
+                        latest_go_receipts=latest_purify_go_receipts,
+                        decisions=decisions,
+                        confirmed_blocked=confirmed_blocked,
+                        side_obs_per_corridor=side_obs_per_corridor,
+                        public=public,
+                        carrier_xy=candidate_carrier_xy,
+                        scout_xy=candidate_scout_xy,
+                        candidates=candidate_actions,
+                        observations_taken=observations,
+                        max_observations=config.max_observations,
+                        max_side_per_corridor=2,
+                    )
+                )
+                contract_progress_selector_invoked = True
+                contract_progress_selector_audit = (
+                    dict(contract_progress_ranking[0])
+                    if contract_progress_ranking
+                    else {}
+                )
+                contract_progress_no_repairable_contract = bool(
+                    contract_progress_selected is None
+                    or contract_progress_selected.kind == "safe_fallback"
+                )
+                contract_progress_selector_corridor_audit = (
+                    _selector_corridor_audit(
+                        list(contract_progress_ranking or [])
+                    )
+                )
+                candidate_cid = (
+                    contract_progress_selected.corridor_id
+                    if contract_progress_selected is not None
+                    else ""
+                )
+                primary = decisions.get(candidate_cid)
+                if primary is None:
+                    # Both contracts hard-denied/malformed: derive the same gaps
+                    # as frozen V8 before delegating its conservative planner.
+                    primary = _pick_primary_decision(
+                        decisions,
+                        confirmed_blocked=confirmed_blocked,
+                        side_obs_per_corridor=side_obs_per_corridor,
+                        max_side_per_corridor=2,
+                    )
+            else:
+                primary = _pick_primary_decision(
+                    decisions,
+                    confirmed_blocked=confirmed_blocked,
+                    side_obs_per_corridor=side_obs_per_corridor,
+                    max_side_per_corridor=2,
+                )
             gaps = [g.get("reason", "insufficient_roots") for g in primary.belief_gaps]
             if not gaps:
                 gaps = list(primary.reasons) or ["insufficient_roots"]
@@ -939,7 +1516,34 @@ def run_v6_episode(
                 runtime.pose_of(CARRIER_ID).y,
             )
             scout_xy = (runtime.pose_of(SCOUT_ID).x, runtime.pose_of(SCOUT_ID).y)
-            if policy in ("purify-active-learned", "purify-active-dagger") and learned_model is not None:
+            if policy == "purify-active-contract-progress":
+                selected = contract_progress_selected
+                ranking = list(contract_progress_ranking or [])
+                if selected is None or selected.kind == "safe_fallback":
+                    # A selector-level fallback means there is no repairable,
+                    # trustworthy Go contract.  Preserve frozen V8's probing and
+                    # dual-blocked safe-detour behavior instead of prematurely
+                    # incrementing the formal fallback metric.
+                    selected, baseline_ranking = choose_evidence_action(
+                        public,
+                        gap_reasons=gaps,
+                        carrier_xy=carrier_xy,
+                        scout_xy=scout_xy,
+                        visited=visited,
+                        observations_taken=observations,
+                        max_observations=config.max_observations,
+                    )
+                    delegated_baseline_fail_closed = True
+                    contract_progress_delegation_count += 1
+                    fail_closed_audit = ranking[0] if ranking else {}
+                    ranking, delegated_go_p_fail_closed = (
+                        _bind_delegated_go_p_blocked(
+                            list(baseline_ranking),
+                            selected_action=selected,
+                            fail_closed_audit=dict(fail_closed_audit),
+                        )
+                    )
+            elif policy in ("purify-active-learned", "purify-active-dagger") and learned_model is not None:
                 from v6_learned_policy import rank_with_learned
                 from v6_repair import build_candidate_actions
 
@@ -997,12 +1601,21 @@ def run_v6_episode(
                 )
             receipt = authorize_evidence_request(
                 belief_gaps=gaps,
-                selected_action=selected.to_dict() if selected else None,
+                selected_action=(
+                    None
+                    if delegated_go_p_fail_closed
+                    else (selected.to_dict() if selected else None)
+                ),
                 current_step=runtime.current_step,
                 observations_taken=observations,
                 replans_taken=replan_count,
                 max_observations=config.max_observations,
                 max_replans=config.max_replans,
+                policy_artifact_id=(
+                    "v8-contract-progress-nbv/1"
+                    if policy == "purify-active-contract-progress"
+                    else "heuristic-v6/1"
+                ),
                 candidate_ranking=ranking,
             )
             evidence_requests.append(receipt.to_wire())
@@ -1012,6 +1625,47 @@ def run_v6_episode(
                     "selected": None if selected is None else selected.to_dict(),
                     "ranking_head": ranking[:5],
                     "authorized": receipt.authorized,
+                    **(
+                        {
+                            "policy_artifact_id": receipt.policy_artifact_id,
+                            "evidence_request_receipt_sha256": (
+                                receipt.receipt_sha256
+                            ),
+                            "execution_status": (
+                                "authorized_for_execution"
+                                if receipt.authorized
+                                else "authorization_denied_noop"
+                            ),
+                            "contract_progress_nbv_enabled": True,
+                            "contract_progress_selector_invoked": bool(
+                                contract_progress_selector_invoked
+                            ),
+                            "contract_progress_no_repairable_contract": bool(
+                                contract_progress_no_repairable_contract
+                            ),
+                            "contract_progress_selector_selection_reason": (
+                                contract_progress_selector_audit.get(
+                                    "selection_reason"
+                                )
+                            ),
+                            "contract_progress_corridor_fail_closed_reasons": (
+                                contract_progress_selector_audit.get(
+                                    "corridor_fail_closed_reasons"
+                                )
+                            ),
+                            "contract_progress_selector_corridor_audit": (
+                                contract_progress_selector_corridor_audit
+                            ),
+                            "delegated_baseline_fail_closed": bool(
+                                delegated_baseline_fail_closed
+                            ),
+                            "delegated_go_p_fail_closed": bool(
+                                delegated_go_p_fail_closed
+                            ),
+                        }
+                        if policy == "purify-active-contract-progress"
+                        else {}
+                    ),
                     "nbv_alignment_score": (
                         None
                         if chosen_rank is None
@@ -1226,12 +1880,89 @@ def run_v6_episode(
         ):
             repair_attempted = True
             for _ in range(max(1, config.max_observations - observations)):
-                primary = _pick_primary_decision(
-                    decisions,
-                    confirmed_blocked=confirmed_blocked,
-                    side_obs_per_corridor=side_obs_per_corridor,
-                    max_side_per_corridor=2,
-                )
+                contract_progress_selected = None
+                contract_progress_ranking = None
+                contract_progress_selector_invoked = False
+                contract_progress_no_repairable_contract = False
+                contract_progress_selector_audit: dict[str, Any] = {}
+                contract_progress_selector_corridor_audit: dict[
+                    str, dict[str, Any]
+                ] = {}
+                delegated_baseline_fail_closed = False
+                delegated_go_p_fail_closed = False
+                if policy == "purify-active-contract-progress":
+                    from v6_repair import build_candidate_actions
+                    from v8_contract_progress_nbv import (
+                        choose_contract_progress_action,
+                    )
+
+                    carrier_xy = (
+                        runtime.pose_of(CARRIER_ID).x,
+                        runtime.pose_of(CARRIER_ID).y,
+                    )
+                    scout_xy = (
+                        runtime.pose_of(SCOUT_ID).x,
+                        runtime.pose_of(SCOUT_ID).y,
+                    )
+                    candidate_actions = build_candidate_actions(
+                        public,
+                        carrier_xy=carrier_xy,
+                        scout_xy=scout_xy,
+                        visited=visited,
+                    )
+                    contract_progress_selected, contract_progress_ranking = (
+                        choose_contract_progress_action(
+                            latest_go_receipts=latest_purify_go_receipts,
+                            decisions=decisions,
+                            # Candidate planner state remains claim-derived.
+                            # ``invalidated_corridors`` comes from the scenario
+                            # event/oracle path and must never enter NBV inputs.
+                            confirmed_blocked=confirmed_blocked,
+                            side_obs_per_corridor=side_obs_per_corridor,
+                            public=public,
+                            carrier_xy=carrier_xy,
+                            scout_xy=scout_xy,
+                            candidates=candidate_actions,
+                            observations_taken=observations,
+                            max_observations=config.max_observations,
+                            max_side_per_corridor=2,
+                        )
+                    )
+                    contract_progress_selector_invoked = True
+                    contract_progress_selector_audit = (
+                        dict(contract_progress_ranking[0])
+                        if contract_progress_ranking
+                        else {}
+                    )
+                    contract_progress_no_repairable_contract = bool(
+                        contract_progress_selected is None
+                        or contract_progress_selected.kind == "safe_fallback"
+                    )
+                    contract_progress_selector_corridor_audit = (
+                        _selector_corridor_audit(
+                            list(contract_progress_ranking or [])
+                        )
+                    )
+                    candidate_cid = (
+                        contract_progress_selected.corridor_id
+                        if contract_progress_selected is not None
+                        else ""
+                    )
+                    primary = decisions.get(candidate_cid)
+                    if primary is None:
+                        primary = _pick_primary_decision(
+                            decisions,
+                            confirmed_blocked=confirmed_blocked,
+                            side_obs_per_corridor=side_obs_per_corridor,
+                            max_side_per_corridor=2,
+                        )
+                else:
+                    primary = _pick_primary_decision(
+                        decisions,
+                        confirmed_blocked=confirmed_blocked,
+                        side_obs_per_corridor=side_obs_per_corridor,
+                        max_side_per_corridor=2,
+                    )
                 gaps = [
                     g.get("reason", "insufficient_roots") for g in primary.belief_gaps
                 ] or list(primary.reasons) or ["insufficient_roots"]
@@ -1239,32 +1970,111 @@ def run_v6_episode(
                     gaps = list(gaps) + [f"target_corridor:{primary.corridor_id}"]
                 for cid in sorted(confirmed_blocked):
                     gaps = list(gaps) + [f"confirmed_blocked:{cid}"]
-                selected, ranking = choose_evidence_action(
-                    public,
-                    gap_reasons=gaps,
-                    carrier_xy=(
-                        runtime.pose_of(CARRIER_ID).x,
-                        runtime.pose_of(CARRIER_ID).y,
-                    ),
-                    scout_xy=(
-                        runtime.pose_of(SCOUT_ID).x,
-                        runtime.pose_of(SCOUT_ID).y,
-                    ),
-                    visited=visited,
-                    observations_taken=observations,
-                    max_observations=config.max_observations,
-                )
+                if policy == "purify-active-contract-progress":
+                    selected = contract_progress_selected
+                    ranking = list(contract_progress_ranking or [])
+                    if selected is None or selected.kind == "safe_fallback":
+                        selected, baseline_ranking = choose_evidence_action(
+                            public,
+                            gap_reasons=gaps,
+                            carrier_xy=carrier_xy,
+                            scout_xy=scout_xy,
+                            visited=visited,
+                            observations_taken=observations,
+                            max_observations=config.max_observations,
+                        )
+                        delegated_baseline_fail_closed = True
+                        contract_progress_delegation_count += 1
+                        fail_closed_audit = ranking[0] if ranking else {}
+                        ranking, delegated_go_p_fail_closed = (
+                            _bind_delegated_go_p_blocked(
+                                list(baseline_ranking),
+                                selected_action=selected,
+                                fail_closed_audit=dict(fail_closed_audit),
+                            )
+                        )
+                else:
+                    selected, ranking = choose_evidence_action(
+                        public,
+                        gap_reasons=gaps,
+                        carrier_xy=(
+                            runtime.pose_of(CARRIER_ID).x,
+                            runtime.pose_of(CARRIER_ID).y,
+                        ),
+                        scout_xy=(
+                            runtime.pose_of(SCOUT_ID).x,
+                            runtime.pose_of(SCOUT_ID).y,
+                        ),
+                        visited=visited,
+                        observations_taken=observations,
+                        max_observations=config.max_observations,
+                    )
                 receipt = authorize_evidence_request(
                     belief_gaps=gaps,
-                    selected_action=selected.to_dict() if selected else None,
+                    selected_action=(
+                        None
+                        if delegated_go_p_fail_closed
+                        else (selected.to_dict() if selected else None)
+                    ),
                     current_step=runtime.current_step,
                     observations_taken=observations,
                     replans_taken=replan_count,
                     max_observations=config.max_observations,
                     max_replans=config.max_replans,
+                    policy_artifact_id=(
+                        "v8-contract-progress-nbv/1"
+                        if policy == "purify-active-contract-progress"
+                        else "heuristic-v6/1"
+                    ),
                     candidate_ranking=ranking,
                 )
                 evidence_requests.append(receipt.to_wire())
+                if policy == "purify-active-contract-progress":
+                    repair_decisions.append(
+                        {
+                            "selected": (
+                                None if selected is None else selected.to_dict()
+                            ),
+                            "ranking_head": ranking[:5],
+                            "authorized": receipt.authorized,
+                            "policy_artifact_id": receipt.policy_artifact_id,
+                            "evidence_request_receipt_sha256": (
+                                receipt.receipt_sha256
+                            ),
+                            "execution_status": (
+                                "authorized_for_execution"
+                                if receipt.authorized
+                                else "authorization_denied_noop"
+                            ),
+                            "contract_progress_nbv_enabled": True,
+                            "contract_progress_selector_invoked": bool(
+                                contract_progress_selector_invoked
+                            ),
+                            "contract_progress_no_repairable_contract": bool(
+                                contract_progress_no_repairable_contract
+                            ),
+                            "contract_progress_selector_selection_reason": (
+                                contract_progress_selector_audit.get(
+                                    "selection_reason"
+                                )
+                            ),
+                            "contract_progress_corridor_fail_closed_reasons": (
+                                contract_progress_selector_audit.get(
+                                    "corridor_fail_closed_reasons"
+                                )
+                            ),
+                            "contract_progress_selector_corridor_audit": (
+                                contract_progress_selector_corridor_audit
+                            ),
+                            "delegated_baseline_fail_closed": bool(
+                                delegated_baseline_fail_closed
+                            ),
+                            "delegated_go_p_fail_closed": bool(
+                                delegated_go_p_fail_closed
+                            ),
+                            "repair_phase": "post_invalidation",
+                        }
+                    )
                 if selected is None or not receipt.authorized:
                     break
                 if selected.kind == "safe_fallback":
@@ -1378,6 +2188,54 @@ def run_v6_episode(
     vision_audits_only = [
         a for a in rgbd_audits if a.get("kind") == "vision_proposal_v7"
     ]
+    shared_initial_ab_audits = [
+        a for a in vision_audits_only if a.get("shared_initial_ab_capture")
+    ]
+    shared_initial_capture_roots = sorted(
+        {
+            str(a.get("shared_physical_capture_root_id"))
+            for a in shared_initial_ab_audits
+            if a.get("shared_physical_capture_root_id")
+        }
+    )
+    shared_initial_device_roots = sorted(
+        {
+            str(a.get("shared_device_root_id"))
+            for a in shared_initial_ab_audits
+            if a.get("shared_device_root_id")
+        }
+    )
+    shared_initial_corridors = sorted(
+        {
+            str(a.get("corridor_id"))
+            for a in shared_initial_ab_audits
+            if a.get("corridor_id")
+        }
+    )
+    shared_initial_a_mask_sources = sorted(
+        {
+            str(a.get("shared_initial_a_mask_source"))
+            for a in shared_initial_ab_audits
+            if a.get("shared_initial_a_mask_source")
+        }
+    )
+    shared_geometry_pose_semantics = sorted(
+        {
+            str(a.get("shared_geometry_pose_semantics"))
+            for a in shared_initial_ab_audits
+            if a.get("shared_geometry_pose_semantics")
+        }
+    )
+    candidate_live_rgbd_vision_audits = [
+        a
+        for a in vision_audits_only
+        if a.get("vision_source") == "genesis_rgb"
+    ]
+    candidate_root_bound_vision_audits = [
+        a
+        for a in candidate_live_rgbd_vision_audits
+        if a.get("physical_capture_root_bound")
+    ]
     vision_ckpt_shas = sorted(
         {
             str(a.get("checkpoint_sha256"))
@@ -1463,6 +2321,85 @@ def run_v6_episode(
             "elapsed_seconds": elapsed,
             "outcome": outcome,
             "policy": policy,
+            **(
+                {
+                    "contract_progress_nbv_enabled": True,
+                    "contract_progress_nbv_policy_artifact_id": (
+                        "v8-contract-progress-nbv/1"
+                    ),
+                    "contract_progress_nbv_delegation_count": int(
+                        contract_progress_delegation_count
+                    ),
+                    "contract_progress_nbv_latest_go_receipt_sha256": {
+                        cid: rec.get("receipt_sha256")
+                        for cid, rec in sorted(
+                            latest_purify_go_receipts.items()
+                        )
+                    },
+                    "contract_progress_shared_initial_ab_capture": bool(
+                        len(shared_initial_ab_audits) == 2
+                        and shared_initial_corridors
+                        == ["corridor_a", "corridor_b"]
+                        and len(shared_initial_capture_roots) == 1
+                        and len(shared_initial_device_roots) == 1
+                        and all(
+                            bool(a.get("shared_rgbd_backbone"))
+                            for a in shared_initial_ab_audits
+                        )
+                        and all(
+                            bool(a.get("physical_capture_root_bound"))
+                            for a in shared_initial_ab_audits
+                        )
+                        and all(
+                            a.get("shared_initial_b_mask_source")
+                            == "public_geometry_projection"
+                            for a in shared_initial_ab_audits
+                        )
+                        and all(
+                            a.get("shared_geometry_pose_semantics")
+                            == "legacy_default_empty"
+                            for a in shared_initial_ab_audits
+                        )
+                        and set(shared_initial_a_mask_sources)
+                        <= {
+                            "raw_frame.corridor_mask",
+                            "raw_frame.target_corridor_mask",
+                            "public_geometry_projection",
+                        }
+                    ),
+                    "contract_progress_shared_initial_ab_proposal_count": len(
+                        shared_initial_ab_audits
+                    ),
+                    "contract_progress_shared_initial_ab_corridors": (
+                        shared_initial_corridors
+                    ),
+                    "contract_progress_shared_initial_capture_root_ids": (
+                        shared_initial_capture_roots
+                    ),
+                    "contract_progress_shared_initial_device_root_ids": (
+                        shared_initial_device_roots
+                    ),
+                    "contract_progress_shared_initial_a_mask_sources": (
+                        shared_initial_a_mask_sources
+                    ),
+                    "contract_progress_shared_geometry_pose_semantics": (
+                        shared_geometry_pose_semantics
+                    ),
+                    "contract_progress_rgbd_vision_proposal_count": len(
+                        candidate_live_rgbd_vision_audits
+                    ),
+                    "contract_progress_physical_root_bound_vision_count": len(
+                        candidate_root_bound_vision_audits
+                    ),
+                    "contract_progress_all_rgbd_geometry_vision_roots_bound": bool(
+                        candidate_live_rgbd_vision_audits
+                        and len(candidate_root_bound_vision_audits)
+                        == len(candidate_live_rgbd_vision_audits)
+                    ),
+                }
+                if policy == "purify-active-contract-progress"
+                else {}
+            ),
             "claims_mode": claims_mode,
             "device": config.device,
             # Repair-required capability telemetry (v7 Genesis paired).

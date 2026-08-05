@@ -41,9 +41,10 @@ class VisionProposal:
     p_blocked: float | None = None
     prediction_set: tuple[str, ...] = ()
     checkpoint_loaded: bool = False
+    shared_rgbd_backbone: bool = False
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "value": self.value,
             "confidence": self.confidence,
             "quality": self.quality,
@@ -61,6 +62,9 @@ class VisionProposal:
             "prediction_set": list(self.prediction_set),
             "checkpoint_loaded": bool(self.checkpoint_loaded),
         }
+        if self.shared_rgbd_backbone:
+            payload["shared_rgbd_backbone"] = True
+        return payload
 
 
 def _rgb_to_array(rgb: Any) -> np.ndarray:
@@ -304,6 +308,55 @@ def propose_vision_torch(
     )
 
 
+def _spatial_prediction_to_proposal(
+    pred: Mapping[str, Any],
+    bundle: Mapping[str, Any],
+    *,
+    rgb: Any,
+    meta: Mapping[str, Any],
+    device: str,
+    shared_rgbd_backbone: bool,
+) -> VisionProposal:
+    value = str(pred["value"])
+    p_blocked = float(pred["p_blocked"])
+    pred_set = tuple(pred.get("prediction_set") or ())
+    conf = (
+        p_blocked
+        if value == "blocked"
+        else (1.0 - p_blocked if value == "clear" else 0.5)
+    )
+    conf = float(np.clip(max(conf, 0.05), 0.05, 0.99))
+    rgb_a = _rgb_to_array(rgb)
+    sha = _input_sha(rgb_a, {**meta, "backend": "torch_spatial_rgbd"})
+    features = {
+        "p_blocked": p_blocked,
+        "fallback_used": 0.0,
+        "checkpoint_loaded": 1.0,
+        "uses_masked_pooling": 1.0,
+    }
+    if shared_rgbd_backbone:
+        features["shared_rgbd_backbone"] = 1.0
+    return VisionProposal(
+        value=value,
+        confidence=conf,
+        quality=float(pred.get("quality") or 0.8),
+        visibility=float(pred.get("visibility") or 0.8),
+        model_id=str(pred.get("model_id") or bundle["model_id"]),
+        input_sha256=sha,
+        backend="torch_spatial_rgbd",
+        features=features,
+        tensor_device=str(pred.get("tensor_device") or device),
+        checkpoint_sha256=str(pred.get("checkpoint_sha256")),
+        conformal_artifact_sha256=str(pred.get("conformal_artifact_sha256")),
+        preprocessing_version=str(pred.get("preprocessing_version")),
+        fallback_used=False,
+        p_blocked=p_blocked,
+        prediction_set=pred_set,
+        checkpoint_loaded=True,
+        shared_rgbd_backbone=shared_rgbd_backbone,
+    )
+
+
 def propose_vision_spatial_rgbd(
     rgb: Any,
     *,
@@ -365,39 +418,82 @@ def propose_vision_spatial_rgbd(
         pose=pose if isinstance(pose, dict) else {},
         corridor_id=corridor_id,
     )
-    value = str(pred["value"])
-    p_blocked = float(pred["p_blocked"])
-    pred_set = tuple(pred.get("prediction_set") or ())
-    conf = (
-        p_blocked
-        if value == "blocked"
-        else (1.0 - p_blocked if value == "clear" else 0.5)
+    return _spatial_prediction_to_proposal(
+        pred,
+        bundle,
+        rgb=rgb,
+        meta=meta,
+        device=device,
+        shared_rgbd_backbone=False,
     )
-    conf = float(np.clip(max(conf, 0.05), 0.05, 0.99))
-    rgb_a = _rgb_to_array(rgb)
-    sha = _input_sha(rgb_a, {**meta, "backend": "torch_spatial_rgbd"})
-    return VisionProposal(
-        value=value,
-        confidence=conf,
-        quality=float(pred.get("quality") or 0.8),
-        visibility=float(pred.get("visibility") or 0.8),
-        model_id=str(pred.get("model_id") or bundle["model_id"]),
-        input_sha256=sha,
-        backend="torch_spatial_rgbd",
-        features={
-            "p_blocked": p_blocked,
-            "fallback_used": 0.0,
-            "checkpoint_loaded": 1.0,
-            "uses_masked_pooling": 1.0,
-        },
-        tensor_device=str(pred.get("tensor_device") or device),
-        checkpoint_sha256=str(pred.get("checkpoint_sha256")),
-        conformal_artifact_sha256=str(pred.get("conformal_artifact_sha256")),
-        preprocessing_version=str(pred.get("preprocessing_version")),
-        fallback_used=False,
-        p_blocked=p_blocked,
-        prediction_set=pred_set,
-        checkpoint_loaded=True,
+
+
+def propose_vision_spatial_rgbd_ab_shared(
+    rgb: Any,
+    *,
+    depth: Any | None,
+    corridor_mask_a: Any,
+    corridor_mask_b: Any,
+    meta_a: Mapping[str, Any] | None = None,
+    meta_b: Mapping[str, Any] | None = None,
+    checkpoint: str | None = None,
+    conformal_artifact: str | None = None,
+    device: str = "cuda:0",
+) -> tuple[VisionProposal, VisionProposal]:
+    """Return A/B proposals from one frozen seg-v3 shared RGB-D forward.
+
+    This formal helper has no heuristic fallback.  Missing inputs, a non-seg-v3
+    checkpoint, or an unavailable shared-forward method all fail closed.
+    """
+    if not checkpoint or not conformal_artifact:
+        raise FileNotFoundError(
+            "shared torch_spatial_rgbd requires checkpoint and conformal artifact "
+            "(fail-closed)"
+        )
+    if depth is None:
+        raise ValueError("shared torch_spatial_rgbd requires depth")
+    if corridor_mask_a is None or corridor_mask_b is None:
+        raise ValueError(
+            "shared torch_spatial_rgbd requires explicit A/B corridor masks"
+        )
+
+    from v8_spatial_runtime import load_spatial_runtime, predict_spatial_ab_shared
+
+    bundle = load_spatial_runtime(
+        checkpoint=checkpoint,
+        conformal_artifact=conformal_artifact,
+        device=device,
+    )
+    meta_a = dict(meta_a or {})
+    meta_b = dict(meta_b or {})
+    pose_a = meta_a.get("pose") or {}
+    pose_b = meta_b.get("pose") or {}
+    pred_a, pred_b = predict_spatial_ab_shared(
+        bundle,
+        rgb=rgb,
+        depth=depth,
+        corridor_mask_a=corridor_mask_a,
+        corridor_mask_b=corridor_mask_b,
+        pose_a=pose_a if isinstance(pose_a, dict) else {},
+        pose_b=pose_b if isinstance(pose_b, dict) else {},
+    )
+    return (
+        _spatial_prediction_to_proposal(
+            pred_a,
+            bundle,
+            rgb=rgb,
+            meta=meta_a,
+            device=device,
+            shared_rgbd_backbone=True,
+        ),
+        _spatial_prediction_to_proposal(
+            pred_b,
+            bundle,
+            rgb=rgb,
+            meta=meta_b,
+            device=device,
+            shared_rgbd_backbone=True,
+        ),
     )
 
 
@@ -451,6 +547,7 @@ def vision_proposal_to_claim_v2(
     step: int,
     ttl: int = 2000,
     capture_root_id: str | None = None,
+    device_root_id: str | None = None,
     calibration_id: str = SENSOR_BUNDLE_COMPAT,
     intended_actor_id: str = "carrier",
 ) -> Any:
@@ -458,7 +555,7 @@ def vision_proposal_to_claim_v2(
     root = capture_root_id or f"vision-{agent_id}-{proposal.input_sha256[:12]}"
     # Unique device root per capture — shared rgb-{agent}-01 collapses Go
     # measurement roots (shared_root / insufficient_roots).
-    device_root = f"rgb-{agent_id}-{proposal.input_sha256[:12]}"
+    device_root = device_root_id or f"rgb-{agent_id}-{proposal.input_sha256[:12]}"
     return build_robot_claim_v2(
         fact_id=f"region:{corridor_id}",
         predicate="carrier_traversable",
@@ -533,6 +630,8 @@ __all__ = (
     "VisionProposal",
     "propose_vision",
     "propose_vision_heuristic",
+    "propose_vision_spatial_rgbd",
+    "propose_vision_spatial_rgbd_ab_shared",
     "propose_vision_torch",
     "vision_proposal_to_claim_v2",
     "synthetic_rgb_for_label",
