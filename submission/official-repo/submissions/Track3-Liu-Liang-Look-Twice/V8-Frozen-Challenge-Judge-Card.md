@@ -9,11 +9,20 @@ change, or threshold change.
 
 This is an additive, preregistered **same-generator non-locked supplement** to
 the permanent 12-pair V8 locked result. Its primary endpoint is not an OOD,
-rigid-body, or physical-robot claim. A separate additive recovery V2 now tests
-the archived route decisions through bounded rigid-body actuation without
-changing that primary endpoint.
+rigid-body, or physical-robot claim. Separate additive evidence tests the
+archived route decisions through bounded rigid-body actuation: recovery V2
+uses 30 independent three-body scenes, while a solver-scale complement covers
+the same fixed decisions in exactly two scene shards, with at most 60 robots
+co-resident. Neither changes the primary endpoint.
 
-## Six judge checks
+> **Owner-review snapshot recorded on 2026-08-05:** at snapshot generation,
+> both solver-scale reports, complete evidence directories, and the rebuilt
+> 18-page PDF were packaged, and the manifest plus every checksum verified
+> locally. At that timestamp, their protocol targets were not yet public and no
+> competition PR had been opened. This is immutable packaging-time context;
+> linked targets show current availability.
+
+## Seven judge checks
 
 | Check | Result | Machine evidence |
 |---|---|---|
@@ -23,10 +32,12 @@ changing that primary endpoint.
 | AMD full-pipeline execution | **60/60** episodes used Genesis live RGB-D, the frozen checkpoint, and Purify Go receipts: 268 RGB-D observations, 134 vision proposals, and 268 Go invocations/receipts. Full subprocess-wall telemetry retained **844** two-second ROCm samples across **1,685.5 s**, including idle: GPU mean/median/p95/max **19.4/0/95/100%**; VRAM p95/max **2/2%**; package power mean/p95/max **35.7/81/109 W**. | [packaged ROCm telemetry](evidence/challenge_102500_102529/ROCM_TELEMETRY.json) |
 | Warehouse operational trade | Active scouting reduced loaded-carrier logical path from **6.404 to 4.961** (`−1.443`, **−22.5%**) while adding **2.980** scout path; total logical-role team path rose from **6.404 to 7.941** (`+1.538`, **+24.0%**). This is kinematic path burden, not energy, throughput, latency, or physical duty cycle. | [packaged per-seed and burden tables](evidence/challenge_102500_102529/CHALLENGE_REPORT.json) |
 | Additive decision-to-dynamics bridge | A separate fixed-denominator V2 replay consumed the archived decisions—**29 direct + 1 safe detour**—without rerunning perception or policy inference. It passed **30/30** across 30 serial, independent three-body scenes: **90/90** distinct non-fixed robot instantiations reached; all **29/29** direct carrier pairs saved at least 0.50 m; mean loaded-carrier path was **4.9435 m active vs 6.2433 m passive (−20.8183%)**; and counted blocker-contact and active carrier/scout contact rows were both **0**. The sole dual-blocked seed `102515` executed its declared safe outer detour. | [V2 result summary](README.md#separate-additive-decision-bound-dynamics-replay) · [packaged report](evidence/decision_dynamics_recovery_v2_102500_102529/REPORT.json) · [packaged scope audit](evidence/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json) |
+| Solver-scale two-shard complement | The same archived decision set separately passed **20/20** in one 60-body scene and **10/10** in a second 30-body scene. Across exactly two scenes, all 30 scouts, 30 active carriers, and 30 passive carriers reached; all 29 direct pairs saved at least 0.50 m; the weighted loaded-carrier path was **4.943605 m active vs 6.245385 m passive (−20.8439%)**; counted blocker/active-pair contact rows and post-build pose writes were **0**; maximum tilt/drift was **10.583984° / 0.021342 m**. This means **90 cumulative distinct robot instantiations, maximum co-resident count 60, and never all 90 in one scene**. | [packaged 60-body prefix report](evidence/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · [prefix package checksums](evidence/decision_dynamics_single_scene_60_102500_102519/PACKAGE_SHA256SUMS) · [packaged 30-body suffix report](evidence/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json) · [suffix package checksums](evidence/decision_dynamics_single_scene_30_suffix_102520_102529/PACKAGE_SHA256SUMS) · owner-review [prefix protocol](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md) · [suffix protocol](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md) |
 
 ## Scope that must travel with the result
 
-- Genesis 1.1.2 kinematic simulation on AMD ROCm, not contact validation.
+- The preregistered primary uses Genesis 1.1.2 kinematic simulation on AMD
+  ROCm; it is not rigid-body contact validation.
 - Carrier and scout are separate logical-role poses, viewpoints, and capture
   roots on **one shared Genesis chassis**; they are not two physical devices or
   simultaneous dual-body dynamics.
@@ -52,6 +63,18 @@ changing that primary endpoint.
   not real-robot validation or safety certification. The 20.8183% result is a
   paired loaded-carrier path reduction, not lower total team travel, energy,
   task time, or throughput.
+- The solver-scale complement consists of two independently verified,
+  non-resumable reports: seeds `102500-102519` in one 60-body scene and seeds
+  `102520-102529` in a second 30-body scene. The only combined topology
+  statement is exactly two scenes, 90 cumulative distinct robot instantiations,
+  and maximum co-resident count 60. The 90 were never co-resident in one scene;
+  there was no checkpoint/state resume and there is no synthetic combined
+  execution report.
+- Both solver-scale shards are archived-decision, fixed-order serial,
+  simulation-only evidence and declare `formal_result_eligible=false`. They
+  are not a live perception-policy rerun, simultaneous cooperative fleet
+  control, dynamic-obstacle evidence, physical-robot validation, sim-to-real
+  evidence, or safety certification. The primary remains **29/30**, not 30/30.
 - The V2 formal source binding omitted the directly imported
   `src/v4_motion.py`; a post-run audit matched it to clean commit `b0c4f0d`,
   but that is corroborating evidence rather than complete formal import-closure
@@ -86,6 +109,29 @@ Expected verification SHA-256:
 
 Raw archive SHA-256:
 `171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2`.
+
+After owner-approved source publication, verify the two solver-scale shards
+independently from the same clean clone:
+
+```bash
+PREFIX=release/v8-derived/decision_dynamics_single_scene_60_102500_102519
+SUFFIX=release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529
+(cd "$PREFIX" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd "$SUFFIX" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_60.py \
+  "$PREFIX/REPORT.json"
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  "$SUFFIX/REPORT.json"
+```
+
+Expected report SHA-256 values are
+`3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`
+for the 60-body prefix and
+`69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`
+for the 30-body suffix. Both reports must verify independently; the weighted
+summary is not a third execution report or a one-scene result.
 
 The complete machine result is also available as a stable
 [release verification asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json).

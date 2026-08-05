@@ -2,6 +2,7 @@
 import { SiteShell, useLanguage } from "../components/SiteShell";
 import { challengeEvidence } from "../lib/challengeEvidence";
 import { decisionDynamicsEvidence } from "../lib/decisionDynamicsEvidence";
+import { twoShardDynamicsEvidence } from "../lib/twoShardDynamicsEvidence";
 import "./reproduce.css";
 
 export default function ReproducePage() {
@@ -46,6 +47,31 @@ python3 scripts/verify_v8_frozen_challenge.py \\
 shasum -a 256 v8-frozen-challenge-102500-102529.LOCAL-VERIFICATION.json`}</code></pre>
           <p><b>RAW</b><code>{challengeEvidence.rawArchiveSha256}</code></p>
           <p><b>VERIFICATION</b><code>{challengeEvidence.verificationSha256}</code></p>
+        </div>
+      </section>
+      <section className="challenge-repro">
+        <div>
+          <span>{zh ? "两分片刚体规模补充 · 双独立复核" : "TWO-SHARD RIGID SCALE COMPLEMENT · DUAL INDEPENDENT AUDIT"}</span>
+          <h2>{zh ? "一个60体场景20/20，加一个30体场景10/10。" : "20/20 in one 60-body scene plus 10/10 in one 30-body scene."}</h2>
+          <p>{zh ? "克隆 source branch 后，分别验证两个完整证据目录和两个报告。网页链接只提供报告与完整包校验索引；执行 shasum -c 需要仓库中的 TRIALS、日志与 source binding。只有两份独立 verifier 都通过，才能描述为固定30 seeds、两个场景分片、累计90个不同机器人、最大同场60个；绝不能写成90体同场。" : "After cloning the source branch, verify both complete evidence directories and both reports independently. The web links expose the reports and package checksum indexes; running shasum -c requires the repository's trials, logs and source binding. Only two verifier passes support the bounded statement: 30 fixed seeds, exactly two scene shards, 90 cumulative distinct robots, maximum 60 co-resident—never one 90-body scene."}</p>
+          <div className="challenge-repro-links">
+            <a href={twoShardDynamicsEvidence.prefixReportUrl} target="_blank">{zh ? "60体报告 ↗" : "60-BODY REPORT ↗"}</a>
+            <a href={twoShardDynamicsEvidence.suffixReportUrl} target="_blank">{zh ? "30体后缀报告 ↗" : "30-BODY SUFFIX REPORT ↗"}</a>
+            <a href={twoShardDynamicsEvidence.prefixPackageChecksumsUrl} target="_blank">{zh ? "60体完整包校验索引（需克隆）↗" : "60-BODY PACKAGE INDEX (CLONE REQUIRED) ↗"}</a>
+            <a href={twoShardDynamicsEvidence.suffixPackageChecksumsUrl} target="_blank">{zh ? "30体完整包校验索引（需克隆）↗" : "30-BODY PACKAGE INDEX (CLONE REQUIRED) ↗"}</a>
+          </div>
+        </div>
+        <div>
+          <pre><code>{`PREFIX=release/v8-derived/decision_dynamics_single_scene_60_102500_102519
+SUFFIX=release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529
+(cd "$PREFIX" && shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd "$SUFFIX" && shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_60.py \
+  "$PREFIX/REPORT.json"
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  "$SUFFIX/REPORT.json"`}</code></pre>
+          <p><b>60-BODY REPORT</b><code>{twoShardDynamicsEvidence.prefixReportSha256}</code></p>
+          <p><b>30-BODY REPORT</b><code>{twoShardDynamicsEvidence.suffixReportSha256}</code></p>
         </div>
       </section>
       <section className="challenge-repro">

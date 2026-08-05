@@ -305,6 +305,78 @@ be described as cryptographic proof that no additional unsealed attempt ever
 existed. The scope audit is retained as
 `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json`.
 
+### Submission-time solver-scale two-shard complement
+
+Two later fixed protocols test a different execution topology without
+reopening the frozen endpoint or replacing recovery V2:
+
+- `docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md` covers seeds
+  `102500-102519` in one Genesis scene containing 60 co-resident non-fixed
+  bodies;
+- `docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md` covers seeds
+  `102520-102529` in a second Genesis scene containing 30 co-resident non-fixed
+  bodies.
+
+The complete, independently verified reports are:
+
+| Shard | Fixed result | Report SHA256 |
+| --- | --- | --- |
+| 60-body prefix | 20/20 in one scene | `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450` |
+| 30-body suffix | 10/10 in a second scene | `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e` |
+
+The reports reside at
+`release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json`
+and
+`release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json`.
+Each directory retains its own `SOURCE_BINDING.json`, per-seed checkpoints,
+formal execution status and logs, `SHA256SUMS`, and `PACKAGE_SHA256SUMS`. The
+same report bytes passed their dedicated fail-closed verifier on the Radeon
+host and locally.
+
+Allowed per-shard claims are:
+
+- the prefix passed 20/20 with 20 scouts, 20 active carriers, and 20 passive
+  carriers co-resident in one scene; the suffix passed 10/10 with ten of each
+  role co-resident in a second scene;
+- every body reached its goal under wheel-DOF velocity control, all fixed
+  trials were actuated serially, and neither run supported resume;
+- the prefix contained 19 archived direct decisions and the safe detour at
+  seed `102515`; the suffix contained ten archived direct decisions;
+- all 19/19 prefix and 10/10 suffix direct pairs saved at least 0.50 m of
+  loaded-carrier path;
+- counted blocker-contact rows, active carrier/scout contact rows, and
+  post-build script entity pose writes were zero in both reports;
+- the prefix's mean active/passive loaded-carrier path was
+  4.966194/6.245425 m, a 20.4827% reduction; the suffix's was
+  4.898426/6.245304 m, a 21.5663% reduction; and
+- maximum tilt and parked-partner drift across the two reports were
+  10.583984 degrees and 0.021342 m.
+
+Only after both exact reports independently verify may their disjoint fixed
+seed coverage be summarized as follows:
+
+- **exactly two completed Genesis scene shards** cover seeds `102500-102529`;
+- **90 cumulative distinct non-fixed robot entities** were instantiated across
+  those two scenes;
+- the **maximum co-resident count was 60**, in the prefix scene;
+- **never were all 90 co-resident** in one scene;
+- there was no cross-shard resume or result stitching; and
+- a fixed-denominator weighted summary gives mean loaded-carrier path
+  **4.943605 m active versus 6.245385 m passive**, a **20.8439%** reduction,
+  with 29/29 direct pairs meeting the 0.50 m saving bar and the sole
+  dual-blocked decision completing by safe detour.
+
+This combined wording is a transparent two-report summary, not a third
+execution report or a one-scene result. The failed V1 all-90-body attempt
+remains failed and must not be relabeled as completed. Both shards are
+**submission-time, additive, non-locked, archived-decision, fixed-order serial,
+simulation-only** evidence and declare `formal_result_eligible=false`. They do
+not rerun live perception or policy inference, demonstrate simultaneous
+cooperative fleet control or dynamic-obstacle response, validate a physical
+robot or sim-to-real transfer, establish energy/throughput/latency, or provide
+safety certification. The preregistered primary remains active full-chain
+direct **29/30 versus passive 0/30**.
+
 ### Reserved challenge range status
 
 The historical `ood_test` label for seeds 102500-102699 denotes only a
@@ -374,8 +446,12 @@ silently omitted from the research archive.
   physical robots or simultaneous dual-body dynamics. A separate additive
   20-seed supplement validates bounded sequential wheel motion by two
   non-fixed rigid bodies. The separate 30-seed recovery V2 binds archived
-  challenge decisions to three non-fixed bodies per independent scene. Neither
-  supplement is a live full-policy rerun or simultaneous 90-body execution.
+  challenge decisions to three non-fixed bodies per independent scene. A
+  further solver-scale complement covers the same fixed decisions in exactly
+  two independently verified scenes: one 60-body prefix and one 30-body suffix,
+  for 90 cumulative distinct robots and maximum co-resident 60. The 90 robots
+  were never co-resident. None of these supplements is a live full-policy rerun
+  or simultaneous cooperative execution.
 - The public replay episode carries `formal_result_eligible=false`; it is a
   presentation artifact, not the locked aggregate.
 - The 30-world challenge is a same-generator non-locked supplement, not a

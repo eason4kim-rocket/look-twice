@@ -3,10 +3,10 @@
 This directory is the English-only owner-review handoff for the AMD AI
 DevMaster Hackathon 2026, Track 3 - Physical AI.
 
-**Current state:** V2 evidence verified; owner review pending;
-`official_pr_opened=false`. No source push, Pages deployment, release-asset
-replacement, official-fork push, competition PR, or Genesis upstream PR for
-this refresh may occur until the owner reviews and authorizes it.
+**Owner-review control state at snapshot generation on 2026-08-05:** the
+two-shard payload was verified locally, owner review was pending, and
+`official_pr_opened=false`. Publication actions remain subject to explicit
+owner authorization; the machine manifest records this packaging-time state.
 
 Official PR title assumption:
 
@@ -55,21 +55,34 @@ never available to the controller, and this audit is not a preregistered
 endpoint. Across the 30 active records, unsafe was false, collision count was
 zero, and fallback was false.
 
-A separate additive decision-bound recovery V2 replays those immutable
+The current additive decision-bound complement replays those immutable
 archived route decisions without rerunning the frozen perception-policy loop.
-It passed **30/30** fixed seeds as 30 independent Genesis scenes, with one
-active scout, active loaded carrier, and passive loaded carrier per scene. All
-**90/90** distinct non-fixed robot instantiations reached; these are 90 bodies
-across the run, not one simultaneous 90-body scene. Mean active/passive loaded-
-carrier paths were 4.944/6.243 m, a paired reduction of **20.8183%**, with zero
-blocker-contact rows, zero active-pair-contact rows, and zero post-build pose
-writes. This execution result is not a replacement for the preregistered
-active **29/30** versus passive 0/30 primary endpoint.
+It consists of exactly two independently verified, non-resumable Genesis scene
+shards:
 
-V2 is additive, non-locked, simulation-only, and
-`formal_result_eligible=false`. It does not establish a policy rerun,
-simultaneous cooperative control, dynamic-obstacle response, real-robot or
-sim-to-real performance, throughput, energy, or safety certification.
+- seeds `102500-102519`: **20/20**, one 60-body scene; report SHA256
+  `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+- seeds `102520-102529`: **10/10**, one 30-body scene; report SHA256
+  `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+
+Together they cover **30/30** seeds in exactly **2** scenes and **90**
+cumulative distinct non-fixed robot entities. The maximum co-resident count is
+**60**; the 90 were never all co-resident. Weighted active/passive
+loaded-carrier paths were **4.943605/6.245385 m**, a paired reduction of
+**20.8439%**. All
+**29/29** direct pairs saved at least 0.5 m, while the only dual-blocked world,
+seed `102515`, completed by safe detour. Counted blocker/active-pair contact
+rows and post-build pose writes remained zero. This is a combined claim over
+two complete shard reports, not a cross-shard checkpoint/state resume or one
+stitched simulator result.
+
+The earlier 30-independent-scene recovery V2 remains retained as corroborating
+historical evidence. Both it and the two-shard complement are additive,
+non-locked, simulation-only, and `formal_result_eligible=false`. Neither
+replaces the preregistered primary endpoint of active **29/30** versus passive
+0/30 or establishes a live policy rerun, simultaneous cooperative control,
+dynamic-obstacle response, real-robot or sim-to-real performance, throughput,
+energy, or safety certification.
 
 ## Public target URLs
 
@@ -87,17 +100,20 @@ sim-to-real performance, throughput, energy, or safety certification.
 | Challenge independent verification | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json> |
 | Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 
-These stable targets currently serve the previously verified public baseline.
-The 239-second demo remains public and hash-verified. The new V2 evidence
-package and local verifier are ready for owner review; the V2-integrated
-technical report PDF, refreshed site, source-branch update, release-PDF
-replacement, and regenerated official-fork package remain local review items.
-No official competition or Genesis upstream PR is open.
+These are publication targets, not proof that the two-shard refresh is live.
+At snapshot generation on 2026-08-05, the stable release, source, and Pages
+URLs either served the previously verified baseline or returned 404; the
+239-second demo was public and hash-verified. At that timestamp, the refreshed
+source/site/PDF/package had not been pushed, deployed, released, or submitted,
+and no competition or Genesis upstream issue/PR was open. Current availability
+must be checked at the target URLs.
 
 ## Handoff map
 
 1. Owner-review checklist: `docs/SUBMISSION_CHECKLIST.md`
-2. Exact English PR body: `docs/SUBMISSION_DRAFT.md`
+2. Owner-review English PR-body draft: `docs/SUBMISSION_DRAFT.md`; immediately
+   before filing, replace its preparation-state preamble with the actual
+   publication state and rerun the stale-state scan.
 3. Submission manifest: `submission/V8_SUBMISSION_MANIFEST.json`
 4. Official-repository directory:
    `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/`
@@ -108,12 +124,19 @@ No official competition or Genesis upstream PR is open.
    `docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md`
 9. Additive dynamics result and recovery note:
    `docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md`
-10. Decision-bound dynamics recovery V2 result and evidence:
+10. Retained decision-bound dynamics recovery V2 result and evidence:
     `docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md` and
     `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/`
-11. Prepared Genesis upstream review packet:
+11. Two-shard decision-bound protocols and evidence:
+    `docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md`,
+    `docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md`,
+    `release/v8-derived/decision_dynamics_single_scene_60_102500_102519/`,
+    and
+    `release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/`
+12. Prepared Genesis upstream review packet:
     local sibling review directory; intentionally excluded from the public
-    competition package until owner approval.
+    competition package until owner approval. The local patch commit is
+    `8fbf352912f748f87ba4e8c94ef31c817017b641`; it has not been published.
 
 ## Primary competition artifacts
 
@@ -134,15 +157,18 @@ No official competition or Genesis upstream PR is open.
 | Additive dual-body report | `release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json` | `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110` |
 | Dual-body timeout audit | `release/v8-derived/dual_body_dynamics_160820_160839/ATTEMPT_1_TIMEOUT_AUDIT.json` | `711547fb5f0ab928ae5cc8b6195f4e0e964a98f6df44dfa2955c67e624705d55` |
 | Dual-body recovery audit | `release/v8-derived/dual_body_dynamics_160820_160839/RECOVERY_EXECUTION_AUDIT.json` | `6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e` |
-| Decision-bound V2 report | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json` | `1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99` |
-| Decision-bound V2 recovery audit | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json` | `344a948da49f89322f3486da2c025ee227dbf3454b33f7f8ab2f8acf6ea8eca4` |
-| Decision-bound V2 provenance review | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json` | `4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7` |
-| Decision-bound V2 package index | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS` | 79 indexed evidence files; index SHA256 `24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540` |
-| Rendered 15-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | `29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e` |
+| Retained historical decision-bound V2 report | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json` | `1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99` |
+| Retained historical V2 recovery audit | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json` | `344a948da49f89322f3486da2c025ee227dbf3454b33f7f8ab2f8acf6ea8eca4` |
+| Retained historical V2 provenance review | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json` | `4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7` |
+| Retained historical V2 package index | `release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS` | 79 indexed evidence files; index SHA256 `24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540` |
+| Two-shard 60-body prefix report | `release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json` | 20/20; `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450` |
+| Two-shard 30-body suffix report | `release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json` | 10/10; `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e` |
+| Rendered 18-page report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | 1,098,120 bytes; `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`; output/site/official copies byte-identical; 18/18 render QA |
+| Two-shard conceptual topology OG | `showcase/public/og-two-shard.png` | `326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`; conceptual topology, not an experiment capture |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 103 manifest entries, 104 checksum entries, 105 total files; `SHA256SUMS` SHA256 `e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9`; local only, no push or PR |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 152 manifest entries, 153 checksum entries, 154 total files; `SHA256SUMS` SHA256 `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`; finalizer `--check` and all 153 checksum entries passed; local only, no push or PR |
 
 ## Frozen checkpoint
 
@@ -155,7 +181,8 @@ No official competition or Genesis upstream PR is open.
 
 ## Verified local commands
 
-The following passed during submission preparation on 2026-08-03:
+The following core checks passed during submission preparation; the final
+two-shard refresh checks were completed on 2026-08-05:
 
 ```bash
 python3 scripts/build_competition_replays.py
@@ -173,12 +200,18 @@ cd showcase && npm run lint && npm test && npm audit
 docker compose build
 ```
 
-The refreshed Evidence Console build passed 35/35 tests, lint, production
-build, and a zero-vulnerability dependency audit. The earlier public baseline
-retains its hydrated desktop visual inspection; owner browser review of the V2
-local build remains required before deployment. The frozen verifier reported
-all 21 guarded files
-green, and the task-utility derivation matched the fixed locked and
+The refreshed Evidence Console passed **38/38** tests, lint, production build,
+and a zero-vulnerability dependency audit. Its conceptual two-shard topology
+OG hashes to
+`326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`;
+the graphic is an explanatory topology, not an experiment capture, simulator
+frame, or screenshot. Local browser visual inspection of the refresh could not
+be completed because the browser-plugin bridge failed, so owner browser review
+remains an explicit deployment gate. The earlier public baseline's inspection
+does not satisfy that gate.
+
+The frozen verifier reported all 21 guarded files green, and the task-utility
+derivation matched the fixed locked and
 confirmatory source hashes without reopening the test. The input-pack verifier
 also checked the real 400-world archive without extracting it or running the
 model; the formal telemetry run did not access the locked split. The 31
@@ -186,18 +219,26 @@ challenge runner/validator tests passed; together with the three telemetry
 helper tests, 34 combined tests passed. The independent validator recomputed
 the 30-pair result from the full 195-file raw archive with zero errors.
 
-The recovery V2 verifier accepted the byte-identical 30/30 report remotely and
-locally. Owner review must still rerun both checksum indexes and the local
-verifier from the final integrated tree:
+The retained recovery V2 verifier accepted its byte-identical 30/30 report
+remotely and locally. The two-shard prefix and suffix dedicated verifiers
+accepted **20/20** and **10/10**, and both shards' formal and complete package
+indexes passed. The final official-directory finalizer `--check` passed, as did
+all **153** entries in its top-level `SHA256SUMS`:
 
 ```bash
-cd release/v8-derived/decision_dynamics_recovery_v2_102500_102529
+python3 scripts/verify_v8_additive_decision_dynamics_60.py \
+  release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json
+python3 scripts/finalize_v8_submission_package.py --check
+cd submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice
 shasum -a 256 -c SHA256SUMS
-shasum -a 256 -c PACKAGE_SHA256SUMS
-cd ../../..
-python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
-  release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json
 ```
+
+The 18-page PDF is 1,098,120 bytes and hashes to
+`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
+The output, site, and official-package copies are byte-identical, and all
+**18/18** rendered pages passed visual QA.
 
 The final demo render is 239.000 seconds and 9,032,035 bytes. Its SHA256 is
 `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`;
@@ -234,9 +275,9 @@ wheel motion by two rigid bodies; it does not rerun the frozen policy,
 demonstrate simultaneous cooperative control, or establish a physical-robot or
 safety result.
 
-The decision-bound recovery V2 is a second, separately frozen additive
-supplement. It consumes archived decisions in 30 independent three-body
-scenes; it does not rerun the frozen policy and its 90 distinct bodies were not
+The earlier decision-bound recovery V2 remains a separately frozen additive
+supplement. It consumes archived decisions in 30 independent three-body scenes;
+it does not rerun the frozen policy and its 90 distinct bodies were not
 simultaneous. Its retained ledger and logs show 30 first-attempt worker
 completions, no completed-checkpoint rerun, and no seed replacement. However,
 the formal checksum index did not originally cover attempts/progress/logs, and
@@ -244,6 +285,21 @@ the formal source manifest omitted the directly imported `src/v4_motion.py`.
 The post-run tree audit and complete package index corroborate the retained
 record; they are not cryptographic proof of continuous no-retry execution or a
 fully bound runtime dependency closure.
+
+The current two-shard complement changes only the solver-scale execution
+topology: one 60-body scene covers 20 seeds and one 30-body scene covers the
+remaining 10. It binds two complete, independently verified reports into a
+30-seed claim; it does not claim that all 90 bodies were co-resident, that state
+was resumed across shards, or that the two scenes form one simulator result.
+The same archived decisions and preregistered active **29/30** endpoint remain
+unchanged. This complement is likewise non-locked, simulation-only, and
+`formal_result_eligible=false`.
+
+A focused Genesis URDF inertial-origin patch is prepared only in the local
+sibling checkout at commit
+`8fbf352912f748f87ba4e8c94ef31c817017b641`. It is not part of the competition
+evidence result, and no public issue, branch push, PR, review, or upstream
+acceptance is claimed.
 
 ## Final owner-review gate
 
@@ -254,13 +310,17 @@ fully bound runtime dependency closure.
 - [x] Regenerate and verify the official-directory `SHA256SUMS` after every
       final artifact is in place.
 - [x] Preserve and anonymously verify the existing public baseline assets.
-- [ ] Review the complete V2 evidence package and rerun its formal/package
-      checksum checks and local verifier.
-- [ ] Review the V2-integrated technical report and visually inspect every PDF
-      page after rebuild; record the replacement hash and page count.
-- [ ] Review the V2 site additions and local build/tests before deployment.
-- [ ] Review the regenerated official-package manifest, checksums, and exact
-      staging-to-official-fork diff.
+- [ ] Review both complete two-shard evidence packages and their dedicated
+      verifier/checksum records; automated verification is already green.
+- [x] Verify the 18-page technical report identity across output/site/official
+      copies and visually inspect all 18/18 rendered pages.
+- [x] Run the two-shard site tests, lint, production build, and dependency
+      audit: 38/38, pass, pass, and zero known vulnerabilities.
+- [ ] Complete owner visual review of the local Results/Reproduce refresh;
+      automated local Chrome QA has already passed desktop English/Chinese and
+      true 390 px mobile layouts with no horizontal overflow.
+- [x] Regenerate and verify the 152-entry official-package manifest and all 153
+      top-level checksum entries; confirm 154 total files.
 - [ ] After owner approval, publish the additive source/site/PDF/package
       refresh and verify every stable target without sign-in.
 - [ ] Review the official-fork branch diff and the English PR body.

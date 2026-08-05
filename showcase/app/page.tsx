@@ -60,7 +60,8 @@ function HomeContent() {
             <span>{zh ? "AMD 全流程墙钟遥测" : "AMD FULL-WALL TELEMETRY"}</span>
             <span>{zh ? "仅限仿真" : "SIMULATION ONLY"}</span>
             <span>{zh ? "冻结策略：一台共享 GENESIS 底盘" : "FROZEN POLICY: ONE SHARED GENESIS CHASSIS"}</span>
-            <span>{zh ? "独立补充：决策绑定动力学 30/30 · 90 实体/30 场景" : "SEPARATE DYNAMICS: 30/30 · 90 BODIES / 30 SCENES"}</span>
+            <span>{zh ? "规模补充：60体 20/20 + 30体 10/10 · 累计90 · 最大同场60" : "SCALE COMPLEMENT: 20/20 @ 60-BODY + 10/10 @ 30-BODY · CUMULATIVE 90 · MAX CO-RESIDENT 60"}</span>
+            <span>{zh ? "独立 V2：30/30 · 90 实体/30 场景" : "SEPARATE DYNAMICS: 30/30 · 90 BODIES / 30 SCENES"}</span>
           </div>
         </div>
         <div className="hero-system" aria-label={zh ? "Look Twice 系统状态" : "Look Twice system status"}>

@@ -5,6 +5,7 @@
   gap: 70px;
   border-bottom: 1px solid var(--line);
 }
+.challenge-repro > div { min-width: 0; }
 .challenge-repro > div:first-child > span {
   color: var(--cyan);
   font: 650 9px var(--font-mono);
@@ -23,11 +24,13 @@
 }
 .challenge-repro-links { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
 .challenge-repro-links a {
+  max-width: 100%;
   padding: 9px 11px;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--cyan);
   font: 650 7px var(--font-mono);
+  overflow-wrap: anywhere;
 }
 .challenge-repro pre {
   margin: 0 0 12px;

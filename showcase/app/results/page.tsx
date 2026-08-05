@@ -8,6 +8,10 @@ import {
   type DecisionDynamicsReport,
 } from "../lib/decisionDynamicsEvidence";
 import {
+  twoShardDynamicsEvidence,
+  type SingleSceneDecisionDynamicsReport,
+} from "../lib/twoShardDynamicsEvidence";
+import {
   dynamicsEvidence,
   type DynamicsReport,
 } from "../lib/dynamicsEvidence";
@@ -203,6 +207,10 @@ function Results() {
   const [challenge, setChallenge] = useState<ChallengeReport | null>(null);
   const [decisionDynamics, setDecisionDynamics] =
     useState<DecisionDynamicsReport | null>(null);
+  const [scalePrefix, setScalePrefix] =
+    useState<SingleSceneDecisionDynamicsReport | null>(null);
+  const [scaleSuffix, setScaleSuffix] =
+    useState<SingleSceneDecisionDynamicsReport | null>(null);
   const [dynamics, setDynamics] = useState<DynamicsReport | null>(null);
   useEffect(() => {
     fetch("/data/manifest.json").then((response) => response.json()).then((manifest) => {
@@ -249,6 +257,20 @@ function Results() {
       })
       .then(setDecisionDynamics)
       .catch(() => setDecisionDynamics(null));
+    fetch(twoShardDynamicsEvidence.prefixReportUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("60-body scale report unavailable");
+        return response.json();
+      })
+      .then(setScalePrefix)
+      .catch(() => setScalePrefix(null));
+    fetch(twoShardDynamicsEvidence.suffixReportUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error("30-body suffix report unavailable");
+        return response.json();
+      })
+      .then(setScaleSuffix)
+      .catch(() => setScaleSuffix(null));
   }, []);
   if (!profile || !challenge) return <div className="loading">{zh ? "正在加载已验证挑战证据…" : "LOADING VERIFIED CHALLENGE EVIDENCE…"}</div>;
   const batchOne = benchmark?.results.find((item) => item.batch_size === 1);
@@ -268,6 +290,29 @@ function Results() {
       (total, trial) => total + trial.script_entity_set_pos_calls_after_build,
       0,
     ) ?? 0;
+  const scaleTrials =
+    (scalePrefix?.summary.trials ?? 0) + (scaleSuffix?.summary.trials ?? 0);
+  const scaleActiveMean = scaleTrials
+    ? ((scalePrefix?.summary.trials ?? 0) * (scalePrefix?.summary.mean_active_loaded_carrier_path_m ?? 0) +
+        (scaleSuffix?.summary.trials ?? 0) * (scaleSuffix?.summary.mean_active_loaded_carrier_path_m ?? 0)) /
+      scaleTrials
+    : 0;
+  const scalePassiveMean = scaleTrials
+    ? ((scalePrefix?.summary.trials ?? 0) * (scalePrefix?.summary.mean_passive_loaded_carrier_path_m ?? 0) +
+        (scaleSuffix?.summary.trials ?? 0) * (scaleSuffix?.summary.mean_passive_loaded_carrier_path_m ?? 0)) /
+      scaleTrials
+    : 0;
+  const scaleReduction = scalePassiveMean
+    ? (1 - scaleActiveMean / scalePassiveMean) * 100
+    : 0;
+  const twoShardComplete = Boolean(
+    scalePrefix?.summary.all_passed &&
+      scaleSuffix?.summary.all_passed &&
+      scaleSuffix.combined_claim_boundary?.shard_count === 2 &&
+      scaleSuffix.combined_claim_boundary.cumulative_non_fixed_robot_entities === 90 &&
+      scaleSuffix.combined_claim_boundary.maximum_co_resident_non_fixed_robot_entities === 60 &&
+      !scaleSuffix.combined_claim_boundary.all_90_co_resident,
+  );
   return <main>
     <header className="page-header challenge-page-header"><div><span className="eyebrow">{zh ? "公开预注册挑战 / 独立验证通过" : "PUBLICLY PREREGISTERED CHALLENGE / INDEPENDENTLY VERIFIED"}</span><h1>{zh ? "结果，带着回执。" : "Results, with receipts."}</h1></div><p>{zh ? "首屏是 30 个同生成器世界、60 个预注册回合的挑战结果。原 12-pair permanent locked test 与旧 synthetic 60s 前向演示在下方分开保留。" : "The first evidence tier is the preregistered 30-world, 60-episode same-generator challenge. The original 12-pair permanent locked test and the older synthetic 60s forward demo remain explicitly separate below."}</p></header>
     <section className="result-section challenge-primary-evidence">
@@ -327,10 +372,44 @@ function Results() {
         </div>
       </div>
     </section>
+    {twoShardComplete && scalePrefix && scaleSuffix && <section className="result-section dynamics-evidence">
+      <div className="result-title">
+        <span>{zh ? "SOLVER-SCALE 补充 · 两个完整场景分片" : "SOLVER-SCALE COMPLEMENT · TWO COMPLETED SCENE SHARDS"}</span>
+        <h2>{zh ? "60体场景 20/20，加30体场景 10/10：固定30 seeds覆盖完成。" : "20/20 in one 60-body scene plus 10/10 in one 30-body scene: all 30 fixed seeds covered."}</h2>
+        <p>{zh ? "两份报告分别通过独立 verifier。它们合计实例化90个不同非固定机器人，最大同时驻留60个；90个机器人从未处于同一场景。主端点仍是主动29/30、被动0/30。" : "Each report passed its independent verifier. Together they instantiate 90 distinct non-fixed robots, with at most 60 co-resident. The 90 robots were never co-resident in one scene. The primary remains active 29/30 versus passive 0/30."}</p>
+      </div>
+      <div className="benchmark-panel dynamics-panel">
+        <div className="benchmark-tags"><span>ADDITIVE NON-LOCKED</span><span>EXACTLY 2 SCENE SHARDS</span><span>CUMULATIVE 90 · MAX CO-RESIDENT 60</span><span>2× VERIFIER PASS</span></div>
+        <div className="benchmark-grid dynamics-grid">
+          <article><span>{zh ? "固定 SEEDS 通过" : "FIXED SEEDS PASSED"}</span><strong>{scaleTrials}<small>/30</small></strong></article>
+          <article><span>{zh ? "场景分片" : "SCENE SHARDS"}</span><strong>2<small> completed</small></strong></article>
+          <article><span>{zh ? "累计 / 最大同场机器人" : "CUMULATIVE / MAX CO-RESIDENT"}</span><strong>90<small> / 60</small></strong></article>
+          <article><span>{zh ? "载荷车合并路径缩短" : "COMBINED CARRIER REDUCTION"}</span><strong>{scaleReduction.toFixed(2)}<small>%</small></strong></article>
+        </div>
+        <div className="dynamics-audit-grid">
+          <article><b>{zh ? "两个完整分片" : "TWO COMPLETE SHARDS"}</b><strong>20<small>/20 @ 60</small> + 10<small>/10 @ 30</small></strong><p>{zh ? "前缀覆盖 seeds 102500–102519；后缀覆盖 102520–102529。两个场景 ID 不同，不做跨分片恢复或结果拼接。" : "The prefix covers seeds 102500–102519; the suffix covers 102520–102529. Their scene IDs differ, with no cross-shard resume or outcome stitching."}</p></article>
+          <article><b>{zh ? "决策绑定的刚体结果" : "DECISION-BOUND RIGID OUTCOME"}</b><strong>90<small>/90 reached</small></strong><p>{zh ? "30个 Scout、30个主动载荷车与30个被动载荷车全部到达；29个直行配对各节省至少0.50 m，唯一双廊阻塞场景安全外绕。" : "All 30 scouts, 30 active carriers and 30 passive carriers reached. Every one of 29 direct pairs saved at least 0.50 m; the sole dual-blocked case took the safe outer detour."}</p></article>
+          <article><b>{zh ? "接触、稳定性与驱动" : "CONTACTS, STABILITY + ACTUATION"}</b><strong>0<small>{zh ? " 障碍物/主动配对接触记录行" : " blocker / active-pair contact rows"}</small></strong><p>{zh ? `build后位姿写入为0，仅使用轮速控制；最大倾角 ${Math.max(scalePrefix.summary.maximum_tilt_deg, scaleSuffix.summary.maximum_tilt_deg).toFixed(3)}°，最大停车漂移 ${(Math.max(scalePrefix.summary.maximum_stationary_partner_drift_m, scaleSuffix.summary.maximum_stationary_partner_drift_m) * 100).toFixed(3)} cm。` : `Zero post-build pose writes; wheel-velocity control only. Maximum tilt was ${Math.max(scalePrefix.summary.maximum_tilt_deg, scaleSuffix.summary.maximum_tilt_deg).toFixed(3)}° and maximum parked drift was ${(Math.max(scalePrefix.summary.maximum_stationary_partner_drift_m, scaleSuffix.summary.maximum_stationary_partner_drift_m) * 100).toFixed(3)} cm.`}</p></article>
+          <article className="boundary-warning"><b>{zh ? "必须保留的边界" : "REQUIRED BOUNDARY"}</b><strong>{zh ? "累计90 ≠ 90同场" : "CUMULATIVE 90 ≠ 90 CO-RESIDENT"}</strong><p>{zh ? "这是归档决策的固定顺序串行轮驱重放，不是在刚体运行中重新执行实时感知策略，不是同步多机器人协作、真机测试、sim-to-real或安全认证。" : "This is a fixed-order serial wheel replay of archived decisions—not a live perception-policy rerun inside the rigid-body run, simultaneous multi-robot cooperation, a physical-robot test, sim-to-real evidence or safety certification."}</p></article>
+        </div>
+        <div className="challenge-identities dynamics-identities">
+          <span><b>60-BODY REPORT SHA256</b><code>{twoShardDynamicsEvidence.prefixReportSha256}</code></span>
+          <span><b>30-BODY REPORT SHA256</b><code>{twoShardDynamicsEvidence.suffixReportSha256}</code></span>
+        </div>
+        <div className="evidence-links">
+          <a href={twoShardDynamicsEvidence.prefixReportUrl} target="_blank">{zh ? "60体报告 ↗" : "60-BODY REPORT ↗"}</a>
+          <a href={twoShardDynamicsEvidence.suffixReportUrl} target="_blank">{zh ? "30体后缀报告 ↗" : "30-BODY SUFFIX REPORT ↗"}</a>
+          <a href={twoShardDynamicsEvidence.prefixPackageChecksumsUrl} target="_blank">{zh ? "60体完整包校验索引（需克隆）↗" : "60-BODY PACKAGE INDEX (CLONE REQUIRED) ↗"}</a>
+          <a href={twoShardDynamicsEvidence.suffixPackageChecksumsUrl} target="_blank">{zh ? "30体完整包校验索引（需克隆）↗" : "30-BODY PACKAGE INDEX (CLONE REQUIRED) ↗"}</a>
+          <a href={twoShardDynamicsEvidence.prefixProtocolUrl} target="_blank" rel="noreferrer">{zh ? "60体协议 ↗" : "60-BODY PROTOCOL ↗"}</a>
+          <a href={twoShardDynamicsEvidence.suffixProtocolUrl} target="_blank" rel="noreferrer">{zh ? "30体后缀协议 ↗" : "30-BODY SUFFIX PROTOCOL ↗"}</a>
+        </div>
+      </div>
+    </section>}
     {decisionDynamics?.summary.all_passed && <section className="result-section dynamics-evidence">
       <div className="result-title">
         <span>{zh ? "独立补充 · 归档决策到轮驱动力学" : "SEPARATE ADDITIVE · ARCHIVED DECISIONS TO WHEEL DYNAMICS"}</span>
-        <h2>{zh ? "30/30 固定场景通过；90/90 非固定刚体到达；29/29 直行配对保留物理路径优势。" : "30/30 fixed scenes passed. 90/90 non-fixed bodies reached. All 29 direct pairs kept a physical path advantage."}</h2>
+        <h2>{zh ? "30/30 固定场景通过；90/90 非固定刚体到达；29/29 直行配对保留仿真刚体路径优势。" : "30/30 fixed scenes passed. 90/90 non-fixed bodies reached. All 29 direct pairs kept a simulated rigid-body path advantage."}</h2>
         <p>{zh ? "V2 将已归档的 29 个直行决策与唯一安全绕行，分别绑定到 30 个独立 Genesis 三实体场景。它不是实时感知策略重跑，也不是同场 90 实体；上方预注册主端点仍为主动 29/30 对被动 0/30。" : "V2 binds the 29 archived direct decisions and the single safe detour to 30 independent three-body Genesis scenes. It is not a live perception-policy rerun or one simultaneous 90-body scene; the preregistered primary above remains active 29/30 versus passive 0/30."}</p>
       </div>
       <div className="benchmark-panel dynamics-panel">

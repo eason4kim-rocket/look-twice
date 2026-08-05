@@ -1,9 +1,9 @@
 # Look Twice V8 Competition Submission Checklist
 
 Verified against the official event page, governing Rules and Conditions, and
-official submission repository on 2026-08-04.
+official submission repository on 2026-08-05.
 
-**Owner-review state:** `v2_owner_review_pending_no_pr`
+**Owner-review state:** `two_shard_finalized_owner_review_pending_no_pr`
 
 **Official PR opened:** `false`
 
@@ -34,8 +34,11 @@ Official sources:
 - [ ] Confirm AMD Developer Program membership for prize eligibility.
 - [ ] Confirm entrant is at least 18 or the age of majority.
 - [x] Confirm `Liu Liang` is the registered solo entrant/team label.
-- [x] Keep the registration email private; do not publish it in the PR,
-      report, repository, video, or evidence site.
+- [x] Do not print the registration email in the PR body, report, packaged
+      submission files, video, or evidence site. Existing Git history metadata
+      already contains it, so use the account's GitHub noreply identity for new
+      submission commits rather than claiming the full repository history is
+      private.
 - [ ] Confirm the registration email and phone are monitored for seven days
       after judging.
 
@@ -83,7 +86,8 @@ Official sources:
       non-locked, and `formal_result_eligible=false`; do not relabel it as a
       frozen-policy rerun, simultaneous cooperative control, or real robot.
 - [x] Report the fixed dynamics denominator exactly: 20/20 seeds, 40 non-fixed
-      entities, zero blocker/pair contacts, and zero post-build pose writes.
+      entities, zero counted blocker/pair contact rows, and zero post-build pose
+      writes.
 - [x] Retain the 3,600-second infrastructure-timeout audit and disclose that
       recovery changed only the outer watchdog to 10,800 seconds, with no seed
       result observed, retried, replaced, or resampled.
@@ -103,6 +107,25 @@ Official sources:
       directly imported `src/v4_motion.py`. Treat the post-run tree audit and
       complete package index as corroboration, not cryptographic proof of no
       retry or a fully bound dependency closure.
+- [x] Present the solver-scale complement as two independent archived-decision
+      reports: 20/20 fixed decisions in one 60-body scene and 10/10 in a second
+      30-body scene.
+- [x] State the combined topology exactly: **exactly two scenes**, 90
+      cumulative distinct non-fixed robots, maximum co-resident 60, and never
+      all 90 co-resident. Do not call it a 90-body scene or one fleet run.
+- [x] Report the two-shard outcome exactly: all 30 scouts, 30 active carriers,
+      and 30 passive carriers reached; 29/29 direct pairs saved at least 0.50 m;
+      seed `102515` completed its safe detour; weighted active/passive path
+      4.943605/6.245385 m (20.8439% reduction); zero counted blocker/active-pair
+      contacts and post-build pose writes; maximum tilt/drift
+      10.583984 degrees/0.021342 m.
+- [x] Keep both solver-scale shards additive, non-locked,
+      `formal_result_eligible=false`, fixed-order serial, and simulation-only.
+      Do not present them as a live policy rerun, simultaneous fleet control,
+      dynamic-obstacle, physical-robot, sim-to-real, energy, throughput,
+      latency, or safety-certification evidence.
+- [x] Preserve the failed V1 all-90-body history and never relabel the two-shard
+      success as completion of that one-scene attempt.
 - [x] State the aggregate challenge task ledger in both directions:
       loaded-carrier logical path -22.5%, total logical-role team path +24.0%.
 - [x] State simulation-only, kinematic-motion, and no-safety-certification
@@ -149,16 +172,36 @@ Official sources:
 - [x] Preserve all 30 V2 checkpoints, the attempt ledger, worker logs, recovery
       audit, provenance review, and both formal and complete-package checksum
       indexes for owner review.
+- [x] Freeze and verify the 60-body prefix: 20/20, report SHA256
+      `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`,
+      dedicated verifier pass, and both checksum indexes pass.
+- [x] Freeze and verify the 30-body suffix: 10/10, report SHA256
+      `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`,
+      dedicated verifier pass, and both checksum indexes pass.
+- [x] Confirm the two reports cover disjoint fixed seed ranges
+      `102500-102519` and `102520-102529`, use distinct scene identities, and
+      have no cross-shard resume or result stitching.
 
 ## English submission materials
 
 - [x] Root V8 README with a 90-second judge path.
-- [x] One-page frozen-challenge Judge Card with the public-before-execution
-      binding, result, safety, AMD execution, task trade, and honest scope.
-- [x] V8 technical report source in `docs/V8_TECHNICAL_REPORT.md`.
-- [x] Rendered 15-page V2-integrated technical report PDF and visually
-      inspected every page after the final rebuild.
-- [x] Detailed V8 reproduction guide.
+- [x] Compact frozen-challenge Judge Card with the public-before-execution
+      binding, result, safety, AMD execution, task trade, two-shard complement,
+      and honest scope.
+- [x] V8 technical report source in `docs/V8_TECHNICAL_REPORT.md`, updated with
+      the independently verified two-shard result and boundary.
+- [x] Retain the rendered 15-page V2-integrated report PDF as the previous
+      pre-two-shard snapshot.
+- [x] Rebuild the two-shard-integrated technical report as an 18-page PDF;
+      record SHA256
+      `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`
+      and complete rendered page-by-page visual QA for all 18/18 pages.
+- [x] Verify that the canonical PDF output, local site copy, and 18-page local
+      official-package copy are byte-identical. The stable public
+      release PDF remains the older pre-two-shard baseline until an
+      owner-approved replacement is uploaded and verified.
+- [x] Detailed V8 reproduction guide, including independent checksum/verifier
+      commands for both solver-scale shards.
 - [x] AMD environment and workload boundary.
 - [x] Evidence claim boundary.
 - [x] Exact English official PR body draft with stable target URLs.
@@ -175,21 +218,39 @@ Official sources:
 - [x] Record the 239-second video and sidecar identities in the submission
       manifest.
 - [x] Regenerate the final local `SHA256SUMS` and verify all 104 checksummed
-      artifacts (105 total files including `SHA256SUMS`); verify that the
-      machine manifest inventories all 103 payload files in its scope.
+      artifacts (105 total files including `SHA256SUMS`) for the prior V2-only
+      staging snapshot; verify that its machine manifest inventories all 103
+      payload files in its scope.
 - [x] Integrate the V2 result note and complete 80-file locally indexed
       evidence directory.
-- [ ] Owner reviews the V2-integrated technical-report source and rebuilt PDF,
-      including its new identity, page count, and page-by-page visual QA.
-- [ ] Owner reviews the V2 Results/Reproduce site additions, byte-identity
-      tests, local production build, lint, and dependency audit before deploy.
-- [ ] Owner reviews the complete V2 evidence directory in official-package
-      staging, its regenerated manifest/checksums, and the exact package diff.
+- [ ] Owner reviews the two-shard-integrated technical-report source and the
+      staged 18-page PDF, including its identity and 18/18 visual-QA record.
+- [ ] Owner completes browser review of the two-shard Results/Reproduce site
+      additions before deploy; code/test/build/lint/audit checks are complete.
+- [ ] Owner reviews the complete V2 and two-shard evidence payload in local
+      official-package staging, the finalized top-level manifests, and the
+      exact package diff.
+- [x] Integrate the 60-body prefix and 30-body suffix claims into the root
+      README, Judge Card, evidence boundary, technical-report source,
+      reproduction guide, PR draft, and this checklist.
+- [x] Integrate both sealed solver-scale evidence directories into the local
+      site and official-package staging; preserve their internal checksum
+      indexes and dedicated verifier passes.
+- [x] Run the official-package finalizer at `2026-08-05T09:43:08Z` and write
+      the final top-level machine manifests, checksum index, file counts, and
+      package identity; its subsequent `--check` passes.
+- [x] Record 152 manifest inventory entries, 153 checksum entries, and 154
+      total regular files including `SHA256SUMS`; all 153 `shasum` checks pass.
+      The top-level `SHA256SUMS` SHA256 is
+      `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+- [ ] Owner reviews the two-shard Results/Reproduce presentation, rebuilt PDF,
+      official-package diff, and exact `cumulative90/max60/never90` wording.
 
 ## Reproducibility
 
-- [x] Push the current 239-second demo, hash-pinned narration provenance, and
-      owner-review documentation to `v8-competition-release`.
+- [x] Prior public baseline: push the 239-second demo, hash-pinned narration
+      provenance, and its then-current review documentation to
+      `v8-competition-release`.
 - [x] Verify the updated final branch HEAD from an anonymous clean clone.
 - [x] Publish the 159 MB V8 checkpoint at the stable release URL.
 - [x] Download the public checkpoint without credentials and verify its SHA256.
@@ -213,16 +274,24 @@ Official sources:
 - [x] Run `go test ./...` for the Purify reference core.
 - [x] Add exact ROCm dependency and environment preflight files.
 - [x] Build and route-smoke the Evidence Console with Docker.
-- [x] Lint, production-build, and run all 35 Evidence Console tests with Node
-      22. The previous public baseline retains its hydrated visual inspection;
-      owner browser review of the local V2 hierarchy remains gated before deploy.
+- [x] Lint, production-build, and run all 38 Evidence Console tests with Node
+      22 after the two-shard Results/Reproduce integration.
 - [x] Pin patched Web dependencies and obtain zero known `npm audit`
-      vulnerabilities.
+      vulnerabilities. The refreshed site remains local and undeployed;
+      owner browser review is still required.
 - [x] Run all seven additive dynamics unit/verifier tests and Ruff checks.
 - [x] Run the recovery V2 report verifier on the Radeon host and on the
       byte-identical local report; both accepted the 30/30 report SHA.
+- [x] Verify both solver-scale evidence directories locally: formal and package
+      checksum indexes pass, the 60-body verifier accepts 20/20, and the
+      30-body suffix verifier accepts 10/10.
+- [x] Independently recompute the exact weighted two-shard summary from the
+      fixed 20+10 denominators: active/passive 4.943605/6.245385 m and 20.8439%
+      reduction; do not create or imply a synthetic combined report.
 - [ ] Owner reruns the formal and complete-package checksum indexes plus the V2
       local verifier from the final integrated review tree.
+- [ ] Owner reruns both solver-scale checksum suites and dedicated verifiers
+      from the final integrated review tree.
 - [ ] Verify every README command exactly as written from the public clean
       clone.
 
@@ -252,6 +321,16 @@ Official sources:
 - [x] Archive the separate recovery V2 execution as 30 fresh Genesis
       subprocesses on AMD ROCm; keep its 1,101-second wall time as an
       engineering record, not throughput or latency evidence.
+- [x] Archive the single-scene 60-body Radeon execution and independently
+      verified 20/20 report; limit the claim to one scene, fixed-order serial
+      actuation, and 60 co-resident bodies.
+- [x] Archive the second-scene 30-body Radeon suffix execution and independently
+      verified 10/10 report; limit the combined statement to exactly two
+      scenes, cumulative 90 distinct robots, maximum co-resident 60, and never
+      all 90 co-resident.
+- [x] Treat both solver-scale body counts and execution walls as acceptance and
+      topology facts, not GPU throughput, latency, utilization, or energy
+      benchmarks.
 
 ## Website and public URLs
 
@@ -274,16 +353,28 @@ Stable targets:
 - [x] Prepare a separate dual-body Results card sourced from byte-identical
       report and audit copies, while preserving the frozen shared-chassis
       boundary.
-- [x] Site links the final report, source branch, checkpoint, and video targets.
-- [x] Rebuild, lint, run all 35 tests, and obtain a zero-vulnerability
-      dependency audit for the refreshed V2 site locally; no deployment was
-      made, and owner browser review remains gated before deployment.
+- [x] Site links the stable report, source branch, checkpoint, and video
+      targets. The stable report URL still serves the older pre-two-shard PDF;
+      it is not yet the current 18-page local artifact.
+- [x] Rebuild, lint, run all 38 tests, and obtain a zero-vulnerability
+      dependency audit for the two-shard-integrated site locally; this work is
+      complete but not deployed.
 - [ ] Owner reviews the separate 30/30 decision-bound V2 Results card and
       reproduction audit, including the 29/30 primary endpoint and the
       non-simultaneous 90-body boundary, after all site checks pass.
+- [x] Add a distinct solver-scale two-shard Results card and Reproduce audit;
+      keep V2 separate and show 20/20 at 60 co-resident plus 10/10 at 30
+      co-resident, exactly two scenes, cumulative 90, maximum 60, never 90.
+- [x] Add six byte-identical report/checksum public-data copies to the local
+      site tree for the two sealed shards, and cover disjoint seeds, distinct
+      scenes, 60/30 body counts, cumulative 90, maximum 60, and
+      `all_90_co_resident=false` in the evidence tests.
+- [x] Run site lint, production build, all 38 tests, and dependency audit after
+      the two-shard integration.
+- [ ] Complete owner browser review of the local Results/Reproduce presentation.
 - [ ] Publish the refreshed dynamics site only after owner approval.
 - [x] Keep the previously published public baseline on Pages with HTTPS
-      enforced; do not describe the local V2 refresh as deployed.
+      enforced; do not describe the local two-shard refresh as deployed.
 - [x] Verify the previous public baseline routes and referenced client/binary
       assets without sign-in.
 - [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
@@ -350,8 +441,10 @@ Stable targets:
 - [x] Search open and closed Genesis issues/PRs for exact duplicates.
 - [x] Prepare exact English issue body, PR body, validation record, and
       publication sequence locally.
-- [x] Keep the local patch at commit
-      `e5d4b5592a156352b8319de83e16ba73e30a3afe` with a clean worktree.
+- [x] Re-fetch upstream main on 2026-08-05, replay the identical patch without
+      conflict, and keep the current-main review at commit
+      `8fbf352912f748f87ba4e8c94ef31c817017b641` with a clean worktree; its
+      stable patch-id matches the earlier `31b58c4` review commit.
 - [x] Identify merged PR #2499 as the related prior change and position this
       patch as a narrow follow-up to the current parser/finalizer regression,
       not an unacknowledged duplicate.
@@ -369,24 +462,45 @@ Stable targets:
 - [x] Stage an English submission directory locally containing the judge-facing
       index, report PDF, compact evidence, and preview.
 - [x] Add the locally verified demo artifact and unchanged stable target URL.
-- [x] Add the 15-page report, four-file dual-body report/recovery chain, and
-      complete 80-file decision-bound recovery V2 evidence directory to local
-      official-repository staging.
-- [x] Regenerate and verify 104 local checksum entries (105 total files
-      including `SHA256SUMS`); checksum-index SHA256
+- [x] Preserve the prior V2-only staging snapshot with its 15-page report,
+      four-file dual-body report/recovery chain, and complete 80-file
+      decision-bound recovery V2 evidence directory.
+- [x] Record the prior V2-only snapshot's 104 local checksum entries (105 total
+      files including `SHA256SUMS`); checksum-index SHA256
       `e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9`.
 - [x] Preserve the previously published official-fork baseline at commit
       `32cff1a1e77952e689f4730ff21b8a8a8ad01a63` without opening a PR.
 - [x] Add the complete decision-bound recovery V2 evidence directory, updated
-      report PDF, Judge Card, and README to the local official-package staging
-      tree; regenerate `SUBMISSION_PACKAGE.json` and top-level `SHA256SUMS`.
-- [x] Copy the staging directory byte-for-byte to the local official-fork
-      worktree and verify a clean `diff -qr` plus 104/104 package checksums
-      before any push.
-- [ ] After owner approval, push the reviewed V2-integrated refresh to the
+      V2 report PDF, Judge Card, and README to the prior local official-package
+      staging tree; regenerate its `SUBMISSION_PACKAGE.json` and top-level
+      `SHA256SUMS`.
+- [x] Copy that prior V2 staging directory byte-for-byte to the local
+      official-fork worktree and verify a clean `diff -qr` plus 104/104 package
+      checksums before any push.
+- [x] Stage the complete sealed 60-body prefix and 30-body suffix evidence
+      directories plus refreshed README, Judge Card, and byte-identical
+      18-page PDF in the local official package; both directories pass their
+      internal formal/package checksum indexes and dedicated verifiers.
+- [x] Regenerate `SUBMISSION_PACKAGE.json`, top-level `SHA256SUMS`, handoff
+      manifest, release notes, all file counts, and every affected SHA after
+      the two-shard payload is final. The finalized counts are 152 manifest
+      entries, 153 checksum entries, and 154 total regular files; the prior
+      103/104/105 counts and `e3fee903…` checksum identity remain archived only.
+- [x] Verify all 153 top-level checksums, rerun the finalizer with `--check`,
+      and pass both staged solver-scale dedicated verifiers. The final
+      top-level checksum-index SHA256 is
+      `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+- [ ] Copy the final two-shard staging directory byte-for-byte to the local
+      official-fork worktree and verify `diff -qr` plus every checksum before
+      any push.
+- [ ] After owner approval, push the reviewed two-shard-integrated refresh to the
       dedicated official-fork branch; do not imply the current public baseline
       contains the new dynamics files.
 - [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
+- [ ] Immediately before pasting, replace the owner-review preamble in
+      `docs/SUBMISSION_DRAFT.md` with the actual publication state and rerun
+      the no-stale-state scan; do not file a body that still says “not yet
+      filed” or “PR pending.”
 - [ ] Paste the final English body from `docs/SUBMISSION_DRAFT.md`.
 - [x] Keep `official_pr_opened=false` until owner review.
 - [ ] Owner explicitly authorizes the official PR.
@@ -398,14 +512,26 @@ Stable targets:
 - [x] Entrant/team label confirmed as `Liu Liang`.
 - [x] Final MP4 and sidecar pass local QA for the recorded 239-second identity.
 - [ ] Owner completes final visual and audible review.
-- [x] Final local 104-entry `SHA256SUMS` verifies cleanly after identity
-      propagation; the 103-entry package inventory has exact path coverage.
+- [x] The prior V2-only 104-entry `SHA256SUMS` verifies cleanly; its 103-entry
+      package inventory has exact path coverage for that snapshot only.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
 - [x] The public official-fork branch remains at its earlier baseline pending
-      owner approval; the final local staging package contains exactly 105
+      owner approval; the prior V2-only local staging snapshot contains 105
       regular files.
+- [x] The current local two-shard staging contains both sealed evidence
+      directories and the byte-identical 18-page PDF with SHA256
+      `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`;
+      these additions are not yet pushed or public.
+- [x] Run the final official-package finalizer and record its top-level
+      manifests and 152/153/154 counts. Its `--check`, all 153 checksum
+      validations, and both staged dedicated verifiers pass; the top-level
+      `SHA256SUMS` SHA256 is
+      `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
 - [ ] Owner reviews the complete V2 evidence package, local verifier output,
       rebuilt PDF, refreshed site, and exact official-package diff.
+- [ ] Owner reviews both solver-scale reports and verifier outputs, the rebuilt
+      two-shard PDF/site, regenerated package identities/counts, and exact
+      official-package diff.
 - [ ] Owner reviews `docs/SUBMISSION_DRAFT.md`.
 - [x] No official PR exists before explicit owner approval.

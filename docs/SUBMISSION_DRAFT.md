@@ -1,10 +1,22 @@
 # Track 3, Liu Liang, Look Twice
 
 > **Owner-review preparation state - not yet filed:** the final 239-second
-> video and the existing V8 review targets are public and anonymously verified.
-> The additive dynamics evidence, new 30/30 decision-bound recovery V2 packet,
-> refreshed report/site/official package, and Genesis upstream fix are prepared
-> locally for owner review. No competition or external upstream PR is open.
+> video and the older public V8 baseline are anonymously verified. Locally, the
+> two-shard Results/Reproduce refresh passes production build, lint, all 38
+> tests, and a zero-vulnerability audit; its six byte-identical public-data
+> copies are prepared but not deployed. The two sealed solver-scale directories
+> and a byte-identical 18-page technical PDF are staged locally. At
+> `2026-08-05T09:43:08Z`, the official-package finalizer produced 152 manifest
+> entries, 153 checksum entries, and 154 total regular files; its `--check`, all
+> 153 `shasum` validations, and both staged dedicated verifiers pass. The
+> top-level `SHA256SUMS` SHA256 is
+> `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+> The canonical output, site, and official-package PDF copies are byte-identical
+> at `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`,
+> and the report passed rendered visual QA on 18/18 pages. The stable release
+> PDF URL still serves the older pre-two-shard baseline. Owner browser review,
+> stable release replacement, source push, Pages deployment, the upstream
+> issue/PR, and the competition PR remain pending.
 
 ## Project
 
@@ -34,12 +46,14 @@ Public Evidence Console, no sign-in required:
 
 https://eason4kim-rocket.github.io/
 
-The site replays recorded Genesis plus AMD GPU evidence. It does not create new
-benchmark samples and does not require a live GPU.
+The currently deployed site replays recorded Genesis plus AMD GPU evidence. It
+does not create new benchmark samples and does not require a live GPU. Its
+two-shard Results/Reproduce refresh has passed local checks but is not deployed;
+the public URL still serves the older baseline pending owner browser review.
 
 ## 90-second judge path
 
-1. Open the one-page [V8 Frozen Challenge Judge Card](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md).
+1. Open the compact [V8 Frozen Challenge Judge Card](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md).
 2. Confirm the public Commit A/Commit B timestamps, 30-pair endpoint, raw
    archive, and independent verification SHA.
 3. Open the Evidence Console and watch the initial denial, BeliefGap, and
@@ -49,21 +63,27 @@ benchmark samples and does not require a live GPU.
 5. Switch to passive mode and compare its safe detour.
 6. Inspect the challenge's 844-sample full-wall ROCm telemetry and 30-world
    carrier/scout burden table.
-7. Open Results and inspect the separate 30/30 decision-bound rigid-dynamics
-   card, then the earlier 20/20 dual-body acceptance card.
-8. Confirm that 30/30 is an archived-decision execution supplement and that
-   the preregistered primary endpoint remains active 29/30 versus passive 0/30.
-9. Follow the permanent locked metrics separately.
+7. After the owner-approved site refresh is deployed, open Results and inspect
+   the separate 30/30 decision-bound rigid-dynamics card, then the earlier
+   20/20 dual-body acceptance card.
+8. Inspect its independently verified solver-scale complement: 20/20 in one
+   60-body scene and 10/10 in a second 30-body scene--exactly two scenes, 90
+   cumulative distinct robots, maximum co-resident 60, never all 90
+   co-resident.
+9. Confirm that all dynamics results are archived-decision execution
+   supplements and that the preregistered primary endpoint remains active
+   29/30 versus passive 0/30.
+10. Follow the permanent locked metrics separately.
 
 ## Official Track 3 judging map
 
 | Criterion | Evidence in this submission |
 | --- | --- |
-| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate additive decision-bound dynamics: 30/30 independent three-body scenes, all 90 distinct robot instantiations reached, 20.8183% paired loaded-carrier path reduction, and zero blocker/active-pair contact rows. This does not replace the 29/30 endpoint. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate 20/20 and 30/30 wheel-dynamics runs retain reports, disclosed source bindings, and local verifiers. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered primary: active **29/30** full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate V2: 30/30 archived decisions in 30 independent three-body scenes. Solver-scale complement: **20/20 in one 60-body scene + 10/10 in a second 30-body scene**, 90/90 cumulative bodies reached, maximum co-resident 60, never all 90 co-resident, 29/29 direct pairs saved at least 0.50 m, one safe detour, and zero counted blocker/active-pair contact rows. None replaces the 29/30 endpoint. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate dual-body, V2, single-scene 60-body, and second-scene 30-body wheel-dynamics runs retain reports, source bindings, checksums, and local verifiers. Body counts and elapsed walls are acceptance facts, not throughput claims. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
-| Real-world application value - 20 | Across 30 warehouse pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%, with all missions completed safely. |
-| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. A focused Genesis URDF inertial-origin fix plus required regression test is prepared locally with baseline-fail/patch-pass evidence; no public external PR is claimed until owner approval. |
+| Real-world application value - 20 | Across 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. The separate two-shard wheel replay retained a weighted 20.8439% loaded-carrier path reduction; neither result is energy or throughput evidence. |
+| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. A focused two-file Genesis URDF inertial-origin fix is prepared locally at `8fbf352`: the identical required test failed on the tested 2026-08-05 upstream-main snapshot `207db28` and passed on the patch; its stable patch-id matches the earlier review commit. Complete `scene.build()` comparison preserves authored principal moments only with the patch and retains geometry fallback for an absent `<inertial>` in both trees. No public issue, fork push, PR, review, or acceptance is claimed until owner approval. |
 
 ## Verified frozen result
 
@@ -128,7 +148,8 @@ at `2026-08-03T10:02:22Z`. B changed only the A-hash field.
 | Full-chain direct | 29/30 (96.7%) | 0/30 (0.0%) |
 | Wilson 95% CI | 83.3-99.4% | 0.0-11.4% |
 | Mission success | 30/30 | 30/30 |
-| Unsafe / fallback | 0 / 0 | 0 / 0 |
+| Unsafe | 0/30 | 0/30 |
+| Fallback | 0/30 | 0/30 |
 
 The paired gain is **+96.7 percentage points**; exact two-sided McNemar
 `p=3.73e-9`. Full-chain direct requires mission success, direct/no-detour, and
@@ -174,8 +195,9 @@ loaded carrier and one scout each as separate non-fixed Genesis URDF bodies:
 in sequential phases using wheel-DOF velocity targets only; the script issued
 no entity pose write after `scene.build()`.
 
-The Radeon run passed **20/20** fixed seeds with zero trial-blocker contacts,
-zero carrier/scout pair contacts, and zero post-build pose writes. Maximum
+The Radeon run passed **20/20** fixed seeds with zero counted trial-blocker
+contact rows, zero counted carrier/scout-pair contact rows, and zero post-build
+pose writes. Maximum
 tilt was 10.750 degrees and maximum parked-partner drift was 0.018061 m. The
 source-bound report passed the same verifier remotely and locally and hashes
 to `8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110`.
@@ -230,6 +252,41 @@ audit and the complete package index provide corroboration, not cryptographic
 proof of continuous no-retry execution or a fully bound runtime dependency
 closure.
 
+## Separate solver-scale two-shard complement
+
+A further fixed submission-time complement tests the same archived decisions
+with unrelated bodies resident in each Genesis solver. Seeds `102500-102519`
+passed **20/20** in one scene containing 60 co-resident non-fixed robots. Seeds
+`102520-102529` passed **10/10** in a second scene containing 30 co-resident
+robots. Each scene had one scout, one active loaded carrier, and one passive
+loaded carrier per assigned seed; used one Genesis initialization and one
+scene build; actuated trials in fixed serial order with wheel velocity control;
+and produced a separate, non-resumable, independently verified report.
+
+Across **exactly two completed scene shards**, all 30 scouts, 30 active
+carriers, and 30 passive carriers reached. The two reports therefore contain
+**90 cumulative distinct robot entities**, with **maximum co-resident 60**;
+the 90 robots were **never all co-resident**. There was no cross-shard resume
+or report stitching. All 29 archived direct pairs saved at least 0.50 m, seed
+`102515` completed its archived safe detour, and the weighted loaded-carrier
+mean was **4.943605 m active versus 6.245385 m passive**, a **20.8439%**
+reduction. Counted blocker/active-pair contact rows and post-build pose writes
+were zero; maximum tilt/drift was **10.583984 degrees / 0.021342 m**.
+
+The 60-body prefix report SHA256 is
+`3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+the 30-body suffix report SHA256 is
+`69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+Both exact reports must verify independently before the two-shard summary is
+used. This does not relabel the timed-out V1 all-90-body attempt as successful.
+
+The complement is additive, non-locked, archived-decision, fixed-order serial,
+simulation-only evidence with `formal_result_eligible=false`. It is not a live
+perception-policy rerun, simultaneous cooperative fleet-control test,
+dynamic-obstacle test, physical-robot or sim-to-real result, energy/throughput
+claim, or safety certification. The preregistered primary remains active
+**29/30** full-chain direct versus passive **0/30**.
+
 ## What runs on the AMD Radeon GPU
 
 | Stage | Execution |
@@ -271,19 +328,26 @@ receipts: 268 RGB-D observations, 134 vision proposals, and 268 Go
 invocations/receipts. These are complete subprocess-wall measurements, not
 control-loop latency or physical energy per mission.
 
+The solver-scale complement separately ran one 60-body and one 30-body scene
+on the same Genesis/ROCm class. Both scene shards passed their fixed acceptance
+bars and independent verifiers. Their co-resident body counts and elapsed
+walls are execution-topology facts, not GPU throughput, utilization,
+control-loop latency, or mission-energy claims.
+
 ## Deliverables
 
 | Requirement | Location |
 | --- | --- |
-| One-page challenge Judge Card | [public preregistration, result, AMD telemetry, application burden, and verifier](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md) |
+| Compact challenge Judge Card | [public preregistration, result, AMD telemetry, application burden, and verifier](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md) |
 | Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [post-hoc feasibility audit](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
 | Dual-body dynamics evidence | [20-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md) · [machine report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json) · timeout/recovery audits and `SHA256SUMS` in the same directory |
 | Decision-bound dynamics V2 | [30-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [complete evidence directory](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-derived/decision_dynamics_recovery_v2_102500_102529) · formal and package checksum indexes, provenance review, and local verifier |
-| Technical report | [release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf) · [source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md) |
+| Solver-scale two-shard evidence | Final target links: [20/20 60-body prefix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · [10/10 30-body suffix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json). Both sealed directories, their protocols, source bindings, trial checkpoints, checksum indexes, and verifier results are staged locally but not yet pushed. |
+| Technical report | Current owner-review artifact: 18 pages, SHA256 `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`, 18/18 rendered pages visually inspected and byte-identical in local staging. The [stable release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf) still serves the older pre-two-shard baseline; [source target](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md). |
 | Project source code | [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |
 | Docker path | [Dockerfile](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/Dockerfile) · [Compose](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docker-compose.yml) |
-| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) |
+| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results) · [Reproduce](https://eason4kim-rocket.github.io/reproduce). These URLs currently serve the older baseline; the locally tested two-shard refresh is pending owner browser review and deployment. |
 | Frozen evidence | [V8 archive](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-frozen) · [import manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/V8_FROZEN_IMPORT_MANIFEST.json) |
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |
@@ -356,6 +420,21 @@ python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
   release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json
 ```
 
+Solver-scale two-shard audit, also without a GPU and without stitching the
+reports:
+
+```bash
+P60=release/v8-derived/decision_dynamics_single_scene_60_102500_102519
+S30=release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529
+(cd "$P60" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd "$S30" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_60.py "$P60/REPORT.json"
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  "$S30/REPORT.json"
+```
+
 Local Evidence Console:
 
 ```bash
@@ -392,6 +471,13 @@ hashes are in the
   independent three-body scenes. Its 90 distinct bodies are not one
   simultaneous 90-body scene, and its 30/30 execution result does not replace
   the preregistered active 29/30 full-chain endpoint.
+- The solver-scale complement replays the same archived decisions in exactly
+  two separate, non-resumable, fixed-order serial scenes: a 20/20 60-body
+  prefix and a 10/10 30-body suffix. It contains 90 cumulative distinct robots,
+  but maximum co-resident is 60 and the 90 robots were never all co-resident.
+  It is not a live perception-policy rerun, simultaneous cooperative fleet
+  control, completion of the failed V1 all-90-body attempt, or a replacement
+  for the primary 29/30 endpoint.
 - The V2 attempt ledger and logs show no retry or replacement, but the original
   formal checksum set did not bind those files and the original source manifest
   omitted one direct runtime dependency. The post-run review is corroborating

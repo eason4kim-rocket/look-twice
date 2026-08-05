@@ -238,6 +238,18 @@ def table_from_markdown(
         col_widths = [available_width * 0.38, available_width * 0.62]
     elif column_count == 3:
         col_widths = [available_width * 0.28, available_width * 0.28, available_width * 0.44]
+    elif column_count == 4 and parsed[0] == [
+        "Fixed check",
+        "60-body prefix",
+        "30-body suffix",
+        "Exact two-shard summary",
+    ]:
+        col_widths = [
+            available_width * 0.30,
+            available_width * 0.17,
+            available_width * 0.17,
+            available_width * 0.36,
+        ]
     else:
         col_widths = [available_width / column_count] * column_count
     data: list[list[Paragraph]] = []
@@ -360,7 +372,7 @@ def draw_cover(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     canvas.setFillColor(colors.HexColor("#91A0A1"))
     canvas.setFont("LTMono", 6.5)
     canvas.drawString(20 * mm, 11 * mm, "LOOK TWICE · V8 FROZEN · TRACK 3 PHYSICAL AI")
-    canvas.drawRightString(width - 20 * mm, 11 * mm, "2026-08-04")
+    canvas.drawRightString(width - 20 * mm, 11 * mm, "2026-08-05")
     canvas.restoreState()
 
 
@@ -394,13 +406,6 @@ def build_cover(
         fontSize=13,
         leading=15,
         textColor=CYAN_BRIGHT,
-    )
-    metric_label_style = ParagraphStyle(
-        "CoverMetricLabel",
-        parent=styles["cover_meta"],
-        fontSize=5.8,
-        leading=8,
-        textColor=colors.HexColor("#91A0A1"),
     )
     audit_note_style = ParagraphStyle(
         "CoverAuditNote",
@@ -451,8 +456,10 @@ def build_cover(
                 "* Post-hoc descriptive oracle audit: 29/29 worlds with a clear corridor "
                 "went direct; the sole dual-blocked world safely detoured.<br/>"
                 "The preregistered primary remains active 29/30 versus passive 0/30.<br/>"
-                "Separate additive evidence: 20/20 fixed dual-body dynamics seeds; "
-                "not a frozen-policy rerun or physical-robot result.",
+                "Additive simulation-only dynamics: 20/20 in one 60-body scene + "
+                "10/10 in one 30-body scene;<br/>"
+                "cumulative 90, maximum co-resident 60, never 90 co-resident. "
+                "Archived decisions only; not a frozen-policy rerun or physical-robot result.",
                 audit_note_style,
             ),
             Spacer(1, 6),

@@ -9,7 +9,7 @@
 **Release candidate:** `v8-frozen`
 
 **License:** Apache-2.0
-**Report date:** 2026-08-04
+**Report date:** 2026-08-05
 
 ## Executive summary
 
@@ -60,7 +60,8 @@ endpoint.
 The frozen policy result is simulation-only and uses a kinematic Genesis
 motion backend. A separate submission-time dual-body supplement instantiated
 40 non-fixed carrier/scout entities and passed a fixed 20-seed wheel-dynamics
-bar with zero blocker or pair contacts and zero post-build script pose writes.
+bar with zero counted trial-blocker or carrier/scout-pair contact rows and zero
+post-build script pose writes.
 It is additive, non-locked, and not a rerun or replacement of the frozen
 policy endpoint.
 
@@ -72,9 +73,24 @@ robot instantiations reached, mean loaded-carrier path fell from 6.2433 m
 passive to 4.9435 m active (20.8183%), blocker and active-pair contact rows
 were zero, maximum tilt was 10.5796 degrees, and maximum parked-partner drift
 was 0.022329 m. The 90 bodies are totals across 30 independent scenes, not one
-simultaneous 90-body execution. Both dynamics supplements remain non-locked,
-carry `formal_result_eligible=false`, and claim neither real-robot validation
-nor safety certification. The frozen primary remains 29/30 direct.
+simultaneous 90-body execution.
+
+A further solver-scale complement replayed the same fixed archived decisions
+with unrelated robots co-resident in each solver. The first 20 decisions passed
+20/20 in one 60-body scene; the final ten passed 10/10 in a second 30-body
+scene. Across exactly two independently verified scene shards this is 90
+cumulative distinct robots, maximum co-resident 60, and never all 90
+co-resident.
+All 90 reached, the 29 direct carrier pairs each saved at least 0.50 m, the
+weighted active/passive loaded-carrier means were 4.943605/6.245385 m
+(20.8439% reduction), and counted blocker/active-pair contact rows were zero. The
+shards used fixed-order serial wheel actuation and did not rerun perception or
+policy inference.
+
+These dynamics supplements remain additive and non-locked, carry
+`formal_result_eligible=false`, and claim neither simultaneous cooperative
+control, real-robot validation, nor safety certification. The frozen primary
+remains 29/30 direct.
 
 ## 1. Target application
 
@@ -389,6 +405,24 @@ not throughput, latency, utilization, or energy evidence. The replay used the
 archived route decision for each world; it did not rerun the frozen RGB-D
 perception-policy loop.
 
+### 6.6 Solver-scale two-shard rigid-dynamics execution
+
+The solver-scale complement changes only the execution topology used to test
+the archived decision-to-actuation boundary. Seeds `102500-102519` ran in one
+Genesis initialization and one scene build containing 60 co-resident
+non-fixed bodies. Seeds `102520-102529` ran in a separate initialization and a
+second scene build containing 30 co-resident bodies. Each scene held one
+scout, one active loaded carrier, and one passive loaded carrier for every
+fixed seed assigned to that shard.
+
+Both runs used Genesis 1.1.2 on `gs.amdgpu`, fixed-order serial trial
+actuation, and wheel-DOF velocity control only for post-build motion. Neither
+run supported resume, and there was no cross-shard state, result, or entity
+stitching. The two reports independently passed their source-aware verifier
+and checksum indexes. Their body counts and elapsed walls are acceptance and
+solver-topology facts, not throughput, latency, utilization, or energy
+benchmarks.
+
 ## 7. Evaluation protocol
 
 ### 7.1 Freeze and open discipline
@@ -590,7 +624,42 @@ not a live-policy rerun, simultaneous cooperative execution, or one
 simultaneous 90-body scene. It is additive, non-locked, and explicitly records
 `formal_result_eligible=false`.
 
-### 8.7 Evidence identity
+### 8.7 Solver-scale two-shard complement
+
+| Fixed check | 60-body prefix | 30-body suffix | Exact two-shard summary |
+| --- | ---: | ---: | ---: |
+| Fixed seeds passed | 20/20 | 10/10 | 30/30 |
+| Genesis scenes | 1 | 1 | **Exactly 2** |
+| Co-resident non-fixed robots | 60 | 30 | **Maximum 60** |
+| Cumulative distinct robots | 60 | 30 | **90; never all 90 co-resident** |
+| Archived decision mix | 19 direct + 1 safe detour | 10 direct | 29 direct + 1 safe detour |
+| Scout / active / passive reached | 20 / 20 / 20 | 10 / 10 / 10 | 30 / 30 / 30 |
+| Direct pairs saving at least 0.50 m | 19/19 | 10/10 | 29/29 |
+| Mean active / passive loaded-carrier path | 4.966194 / 6.245425 m | 4.898426 / 6.245304 m | 4.943605 / 6.245385 m |
+| Paired mean path reduction | 20.4827% | 21.5663% | **20.8439%** |
+| Blocker / active-pair contact rows | 0 / 0 | 0 / 0 | 0 / 0 |
+| Maximum tilt | 10.550809 degrees | 10.583984 degrees | 10.583984 degrees |
+| Maximum parked-partner drift | 0.021332 m | 0.021342 m | 0.021342 m |
+| Post-build script entity pose writes | 0 | 0 | 0 |
+
+The weighted two-shard means use the fixed 20-trial and 10-trial denominators;
+they are a deterministic summary of two reports, not a third execution report.
+The prefix report SHA256 is
+`3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+the suffix report SHA256 is
+`69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+Both exact reports must verify independently before the combined topology is
+stated.
+
+The reports are non-resumable, fixed-order serial, archived-decision
+simulation evidence. The prefix and suffix entities occupied different
+Genesis scenes; never were all 90 co-resident. The result neither completes
+the failed V1 one-scene 90-body attempt nor changes the primary 29/30 endpoint.
+It is not a live policy rerun, simultaneous fleet-control test, dynamic
+obstacle test, physical-robot or sim-to-real result, throughput or energy
+result, or safety certification.
+
+### 8.8 Evidence identity
 
 The authoritative locked report file SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
@@ -622,6 +691,22 @@ the source-binding SHA256 is
 `c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d`.
 The 79-entry post-run package checksum index has identity
 `PACKAGE_SHA=24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540`.
+
+The solver-scale complement retains two separate evidence directories:
+
+- `release/v8-derived/decision_dynamics_single_scene_60_102500_102519`,
+  whose report SHA256 is
+  `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+- `release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529`,
+  whose report SHA256 is
+  `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+
+Each directory has an independent source binding, formal status, progress
+ledger, trial files, and formal/package checksum indexes. The suffix report
+binds the exact prefix report identity but does not parse its outcomes as a
+controller or scientific-acceptance input. The combined two-shard statement
+still requires both dedicated verifiers; it is not established by the suffix
+report alone.
 
 Two proof-scope limits are preserved rather than hidden. The inner V2-run
 `SHA256SUMS` covered the source binding, 30 checkpoints, and report (32 files),
@@ -671,6 +756,25 @@ claim language.
     binds every archived 30-world decision to a fresh paired rigid-body scene,
     atomically seals the complete fixed-order denominator, and keeps recovery
     observability separate from the frozen policy endpoint.
+11. **Bounded solver-scale complement.** Two independently verified,
+    non-resumable scene shards cover the same fixed 30 decisions with 60 and 30
+    co-resident bodies. The evidence states the topology explicitly--exactly
+    two scenes, 90 cumulative distinct robots, maximum co-resident 60, never
+    all 90 co-resident--instead of presenting a failed all-90-body attempt as
+    success.
+12. **Prepared Genesis parser robustness fix.** A two-file upstream patch
+    defaults an omitted URDF inertial origin to the link frame without changing
+    geometry fallback for a fully absent `<inertial>` element. Against Genesis
+    tested 2026-08-05 upstream-main snapshot
+    `207db282fa523e7cdf6c0b1c85d7b72b12d79a7a`, the required regression test
+    failed (`1 failed in 14.64 s`; shell real 19.78 s); local review commit
+    `8fbf352912f748f87ba4e8c94ef31c817017b641` passed (`1 passed in 13.78 s`;
+    shell real 18.83 s). Its stable patch-id matches the earlier review commit.
+    Complete
+    `scene.build()` comparison also retained the authored principal moments only
+    with the patch while preserving the absent-inertial fallback in both trees.
+    This contribution is prepared for owner review: no public issue, fork push,
+    pull request, maintainer review, or upstream acceptance is claimed yet.
 
 ## 10. Real-world value
 
@@ -705,7 +809,14 @@ incident review, and future assurance tooling.
 - a separately verified 30-seed decision-bound rigid-dynamics replay with 90
   distinct non-fixed instantiations, 30 atomic checkpoints, package-wide
   checksums, and a disclosed post-run provenance-scope review;
-- a one-page English Frozen Challenge Judge Card;
+- an independently verified 20/20 single-scene 60-body prefix and 10/10
+  single-scene 30-body suffix, covering the same 30 fixed archived decisions
+  across exactly two scene shards with 90 cumulative distinct robots, maximum
+  co-resident 60, and never all 90 co-resident;
+- a compact English Frozen Challenge Judge Card;
+- an owner-review-ready two-file Genesis URDF inertial-origin fix with a
+  physically valid non-diagonal regression case, tested-snapshot fail / patch-pass
+  evidence, and complete scene-build comparison; it is not yet public upstream;
 - final 3:59 English workflow video with fixed-composition visuals and
   AI-generated OpenAI Cedar narration;
 - public 159,592,901-byte frozen checkpoint release asset.
@@ -784,6 +895,26 @@ python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
 Expected verifier output ends with `30/30` and report SHA256
 `1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
 
+The two solver-scale shards must be checked independently; their reports are
+not combined into a synthetic one-scene artifact:
+
+```bash
+P60=release/v8-derived/decision_dynamics_single_scene_60_102500_102519
+S30=release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529
+(cd "$P60" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd "$S30" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_60.py "$P60/REPORT.json"
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  "$S30/REPORT.json"
+```
+
+Expected final lines identify the 20/20 prefix report SHA256
+`3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`
+and the 10/10 suffix report SHA256
+`69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+
 The standalone contract core is tested with:
 
 ```bash
@@ -816,6 +947,15 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
   simultaneous 90-body scene. It is additive, non-locked,
   `formal_result_eligible=false`, and is not dynamic-obstacle, real-robot,
   sim-to-real, energy, throughput, or safety-certification evidence.
+- The solver-scale complement consumes the same archived decisions in two
+  separate, fixed-order serial scene shards: a 20/20 60-body prefix and a 10/10
+  30-body suffix. Their only combined topology claim is exactly two scenes, 90
+  cumulative distinct robots, and maximum co-resident 60; the 90 robots were
+  never all co-resident. It is not a live perception-policy rerun,
+  simultaneous cooperative fleet control, dynamic-obstacle evidence, a
+  physical-robot or sim-to-real result, an energy/throughput/latency result, or
+  safety certification. It does not convert the failed V1 all-90-body attempt
+  into a pass or change the primary 29/30 endpoint.
 - The V2 retained ledger shows 30 first-attempt worker completions and no
   replacement. Its inner V2-run checksum/attempt-verifier scope did not cover
   every attempt, progress, and log byte, so this observation is not promoted
@@ -857,3 +997,5 @@ evidence integrity, website, documentation, and submission packaging.
 2. [Official submission repository](https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07)
 3. [Genesis physics simulation framework](https://github.com/Genesis-Embodied-AI/Genesis)
 4. [AMD ROCm documentation](https://rocm.docs.amd.com/)
+5. [urdfdom inertial parsing at pinned commit](https://github.com/ros/urdfdom/blob/bfcf29f39cc3e0fa13e5572f36b4b8c42d4f5ce1/urdf_parser/src/link.cpp#L269-L279)
+6. [Genesis PR #2499: prior unspecified-inertia-origin support](https://github.com/Genesis-Embodied-AI/genesis-world/pull/2499)

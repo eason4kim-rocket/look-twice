@@ -9,11 +9,13 @@ change, or threshold change.
 
 This is an additive, preregistered **same-generator non-locked supplement** to
 the permanent 12-pair V8 locked result. Its primary endpoint is not an OOD,
-rigid-body, or physical-robot claim. A separate additive recovery V2 now tests
-the archived route decisions through bounded rigid-body actuation without
-changing that primary endpoint.
+rigid-body, or physical-robot claim. Separate additive evidence tests the
+archived route decisions through bounded rigid-body actuation: recovery V2
+uses 30 independent three-body scenes, while a solver-scale complement covers
+the same fixed decisions in exactly two scene shards, with at most 60 robots
+co-resident. Neither changes the primary endpoint.
 
-## Six judge checks
+## Seven judge checks
 
 | Check | Result | Machine evidence |
 |---|---|---|
@@ -23,10 +25,12 @@ changing that primary endpoint.
 | AMD full-pipeline execution | **60/60** episodes used Genesis live RGB-D, the frozen checkpoint, and Purify Go receipts: 268 RGB-D observations, 134 vision proposals, and 268 Go invocations/receipts. Full subprocess-wall telemetry retained **844** two-second ROCm samples across **1,685.5 s**, including idle: GPU mean/median/p95/max **19.4/0/95/100%**; VRAM p95/max **2/2%**; package power mean/p95/max **35.7/81/109 W**. | [ROCm telemetry](../release/v8-frozen/results/challenge_102500_102529/ROCM_TELEMETRY.json) |
 | Warehouse operational trade | Active scouting reduced loaded-carrier logical path from **6.404 to 4.961** (`−1.443`, **−22.5%**) while adding **2.980** scout path; total logical-role team path rose from **6.404 to 7.941** (`+1.538`, **+24.0%**). This is kinematic path burden, not energy, throughput, latency, or physical duty cycle. | [per-seed and burden tables](../release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) |
 | Additive decision-to-dynamics bridge | A separate fixed-denominator V2 replay consumed the archived decisions—**29 direct + 1 safe detour**—without rerunning perception or policy inference. It passed **30/30** across 30 serial, independent three-body scenes: **90/90** distinct non-fixed robot instantiations reached; all **29/29** direct carrier pairs saved at least 0.50 m; mean loaded-carrier path was **4.9435 m active vs 6.2433 m passive (−20.8183%)**; and counted blocker-contact and active carrier/scout contact rows were both **0**. The sole dual-blocked seed `102515` executed its declared safe outer detour. | [V2 result note](V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [report](../release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json) · [scope audit](../release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json) |
+| Solver-scale two-shard complement | The same archived decision set separately passed **20/20** in one 60-body scene and **10/10** in a second 30-body scene. Across exactly two scenes, all 30 scouts, 30 active carriers, and 30 passive carriers reached; all 29 direct pairs saved at least 0.50 m; the weighted loaded-carrier path was **4.943605 m active vs 6.245385 m passive (−20.8439%)**; counted blocker/active-pair contact rows and post-build pose writes were **0**; maximum tilt/drift was **10.583984° / 0.021342 m**. This is **90 cumulative distinct robots, maximum 60 co-resident, never all 90 co-resident**. | [60-body prefix report](../release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · [30-body suffix report](../release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json) · [prefix protocol](V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md) · [suffix protocol](V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md) |
 
 ## Scope that must travel with the result
 
-- Genesis 1.1.2 kinematic simulation on AMD ROCm, not contact validation.
+- The preregistered primary uses Genesis 1.1.2 kinematic simulation on AMD
+  ROCm; it is not rigid-body contact validation.
 - Carrier and scout are separate logical-role poses, viewpoints, and capture
   roots on **one shared Genesis chassis**; they are not two physical devices or
   simultaneous dual-body dynamics.
@@ -52,6 +56,16 @@ changing that primary endpoint.
   not real-robot validation or safety certification. The 20.8183% result is a
   paired loaded-carrier path reduction, not lower total team travel, energy,
   task time, or throughput.
+- The solver-scale complement consists of two independently verified,
+  non-resumable reports: seeds `102500-102519` in one 60-body scene and seeds
+  `102520-102529` in a second 30-body scene. Their combined statement is
+  limited to exactly two scenes, 90 cumulative distinct robots, and maximum
+  co-resident 60. The reports are not stitched; never were all 90 co-resident.
+- Both solver-scale shards are archived-decision, fixed-order serial,
+  simulation-only evidence and declare `formal_result_eligible=false`. They
+  are not a live perception-policy rerun, simultaneous cooperative fleet
+  control, dynamic obstacle evidence, physical-robot validation, sim-to-real
+  evidence, or safety certification. The primary remains **29/30**, not 30/30.
 - The V2 formal source binding omitted the directly imported
   `src/v4_motion.py`; a post-run audit matched it to clean commit `b0c4f0d`,
   but that is corroborating evidence rather than complete formal import-closure

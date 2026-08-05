@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-submission-package/v1",
   "generated_on": "2026-08-05",
-  "status": "v2_owner_review_pending_no_pr",
+  "status": "two_shard_owner_review_snapshot_unpublished_at_generation",
   "competition": {
     "name": "AMD AI DevMaster Hackathon 2026",
     "track": "Track 3 - Physical AI",
@@ -178,6 +178,81 @@
     ],
     "interpretation_limit": "Consumes archived route decisions without rerunning the frozen perception-policy loop; not simultaneous cooperative control, dynamic-obstacle evidence, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification."
   },
+  "additive_decision_bound_dynamics_two_shard": {
+    "evidence_class": "additive non-locked archived-decision rigid-dynamics solver-scale complement",
+    "formal_result_eligible": false,
+    "seed_range": [
+      102500,
+      102529
+    ],
+    "fixed_seeds": 30,
+    "passed": 30,
+    "failed": 0,
+    "active_direct_decisions": 29,
+    "active_safe_detours": 1,
+    "genesis_scene_count": 2,
+    "scene_non_fixed_robot_entity_counts": [
+      60,
+      30
+    ],
+    "cumulative_distinct_non_fixed_robot_entities": 90,
+    "maximum_co_resident_non_fixed_robot_entities": 60,
+    "all_90_robots_co_resident": false,
+    "cross_shard_checkpoint_or_state_resume": false,
+    "synthetic_combined_execution_report_created": false,
+    "arithmetic_summary_across_independent_reports": true,
+    "fixed_order_serial_trial_actuation": true,
+    "simultaneous_cooperative_control": false,
+    "active_scout_reached": 30,
+    "active_carrier_reached": 30,
+    "passive_carrier_reached": 30,
+    "mean_active_loaded_carrier_path_m": 4.943604753440714,
+    "mean_passive_loaded_carrier_path_m": 6.245384742632991,
+    "paired_mean_loaded_carrier_path_reduction_percent": 20.843871800337798,
+    "direct_pairs_saving_at_least_0_50_m": "29/29",
+    "safe_detour_seed": 102515,
+    "maximum_tilt_deg": 10.583984080221363,
+    "maximum_stationary_partner_drift_m": 0.021341944256011203,
+    "trial_blocker_contact_rows": 0,
+    "active_pair_contact_rows": 0,
+    "post_build_entity_pose_writes": 0,
+    "post_build_actuation_api": "control_dofs_velocity only",
+    "uses_archived_decisions_without_rerunning_policy": true,
+    "shards": [
+      {
+        "name": "single_scene_60_body_prefix",
+        "seed_range": [
+          102500,
+          102519
+        ],
+        "passed": 20,
+        "failed": 0,
+        "genesis_scene_count": 1,
+        "non_fixed_robot_entities_in_scene": 60,
+        "report_sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450",
+        "source_commit": "aac8cd08ca8f2cd6bb62e77189541b1c5ff957e2",
+        "source_binding_sha256": "3eb0d2b67ca9e94e795027597d5cf9a20661214c3c9c0e6f4c02d426ceced7d9"
+      },
+      {
+        "name": "single_scene_30_body_suffix",
+        "seed_range": [
+          102520,
+          102529
+        ],
+        "passed": 10,
+        "failed": 0,
+        "genesis_scene_count": 1,
+        "non_fixed_robot_entities_in_scene": 30,
+        "report_sha256": "69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e",
+        "source_commit": "4bac3facfb5116df0e971f2b3e0887600f0fe5cd",
+        "source_binding_sha256": "e270b7f014597e8960bdd908117bdbde3c712b2a5248d707468f3279e4ade460",
+        "bound_prefix_report_sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450"
+      }
+    ],
+    "primary_endpoint_unchanged": "active 29/30 direct versus passive 0/30",
+    "failed_v1_all_90_body_attempt_relabelled_as_pass": false,
+    "interpretation_limit": "Exactly two independently verified, non-resumable Genesis scene shards with fixed-order serial wheel actuation; 90 cumulative distinct robots, maximum 60 co-resident, never all 90 co-resident. Not a live perception-policy rerun, simultaneous fleet-control result, dynamic-obstacle result, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification."
+  },
   "confirmatory_cost_ledger": {
     "seed": 105400,
     "formal_result_eligible": false,
@@ -292,7 +367,47 @@
       "remote_verifier_passed": true,
       "local_byte_identical_verifier_passed": true,
       "publication_verified": false,
-      "publication_state": "local owner-review identity; not pushed, deployed, released, or submitted"
+      "publication_state": "at manifest generation, this was a local owner-review identity that had not been pushed, deployed, released, or submitted"
+    },
+    "additive_decision_bound_dynamics_two_shard": {
+      "evidence_class": "additive non-locked archived-decision rigid-dynamics solver-scale complement",
+      "formal_result_eligible": false,
+      "combined_claim_requires_both_independent_verifiers": true,
+      "prefix_60_body": {
+        "report_path": "release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json",
+        "staged_report_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/decision_dynamics_single_scene_60_102500_102519/REPORT.json",
+        "report_sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450",
+        "source_commit": "aac8cd08ca8f2cd6bb62e77189541b1c5ff957e2",
+        "source_binding_path": "release/v8-derived/decision_dynamics_single_scene_60_102500_102519/SOURCE_BINDING.json",
+        "source_binding_sha256": "3eb0d2b67ca9e94e795027597d5cf9a20661214c3c9c0e6f4c02d426ceced7d9",
+        "formal_sha256sums_path": "release/v8-derived/decision_dynamics_single_scene_60_102500_102519/SHA256SUMS",
+        "formal_sha256sums_sha256": "8cbb126bfaea90a7a8dad132409f0c689f125cc66713a4cd568ba8c2713b9541",
+        "formal_checksum_entries": 23,
+        "complete_sha256sums_path": "release/v8-derived/decision_dynamics_single_scene_60_102500_102519/PACKAGE_SHA256SUMS",
+        "complete_sha256sums_sha256": "8d4f891e6bacbf8627a9ba441c5396525259b88b8d4350c5b84bef7db6277c55",
+        "complete_checksum_entries": 28,
+        "regular_files": 29,
+        "dedicated_verifier_passed": true
+      },
+      "suffix_30_body": {
+        "report_path": "release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json",
+        "staged_report_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json",
+        "report_sha256": "69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e",
+        "source_commit": "4bac3facfb5116df0e971f2b3e0887600f0fe5cd",
+        "source_binding_path": "release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/SOURCE_BINDING.json",
+        "source_binding_sha256": "e270b7f014597e8960bdd908117bdbde3c712b2a5248d707468f3279e4ade460",
+        "formal_sha256sums_path": "release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/SHA256SUMS",
+        "formal_sha256sums_sha256": "e275221248b48292cd32959febfd880ac447611a75405c571d2fbbf4ec7d931c",
+        "formal_checksum_entries": 13,
+        "complete_sha256sums_path": "release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/PACKAGE_SHA256SUMS",
+        "complete_sha256sums_sha256": "930f41c497e8aaa6dceb4ee12f6b7b87cea189c2320e3d90d1c03e850ca16d4b",
+        "complete_checksum_entries": 18,
+        "regular_files": 19,
+        "dedicated_verifier_passed": true,
+        "bound_prefix_report_sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450"
+      },
+      "publication_verified": false,
+      "publication_state": "at manifest generation, this was a local owner-review identity that had not been pushed, deployed, released, or submitted"
     },
     "locked_input_evidence_pack": {
       "archive_name": "v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
@@ -321,12 +436,12 @@
     "technical_report_pdf": {
       "path": "output/pdf/Look-Twice-V8-Technical-Report.pdf",
       "staged_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Technical-Report.pdf",
-      "sha256": "29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e",
-      "size_bytes": 1089114,
-      "page_count": 15,
+      "sha256": "34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a",
+      "size_bytes": 1098120,
+      "page_count": 18,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
       "publication_verified": false,
-      "publication_state": "local V2-integrated identity; stable URL still serves the earlier public baseline pending owner approval"
+      "publication_state": "at manifest generation, this two-shard-integrated identity was local and the stable URL still served the earlier public baseline"
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -358,18 +473,21 @@
       "status": "published_and_hash_verified_pending_owner_review"
     },
     "social_preview": {
-      "path": "showcase/public/og.png",
-      "sha256": "524b222272abdff4316b7fc302ea385c1d74572095894fcba712bfdd13288d0e",
-      "size_bytes": 1757156
+      "path": "showcase/public/og-two-shard.png",
+      "sha256": "326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce",
+      "size_bytes": 1271584,
+      "width": 1728,
+      "height": 910,
+      "disclosure": "CONCEPTUAL TOPOLOGY · NOT EXPERIMENT CAPTURE"
     },
     "official_repository_staging": {
       "path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice",
       "sha256s_path": "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/SHA256SUMS",
-      "checksummed_artifacts": 104,
-      "total_regular_files_including_sha256sums": 105,
-      "sha256s_sha256": "e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9",
-      "status": "local_v2_refresh_ready_no_push_no_pr",
-      "manifest_inventory_entries": 103
+      "checksummed_artifacts": 153,
+      "total_regular_files_including_sha256sums": 154,
+      "sha256s_sha256": "a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6",
+      "status": "local_two_shard_refresh_ready_no_push_no_pr",
+      "manifest_inventory_entries": 152
     }
   },
   "links": {
@@ -389,14 +507,14 @@
     "frozen_foundation": "passed",
     "python_replay_tests": "6/6 passed",
     "go_tests": "passed",
-    "node_22_site_tests": "35/35 passed",
+    "node_22_site_tests": "38/38 passed",
     "node_22_lint": "passed",
     "node_dependency_audit": "0 known vulnerabilities",
     "production_build": "passed",
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
-    "pdf_visual_qa": "15/15 pages rendered and inspected after final regeneration",
-    "browser_visual_qa": "previous public baseline inspection retained; V2 local source, tests, lint, and production-build QA passed; owner browser review remains before deployment",
+    "pdf_visual_qa": "18/18 pages rendered and inspected after final regeneration",
+    "browser_visual_qa": "previous public baseline inspection retained; two-shard local source, 38 tests, lint, and production-build QA passed; owner browser review remains before deployment",
     "submission_surface_credential_scan": "passed",
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
@@ -404,22 +522,23 @@
     "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
     "feasibility_audit_tests": "10/10 passed; derived artifact matched the 30 archived active episodes and preserved the 29/30 formal primary",
     "additive_dynamics_tests": "7/7 unit and verifier tests passed; remote and local report verification passed; 20/20 formal seeds, failed 0",
-    "official_repository_staging_checksums": "104 checksummed artifacts passed locally (105 total files including SHA256SUMS); manifest inventory 103/103; checksum-index SHA256 e3fee90381052e4b8fe28ca937736292ae5dee670ef30e1abf0b6a258fdc63f9; V2 refresh not pushed",
+    "official_repository_staging_checksums": "153 checksummed artifacts passed locally (154 total files including SHA256SUMS); manifest inventory 152/152; checksum-index SHA256 a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6; two-shard refresh not pushed",
     "github_actions_ci": "functional feasibility-audit commit 5d929f8f223a184b3670c4be51f8256e127ebd6c; run 30811281217 passed; Python, Purify Go, and showcase jobs all green",
     "github_pages_deployment": "commit dd741c24d7264e292c755d1547d4943dd2389333; Pages run 30811406679 completed successfully; four routes, feasibility JSON, PDF, and referenced client assets verified without credentials",
-    "public_distribution": "previous challenge/feasibility baseline remains public and anonymously verified; V2 source, site, 15-page PDF, and 105-file official package are local only pending owner approval",
-    "official_fork_branch": "public branch remains at the earlier baseline; the byte-identical local V2 package refresh is prepared on the local official-fork branch but unpushed; official_pr_opened=false",
-    "decision_dynamics_recovery_v2_tests": "16/16 runner and verifier tests passed; Ruff passed; formal remote and byte-identical local verifiers passed; 30/30 formal seeds, failed 0"
+    "public_distribution": "previous challenge/feasibility baseline remains public and anonymously verified; two-shard source, site, 18-page PDF, and 154-file official package are local only pending owner approval",
+    "official_fork_branch": "at manifest generation, the public branch remained at the earlier baseline and the byte-identical two-shard package refresh was prepared only on the local official-fork branch; official_pr_opened=false",
+    "decision_dynamics_recovery_v2_tests": "16/16 runner and verifier tests passed; Ruff passed; formal remote and byte-identical local verifiers passed; 30/30 formal seeds, failed 0",
+    "decision_dynamics_two_shard_tests": "23/23 runner and verifier tests passed; both formal and complete-package checksum indexes passed; dedicated 60-body and 30-body verifiers passed; 20/20 prefix plus 10/10 suffix, failed 0"
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",
-    "Review the locally verified V2 source/site/PDF/official-package diff and authorize or reject publication.",
+    "Review the locally verified two-shard source/site/PDF/official-package diff and authorize or reject publication.",
     "Review the prepared Genesis issue and PR packet and authorize or reject upstream publication.",
     "Review the English competition PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
     "complete owner visual and audible review of the final 3:59 English demo",
-    "obtain owner approval to publish and anonymously verify the V2 source/site/PDF/official-fork refresh",
+    "obtain owner approval to publish and anonymously verify the two-shard source/site/PDF/official-fork refresh",
     "obtain separate owner approval before filing the Genesis upstream issue or PR",
     "obtain owner approval to open the official English submission PR"
   ]

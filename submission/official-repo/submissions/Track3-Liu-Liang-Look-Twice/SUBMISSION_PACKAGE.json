@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-official-submission-package/v1",
   "package_id": "Track3-Liu-Liang-Look-Twice",
-  "generated_at_utc": "2026-08-04T17:11:37Z",
+  "generated_at_utc": "2026-08-05T09:43:08Z",
   "track": "Track 3 - Physical AI",
   "entry": {
     "project_name": "Look Twice V8",
@@ -108,7 +108,10 @@
       "not_physical_robot_validation": true,
       "not_sim_to_real_validation": true,
       "not_safety_certification": true,
-      "separate_additive_decision_bound_dynamics_packaged": true
+      "separate_additive_decision_bound_dynamics_packaged": true,
+      "separate_additive_two_shard_dynamics_packaged": true,
+      "two_shard_maximum_co_resident_non_fixed_robot_entities": 60,
+      "two_shard_all_90_robots_co_resident": false
     },
     "additive_decision_bound_dynamics_recovery_v2": {
       "evidence_class": "additive non-locked archived-decision rigid-dynamics supplement",
@@ -152,9 +155,90 @@
         "The formal source binding omitted the directly imported src/v4_motion.py dependency, so it is not a complete import-closure attestation; a post-run clean-tree audit found matching worktree and commit bytes."
       ],
       "interpretation_limit": "Consumes archived route decisions without rerunning the frozen perception-policy loop; not simultaneous cooperative control, dynamic-obstacle evidence, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification."
+    },
+    "additive_decision_bound_dynamics_two_shard": {
+      "evidence_class": "additive non-locked archived-decision rigid-dynamics solver-scale complement",
+      "formal_result_eligible": false,
+      "seed_range": [
+        102500,
+        102529
+      ],
+      "fixed_seeds": 30,
+      "passed": 30,
+      "failed": 0,
+      "active_direct_decisions": 29,
+      "active_safe_detours": 1,
+      "genesis_scene_count": 2,
+      "scene_non_fixed_robot_entity_counts": [
+        60,
+        30
+      ],
+      "cumulative_distinct_non_fixed_robot_entities": 90,
+      "maximum_co_resident_non_fixed_robot_entities": 60,
+      "all_90_robots_co_resident": false,
+      "cross_shard_checkpoint_or_state_resume": false,
+      "synthetic_combined_execution_report_created": false,
+      "arithmetic_summary_across_independent_reports": true,
+      "fixed_order_serial_trial_actuation": true,
+      "simultaneous_cooperative_control": false,
+      "active_scout_reached": 30,
+      "active_carrier_reached": 30,
+      "passive_carrier_reached": 30,
+      "mean_active_loaded_carrier_path_m": 4.943604753440714,
+      "mean_passive_loaded_carrier_path_m": 6.245384742632991,
+      "paired_mean_loaded_carrier_path_reduction_percent": 20.843871800337798,
+      "direct_pairs_saving_at_least_0_50_m": "29/29",
+      "safe_detour_seed": 102515,
+      "maximum_tilt_deg": 10.583984080221363,
+      "maximum_stationary_partner_drift_m": 0.021341944256011203,
+      "trial_blocker_contact_rows": 0,
+      "active_pair_contact_rows": 0,
+      "post_build_entity_pose_writes": 0,
+      "post_build_actuation_api": "control_dofs_velocity only",
+      "uses_archived_decisions_without_rerunning_policy": true,
+      "shards": [
+        {
+          "name": "single_scene_60_body_prefix",
+          "seed_range": [
+            102500,
+            102519
+          ],
+          "passed": 20,
+          "failed": 0,
+          "genesis_scene_count": 1,
+          "non_fixed_robot_entities_in_scene": 60,
+          "report_sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450",
+          "source_commit": "aac8cd08ca8f2cd6bb62e77189541b1c5ff957e2",
+          "source_binding_sha256": "3eb0d2b67ca9e94e795027597d5cf9a20661214c3c9c0e6f4c02d426ceced7d9"
+        },
+        {
+          "name": "single_scene_30_body_suffix",
+          "seed_range": [
+            102520,
+            102529
+          ],
+          "passed": 10,
+          "failed": 0,
+          "genesis_scene_count": 1,
+          "non_fixed_robot_entities_in_scene": 30,
+          "report_sha256": "69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e",
+          "source_commit": "4bac3facfb5116df0e971f2b3e0887600f0fe5cd",
+          "source_binding_sha256": "e270b7f014597e8960bdd908117bdbde3c712b2a5248d707468f3279e4ade460",
+          "bound_prefix_report_sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450"
+        }
+      ],
+      "primary_endpoint_unchanged": "active 29/30 direct versus passive 0/30",
+      "failed_v1_all_90_body_attempt_relabelled_as_pass": false,
+      "interpretation_limit": "Exactly two independently verified, non-resumable Genesis scene shards with fixed-order serial wheel actuation; 90 cumulative distinct robots, maximum 60 co-resident, never all 90 co-resident. Not a live perception-policy rerun, simultaneous fleet-control result, dynamic-obstacle result, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification."
     }
   },
   "files": [
+    {
+      "path": ".gitattributes",
+      "role": "submission-local binary diff attributes",
+      "size_bytes": 80,
+      "sha256": "e26349249edaf4f92f8d1ebbf8d23eeeb5b057b818b4fa2ea5a236d05ef122b7"
+    },
     {
       "path": "Look-Twice-V8-Demo.manifest.json",
       "role": "demo sidecar manifest",
@@ -176,20 +260,20 @@
     {
       "path": "Look-Twice-V8-Technical-Report.pdf",
       "role": "technical report",
-      "size_bytes": 1089114,
-      "sha256": "29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e"
+      "size_bytes": 1098120,
+      "sha256": "34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a"
     },
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 17809,
-      "sha256": "23e67e4e1a7c3826eb6040198ecd67c10c85844eab7d376cb274ebfa7049e8a6"
+      "size_bytes": 22844,
+      "sha256": "4575877b7005a2d5be1203d8bfb490fa0dad4f3d205e804c25c4e361a8e98485"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
-      "role": "one-page judge entrypoint",
-      "size_bytes": 8709,
-      "sha256": "b893637f013d7fb187c86ace75fa36eaeb929c6bdd3bb3cf275dd989a88abd41"
+      "role": "compact judge entrypoint",
+      "size_bytes": 12588,
+      "sha256": "d94f8a11f476e377988dedddbfdb55aea59da908e02c91f3d7f96328fac0613d"
     },
     {
       "path": "evidence/LOCKED_TEST_REPORT.public.json",
@@ -200,8 +284,8 @@
     {
       "path": "evidence/README.md",
       "role": "compact evidence index and boundary ledger",
-      "size_bytes": 17793,
-      "sha256": "273dd36181e79ffe3e233b59b1e38837445509798c09d51e49d09000c7dec03a"
+      "size_bytes": 22692,
+      "sha256": "8db3241c2f59952ab87dc625f17534b5e036495e48a07cbb386d47f1f7cf9151"
     },
     {
       "path": "evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
@@ -750,6 +834,294 @@
       "sha256": "e1308e14f07d45988e8f14f9ca507a2359f599f2e5b75fe60ec66572e76c4ad5"
     },
     {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/EXECUTION_LOGS/FORMAL.checksums.log",
+      "role": "retained single-scene 30-body suffix checksum-verification log",
+      "size_bytes": 288,
+      "sha256": "e5c9ed609c2a9c2bb9faea09838d3191e8276f8bf73a9d4387ca44402f9bf6fd"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/EXECUTION_LOGS/FORMAL.log",
+      "role": "retained single-scene 30-body suffix formal execution log",
+      "size_bytes": 1410,
+      "sha256": "ed7dd8161a195ad6defb3e56d2df4f81e84c0ce19e0662b6f779a83025678fb7"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/EXECUTION_LOGS/FORMAL.status",
+      "role": "retained single-scene 30-body suffix formal execution status record",
+      "size_bytes": 858,
+      "sha256": "98db859974fd5088be31926502125ae5c0287f103a8e07bf6d6ddcb75b78703f"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/EXECUTION_LOGS/FORMAL.verify.log",
+      "role": "retained single-scene 30-body suffix dedicated-verifier log",
+      "size_bytes": 136,
+      "sha256": "72dc6f1ee67fadf4f7dc4e8b9a77d01d4bb660bf104e3fe365f55224ef955cff"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/PACKAGE_SHA256SUMS",
+      "role": "complete single-scene 30-body suffix 18-file evidence checksum index",
+      "size_bytes": 1595,
+      "sha256": "930f41c497e8aaa6dceb4ee12f6b7b87cea189c2320e3d90d1c03e850ca16d4b"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/PROGRESS.json",
+      "role": "final non-resumable single-scene 30-body suffix progress snapshot",
+      "size_bytes": 2395,
+      "sha256": "591cbdd5d992f52521946c30f7b69edd7e20a6aaa3201cdc93567c432e00d065"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json",
+      "role": "10-seed single-scene 30-body suffix archived-decision rigid-dynamics report",
+      "size_bytes": 217500,
+      "sha256": "69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/SHA256SUMS",
+      "role": "formal single-scene 30-body suffix 13-file checksum index",
+      "size_bytes": 1094,
+      "sha256": "e275221248b48292cd32959febfd880ac447611a75405c571d2fbbf4ec7d931c"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/SOURCE_BINDING.json",
+      "role": "formal single-scene 30-body suffix source-binding manifest",
+      "size_bytes": 4865,
+      "sha256": "e270b7f014597e8960bdd908117bdbde3c712b2a5248d707468f3279e4ade460"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102520.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 20814,
+      "sha256": "a7720d979fc2fdf485707cbabace856ce5cc45b195a6f1f5301515017260cf33"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102521.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 21919,
+      "sha256": "0d97481b0b48c2689a8619732220c450621d3dbfd0a9e6a437b509a6d622092a"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102522.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 20823,
+      "sha256": "2304b01d4274e7be471a694f3ce4600d288212495a893fa98e204fdc5debe804"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102523.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 21920,
+      "sha256": "25217dbd6c2bf4a71efef4529e17057d07923d6e46356f163fbcc3e298e70b1a"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102524.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 20812,
+      "sha256": "dc0612036b7578de86e03f59c52cec1db4a6ac65c1c908ddf910379c8e7388d2"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102525.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 21933,
+      "sha256": "5ee1494111a1c8e362da1f29357bc9eb8e74680698eb1435528d3554391b8c89"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102526.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 20793,
+      "sha256": "63975d71982c53b5a2b13b6df46d840a3c7bb959bc45134bdd952560a76dee95"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102527.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 21929,
+      "sha256": "82bbd6ce2a36603e3622153c0f06fbe77132f8352146cdf62614ee661818378e"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102528.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 20819,
+      "sha256": "c613c3e244437aad89aa0ad9484db08ac42c1880bb0308d610a6c10f1cbeab9c"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/TRIALS/102529.json",
+      "role": "sealed per-seed single-scene 30-body suffix partial-evidence checkpoint",
+      "size_bytes": 21918,
+      "sha256": "ab91b12bb0dea24870d167210538dd7626f5a4856931354badcc4e9ddfb6e622"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/EXECUTION_LOGS/FORMAL.checksums.log",
+      "role": "retained single-scene 60-body prefix checksum-verification log",
+      "size_bytes": 518,
+      "sha256": "222bff14258f356a4138582f45110a1853d04a6614465f6e4e8d494b647182a3"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/EXECUTION_LOGS/FORMAL.log",
+      "role": "retained single-scene 60-body prefix formal execution log",
+      "size_bytes": 2690,
+      "sha256": "98089b3f66f94459197ff2ca5176b791d326e2b07acabb5cbb951f7c057a5895"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/EXECUTION_LOGS/FORMAL.status",
+      "role": "retained single-scene 60-body prefix formal execution status record",
+      "size_bytes": 648,
+      "sha256": "444976b076699f387512a7b4666046f6b429a479f0d9cf6855e87774aac0639a"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/EXECUTION_LOGS/FORMAL.verify.log",
+      "role": "retained single-scene 60-body prefix dedicated-verifier log",
+      "size_bytes": 142,
+      "sha256": "886f5191b77c9d1960c3f727f526a8f5814bd095c5734b34c32a847644ea7c0c"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/PACKAGE_SHA256SUMS",
+      "role": "complete single-scene 60-body prefix 28-file evidence checksum index",
+      "size_bytes": 2465,
+      "sha256": "8d4f891e6bacbf8627a9ba441c5396525259b88b8d4350c5b84bef7db6277c55"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/PROGRESS.json",
+      "role": "final non-resumable single-scene 60-body prefix progress snapshot",
+      "size_bytes": 3064,
+      "sha256": "72c732a025ea2ebd892b92203fad9ff635fed489534dd8cc601eb54a867c9dfb"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/REPORT.json",
+      "role": "20-seed single-scene 60-body prefix archived-decision rigid-dynamics report",
+      "size_bytes": 395777,
+      "sha256": "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/SHA256SUMS",
+      "role": "formal single-scene 60-body prefix 23-file checksum index",
+      "size_bytes": 1944,
+      "sha256": "8cbb126bfaea90a7a8dad132409f0c689f125cc66713a4cd568ba8c2713b9541"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/SOURCE_BINDING.json",
+      "role": "formal single-scene 60-body prefix source-binding manifest",
+      "size_bytes": 3725,
+      "sha256": "3eb0d2b67ca9e94e795027597d5cf9a20661214c3c9c0e6f4c02d426ceced7d9"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102500.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19811,
+      "sha256": "8ffebc5b9c70c768a016b61f201d77c616f2e2fb750d5911063418f55780c76e"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102501.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20961,
+      "sha256": "0b6f48d9304072ce41d51041ac06350809f2b906f6f093fb7d8323a7c045620c"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102502.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19813,
+      "sha256": "7b5d7ccbd802aba0aec5a21dc6e5f2f5b13c05d0e0fb106b068066f395d28e9b"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102503.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20840,
+      "sha256": "e3c816c762d34b306b1f87255ad9bd12e2ae97a584cba9adf33992a9ea310902"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102504.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19714,
+      "sha256": "2c87a0e01a1801bbbde0905aa2b83fc30e3720aaa663057d43384c59dbe733a1"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102505.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20811,
+      "sha256": "de6fbce229dbf9228c7458c93add0f383ec455ce9803b44804d8f457dd2d364f"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102506.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19763,
+      "sha256": "77d7b0445a3442f51b59ac19b3fe3d581159ed222105be22976f230218082075"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102507.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20886,
+      "sha256": "29defeb233bf2884936a53b161c6dc189309f3ddda0b631e1f23ef4c8d20e818"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102508.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19727,
+      "sha256": "6e0f83046ffa3a9c711658b3683af955d3116d3a113fb80add3829b7c0046b20"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102509.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20879,
+      "sha256": "324650b3d2463cea5bee20a4e1ec7ac4ccbbfd7a3093762287387a4c9fc5f49a"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102510.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19734,
+      "sha256": "0e80d5c6112d8995296316279041b543e5f40969dff30274e5d58f58786dce0f"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102511.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20850,
+      "sha256": "b6b6ad069eb9bb52eedb3433a625e12a2a07d3c89bdbd55153b01162fac8fa61"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102512.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20136,
+      "sha256": "5b29ffaa7956516b63e20b513ffa3866ecb4ee0a5628a4d8a5aa173d156a4ef2"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102513.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20863,
+      "sha256": "5abe702c91dc1138edf45069a0d63a7d1ae06de15f02f9719562bd07225e4063"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102514.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19747,
+      "sha256": "630b7453c35571d3d55b53caa2da7de480242c1244232a092631587973300e0a"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102515.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20853,
+      "sha256": "002b2e147e73cbd619ae2bd9ec5aea9672df6d7a59beda44c2cb7f479c1d096c"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102516.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19733,
+      "sha256": "fd1612718dd39174774684ca28d10c4ceaed24c8457014b1d6892961d905b644"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102517.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20826,
+      "sha256": "6d7fb4b78b5b4f907eb451c99395bee66b7872bf07f10eedaab80d179f3ec10c"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102518.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 19740,
+      "sha256": "98174bd3966d689208816a8d3a1ca982018df4d249d26c40a5be41456b5bad0b"
+    },
+    {
+      "path": "evidence/decision_dynamics_single_scene_60_102500_102519/TRIALS/102519.json",
+      "role": "sealed per-seed single-scene 60-body prefix partial-evidence checkpoint",
+      "size_bytes": 20844,
+      "sha256": "d7c614ae264102161a35a072cdfffc202fae796555723169fd342e2d3d57aef9"
+    },
+    {
       "path": "evidence/dual_body_dynamics_160820_160839/ATTEMPT_1_TIMEOUT_AUDIT.json",
       "role": "retained first-attempt infrastructure-timeout audit",
       "size_bytes": 1880,
@@ -801,9 +1173,9 @@
     "raw_archive_bound_file_count": 194,
     "raw_archive_sha256": "171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2",
     "raw_archive_internal_checksum_index_sha256": "90d70a11d4a6fd91727c3849536e7a41124196c1c0b4e0f51779419e99105b6d",
-    "manifest_file_entries": 103,
-    "package_checksum_entries": 104,
-    "total_regular_package_files_including_sha256sums": 105,
+    "manifest_file_entries": 152,
+    "package_checksum_entries": 153,
+    "total_regular_package_files_including_sha256sums": 154,
     "manifest_coverage_complete": true,
     "decision_dynamics_v2_regular_files": 80,
     "decision_dynamics_v2_formal_checksum_entries": 32,
@@ -811,6 +1183,16 @@
     "decision_dynamics_v2_complete_checksum_entries": 79,
     "decision_dynamics_v2_complete_checksum_index_sha256": "24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540",
     "decision_dynamics_v2_recovery_audit_sha256": "344a948da49f89322f3486da2c025ee227dbf3454b33f7f8ab2f8acf6ea8eca4",
-    "decision_dynamics_v2_provenance_review_sha256": "4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7"
+    "decision_dynamics_v2_provenance_review_sha256": "4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7",
+    "decision_dynamics_single_scene_60_regular_files": 29,
+    "decision_dynamics_single_scene_60_formal_checksum_entries": 23,
+    "decision_dynamics_single_scene_60_formal_checksum_index_sha256": "8cbb126bfaea90a7a8dad132409f0c689f125cc66713a4cd568ba8c2713b9541",
+    "decision_dynamics_single_scene_60_complete_checksum_entries": 28,
+    "decision_dynamics_single_scene_60_complete_checksum_index_sha256": "8d4f891e6bacbf8627a9ba441c5396525259b88b8d4350c5b84bef7db6277c55",
+    "decision_dynamics_single_scene_30_suffix_regular_files": 19,
+    "decision_dynamics_single_scene_30_suffix_formal_checksum_entries": 13,
+    "decision_dynamics_single_scene_30_suffix_formal_checksum_index_sha256": "e275221248b48292cd32959febfd880ac447611a75405c571d2fbbf4ec7d931c",
+    "decision_dynamics_single_scene_30_suffix_complete_checksum_entries": 18,
+    "decision_dynamics_single_scene_30_suffix_complete_checksum_index_sha256": "930f41c497e8aaa6dceb4ee12f6b7b87cea189c2320e3d90d1c03e850ca16d4b"
   }
 }

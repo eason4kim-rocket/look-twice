@@ -33,15 +33,70 @@ DEFAULT_HANDOFF_MANIFEST = REPO_ROOT / "submission" / "V8_SUBMISSION_MANIFEST.js
 PACKAGE_MANIFEST = "SUBMISSION_PACKAGE.json"
 PACKAGE_CHECKSUMS = "SHA256SUMS"
 V2_PREFIX = "evidence/decision_dynamics_recovery_v2_102500_102529/"
+SINGLE_SCENE_60_PREFIX = "evidence/decision_dynamics_single_scene_60_102500_102519/"
+SINGLE_SCENE_30_SUFFIX_PREFIX = (
+    "evidence/decision_dynamics_single_scene_30_suffix_102520_102529/"
+)
+TWO_SHARD_BOUNDARY_KEY = "additive_decision_bound_dynamics_two_shard"
 
-REPORT_SHA256 = "1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99"
-SOURCE_BINDING_SHA256 = "c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d"
-RECOVERY_AUDIT_SHA256 = "344a948da49f89322f3486da2c025ee227dbf3454b33f7f8ab2f8acf6ea8eca4"
-PROVENANCE_REVIEW_SHA256 = "4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7"
-V2_PACKAGE_INDEX_SHA256 = "24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540"
-V2_FORMAL_INDEX_SHA256 = "dae4f7f694e3db14db9731e6292d2d7e28f98b6540eca485be9666947273d5be"
+V2_REPORT_SHA256 = "1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99"
+SOURCE_BINDING_SHA256 = (
+    "c40f6ba74a39ad761e4926ddb66326f33a1a645fef3c96364f9c53b9d5d3eb5d"
+)
+RECOVERY_AUDIT_SHA256 = (
+    "344a948da49f89322f3486da2c025ee227dbf3454b33f7f8ab2f8acf6ea8eca4"
+)
+PROVENANCE_REVIEW_SHA256 = (
+    "4667a9f817c882e7cbe6b358c207a2fb3cc6afec643e185e99fbd30ae0f959a7"
+)
+V2_PACKAGE_INDEX_SHA256 = (
+    "24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540"
+)
+V2_FORMAL_INDEX_SHA256 = (
+    "dae4f7f694e3db14db9731e6292d2d7e28f98b6540eca485be9666947273d5be"
+)
 V2_SOURCE_COMMIT = "b0c4f0d33b0a2d0c647dda0b2b3b7c03279a511a"
-TECHNICAL_REPORT_SHA256 = "29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e"
+
+SINGLE_SCENE_60_REPORT_SHA256 = (
+    "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450"
+)
+SINGLE_SCENE_60_SOURCE_COMMIT = "aac8cd08ca8f2cd6bb62e77189541b1c5ff957e2"
+SINGLE_SCENE_60_SOURCE_BINDING_SHA256 = (
+    "3eb0d2b67ca9e94e795027597d5cf9a20661214c3c9c0e6f4c02d426ceced7d9"
+)
+SINGLE_SCENE_60_FORMAL_INDEX_SHA256 = (
+    "8cbb126bfaea90a7a8dad132409f0c689f125cc66713a4cd568ba8c2713b9541"
+)
+SINGLE_SCENE_60_PACKAGE_INDEX_SHA256 = (
+    "8d4f891e6bacbf8627a9ba441c5396525259b88b8d4350c5b84bef7db6277c55"
+)
+SINGLE_SCENE_60_REGULAR_FILES = 29
+SINGLE_SCENE_60_FORMAL_ENTRIES = 23
+SINGLE_SCENE_60_PACKAGE_ENTRIES = 28
+
+SINGLE_SCENE_30_SUFFIX_REPORT_SHA256 = (
+    "69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e"
+)
+SINGLE_SCENE_30_SUFFIX_SOURCE_COMMIT = "4bac3facfb5116df0e971f2b3e0887600f0fe5cd"
+SINGLE_SCENE_30_SUFFIX_SOURCE_BINDING_SHA256 = (
+    "e270b7f014597e8960bdd908117bdbde3c712b2a5248d707468f3279e4ade460"
+)
+SINGLE_SCENE_30_SUFFIX_FORMAL_INDEX_SHA256 = (
+    "e275221248b48292cd32959febfd880ac447611a75405c571d2fbbf4ec7d931c"
+)
+SINGLE_SCENE_30_SUFFIX_PACKAGE_INDEX_SHA256 = (
+    "930f41c497e8aaa6dceb4ee12f6b7b87cea189c2320e3d90d1c03e850ca16d4b"
+)
+SINGLE_SCENE_30_SUFFIX_REGULAR_FILES = 19
+SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES = 13
+SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES = 18
+
+SOCIAL_PREVIEW_PATH = REPO_ROOT / "showcase" / "public" / "og-two-shard.png"
+SOCIAL_PREVIEW_SHA256 = (
+    "326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce"
+)
+SOCIAL_PREVIEW_WIDTH = 1728
+SOCIAL_PREVIEW_HEIGHT = 910
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -74,7 +129,8 @@ def _package_paths(package_dir: Path, excluded: set[str]) -> list[Path]:
         (
             path
             for path in package_dir.rglob("*")
-            if path.is_file() and path.relative_to(package_dir).as_posix() not in excluded
+            if path.is_file()
+            and path.relative_to(package_dir).as_posix() not in excluded
         ),
         key=lambda path: path.relative_to(package_dir).as_posix(),
     )
@@ -109,16 +165,176 @@ def _v2_role(relative_path: str) -> str:
     raise ValueError(f"No role classification for V2 package file: {relative_path}")
 
 
-def _inventory(package_dir: Path, existing_roles: Mapping[str, str]) -> list[dict[str, Any]]:
+def _single_scene_shard_role(
+    relative_path: str,
+    *,
+    prefix: str,
+    label: str,
+    fixed_seeds: int,
+    formal_entries: int,
+    package_entries: int,
+) -> str:
+    suffix = relative_path.removeprefix(prefix)
+    if suffix == "PROGRESS.json":
+        return f"final non-resumable {label} progress snapshot"
+    if suffix == "REPORT.json":
+        return f"{fixed_seeds}-seed {label} archived-decision rigid-dynamics report"
+    if suffix == "SOURCE_BINDING.json":
+        return f"formal {label} source-binding manifest"
+    if suffix == "SHA256SUMS":
+        return f"formal {label} {formal_entries}-file checksum index"
+    if suffix == "PACKAGE_SHA256SUMS":
+        return f"complete {label} {package_entries}-file evidence checksum index"
+    if suffix.startswith("TRIALS/"):
+        return f"sealed per-seed {label} partial-evidence checkpoint"
+    if suffix.startswith("EXECUTION_LOGS/") and suffix.endswith(".status"):
+        return f"retained {label} formal execution status record"
+    if suffix.startswith("EXECUTION_LOGS/") and suffix.endswith(".verify.log"):
+        return f"retained {label} dedicated-verifier log"
+    if suffix.startswith("EXECUTION_LOGS/") and suffix.endswith(".checksums.log"):
+        return f"retained {label} checksum-verification log"
+    if suffix.startswith("EXECUTION_LOGS/"):
+        return f"retained {label} formal execution log"
+    raise ValueError(
+        f"No role classification for {label} package file: {relative_path}"
+    )
+
+
+def _validate_index(path: Path, expected_sha256: str, expected_entries: int) -> None:
+    if not path.is_file():
+        raise ValueError(f"Required checksum index is missing: {path}")
+    observed_sha256 = _sha256_file(path)
+    if observed_sha256 != expected_sha256:
+        raise ValueError(
+            f"Checksum-index identity mismatch for {path}: "
+            f"expected {expected_sha256}, observed {observed_sha256}"
+        )
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if len(lines) != expected_entries:
+        raise ValueError(
+            f"Checksum-index entry count mismatch for {path}: "
+            f"expected {expected_entries}, observed {len(lines)}"
+        )
+    root = path.parent.resolve()
+    for line_number, line in enumerate(lines, start=1):
+        digest, separator, relative = line.partition("  ")
+        if separator != "  " or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError(f"Malformed checksum entry at {path}:{line_number}")
+        relative_path = Path(relative.removeprefix("./"))
+        target = (root / relative_path).resolve()
+        try:
+            target.relative_to(root)
+        except ValueError as error:
+            raise ValueError(
+                f"Checksum entry escapes its evidence directory: {path}:{line_number}"
+            ) from error
+        if not target.is_file():
+            raise ValueError(f"Indexed evidence file is missing: {target}")
+        observed = _sha256_file(target)
+        if observed != digest:
+            raise ValueError(
+                f"Indexed evidence identity mismatch for {target}: "
+                f"expected {digest}, observed {observed}"
+            )
+
+
+def _validate_two_shard_package(package_dir: Path) -> None:
+    shards = (
+        {
+            "prefix": SINGLE_SCENE_60_PREFIX,
+            "label": "single-scene 60-body prefix",
+            "regular_files": SINGLE_SCENE_60_REGULAR_FILES,
+            "report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
+            "source_binding_sha256": SINGLE_SCENE_60_SOURCE_BINDING_SHA256,
+            "formal_index_sha256": SINGLE_SCENE_60_FORMAL_INDEX_SHA256,
+            "formal_entries": SINGLE_SCENE_60_FORMAL_ENTRIES,
+            "package_index_sha256": SINGLE_SCENE_60_PACKAGE_INDEX_SHA256,
+            "package_entries": SINGLE_SCENE_60_PACKAGE_ENTRIES,
+        },
+        {
+            "prefix": SINGLE_SCENE_30_SUFFIX_PREFIX,
+            "label": "single-scene 30-body suffix",
+            "regular_files": SINGLE_SCENE_30_SUFFIX_REGULAR_FILES,
+            "report_sha256": SINGLE_SCENE_30_SUFFIX_REPORT_SHA256,
+            "source_binding_sha256": SINGLE_SCENE_30_SUFFIX_SOURCE_BINDING_SHA256,
+            "formal_index_sha256": SINGLE_SCENE_30_SUFFIX_FORMAL_INDEX_SHA256,
+            "formal_entries": SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES,
+            "package_index_sha256": SINGLE_SCENE_30_SUFFIX_PACKAGE_INDEX_SHA256,
+            "package_entries": SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES,
+        },
+    )
+    for shard in shards:
+        root = package_dir / str(shard["prefix"]).rstrip("/")
+        if not root.is_dir():
+            raise ValueError(
+                f"Required {shard['label']} evidence directory is missing: {root}"
+            )
+        regular_files = sum(path.is_file() for path in root.rglob("*"))
+        if regular_files != shard["regular_files"]:
+            raise ValueError(
+                f"Unexpected file count for {shard['label']}: "
+                f"expected {shard['regular_files']}, observed {regular_files}"
+            )
+        for name, expected in (
+            ("REPORT.json", shard["report_sha256"]),
+            ("SOURCE_BINDING.json", shard["source_binding_sha256"]),
+        ):
+            target = root / name
+            if not target.is_file():
+                raise ValueError(f"Required {shard['label']} file is missing: {target}")
+            observed = _sha256_file(target)
+            if observed != expected:
+                raise ValueError(
+                    f"Identity mismatch for {target}: expected {expected}, observed {observed}"
+                )
+        _validate_index(
+            root / "SHA256SUMS",
+            str(shard["formal_index_sha256"]),
+            int(shard["formal_entries"]),
+        )
+        _validate_index(
+            root / "PACKAGE_SHA256SUMS",
+            str(shard["package_index_sha256"]),
+            int(shard["package_entries"]),
+        )
+
+
+def _inventory(
+    package_dir: Path, existing_roles: Mapping[str, str]
+) -> list[dict[str, Any]]:
     files: list[dict[str, Any]] = []
     excluded = {PACKAGE_MANIFEST, PACKAGE_CHECKSUMS}
     for path in _package_paths(package_dir, excluded):
         relative = path.relative_to(package_dir).as_posix()
         role = existing_roles.get(relative)
+        if relative == ".gitattributes":
+            role = "submission-local binary diff attributes"
+        if relative == "V8-Frozen-Challenge-Judge-Card.md":
+            role = "compact judge entrypoint"
         if role is None and relative.startswith(V2_PREFIX):
             role = _v2_role(relative)
+        if relative.startswith(SINGLE_SCENE_60_PREFIX):
+            role = _single_scene_shard_role(
+                relative,
+                prefix=SINGLE_SCENE_60_PREFIX,
+                label="single-scene 60-body prefix",
+                fixed_seeds=20,
+                formal_entries=SINGLE_SCENE_60_FORMAL_ENTRIES,
+                package_entries=SINGLE_SCENE_60_PACKAGE_ENTRIES,
+            )
+        if relative.startswith(SINGLE_SCENE_30_SUFFIX_PREFIX):
+            role = _single_scene_shard_role(
+                relative,
+                prefix=SINGLE_SCENE_30_SUFFIX_PREFIX,
+                label="single-scene 30-body suffix",
+                fixed_seeds=10,
+                formal_entries=SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES,
+                package_entries=SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES,
+            )
         if role is None:
-            raise ValueError(f"No preserved or explicit role for package file: {relative}")
+            raise ValueError(
+                f"No preserved or explicit role for package file: {relative}"
+            )
         files.append(
             {
                 "path": relative,
@@ -162,7 +378,7 @@ def _decision_dynamics_boundary() -> dict[str, Any]:
         "v2_formal_exit_code": 0,
         "source_commit": V2_SOURCE_COMMIT,
         "source_binding_sha256": SOURCE_BINDING_SHA256,
-        "report_sha256": REPORT_SHA256,
+        "report_sha256": V2_REPORT_SHA256,
         "remote_and_local_verifier_passed": True,
         "observed_execution_ledger": "30 first-attempt worker completions; all worker exit codes 0; no completed-checkpoint rerun or seed replacement observed",
         "proof_scope_limits": [
@@ -170,6 +386,72 @@ def _decision_dynamics_boundary() -> dict[str, Any]:
             "The formal source binding omitted the directly imported src/v4_motion.py dependency, so it is not a complete import-closure attestation; a post-run clean-tree audit found matching worktree and commit bytes.",
         ],
         "interpretation_limit": "Consumes archived route decisions without rerunning the frozen perception-policy loop; not simultaneous cooperative control, dynamic-obstacle evidence, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification.",
+    }
+
+
+def _two_shard_dynamics_boundary() -> dict[str, Any]:
+    return {
+        "evidence_class": "additive non-locked archived-decision rigid-dynamics solver-scale complement",
+        "formal_result_eligible": False,
+        "seed_range": [102500, 102529],
+        "fixed_seeds": 30,
+        "passed": 30,
+        "failed": 0,
+        "active_direct_decisions": 29,
+        "active_safe_detours": 1,
+        "genesis_scene_count": 2,
+        "scene_non_fixed_robot_entity_counts": [60, 30],
+        "cumulative_distinct_non_fixed_robot_entities": 90,
+        "maximum_co_resident_non_fixed_robot_entities": 60,
+        "all_90_robots_co_resident": False,
+        "cross_shard_checkpoint_or_state_resume": False,
+        "synthetic_combined_execution_report_created": False,
+        "arithmetic_summary_across_independent_reports": True,
+        "fixed_order_serial_trial_actuation": True,
+        "simultaneous_cooperative_control": False,
+        "active_scout_reached": 30,
+        "active_carrier_reached": 30,
+        "passive_carrier_reached": 30,
+        "mean_active_loaded_carrier_path_m": 4.943604753440714,
+        "mean_passive_loaded_carrier_path_m": 6.245384742632991,
+        "paired_mean_loaded_carrier_path_reduction_percent": 20.843871800337798,
+        "direct_pairs_saving_at_least_0_50_m": "29/29",
+        "safe_detour_seed": 102515,
+        "maximum_tilt_deg": 10.583984080221363,
+        "maximum_stationary_partner_drift_m": 0.021341944256011203,
+        "trial_blocker_contact_rows": 0,
+        "active_pair_contact_rows": 0,
+        "post_build_entity_pose_writes": 0,
+        "post_build_actuation_api": "control_dofs_velocity only",
+        "uses_archived_decisions_without_rerunning_policy": True,
+        "shards": [
+            {
+                "name": "single_scene_60_body_prefix",
+                "seed_range": [102500, 102519],
+                "passed": 20,
+                "failed": 0,
+                "genesis_scene_count": 1,
+                "non_fixed_robot_entities_in_scene": 60,
+                "report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
+                "source_commit": SINGLE_SCENE_60_SOURCE_COMMIT,
+                "source_binding_sha256": SINGLE_SCENE_60_SOURCE_BINDING_SHA256,
+            },
+            {
+                "name": "single_scene_30_body_suffix",
+                "seed_range": [102520, 102529],
+                "passed": 10,
+                "failed": 0,
+                "genesis_scene_count": 1,
+                "non_fixed_robot_entities_in_scene": 30,
+                "report_sha256": SINGLE_SCENE_30_SUFFIX_REPORT_SHA256,
+                "source_commit": SINGLE_SCENE_30_SUFFIX_SOURCE_COMMIT,
+                "source_binding_sha256": SINGLE_SCENE_30_SUFFIX_SOURCE_BINDING_SHA256,
+                "bound_prefix_report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
+            },
+        ],
+        "primary_endpoint_unchanged": "active 29/30 direct versus passive 0/30",
+        "failed_v1_all_90_body_attempt_relabelled_as_pass": False,
+        "interpretation_limit": "Exactly two independently verified, non-resumable Genesis scene shards with fixed-order serial wheel actuation; 90 cumulative distinct robots, maximum 60 co-resident, never all 90 co-resident. Not a live perception-policy rerun, simultaneous fleet-control result, dynamic-obstacle result, physical-robot or sim-to-real validation, throughput, energy, control-loop latency, or safety certification.",
     }
 
 
@@ -181,21 +463,26 @@ def _build_package_manifest(
     if generated_at_utc is not None:
         data["generated_at_utc"] = generated_at_utc
 
+    _validate_two_shard_package(package_dir)
     existing_roles = {
         item["path"]: item["role"]
         for item in data.get("files", [])
         if isinstance(item, dict) and "path" in item and "role" in item
     }
     inventory = _inventory(package_dir, existing_roles)
-    data["evidence_boundaries"][
-        "additive_decision_bound_dynamics_recovery_v2"
-    ] = _decision_dynamics_boundary()
+    data["evidence_boundaries"]["additive_decision_bound_dynamics_recovery_v2"] = (
+        _decision_dynamics_boundary()
+    )
+    data["evidence_boundaries"][TWO_SHARD_BOUNDARY_KEY] = _two_shard_dynamics_boundary()
     simulation = data["evidence_boundaries"]["simulation_scope"]
     simulation["backend"] = (
         "Frozen policy: Genesis 1.1.2 kinematic simulation on AMD ROCm; "
         "separate additive supplements: non-fixed rigid-body wheel dynamics"
     )
     simulation["separate_additive_decision_bound_dynamics_packaged"] = True
+    simulation["separate_additive_two_shard_dynamics_packaged"] = True
+    simulation["two_shard_maximum_co_resident_non_fixed_robot_entities"] = 60
+    simulation["two_shard_all_90_robots_co_resident"] = False
     data["files"] = inventory
 
     integrity = data["integrity"]
@@ -212,6 +499,16 @@ def _build_package_manifest(
             "decision_dynamics_v2_complete_checksum_index_sha256": V2_PACKAGE_INDEX_SHA256,
             "decision_dynamics_v2_recovery_audit_sha256": RECOVERY_AUDIT_SHA256,
             "decision_dynamics_v2_provenance_review_sha256": PROVENANCE_REVIEW_SHA256,
+            "decision_dynamics_single_scene_60_regular_files": SINGLE_SCENE_60_REGULAR_FILES,
+            "decision_dynamics_single_scene_60_formal_checksum_entries": SINGLE_SCENE_60_FORMAL_ENTRIES,
+            "decision_dynamics_single_scene_60_formal_checksum_index_sha256": SINGLE_SCENE_60_FORMAL_INDEX_SHA256,
+            "decision_dynamics_single_scene_60_complete_checksum_entries": SINGLE_SCENE_60_PACKAGE_ENTRIES,
+            "decision_dynamics_single_scene_60_complete_checksum_index_sha256": SINGLE_SCENE_60_PACKAGE_INDEX_SHA256,
+            "decision_dynamics_single_scene_30_suffix_regular_files": SINGLE_SCENE_30_SUFFIX_REGULAR_FILES,
+            "decision_dynamics_single_scene_30_suffix_formal_checksum_entries": SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES,
+            "decision_dynamics_single_scene_30_suffix_formal_checksum_index_sha256": SINGLE_SCENE_30_SUFFIX_FORMAL_INDEX_SHA256,
+            "decision_dynamics_single_scene_30_suffix_complete_checksum_entries": SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES,
+            "decision_dynamics_single_scene_30_suffix_complete_checksum_index_sha256": SINGLE_SCENE_30_SUFFIX_PACKAGE_INDEX_SHA256,
         }
     )
     return data, _json_bytes(data)
@@ -254,7 +551,7 @@ def _decision_dynamics_artifact() -> dict[str, Any]:
     return {
         "report_path": f"{base}/REPORT.json",
         "staged_report_path": f"{staged}/REPORT.json",
-        "report_sha256": REPORT_SHA256,
+        "report_sha256": V2_REPORT_SHA256,
         "source_commit": V2_SOURCE_COMMIT,
         "source_binding_path": f"{base}/SOURCE_BINDING.json",
         "source_binding_sha256": SOURCE_BINDING_SHA256,
@@ -272,26 +569,139 @@ def _decision_dynamics_artifact() -> dict[str, Any]:
         "remote_verifier_passed": True,
         "local_byte_identical_verifier_passed": True,
         "publication_verified": False,
-        "publication_state": "local owner-review identity; not pushed, deployed, released, or submitted",
+        "publication_state": "at manifest generation, this was a local owner-review identity that had not been pushed, deployed, released, or submitted",
+    }
+
+
+def _two_shard_dynamics_artifact() -> dict[str, Any]:
+    source_base = "release/v8-derived"
+    staged_base = (
+        "submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/evidence"
+    )
+    prefix_name = "decision_dynamics_single_scene_60_102500_102519"
+    suffix_name = "decision_dynamics_single_scene_30_suffix_102520_102529"
+    return {
+        "evidence_class": "additive non-locked archived-decision rigid-dynamics solver-scale complement",
+        "formal_result_eligible": False,
+        "combined_claim_requires_both_independent_verifiers": True,
+        "prefix_60_body": {
+            "report_path": f"{source_base}/{prefix_name}/REPORT.json",
+            "staged_report_path": f"{staged_base}/{prefix_name}/REPORT.json",
+            "report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
+            "source_commit": SINGLE_SCENE_60_SOURCE_COMMIT,
+            "source_binding_path": f"{source_base}/{prefix_name}/SOURCE_BINDING.json",
+            "source_binding_sha256": SINGLE_SCENE_60_SOURCE_BINDING_SHA256,
+            "formal_sha256sums_path": f"{source_base}/{prefix_name}/SHA256SUMS",
+            "formal_sha256sums_sha256": SINGLE_SCENE_60_FORMAL_INDEX_SHA256,
+            "formal_checksum_entries": SINGLE_SCENE_60_FORMAL_ENTRIES,
+            "complete_sha256sums_path": f"{source_base}/{prefix_name}/PACKAGE_SHA256SUMS",
+            "complete_sha256sums_sha256": SINGLE_SCENE_60_PACKAGE_INDEX_SHA256,
+            "complete_checksum_entries": SINGLE_SCENE_60_PACKAGE_ENTRIES,
+            "regular_files": SINGLE_SCENE_60_REGULAR_FILES,
+            "dedicated_verifier_passed": True,
+        },
+        "suffix_30_body": {
+            "report_path": f"{source_base}/{suffix_name}/REPORT.json",
+            "staged_report_path": f"{staged_base}/{suffix_name}/REPORT.json",
+            "report_sha256": SINGLE_SCENE_30_SUFFIX_REPORT_SHA256,
+            "source_commit": SINGLE_SCENE_30_SUFFIX_SOURCE_COMMIT,
+            "source_binding_path": f"{source_base}/{suffix_name}/SOURCE_BINDING.json",
+            "source_binding_sha256": SINGLE_SCENE_30_SUFFIX_SOURCE_BINDING_SHA256,
+            "formal_sha256sums_path": f"{source_base}/{suffix_name}/SHA256SUMS",
+            "formal_sha256sums_sha256": SINGLE_SCENE_30_SUFFIX_FORMAL_INDEX_SHA256,
+            "formal_checksum_entries": SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES,
+            "complete_sha256sums_path": f"{source_base}/{suffix_name}/PACKAGE_SHA256SUMS",
+            "complete_sha256sums_sha256": SINGLE_SCENE_30_SUFFIX_PACKAGE_INDEX_SHA256,
+            "complete_checksum_entries": SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES,
+            "regular_files": SINGLE_SCENE_30_SUFFIX_REGULAR_FILES,
+            "dedicated_verifier_passed": True,
+            "bound_prefix_report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
+        },
+        "publication_verified": False,
+        "publication_state": "at manifest generation, this was a local owner-review identity that had not been pushed, deployed, released, or submitted",
+    }
+
+
+def _pdf_page_count(path: Path) -> int:
+    count = len(re.findall(rb"/Type\s*/Page\b", path.read_bytes()))
+    if count <= 0:
+        raise ValueError(
+            f"Could not determine a positive page count from staged PDF: {path}"
+        )
+    return count
+
+
+def _technical_report_identity(
+    path: Path,
+    *,
+    expected_sha256: str | None,
+    expected_page_count: int | None,
+) -> dict[str, Any]:
+    if not path.is_file():
+        raise ValueError(f"The staged technical-report PDF is missing: {path}")
+    sha256 = _sha256_file(path)
+    if expected_sha256 is not None and sha256 != expected_sha256:
+        raise ValueError(
+            "The staged technical-report PDF does not match --technical-report-sha256: "
+            f"expected {expected_sha256}, observed {sha256}"
+        )
+    page_count = _pdf_page_count(path)
+    if expected_page_count is not None and page_count != expected_page_count:
+        raise ValueError(
+            "The staged technical-report PDF page count does not match "
+            f"--technical-report-page-count: expected {expected_page_count}, "
+            f"observed {page_count}"
+        )
+    return {
+        "sha256": sha256,
+        "size_bytes": path.stat().st_size,
+        "page_count": page_count,
+    }
+
+
+def _social_preview_identity() -> dict[str, Any]:
+    if not SOCIAL_PREVIEW_PATH.is_file():
+        raise ValueError(
+            f"The two-shard social preview is missing: {SOCIAL_PREVIEW_PATH}"
+        )
+    observed_sha256 = _sha256_file(SOCIAL_PREVIEW_PATH)
+    if observed_sha256 != SOCIAL_PREVIEW_SHA256:
+        raise ValueError(
+            "The two-shard social preview does not match its pinned identity: "
+            f"expected {SOCIAL_PREVIEW_SHA256}, observed {observed_sha256}"
+        )
+    return {
+        "path": "showcase/public/og-two-shard.png",
+        "sha256": observed_sha256,
+        "size_bytes": SOCIAL_PREVIEW_PATH.stat().st_size,
+        "width": SOCIAL_PREVIEW_WIDTH,
+        "height": SOCIAL_PREVIEW_HEIGHT,
+        "disclosure": "CONCEPTUAL TOPOLOGY · NOT EXPERIMENT CAPTURE",
     }
 
 
 def _build_handoff_manifest(
     path: Path,
-    package_dir: Path,
     package_inventory_count: int,
     package_checksum_bytes: bytes,
+    technical_report_identity: Mapping[str, Any],
+    social_preview_identity: Mapping[str, Any],
     generated_on: str | None,
 ) -> tuple[dict[str, Any], bytes]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if generated_on is not None:
         data["generated_on"] = generated_on
+    data["status"] = "two_shard_owner_review_snapshot_unpublished_at_generation"
 
     boundary = _decision_dynamics_boundary()
     data_without_existing_boundary = {
         key: value
         for key, value in data.items()
-        if key != "additive_decision_bound_dynamics_recovery_v2"
+        if key
+        not in {
+            "additive_decision_bound_dynamics_recovery_v2",
+            TWO_SHARD_BOUNDARY_KEY,
+        }
     }
     data = _insert_after(
         data_without_existing_boundary,
@@ -299,7 +709,17 @@ def _build_handoff_manifest(
         "additive_decision_bound_dynamics_recovery_v2",
         boundary,
     )
-    artifacts = data["artifacts"]
+    data = _insert_after(
+        data,
+        "additive_decision_bound_dynamics_recovery_v2",
+        TWO_SHARD_BOUNDARY_KEY,
+        _two_shard_dynamics_boundary(),
+    )
+    artifacts = {
+        key: value
+        for key, value in data["artifacts"].items()
+        if key != TWO_SHARD_BOUNDARY_KEY
+    }
     if "additive_decision_bound_dynamics_recovery_v2" not in artifacts:
         artifacts = _insert_after(
             artifacts,
@@ -311,19 +731,21 @@ def _build_handoff_manifest(
         artifacts["additive_decision_bound_dynamics_recovery_v2"] = (
             _decision_dynamics_artifact()
         )
+    artifacts = _insert_after(
+        artifacts,
+        "additive_decision_bound_dynamics_recovery_v2",
+        TWO_SHARD_BOUNDARY_KEY,
+        _two_shard_dynamics_artifact(),
+    )
 
-    pdf = package_dir / "Look-Twice-V8-Technical-Report.pdf"
-    if _sha256_file(pdf) != TECHNICAL_REPORT_SHA256:
-        raise ValueError("The staged technical-report PDF does not match its final identity")
     artifacts["technical_report_pdf"].update(
         {
-            "sha256": TECHNICAL_REPORT_SHA256,
-            "size_bytes": pdf.stat().st_size,
-            "page_count": 15,
+            **technical_report_identity,
             "publication_verified": False,
-            "publication_state": "local V2-integrated identity; stable URL still serves the earlier public baseline pending owner approval",
+            "publication_state": "at manifest generation, this two-shard-integrated identity was local and the stable URL still served the earlier public baseline",
         }
     )
+    artifacts["social_preview"].update(social_preview_identity)
     package_checksum_sha256 = _sha256_bytes(package_checksum_bytes)
     artifacts["official_repository_staging"].update(
         {
@@ -331,7 +753,7 @@ def _build_handoff_manifest(
             "manifest_inventory_entries": package_inventory_count,
             "total_regular_files_including_sha256sums": package_inventory_count + 2,
             "sha256s_sha256": package_checksum_sha256,
-            "status": "local_v2_refresh_ready_no_push_no_pr",
+            "status": "local_two_shard_refresh_ready_no_push_no_pr",
         }
     )
     data["artifacts"] = artifacts
@@ -339,33 +761,45 @@ def _build_handoff_manifest(
     verification = data["verification"]
     verification.update(
         {
-            "node_22_site_tests": "35/35 passed",
+            "node_22_site_tests": "38/38 passed",
             "node_22_lint": "passed",
             "node_dependency_audit": "0 known vulnerabilities",
             "production_build": "passed",
-            "pdf_visual_qa": "15/15 pages rendered and inspected after final regeneration",
-            "browser_visual_qa": "previous public baseline inspection retained; V2 local source, tests, lint, and production-build QA passed; owner browser review remains before deployment",
+            "pdf_visual_qa": (
+                f"{technical_report_identity['page_count']}/"
+                f"{technical_report_identity['page_count']} pages rendered and "
+                "inspected after final regeneration"
+            ),
+            "browser_visual_qa": "previous public baseline inspection retained; two-shard local source, 38 tests, lint, and production-build QA passed; owner browser review remains before deployment",
             "decision_dynamics_recovery_v2_tests": "16/16 runner and verifier tests passed; Ruff passed; formal remote and byte-identical local verifiers passed; 30/30 formal seeds, failed 0",
+            "decision_dynamics_two_shard_tests": "23/23 runner and verifier tests passed; both formal and complete-package checksum indexes passed; dedicated 60-body and 30-body verifiers passed; 20/20 prefix plus 10/10 suffix, failed 0",
             "official_repository_staging_checksums": (
                 f"{package_inventory_count + 1} checksummed artifacts passed locally "
                 f"({package_inventory_count + 2} total files including SHA256SUMS); "
                 f"manifest inventory {package_inventory_count}/{package_inventory_count}; "
-                f"checksum-index SHA256 {package_checksum_sha256}; V2 refresh not pushed"
+                f"checksum-index SHA256 {package_checksum_sha256}; "
+                "two-shard refresh not pushed"
             ),
-            "public_distribution": "previous challenge/feasibility baseline remains public and anonymously verified; V2 source, site, 15-page PDF, and 105-file official package are local only pending owner approval",
-            "official_fork_branch": "public branch remains at the earlier baseline; the byte-identical local V2 package refresh is prepared on the local official-fork branch but unpushed; official_pr_opened=false",
+            "public_distribution": (
+                "previous challenge/feasibility baseline remains public and "
+                "anonymously verified; two-shard source, site, "
+                f"{technical_report_identity['page_count']}-page PDF, and "
+                f"{package_inventory_count + 2}-file official package are local "
+                "only pending owner approval"
+            ),
+            "official_fork_branch": "at manifest generation, the public branch remained at the earlier baseline and the byte-identical two-shard package refresh was prepared only on the local official-fork branch; official_pr_opened=false",
         }
     )
     data["verification"] = verification
     data["owner_review_items"] = [
         "Complete owner visual and audible review of the final demo.",
-        "Review the locally verified V2 source/site/PDF/official-package diff and authorize or reject publication.",
+        "Review the locally verified two-shard source/site/PDF/official-package diff and authorize or reject publication.",
         "Review the prepared Genesis issue and PR packet and authorize or reject upstream publication.",
         "Review the English competition PR body and authorize opening the official PR.",
     ]
     data["remaining_before_pr"] = [
         "complete owner visual and audible review of the final 3:59 English demo",
-        "obtain owner approval to publish and anonymously verify the V2 source/site/PDF/official-fork refresh",
+        "obtain owner approval to publish and anonymously verify the two-shard source/site/PDF/official-fork refresh",
         "obtain separate owner approval before filing the Genesis upstream issue or PR",
         "obtain owner approval to open the official English submission PR",
     ]
@@ -378,6 +812,20 @@ def _validate_timestamp(value: str) -> str:
     return value
 
 
+def _validate_sha256(value: str) -> str:
+    normalized = value.lower()
+    if not re.fullmatch(r"[0-9a-f]{64}", normalized):
+        raise argparse.ArgumentTypeError("expected a 64-character SHA256 hex digest")
+    return normalized
+
+
+def _positive_int(value: str) -> int:
+    parsed = int(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("expected a positive integer")
+    return parsed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package-dir", type=Path, default=DEFAULT_PACKAGE_DIR)
@@ -386,6 +834,16 @@ def main() -> int:
     )
     parser.add_argument("--generated-at-utc", type=_validate_timestamp)
     parser.add_argument("--generated-on", help="local calendar date YYYY-MM-DD")
+    parser.add_argument(
+        "--technical-report-sha256",
+        type=_validate_sha256,
+        help="optional expected staged technical-report SHA256",
+    )
+    parser.add_argument(
+        "--technical-report-page-count",
+        type=_positive_int,
+        help="optional expected staged technical-report page count",
+    )
     parser.add_argument(
         "--check", action="store_true", help="verify canonical bytes without writing"
     )
@@ -399,11 +857,18 @@ def main() -> int:
     package_checksum_bytes = _build_package_checksums(
         package_dir, package_manifest_bytes
     )
+    technical_report_identity = _technical_report_identity(
+        package_dir / "Look-Twice-V8-Technical-Report.pdf",
+        expected_sha256=args.technical_report_sha256,
+        expected_page_count=args.technical_report_page_count,
+    )
+    social_preview_identity = _social_preview_identity()
     handoff_data, handoff_bytes = _build_handoff_manifest(
         handoff_manifest,
-        package_dir,
         len(package_data["files"]),
         package_checksum_bytes,
+        technical_report_identity,
+        social_preview_identity,
         args.generated_on,
     )
 
@@ -434,7 +899,10 @@ def main() -> int:
     }
     if manifest_paths != actual_paths:
         raise ValueError("Manifest coverage changed during finalization")
-    if len(package_checksum_bytes.decode("utf-8").splitlines()) != len(actual_paths) + 1:
+    if (
+        len(package_checksum_bytes.decode("utf-8").splitlines())
+        != len(actual_paths) + 1
+    ):
         raise ValueError("Top-level checksum coverage is incomplete")
 
     print(
@@ -445,8 +913,12 @@ def main() -> int:
                 "checksum_entries": len(actual_paths) + 1,
                 "total_regular_files": len(actual_paths) + 2,
                 "sha256s_sha256": _sha256_bytes(package_checksum_bytes),
-                "technical_report_sha256": TECHNICAL_REPORT_SHA256,
-                "decision_dynamics_report_sha256": REPORT_SHA256,
+                "technical_report_sha256": technical_report_identity["sha256"],
+                "technical_report_page_count": technical_report_identity["page_count"],
+                "decision_dynamics_v2_report_sha256": V2_REPORT_SHA256,
+                "decision_dynamics_single_scene_60_report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
+                "decision_dynamics_single_scene_30_suffix_report_sha256": SINGLE_SCENE_30_SUFFIX_REPORT_SHA256,
+                "social_preview_sha256": social_preview_identity["sha256"],
                 "handoff_manifest": str(handoff_manifest),
             },
             indent=2,

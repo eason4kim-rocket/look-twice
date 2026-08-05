@@ -25,9 +25,18 @@ a concrete next observation and robot action into an auditable decision.
 This entry is simulation-only. It does not claim real-robot validation,
 sim-to-real transfer, or safety certification.
 
+> **Owner-review snapshot recorded on 2026-08-05:** at snapshot generation,
+> the independently verified 60-body prefix and 30-body suffix were integrated
+> into these human-readable materials, their complete evidence directories and
+> rebuilt 18-page PDF were packaged: all 154 regular files were present and all
+> 153 checksum entries verified locally. At
+> that timestamp, protocol targets were not yet public and no competition PR
+> had been opened. This records packaging-time state; the links below expose
+> current publication availability.
+
 ## Judge-first links
 
-- One-page frozen challenge Judge Card:
+- Compact frozen challenge Judge Card:
   [packaged copy](V8-Frozen-Challenge-Judge-Card.md)
 - Post-hoc descriptive offline route-feasibility audit:
   [packaged JSON](evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json)
@@ -40,6 +49,13 @@ sim-to-real transfer, or safety certification.
   [execution audit](evidence/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json) ·
   [proof-scope review](evidence/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW.json) ·
   [complete package checksums](evidence/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS)
+- Separate solver-scale two-shard complement:
+  [20/20 60-body prefix report](evidence/decision_dynamics_single_scene_60_102500_102519/REPORT.json) ·
+  [prefix complete-package checksums](evidence/decision_dynamics_single_scene_60_102500_102519/PACKAGE_SHA256SUMS) ·
+  [10/10 30-body suffix report](evidence/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json) ·
+  [suffix complete-package checksums](evidence/decision_dynamics_single_scene_30_suffix_102520_102529/PACKAGE_SHA256SUMS) ·
+  [prefix protocol](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md) ·
+  [suffix protocol](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md)
 - Independent machine verification:
   [packaged JSON](evidence/challenge_102500_102529/VERIFICATION.json) ·
   [stable release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json)
@@ -51,8 +67,8 @@ sim-to-real transfer, or safety certification.
 - Dedicated source branch:
   <https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release>
 - Technical report:
-  [packaged PDF](Look-Twice-V8-Technical-Report.pdf) ·
-  [stable release target](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
+  [packaged two-shard-integrated PDF](Look-Twice-V8-Technical-Report.pdf) ·
+  [replacement publication target](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
 - Final 3:59 English demo target:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4>
 - Frozen checkpoint:
@@ -63,11 +79,15 @@ sim-to-real transfer, or safety certification.
 The 30-second file is a silent evidence preview. The 3:59 MP4 is the complete
 narrated workflow demonstration. The replacement MP4 and sidecar were
 downloaded from their stable release targets without credentials and matched
-the packaged SHA256 identities on 2026-08-03. The final 15-page report is
-packaged here and bound by `SHA256SUMS`; its release URL is the publication
-target.
+the packaged SHA256 identities on 2026-08-03. The packaged 18-page report now
+includes the two-shard complement and hashes to
+`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
+The package manifest and `SHA256SUMS` bind and verify this owner-review
+snapshot. At snapshot generation on 2026-08-05, the stable release URL still
+served an earlier public baseline; the packaged copy is authoritative for this
+payload.
 
-## 90-second judge path
+## Judge-first review path
 
 1. Open the [packaged Judge Card](V8-Frozen-Challenge-Judge-Card.md) and confirm
    Commit A/Commit B preceded all 60 episodes.
@@ -80,11 +100,15 @@ target.
    carrier/scout burden table.
 6. Inspect the separately labeled 30/30 decision-bound wheel-dynamics replay:
    90/90 bodies reached across 30 independent scenes; 29/29 direct pairs kept
-   a physical carrier-path advantage; the one dual-blocked case safely
+   a simulated loaded-carrier path advantage; the one dual-blocked case safely
    detoured.
-7. Inspect the earlier 20/20 dual-body wheel-dynamics component bar and its
+7. Inspect the solver-scale complement separately: 20/20 fixed decisions in
+   one 60-body scene plus 10/10 in a second 30-body scene. This is exactly two
+   scene shards, 90 cumulative distinct robots, and at most 60 co-resident--not
+   one 90-body scene.
+8. Inspect the earlier 20/20 dual-body wheel-dynamics component bar and its
    retained timeout/recovery chain.
-8. Open Results and trace the permanent locked numbers separately.
+9. Open Results and trace the permanent locked numbers separately.
 
 ## Why the result matters
 
@@ -148,7 +172,8 @@ open, OOD result, rigid-body test, or physical-robot result.
 A fixed submission-time protocol tested one narrow implementation gap without
 rerunning or relabeling the frozen policy endpoint. Seeds `160820-160839`
 instantiated a loaded carrier and a scout as separate non-fixed Genesis URDF
-bodies: **40 distinct robot entities** across 20 non-overlapping scenes. The
+bodies: **40 distinct robot entities in one Genesis scene containing 20
+spatially isolated trial worlds**. The
 scout moved while the carrier stayed parked, then the carrier moved while the
 scout stayed parked. The only post-build actuation API was wheel-DOF
 `control_dofs_velocity`; the script made no pose write after `scene.build()`.
@@ -181,7 +206,7 @@ distinct bodies; it was not one simultaneous 90-body scene.
 The AMD Radeon/ROCm run passed **30/30**. All 90/90 bodies were wheel-actuated
 and reached; all 29 direct pairs saved at least 0.50 m of loaded-carrier path;
 mean active/passive carrier paths were 4.943529/6.243270 m, a paired reduction
-of **20.8183%**. Recorded blocker and active carrier/scout contact rows were
+of **20.8183%**. Counted Genesis blocker and active carrier/scout contact rows were
 0/0; maximum tilt was 10.579607 degrees and maximum parked-partner drift was
 0.022329 m.
 
@@ -206,6 +231,45 @@ This is additive, non-locked, archived-decision simulation evidence with
 rerun live perception/policy inference, demonstrate simultaneous cooperation,
 dynamic-obstacle response, real-robot or sim-to-real validation, throughput,
 energy, or safety certification.
+
+## Separate solver-scale two-shard complement
+
+A further fixed submission-time complement consumed the same immutable 30
+archived decisions without rerunning perception or policy inference. Seeds
+`102500-102519` passed **20/20** in one Genesis scene containing **60
+co-resident non-fixed robots**: 20 scouts, 20 active loaded carriers, and 20
+passive loaded carriers. Seeds `102520-102529` independently passed **10/10**
+in a second Genesis scene containing **30 co-resident non-fixed robots**, ten
+of each role.
+
+Each shard used one Genesis initialization and one scene build, then actuated
+its assigned trials in fixed serial order using wheel-DOF velocity control.
+Neither shard supported resume. The two exact reports independently passed
+their source-aware verifiers and checksum indexes. Their only combined topology
+statement is **exactly two completed scene shards, 90 cumulative distinct robot
+instantiations, and a maximum of 60 co-resident robots**. The 90 robots were
+never co-resident in a single scene; there is no synthetic combined execution
+report and the result does not convert V1's timed-out one-scene 90-body attempt
+into a pass.
+
+Across the two reports, all 30 scouts, 30 active carriers, and 30 passive
+carriers reached. All **29/29** direct pairs saved at least 0.50 m of simulated
+loaded-carrier path, while seed `102515` completed its archived safe detour.
+The fixed-denominator weighted mean was **4.943605 m active versus 6.245385 m
+passive**, a **20.8439%** reduction. Counted blocker-contact and active-pair
+contact rows were zero; post-build script pose writes were zero; maximum tilt
+was **10.583984 degrees** and maximum parked-partner drift was **0.021342 m**.
+
+The 60-body report SHA256 is
+`3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+the 30-body suffix report SHA256 is
+`69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+Both remain additive, non-locked, archived-decision, fixed-order serial,
+simulation-only evidence with `formal_result_eligible=false`. They are not a
+live perception-policy rerun, simultaneous cooperative fleet control,
+dynamic-obstacle evidence, physical-robot validation, sim-to-real evidence,
+throughput or energy evidence, or safety certification. The preregistered
+primary remains **active 29/30 versus passive 0/30**.
 
 ## Frozen V8 result
 
@@ -277,6 +341,11 @@ The decision-bound V2 replay used the same Radeon/ROCm software class with one
 fresh three-body scene per fixed seed. Its approximately 18-minute wall is an
 execution-audit fact only, not a throughput or latency benchmark.
 
+The separate solver-scale prefix and suffix used Genesis 1.1.2 on
+`gs.amdgpu` with 60 and 30 co-resident non-fixed bodies respectively. Their
+body counts, scene counts, and elapsed walls are solver-topology acceptance
+facts, not fleet throughput, utilization, latency, or energy benchmarks.
+
 ## Reproduction and identities
 
 The dedicated source branch provides a deterministic CPU evidence audit,
@@ -324,6 +393,10 @@ shasum -a 256 -c \
   evidence/decision_dynamics_recovery_v2_102500_102529/SHA256SUMS
 shasum -a 256 -c \
   evidence/decision_dynamics_recovery_v2_102500_102529/PACKAGE_SHA256SUMS
+(cd evidence/decision_dynamics_single_scene_60_102500_102519 && \
+  shasum -a 256 -c SHA256SUMS && shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd evidence/decision_dynamics_single_scene_30_suffix_102520_102529 && \
+  shasum -a 256 -c SHA256SUMS && shasum -a 256 -c PACKAGE_SHA256SUMS)
 ```
 
 The 239.000-second final demo is 9,032,035 bytes and must hash to:
@@ -348,7 +421,9 @@ locked-input manifest, frozen import manifest, machine-readable task-utility
 derivation, and the preregistered challenge report, run manifest, full-wall
 ROCm telemetry, independent verification, raw-archive checksum index, the
 separately labeled dual-body report and timeout/recovery audit chain, plus the
-complete 30-seed decision-bound checkpoint/report/provenance package.
+complete 30-seed decision-bound checkpoint/report/provenance package, and the
+complete 60-body prefix and 30-body suffix solver-scale evidence directories.
 The machine-readable [package manifest](SUBMISSION_PACKAGE.json) states the
 included payload and evidence boundaries. Every packaged regular file except
-the checksum index itself is bound by [SHA256SUMS](SHA256SUMS).
+the checksum index itself is bound by [SHA256SUMS](SHA256SUMS); the finalizer
+and all 153 checksum entries pass locally for this owner-review snapshot.

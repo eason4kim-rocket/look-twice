@@ -24,7 +24,7 @@ deployment or a certified safety controller.
 
 ## 90-second judge path
 
-1. Read the one-page [V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md):
+1. Read the compact [V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md):
    public preregistration, 30 paired worlds, AMD full-wall telemetry, application
    burden, raw archive, and one-command verification.
 2. Open the public [Evidence Console](https://eason4kim-rocket.github.io/) and
@@ -34,8 +34,12 @@ deployment or a certified safety controller.
 4. Inspect the [frozen results](https://eason4kim-rocket.github.io/results/)
    and open the linked source JSON, including the separate 30/30
    decision-bound wheel-dynamics replay and the earlier 20/20 dual-body bar.
-5. Use the CPU-only audit below to verify the replay bundles and frozen SHA
-   boundary locally.
+5. Inspect the solver-scale complement: **20/20** fixed decisions in one
+   60-body scene plus **10/10** in a second 30-body scene. Together these are
+   exactly two scene shards, 90 cumulative distinct robots, and at most 60
+   co-resident robots; never were all 90 co-resident.
+6. Use the CPU-only audits below to verify the replay bundles, frozen SHA
+   boundary, and both solver-scale reports locally.
 
 ## Frozen V8 result
 
@@ -236,6 +240,47 @@ This is additive, non-locked, archived-decision simulation evidence with
 simultaneous cooperative control, dynamic-obstacle response, real-robot or
 sim-to-real validation, throughput, energy, or safety-certification evidence.
 
+## Separate solver-scale two-shard complement
+
+A further predeclared complement asks whether the same fixed 30 archived
+decisions can execute with many unrelated robot bodies resident in each
+Genesis solver. Seeds `102500-102519` passed **20/20** in one scene containing
+**60 co-resident non-fixed robots**: 20 scouts, 20 active loaded carriers, and
+20 passive loaded carriers. Seeds `102520-102529` then passed **10/10** in a
+second scene containing **30 co-resident non-fixed robots**, ten of each role.
+Each shard used one Genesis initialization and one scene build, actuated its
+fixed trials serially with wheel velocity control, supported no resume, and
+produced its own independently verified report.
+
+Taken together, the two completed reports cover the fixed 30-seed decision
+set across **exactly two Genesis scenes**, with **90 cumulative distinct
+non-fixed robot entities** and a **maximum of 60 co-resident entities**. The 90
+robots were **never co-resident in one scene**. This is not a stitched or
+resumed 90-body run and does not convert V1's timed-out all-90-body scene into
+a pass.
+
+Across the two shards, all 30 scouts, 30 active carriers, and 30 passive
+carriers reached their goals. All **29/29** archived direct pairs saved at
+least 0.50 m of loaded-carrier path, while seed `102515` completed its archived
+safe detour. Weighted across the fixed 30 trials, mean loaded-carrier path was
+**4.943605 m active versus 6.245385 m passive**, a **20.8439%** reduction.
+Counted blocker-contact and active carrier/scout contact rows were zero;
+post-build script pose writes were zero; maximum tilt was **10.583984 degrees**
+and maximum parked-partner drift was **0.021342 m**.
+
+The [60-body prefix report](release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json)
+hashes to
+`3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+the [30-body suffix report](release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json)
+hashes to
+`69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+Both remain additive, non-locked, archived-decision, fixed-order serial,
+simulation-only evidence with `formal_result_eligible=false`. They are not a
+live perception-policy rerun, simultaneous cooperative fleet control, dynamic
+obstacle evidence, physical-robot validation, sim-to-real evidence, or safety
+certification. The preregistered primary remains active **29/30** versus
+passive **0/30**.
+
 ## What is novel
 
 - **Evidence lineage, not sensor counting.** RGB and depth from one capture
@@ -308,6 +353,12 @@ non-fixed instantiations. Its approximately 18-minute wall is retained only as
 an execution-audit fact; no throughput or latency comparison is derived from
 it.
 
+The solver-scale complement used the same Genesis/ROCm class but a different,
+predeclared topology: one 60-body scene for the first 20 fixed seeds and one
+30-body scene for the final ten. The two executions passed 20/20 and 10/10.
+Their elapsed walls and body counts are acceptance facts, not throughput,
+latency, energy, or utilization benchmarks.
+
 ## Reproduce the submitted evidence
 
 ### CPU-only evidence audit
@@ -369,6 +420,25 @@ python3 scripts/verify_v8_additive_decision_dynamics_recovery_v2.py \
   release/v8-derived/decision_dynamics_recovery_v2_102500_102529/REPORT.json
 ```
 
+To verify the two solver-scale shards independently without Genesis or a GPU:
+
+```bash
+P60=release/v8-derived/decision_dynamics_single_scene_60_102500_102519
+S30=release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529
+(cd "$P60" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd "$S30" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_60.py "$P60/REPORT.json"
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  "$S30/REPORT.json"
+```
+
+Expected report identities are `3cfcf19e…b24450` for the 20/20 60-body prefix
+and `69dfd142…e1a4e` for the 10/10 30-body suffix. The combined two-shard claim
+is valid only when both reports verify independently; the reports are never
+stitched into a synthetic one-scene result.
+
 ### Run the evidence console
 
 ```bash
@@ -397,19 +467,21 @@ and verify SHA256
 
 | Criterion | Evidence |
 | --- | --- |
-| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Additive preregistered 30-world supplement: active 29/30 full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate non-locked decision-bound dynamics replay: 30/30 fixed scenes, 90/90 wheel-actuated bodies reached, 29/29 direct pairs retained a physical carrier-path advantage, one safe detour, and zero counted blocker/active-pair contact rows. |
-| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D inference, exact-checkpoint benchmark, 844 samples across the complete 1,685.5-second/60-episode Genesis + checkpoint + Go challenge wall, a 4,299.992-second dual-body component bar, and the separate 30-scene decision-bound rigid-dynamics replay. Dynamics wall times are audit facts, not throughput claims. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Additive preregistered 30-world supplement: active **29/30** full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate V2 replay: 30/30 archived decisions in 30 independent three-body scenes. Solver-scale complement: **20/20** in one 60-body scene plus **10/10** in a second 30-body scene; 90/90 cumulative bodies reached, maximum co-resident 60, never all 90 co-resident, 29/29 direct pairs saved at least 0.50 m, one safe detour, and zero counted blocker/active-pair contact rows. |
+| AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D inference, exact-checkpoint benchmark, 844 samples across the complete 1,685.5-second/60-episode Genesis + checkpoint + Go challenge wall, a 4,299.992-second dual-body component bar, the separate 30-scene V2 replay, and independently verified single-scene 60-body and 30-body acceptance shards. Dynamics walls and body counts are audit facts, not throughput claims. |
 | Innovation and originality - 20 | Lineage-aware Claims, conformal action qualification, dual authorization, BeliefGap-driven active repair, and canonical content-addressed receipts. |
-| Real-world application value - 20 | Warehouse AMR burden trade measured over 30 logical-role pairs: active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%, with all missions completed safely. The separate wheel-dynamics replay retained a 20.82% paired loaded-carrier path reduction across all 30 fixed scenes; neither result is presented as energy or throughput evidence. |
-| Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. A focused Genesis URDF inertial-origin fix and required regression test are prepared locally with baseline-fail/patch-pass evidence; no public external PR is claimed until owner approval. |
+| Real-world application value - 20 | In 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. V2 retained a 20.8183% paired loaded-carrier path reduction across 30 independent scenes; the two solver-scale shards retained a weighted 20.8439% reduction across the same fixed decisions. None is presented as energy or throughput evidence. |
+| Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. A focused two-file Genesis URDF inertial-origin fix is prepared locally at `8fbf352`: the identical required test failed on the tested 2026-08-05 upstream-main snapshot `207db28` and passed on the patch; its stable patch-id matches the earlier review commit. Complete `scene.build()` comparison preserves authored principal moments only with the patch and retains geometry fallback for an absent `<inertial>` in both trees. No public issue, fork push, PR, review, or acceptance is claimed until owner approval. |
 
 ## Submission deliverables
 
 - [English V8 technical report](docs/V8_TECHNICAL_REPORT.md)
-- [One-page V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md)
+- [Compact V8 Frozen Challenge Judge Card](docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md)
 - [Preregistered 30-world challenge report](release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json)
 - [Verified 20-seed dual-body dynamics result](docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md)
 - [Verified 30-seed decision-bound dynamics replay](docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md)
+- [Verified 20/20 single-scene 60-body prefix](release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json)
+- [Verified 10/10 single-scene 30-body suffix](release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json)
 - [Independently verified raw challenge archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz)
 - [Rendered technical report PDF](output/pdf/Look-Twice-V8-Technical-Report.pdf)
 - [Detailed reproduction guide](docs/V8_REPRODUCTION.md)
@@ -450,6 +522,12 @@ and verify SHA256
 - `scripts/verify_v8_additive_decision_dynamics_recovery_v2.py` - recomputes
   the 30 trial assessments, aggregate bar, checkpoint identities, and bound
   source surface;
+- `scripts/verify_v8_additive_decision_dynamics_60.py` - verifies the first
+  20 archived decisions, 60 co-resident bodies, one-scene identity, and every
+  prefix trial/checkpoint;
+- `scripts/verify_v8_additive_decision_dynamics_30_suffix.py` - independently
+  verifies the final ten archived decisions, second-scene 30-body identity, and
+  the exact prefix report binding needed for the limited combined claim;
 - `scripts/finalize_v8_submission_package.py` - mechanically inventories all
   official-package payload files, regenerates the top-level checksum index,
   updates the handoff manifest, and provides an idempotent `--check` mode;
@@ -473,5 +551,13 @@ endpoint.
 The 30-seed decision-bound dynamics result is another separate submission-time,
 non-locked archived-decision replay. It uses 30 serial independent scenes, not
 one simultaneous 90-body scene, and does not become a new formal endpoint.
+
+The solver-scale complement is also separate, submission-time, non-locked
+archived-decision evidence. Its **20/20 60-body prefix** and **10/10 30-body
+suffix** are two independent single-scene reports. Only their jointly verified
+coverage may be summarized as 30 fixed seeds across **exactly two scenes**, 90
+cumulative distinct robots, and maximum co-resident 60. The 90 robots were
+never co-resident; actuation was fixed-order serial, not simultaneous fleet
+control; and the preregistered primary remains 29/30.
 
 Apache-2.0. `NOTICE` defines the public Purify reference-core boundary.

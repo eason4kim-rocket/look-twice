@@ -9,9 +9,9 @@ This guide separates five reproducibility levels:
 3. Local Evidence Console - rebuilds the exact judge-facing replay site.
 4. Radeon runtime replay - executes a new non-locked episode using the frozen
    model and calibration artifacts.
-5. Additive dynamics audit - verifies the earlier 20/20 component bar and the
-   separate 30/30 archived-decision wheel-dynamics package without rerunning
-   either sealed supplement.
+5. Additive dynamics audit - verifies the earlier 20/20 component bar, the
+   separate 30/30 archived-decision V2 package, and the independently sealed
+   20/20 60-body plus 10/10 30-body solver-scale shards without rerunning them.
 
 The locked result itself is permanent and is not rerun. A new execution must be
 reported as a reproduction or smoke, never as a second locked test.
@@ -531,7 +531,70 @@ release/v8-derived/decision_dynamics_recovery_v2_102500_102529/PROVENANCE_REVIEW
 release/v8-derived/decision_dynamics_recovery_v2_102500_102529/RECOVERY_EXECUTION_AUDIT.json
 ```
 
-## 11. Verify artifact identities
+## 11. Verify the solver-scale two-shard complement
+
+This evidence class replays the same immutable archived decisions in a
+different solver topology. The first report covers seeds `102500-102519` in
+one scene containing 60 co-resident non-fixed robots and passed 20/20. The
+second report covers seeds `102520-102529` in a separate scene containing 30
+co-resident robots and passed 10/10. Both used fixed-order serial wheel
+actuation, one Genesis initialization and scene build per shard, and no resume.
+
+Run both checksum suites and both dedicated verifiers independently:
+
+```bash
+P60=release/v8-derived/decision_dynamics_single_scene_60_102500_102519
+S30=release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529
+
+(cd "$P60" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+(cd "$S30" && shasum -a 256 -c SHA256SUMS && \
+  shasum -a 256 -c PACKAGE_SHA256SUMS)
+python3 scripts/verify_v8_additive_decision_dynamics_60.py "$P60/REPORT.json"
+python3 scripts/verify_v8_additive_decision_dynamics_30_suffix.py \
+  "$S30/REPORT.json"
+```
+
+Expected final verifier lines:
+
+```text
+PASS: additive decision-to-dynamics single-scene 60-body 20/20 report_sha256=3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450
+PASS: additive decision-to-dynamics 30-body suffix 10/10 report_sha256=69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e
+```
+
+Expected two-report summary:
+
+```text
+scenes: exactly 2 (one 60-body prefix + one 30-body suffix)
+fixed decisions: 20/20 + 10/10 = 30/30
+cumulative distinct robots: 90
+maximum co-resident robots: 60
+all 90 co-resident in one scene: false
+scout / active carrier / passive carrier reached: 30/30 / 30/30 / 30/30
+direct pairs saving at least 0.50 m: 29/29
+safe detour: seed 102515
+weighted active / passive path: 4.943605 m / 6.245385 m
+weighted path reduction: 20.8439%
+blocker / active-pair contact rows: 0 / 0
+maximum tilt / parked-partner drift: 10.583984 deg / 0.021342 m
+```
+
+The combined lines above are a deterministic summary of two disjoint fixed
+denominators, not a third report. The suffix binds the exact prefix report SHA
+but does not use prefix outcomes to determine its own scientific acceptance.
+The combined topology may be stated only after both reports independently
+verify. There is no cross-shard resume or stitching, and the 90 robots were
+never all co-resident.
+
+Both reports remain additive, non-locked, archived-decision, fixed-order
+serial, simulation-only evidence with `formal_result_eligible=false`. They do
+not rerun the live perception-policy loop, demonstrate simultaneous fleet
+control or dynamic obstacles, validate a physical robot or sim-to-real
+transfer, establish energy/throughput/latency, or certify safety. They do not
+turn the failed V1 all-90-body attempt into a pass, and the preregistered
+primary remains active 29/30 versus passive 0/30.
+
+## 12. Verify artifact identities
 
 ```bash
 shasum -a 256 "$V8_CHECKPOINT"
@@ -551,7 +614,7 @@ Expected Purify binary SHA:
 31a405b6d7e494a6add120c14b8d27b1f9f168cedaaae2afd860ccfdbd385d00
 ```
 
-## 12. Reproducibility limits
+## 13. Reproducibility limits
 
 - The full train/validation/locked datasets are not committed to Git. The
   locked input archive is byte-identified and verifiable when supplied as a
@@ -576,6 +639,13 @@ Expected Purify binary SHA:
   perception-policy loop, place 90 bodies in one simultaneous scene, or test
   simultaneous cooperation or dynamic obstacles. It is additive, non-locked,
   and `formal_result_eligible=false`.
+- The solver-scale complement uses the same archived decisions in two separate,
+  non-resumable, fixed-order serial scene shards: 20/20 in one 60-body scene
+  and 10/10 in a second 30-body scene. The only combined topology claim is
+  exactly two scenes, cumulative 90 distinct robots, maximum co-resident 60,
+  and never all 90 co-resident. It is not a live full-policy rerun,
+  simultaneous cooperative control, or completion of the failed V1 90-body
+  attempt, and it does not alter the primary 29/30 endpoint.
 - The decision-bound replay supports a paired physical-path result only. It is
   not real-robot, sim-to-real, energy, throughput, latency, or safety-
   certification evidence.

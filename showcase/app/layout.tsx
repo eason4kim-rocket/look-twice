@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     type: "website",
     title: "Look Twice — Active Evidence Assurance",
     description:
-      "A robot should not act on evidence it cannot defend. Watch the 30-second Purify-qualified repair loop.",
+      "A robot should not act on evidence it cannot defend. See the verified repair loop and two completed rigid-body scene shards.",
     images: [
       {
-        url: "https://eason4kim-rocket.github.io/og.png",
-        width: 1730,
-        height: 909,
-        alt: "Look Twice active evidence assurance for Track 3 Physical AI",
+        url: "https://eason4kim-rocket.github.io/og-two-shard.png",
+        width: 1728,
+        height: 910,
+        alt: "Look Twice two completed rigid-body scene shards for Track 3 Physical AI",
       },
     ],
   },
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Look Twice — Active Evidence Assurance",
     description:
-      "Claim → Purify → active evidence repair → qualified physical action.",
-    images: ["https://eason4kim-rocket.github.io/og.png"],
+      "Claim → Purify → active repair → qualified action, backed by two completed rigid-body scene shards.",
+    images: ["https://eason4kim-rocket.github.io/og-two-shard.png"],
   },
 };
 

@@ -1,10 +1,11 @@
 # Look Twice V8 Competition Candidate
 
-This release carries the hash-pinned assets for the English Track 3
-owner-review package. The 239-second replacement assets were downloaded without
-credentials and identity-verified on 2026-08-03. No competition PR has been
-opened. The additive dynamics/source/site/report refresh described below is
-prepared locally and has not replaced the public release assets yet.
+This release note describes the hash-pinned English Track 3 owner-review
+snapshot. The local refresh adds the verified two-shard decision-bound
+complement, 18-page report, and regenerated 154-file official package. At
+snapshot generation on 2026-08-05, no competition PR had been opened and the
+refresh had not been pushed, deployed, released, or copied into the public
+release assets. Owner approval remains the publication gate.
 
 Look Twice is a pre-action evidence-assurance layer for embodied AI. A denied
 Action Contract becomes a machine-readable `BeliefGap`; a scout acquires the
@@ -71,45 +72,70 @@ This supplement validates bounded sequential wheel motion by two rigid bodies.
 It is not a frozen-policy rerun, simultaneous cooperative control, a physical
 robot, sim-to-real evidence, or safety certification.
 
-## Separate additive decision-bound dynamics recovery V2
+## Retained additive decision-bound dynamics recovery V2
 
-A separately fixed recovery protocol replaces the earlier whole-run,
-all-or-nothing 90-body compute topology without changing the archived decisions, seed
-range, scene geometry, wheel controller, or acceptance bars. It replays the 29
-direct decisions and one safe-detour decision from seeds `102500-102529`,
-without rerunning the frozen perception-policy loop.
+The earlier recovery V2 remains packaged as historical corroborating evidence.
+It passed **30/30** fixed seeds as 30 independent fresh Genesis scenes and did
+not place all 90 distinct robot instantiations in one scene. Its report SHA256
+is `1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`;
+its 79-entry complete package index hashes to
+`24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540`.
+The retained proof-scope limits still apply: the original formal checksum index
+did not bind attempts/progress/logs, and the source manifest omitted the
+directly imported `src/v4_motion.py`.
 
-The Radeon/ROCm execution passed **30/30** fixed seeds as 30 independent fresh
-Genesis scenes. Each scene contained an active scout, active loaded carrier,
-and passive loaded carrier. All **90/90** distinct non-fixed robot
-instantiations reached; this is not one simultaneous 90-body simulation. Mean
-active/passive loaded-carrier paths were 4.943529/6.243270 m, a paired
-reduction of **20.8183%**. Retained records contain zero blocker-contact rows,
-zero active carrier/scout contact rows, and zero post-build pose writes.
+## Current two-shard decision-bound complement
+
+The current owner-review complement replays the same immutable archived route
+decisions without rerunning the frozen perception-policy loop. It comprises
+exactly two independently verified, non-resumable Genesis scene shards:
+
+- a **20/20** seed prefix in one 60-body scene, report SHA256
+  `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`;
+- a **10/10** seed suffix in one 30-body scene, report SHA256
+  `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+
+The combined claim therefore covers **30/30** seeds in exactly **2** scenes:
+**90** cumulative distinct non-fixed robot entities, at most **60** co-resident,
+and never all 90 co-resident. Weighted active/passive loaded-carrier paths were
+**4.943605/6.245385 m**, a paired reduction of **20.8439%**. Each of the
+**29/29** direct pairs saved at least 0.5 m; the only dual-blocked world, seed
+`102515`, completed by safe detour. Counted blocker/active-pair contact rows and
+post-build pose writes were zero. The suffix binds the completed prefix only to
+define this combined claim; there is no cross-shard checkpoint/state resume,
+controller-outcome input, or claim that the two scenes are one simulator
+result.
 
 The preregistered primary endpoint remains active **29/30** full-chain direct
-versus passive 0/30. V2 is additive, non-locked, simulation-only, and
-`formal_result_eligible=false`; it is not a frozen-policy rerun, simultaneous
-cooperative-control result, physical-robot or sim-to-real result, throughput
-benchmark, energy claim, or safety certification.
+versus passive 0/30. The two-shard complement is additive, non-locked,
+simulation-only, and `formal_result_eligible=false`; it is not a frozen-policy
+rerun, simultaneous cooperative-control result, physical-robot or sim-to-real
+result, throughput benchmark, energy claim, or safety certification.
 
-The byte-identical report passed remote and local verification and hashes to
-`1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99`.
-The complete local package index covers 79 retained evidence files and hashes
-to `24d3538365d2818f5e5b64c5f06ecee94bdeae1e4d3df2ab320178248bf71540`.
-The retained attempt ledger and logs show 30 first-attempt completions with no
-completed-checkpoint rerun or seed replacement. The proof scope is narrower:
-the formal checksum index did not originally bind attempts/progress/logs, and
-the formal source manifest omitted the directly imported `src/v4_motion.py`.
-The post-run tree audit and package index are corroborating evidence, not
-cryptographic proof of continuous no-retry execution or a fully bound runtime
-dependency closure.
+The refreshed Evidence Console passed **38/38** tests, lint, production build,
+and a zero-vulnerability dependency audit. Owner browser review remains open:
+the local browser-plugin bridge failed, so the refreshed Results/Reproduce
+presentation has not received owner visual approval. The conceptual topology
+OG hashes to
+`326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`;
+it is explanatory artwork, not an experiment capture, simulator frame, or
+screenshot.
 
-The V2 evidence directory, local verifier, V2-integrated report PDF, website
-build, and regenerated 105-file official-repository package are complete and
-verified locally. Source publication, release-PDF replacement, deployment,
-official-fork push, and PR submission remain pending owner approval; none is
-authorized by these notes.
+The 18-page PDF is 1,098,120 bytes and hashes to
+`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
+Its output, site, and official-package copies are byte-identical, and all
+**18/18** rendered pages passed visual QA. The official package contains
+**152** manifest entries, **153** checksum entries, and **154** total files.
+Finalizer `--check` and all 153 top-level checksum entries passed; the
+`SHA256SUMS` file hashes to
+`a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+
+Stable release, source, and Pages targets still serve the earlier baseline or
+return 404. No source push, deployment, release replacement, official-fork
+push, or competition PR has occurred. A focused Genesis URDF inertial-origin
+patch is prepared locally at
+`8fbf352912f748f87ba4e8c94ef31c817017b641`, but no public issue, push, PR,
+review, or upstream acceptance is claimed.
 
 ## Release assets
 
@@ -122,14 +148,26 @@ authorized by these notes.
 - `Look-Twice-V8-Demo.manifest.json` - machine-readable video identity and
   chapter/evidence boundary; SHA256
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
-- `Look-Twice-V8-Technical-Report.pdf` - local 15-page V2-integrated English
-  technical report replacement, 1,089,114 bytes; SHA256
-  `29935428bf1eedd5942fa89e961fbc8b057e99130cc5df18a28fe3040c71d35e`.
-- `decision_dynamics_recovery_v2_102500_102529/` - 80-file local owner-review
-  evidence directory with report, 30 checkpoints, attempt/progress records,
-  worker and execution logs, recovery/provenance audits, and formal/package
-  checksum indexes; included in the 105-file local official submission package
-  but not yet published.
+- `Look-Twice-V8-Technical-Report.pdf` - local 18-page two-shard-integrated
+  English technical report replacement, 1,098,120 bytes; SHA256
+  `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`;
+  output/site/official copies are byte-identical and 18/18 rendered pages
+  passed visual QA.
+- `decision_dynamics_recovery_v2_102500_102529/` - retained historical 80-file
+  recovery V2 evidence directory; still packaged, not the current topology
+  claim.
+- `decision_dynamics_single_scene_60_102500_102519/` - current 29-file
+  owner-review prefix evidence directory; 20/20 report SHA256
+  `3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450`.
+- `decision_dynamics_single_scene_30_suffix_102520_102529/` - current 19-file
+  owner-review suffix evidence directory; 10/10 report SHA256
+  `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
+- `og-two-shard.png` - conceptual two-scene topology graphic, not an
+  experiment capture; SHA256
+  `326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`.
+- official-repository package - 152 manifest entries, 153 checksum entries,
+  154 total files; top-level `SHA256SUMS` SHA256
+  `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
@@ -144,13 +182,13 @@ The current report was re-exported after the final entrant/team identity was
 confirmed as `Liu Liang`, then extended with the locked-input evidence pack and
 the sustained exact-checkpoint Radeon telemetry and preregistered challenge
 supplements, plus the separately labeled dual-body dynamics acceptance result.
-These additive publication updates do not change the frozen
-model, one-shot locked result, calibration, thresholds, or final video. The
-decision-bound V2 evidence is a further local, separately labeled addition and
-likewise does not change those identities or the 29/30 preregistered endpoint.
-The V2-integrated PDF is the local replacement identity above; the stable
-release URL still serves the earlier public PDF until owner approval. The video
-sidecar intentionally
+These additive publication updates do not change the frozen model, one-shot
+locked result, calibration, thresholds, or final video. Recovery V2 remains a
+separately labeled historical addition, while the two-shard complement is the
+current local solver-scale topology claim; neither changes the **29/30**
+preregistered endpoint. The 18-page PDF is the local replacement identity
+above. Stable release/source/Pages targets still expose the older baseline or
+404 until owner approval and publication. The video sidecar intentionally
 retains report SHA
 `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`
 as the exact earlier report bytes used when rendering its report-page frames.
