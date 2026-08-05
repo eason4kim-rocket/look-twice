@@ -1,22 +1,24 @@
 # Track 3, Liu Liang, Look Twice
 
-> **Publication state - official competition PR intentionally held:** the final
-> 239-second video, dedicated source branch, 18-page release PDF, refreshed
-> GitHub Pages site, public site mirror, and two solver-scale evidence shards
-> are published and anonymously verified. Production build, lint, all 38 site
-> tests, dependency audit, source CI, and the public PDF/evidence checksum
-> checks are green. The personal competition-fork branch is published at
-> `bcc7a07`; all 153 package checksums pass, but no AMD competition PR has been
-> created. The package contains 152 manifest entries and 154 regular files;
-> its `SHA256SUMS` hashes to
-> `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
-> The final PDF hashes to
-> `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`
-> and passed 18/18-page visual QA. Genesis issue #3183 and PR #3184 are public;
-> the PR is open and unmerged. The report and sealed competition package were
-> generated before that later upstream publication and do not claim it as part
-> of their timestamped contents. Only the final AMD competition PR remains
-> behind explicit owner approval.
+## Judge Snapshot
+
+- **29/30 vs 0/30** — preregistered 30-world full-chain direct routes, active
+  versus passive; the sole active non-direct case completed by safe detour.
+- **60/60 missions · 0/60 unsafe · 0/60 fallback** — all active and passive
+  challenge episodes completed under the fixed protocol.
+- **60/60 live RGB-D episodes** — every episode used Genesis live RGB-D and the
+  frozen 39.8M-parameter learned checkpoint; Python and Purify Go remained
+  fail-closed.
+- **844 samples · 1,685.5 s** — complete Python + Genesis + checkpoint + Purify
+  Go subprocess-wall telemetry on AMD ROCm, including idle; not control-loop
+  latency or physical energy.
+- **20 @ 60 bodies + 10 @ 30 bodies** — two independently verified
+  archived-decision wheel-dynamics scenes: 90 cumulative distinct robots,
+  maximum 60 co-resident, never all 90; not a live-policy rerun.
+- **Genesis PR #3184** — open, non-draft two-file URDF inertial-origin fix
+  linked to issue #3183; a bounded serial-CPU regression passed 3/3 selected
+  nodes at the exact head. It is unmerged, with no full-suite, review, or
+  acceptance claim.
 
 ## Project
 
@@ -82,7 +84,7 @@ stable GitHub Pages URL and its public mirror.
 | AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate dual-body, V2, single-scene 60-body, and second-scene 30-body wheel-dynamics runs retain reports, source bindings, checksums, and local verifiers. Body counts and elapsed walls are acceptance facts, not throughput claims. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
 | Real-world application value - 20 | Across 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. The separate two-shard wheel replay retained a weighted 20.8439% loaded-carrier path reduction; neither result is energy or throughput evidence. |
-| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. The PR is open and unmerged; no review, acceptance, or upstream-release inclusion is claimed. |
+| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. A later [bounded serial-CPU validation](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-final-2026-08-05/docs/V8_GENESIS_PR_3184_VALIDATION.md) at the exact PR head passed 3/3 selected regression nodes; it is not a full-suite claim. The PR is open and unmerged; no review, acceptance, or upstream-release inclusion is claimed. |
 
 ## Verified frozen result
 
@@ -343,12 +345,12 @@ control-loop latency, or mission-energy claims.
 | Decision-bound dynamics V2 | [30-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [complete evidence directory](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-derived/decision_dynamics_recovery_v2_102500_102529) · formal and package checksum indexes, provenance review, and local verifier |
 | Solver-scale two-shard evidence | Published [20/20 60-body prefix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · published [10/10 30-body suffix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json). Both sealed directories include their protocols, source bindings, trial checkpoints, checksum indexes, and verifier results. |
 | Technical report | Final [18-page stable release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf), SHA256 `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`; 18/18 rendered pages passed visual QA. [Report source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md). |
-| Project source code | [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
+| Project source code | [immutable final-source tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05) · [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |
 | Docker path | [Dockerfile](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/Dockerfile) · [Compose](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docker-compose.yml) |
 | Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) · [public mirror](https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/). The refreshed routes and their two-shard boundaries were verified without sign-in. |
-| Genesis upstream contribution | [Issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) · open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) · exact fork head `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`. Open and unmerged; no acceptance is claimed. |
-| Competition-fork package | [Published personal-fork branch](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice) at `bcc7a07`; official AMD competition PR intentionally not created pending owner approval. |
+| Genesis upstream contribution | [Issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) · open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) · [bounded 3/3 validation record](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-final-2026-08-05/docs/V8_GENESIS_PR_3184_VALIDATION.md) · exact fork head `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`. Open and unmerged; no full-suite, review, or acceptance is claimed. |
+| Competition-fork package | [Published personal-fork review package](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice) at exact head `bcc7a07`; all 153 top-level checksum entries pass. |
 | Frozen evidence | [V8 archive](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-frozen) · [import manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/V8_FROZEN_IMPORT_MANIFEST.json) |
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |

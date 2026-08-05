@@ -135,13 +135,16 @@ Finalizer `--check` and all 153 top-level checksum entries passed; the
 `SHA256SUMS` file hashes to
 `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
 
-The stable release, source, and refreshed Pages targets are public and were
-verified without sign-in. The reviewed official-fork branch is public at
+The stable release, source branch, immutable final-source tag, and refreshed
+Pages targets are public and were verified without sign-in. The reviewed
+official-fork branch is public at
 `bcc7a07`, but no competition PR has been opened. A focused Genesis URDF
 inertial-origin patch is public at
 `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
 non-draft PR #3184. It remains unmerged; no maintainer review, acceptance, or
-upstream-release inclusion is claimed.
+upstream-release inclusion is claimed. A bounded serial-CPU validation at that
+exact head passed 3/3 named regression nodes; it is not a full-suite or
+official-CI claim.
 
 ## Release assets
 

@@ -68,12 +68,14 @@ test("two independent completed shards cover the fixed 30 seeds without a 90-bod
 });
 
 test("judge-facing site states the two-shard topology and proof boundary", async () => {
-  const [home, results, reproduce, reproduceCss, evidence] = await Promise.all([
+  const [home, results, reproduce, reproduceCss, evidence, publication, shell] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/results/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/reproduce/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/reproduce/reproduce.css", import.meta.url), "utf8"),
     readFile(new URL("../app/lib/twoShardDynamicsEvidence.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/lib/publicationEvidence.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/components/SiteShell.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(home, /20\/20 @ 60-BODY \+ 10\/10 @ 30-BODY/);
   assert.match(home, /CUMULATIVE 90 · MAX CO-RESIDENT 60/);
@@ -90,5 +92,18 @@ test("judge-facing site states the two-shard topology and proof boundary", async
   assert.match(reproduceCss, /\.challenge-repro > div \{ min-width: 0; \}/);
   assert.match(evidence, /3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450/);
   assert.match(evidence, /69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e/);
+  assert.match(results, /PUBLICATION & UPSTREAM/);
+  assert.match(results, /No maintainer review, merge, or acceptance is claimed here/);
+  assert.match(results, /publicationEvidence\.finalSourceTagUrl/);
+  assert.match(publication, /v8-competition-final-2026-08-05/);
+  assert.match(publication, /V8_GENESIS_PR_3184_VALIDATION\.md/);
+  assert.match(publication, /Genesis-Embodied-AI\/genesis-world\/issues\/3183/);
+  assert.match(publication, /Genesis-Embodied-AI\/genesis-world\/pull\/3184/);
+  assert.match(publication, /0fa0f4ae5c83e964282fea1d6ad44aa333ee1850/);
+  assert.match(publication, /bcc7a07a5d8b69bb8903a9f2ce7eb895cca719d7/);
+  assert.match(publication, /34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a/);
+  assert.match(shell, /publicationEvidence\.genesisPullRequestUrl/);
+  assert.match(shell, /publicationEvidence\.competitionPackageUrl/);
+  assert.match(shell, /publicationEvidence\.finalSourceTagUrl/);
   assert.doesNotMatch(`${home}\n${results}\n${reproduce}`, /90 (?:robots|bodies) co-resident/i);
 });

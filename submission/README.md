@@ -8,11 +8,11 @@ two-shard payload was verified locally, owner review was pending, and
 `official_pr_opened=false`. Publication actions remain subject to explicit
 owner authorization; the machine manifest records this packaging-time state.
 
-**Post-snapshot publication update:** the source branch, final release PDF,
-refreshed evidence site, public mirror, Genesis issue/PR, and reviewed personal
-competition-fork branch are now public. The AMD competition PR remains
-unopened, so `official_pr_opened=false` is still the current state as well as
-the packaging-time state.
+**Post-snapshot publication update:** the source branch, immutable final-source
+tag, final release PDF, refreshed evidence site, public mirror, Genesis
+issue/PR, and reviewed personal competition-fork branch are now public. The
+AMD competition PR remains unopened, so `official_pr_opened=false` is still
+the current state as well as the packaging-time state.
 
 Official PR title assumption:
 
@@ -98,6 +98,7 @@ energy, or safety certification.
 | Frozen Results | <https://eason4kim-rocket.github.io/results> |
 | Reproduction | <https://eason4kim-rocket.github.io/reproduce> |
 | Dedicated source branch | <https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release> |
+| Immutable final source | <https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05> |
 | Release | <https://github.com/eason4kim-rocket/look-twice/releases/tag/v8-competition-candidate> |
 | Technical report PDF | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf> |
 | Frozen checkpoint | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt> |
@@ -107,13 +108,16 @@ energy, or safety certification.
 | Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 | Genesis issue | <https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183> |
 | Genesis PR | <https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184> |
+| Genesis bounded validation | <https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-final-2026-08-05/docs/V8_GENESIS_PR_3184_VALIDATION.md> |
 | Competition-fork package | <https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice> |
 
 At snapshot generation on 2026-08-05, the source/site/PDF/package and upstream
 contribution had not yet been published. They were published afterward under
 owner authorization and verified at the URLs above without sign-in. Genesis
-PR #3184 is open and unmerged. The reviewed competition package is public only
-on the personal fork; no PR has been opened against the official AMD repository.
+PR #3184 is open and unmerged. A post-publication bounded serial-CPU run passed
+3/3 named regression nodes at its exact head; it is not a full-suite or
+maintainer-CI claim. The reviewed competition package is public only on the
+personal fork; no PR has been opened against the official AMD repository.
 
 ## Handoff map
 

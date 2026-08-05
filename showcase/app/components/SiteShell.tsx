@@ -10,6 +10,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { publicationEvidence } from "../lib/publicationEvidence";
 
 export type Language = "en" | "zh";
 const LOCALE_STORAGE_KEY = "look-twice.locale";
@@ -114,6 +115,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <p>{zh
           ? "公开预注册挑战已验证 · 同生成器仿真 · 一台共享底盘"
           : "Publicly preregistered challenge verified · Same-generator simulation · One shared chassis"}</p>
+        <nav className="footer-links" aria-label={zh ? "公开材料" : "Public materials"}>
+          <a href={publicationEvidence.finalSourceTagUrl}>{zh ? "最终源码" : "Final source"}</a>
+          <a href={publicationEvidence.technicalReportUrl}>{zh ? "报告" : "Report"}</a>
+          <a href={publicationEvidence.genesisPullRequestUrl}>Genesis PR</a>
+          <a href={publicationEvidence.competitionPackageUrl}>{zh ? "赛事包" : "Competition package"}</a>
+        </nav>
         <span>Liu Liang · {zh ? "个人参赛" : "Solo entrant"} · Apache-2.0</span>
       </footer>
     </div>

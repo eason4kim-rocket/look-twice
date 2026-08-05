@@ -340,6 +340,8 @@ Stable targets:
 - Reproduction: https://eason4kim-rocket.github.io/reproduce
 - Source branch:
   https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release
+- Immutable final source:
+  https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05
 - Candidate release:
   https://github.com/eason4kim-rocket/look-twice/releases/tag/v8-competition-candidate
 
@@ -355,6 +357,9 @@ Stable targets:
 - [x] Site links the stable report, source branch, checkpoint, and video
       targets. The stable report URL serves the final 18-page PDF with SHA256
       `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
+- [x] Results and the global footer expose the immutable final-source tag,
+      exact Genesis issue/PR head, personal competition-fork head, final PDF
+      identity, and an explicit no-merge/no-acceptance boundary.
 - [x] Rebuild, lint, run all 38 tests, and obtain a zero-vulnerability
       dependency audit for the two-shard-integrated site; publish the verified
       build to GitHub Pages and the public site mirror.
@@ -455,6 +460,10 @@ Stable targets:
       [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184).
 - [x] Update judging materials with the real open/unmerged issue/PR URLs and
       observed CI state; do not claim merge or acceptance.
+- [x] Run a bounded serial CPU mini-regression at exact PR head `0fa0f4a`:
+      3/3 selected URDF-loading boundary nodes passed; publish the exact
+      identities and state that neither a full suite nor maintainer CI is
+      claimed.
 
 ## Official submission repository
 
@@ -517,6 +526,9 @@ Stable targets:
       stable URLs remain unchanged.
 - [x] The public official-fork branch is the reviewed two-shard package at
       `bcc7a07`; no official competition PR has been opened.
+- [x] Freeze the final judge-facing source in the new annotated tag
+      `v8-competition-final-2026-08-05` without moving the historical
+      `v8-competition-candidate` tag.
 - [x] The current two-shard staging contains both sealed evidence
       directories and the byte-identical 18-page PDF with SHA256
       `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`;

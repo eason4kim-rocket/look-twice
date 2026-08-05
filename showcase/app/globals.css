@@ -498,7 +498,11 @@ footer {
   gap: 24px;
   color: var(--muted);
   font: 500 9px var(--font-mono);
+  flex-wrap: wrap;
 }
+.footer-links { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--cyan); }
 .shell-console footer { border-top: 1px solid var(--line); }
 .compact .brand-symbol { width: 28px; height: 28px; }
 .compact .brand-symbol i { width: 5px; height: 11px; }

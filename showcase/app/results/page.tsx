@@ -15,6 +15,7 @@ import {
   dynamicsEvidence,
   type DynamicsReport,
 } from "../lib/dynamicsEvidence";
+import { publicationEvidence } from "../lib/publicationEvidence";
 import type { ReleaseProfile } from "../lib/types";
 import "./results.css";
 
@@ -573,6 +574,31 @@ function Results() {
     <section className="result-section"><div className="result-title"><span>{zh ? "能力边界" : "CAPABILITY ENVELOPE"}</span><h2>{zh ? "通过的不是单一模型，而是端到端动作保障链。" : "The evaluated unit is the end-to-end action assurance chain."}</h2></div><div className="capability-list">{profile.capabilities.map((capability, index) => <div key={capability}><b>{String(index + 1).padStart(2, "0")}</b><span>{capabilityLabels[capability]?.[zh ? "zh" : "en"] || capability.replaceAll("_", " ")}</span><i>{zh ? "已验证" : "VERIFIED"}</i></div>)}</div></section>
     <section className="result-section identities"><div className="result-title"><span>{zh ? "冻结身份" : "FROZEN IDENTITIES"}</span><h2>{zh ? "模型、校准与授权内核均可追溯。" : "Model, calibration and authorization identities are traceable."}</h2></div><div>{profile.artifact_identities.map((artifact) => <p key={artifact.artifact}><span>{artifactLabels[artifact.artifact]?.[zh ? "zh" : "en"] || artifact.artifact.replaceAll("_", " ")}</span><code>{artifact.sha256}</code></p>)}</div></section>
     <section className="result-section limits"><div className="result-title"><span>{zh ? "诚实边界" : "HONEST BOUNDARY"}</span><h2>{zh ? "我们明确系统做到了什么，也明确没有声称什么。" : "The boundary is part of the result."}</h2></div><div>{profile.limitations.map((limitation, index) => <article key={limitation.en}><b>0{index + 1}</b><p>{zh ? limitation.zh : limitation.en}</p></article>)}</div></section>
+    <section className="result-section publication-upstream">
+      <div className="result-title">
+        <span>{zh ? "发布与上游贡献" : "PUBLICATION & UPSTREAM"}</span>
+        <h2>{zh ? "公开证据链也延伸到了上游修复。" : "The public evidence chain now includes an upstream fix."}</h2>
+        <p>{zh ? `这是技术报告封存后的发布更新。最终源码固定在 ${publicationEvidence.finalSourceTag}；GitHub 页面提供实时上游状态。此处不声称维护者评审、合并或接受。` : `This is a post-report publication update. Final source is pinned at ${publicationEvidence.finalSourceTag}; GitHub provides the live upstream state. No maintainer review, merge, or acceptance is claimed here.`}</p>
+      </div>
+      <div className="publication-panel">
+        <div className="benchmark-tags"><span>PUBLIC CONTRIBUTION</span><span>HEAD PINNED</span><span>POST-REPORT UPDATE</span></div>
+        <div className="publication-grid">
+          <article><span>{zh ? "GENESIS 问题" : "GENESIS ISSUE"}</span><strong>#{publicationEvidence.genesisIssueNumber}</strong><small>{zh ? "公开错误报告" : "public bug report"}</small></article>
+          <article><span>{zh ? "GENESIS PR" : "GENESIS PR"}</span><strong>#{publicationEvidence.genesisPullRequestNumber}</strong><code title={publicationEvidence.genesisPullRequestHead}>{publicationEvidence.genesisPullRequestHead.slice(0, 8)}</code></article>
+          <article><span>{zh ? "赛事个人 FORK" : "COMPETITION FORK"}</span><strong title={publicationEvidence.competitionPackageCommit}>{publicationEvidence.competitionPackageCommit.slice(0, 8)}</strong><small>{zh ? "完整评审包" : "reviewed package"}</small></article>
+          <article><span>{zh ? "最终报告 SHA" : "FINAL REPORT SHA"}</span><strong title={publicationEvidence.technicalReportSha256}>{publicationEvidence.technicalReportSha256.slice(0, 8)}</strong><code>…{publicationEvidence.technicalReportSha256.slice(-8)}</code></article>
+        </div>
+        <p>{zh ? "Genesis 修复仅规范化已有 inertial 记录中省略的 origin；完全缺失 inertial 的几何回退保持不变。赛事包已在个人 fork 发布，AMD 官方 PR 仍由参赛者最终授权。" : "The Genesis fix only normalizes an omitted origin on an existing inertial record; geometry fallback for a fully absent inertial record remains unchanged. The reviewed competition package is public on the personal fork; the official AMD PR remains owner-gated."}</p>
+        <div className="publication-links">
+          <a href={publicationEvidence.finalSourceTagUrl} target="_blank" rel="noreferrer">{zh ? "查看最终源码 ↗" : "INSPECT FINAL SOURCE ↗"}</a>
+          <a href={publicationEvidence.genesisIssueUrl} target="_blank" rel="noreferrer">{zh ? "查看 ISSUE #3183 ↗" : "INSPECT ISSUE #3183 ↗"}</a>
+          <a href={publicationEvidence.genesisPullRequestUrl} target="_blank" rel="noreferrer">{zh ? "查看 GENESIS PR #3184 ↗" : "INSPECT GENESIS PR #3184 ↗"}</a>
+          <a href={publicationEvidence.genesisValidationUrl} target="_blank" rel="noreferrer">{zh ? "查看 3/3 回归记录 ↗" : "INSPECT 3/3 REGRESSION RECORD ↗"}</a>
+          <a href={publicationEvidence.competitionPackageUrl} target="_blank" rel="noreferrer">{zh ? "查看赛事包 ↗" : "INSPECT COMPETITION PACKAGE ↗"}</a>
+          <a href={publicationEvidence.technicalReportUrl} target="_blank" rel="noreferrer">{zh ? "下载最终报告 ↗" : "DOWNLOAD FINAL REPORT ↗"}</a>
+        </div>
+      </div>
+    </section>
     <section className="result-section report-download">
       <div className="result-title"><span>{zh ? "提交资料" : "SUBMISSION MATERIALS"}</span><h2>{zh ? "评委卡、原始挑战数据、独立验证与复现说明均已归档。" : "The judge card, raw challenge evidence, independent verification and reproduction notes are packaged."}</h2></div>
       <div>
@@ -581,7 +607,7 @@ function Results() {
         <a href={challengeEvidence.verificationUrl}>{zh ? "打开独立验证 JSON ↗" : "OPEN INDEPENDENT VERIFICATION JSON ↗"}</a>
         <a href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a>
         <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4" target="_blank">{zh ? "观看 3:59 英文演示 ↗" : "WATCH 3:59 ENGLISH DEMO ↗"}</a>
-        <a href="https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release" target="_blank">{zh ? "打开冻结源码分支 ↗" : "OPEN FROZEN SOURCE BRANCH ↗"}</a>
+        <a href={publicationEvidence.finalSourceTagUrl} target="_blank" rel="noreferrer">{zh ? "打开最终源码标签 ↗" : "OPEN IMMUTABLE FINAL SOURCE ↗"}</a>
         <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt" target="_blank">{zh ? "下载冻结模型 ↗" : "DOWNLOAD FROZEN CHECKPOINT ↗"}</a>
         <a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a>
         <a href="/media/look-twice-replay-30s.mp4">{zh ? "下载 30 秒证据短片 ↓" : "DOWNLOAD 30-SECOND EVIDENCE REEL ↓"}</a>

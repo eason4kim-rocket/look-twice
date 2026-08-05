@@ -471,9 +471,11 @@ and verify SHA256
 | AMD Radeon GPU and ROCm adoption - 20 | Genesis `gs.amdgpu`, RGB-D rendering, spatial RGB-D inference, exact-checkpoint benchmark, 844 samples across the complete 1,685.5-second/60-episode Genesis + checkpoint + Go challenge wall, a 4,299.992-second dual-body component bar, the separate 30-scene V2 replay, and independently verified single-scene 60-body and 30-body acceptance shards. Dynamics walls and body counts are audit facts, not throughput claims. |
 | Innovation and originality - 20 | Lineage-aware Claims, conformal action qualification, dual authorization, BeliefGap-driven active repair, and canonical content-addressed receipts. |
 | Real-world application value - 20 | In 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. V2 retained a 20.8183% paired loaded-carrier path reduction across 30 independent scenes; the two solver-scale shards retained a weighted 20.8439% reduction across the same fixed decisions. None is presented as energy or throughput evidence. |
-| Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. The PR is open and unmerged; no review, acceptance, or inclusion in an upstream release is claimed. |
+| Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. A later [bounded serial-CPU validation](docs/V8_GENESIS_PR_3184_VALIDATION.md) at the exact PR head passed 3/3 selected regression nodes. It is not a full-suite claim. The PR is open and unmerged; no review, acceptance, or inclusion in an upstream release is claimed. |
 
-Publication state on 2026-08-05: the source branch, refreshed site, and final
+Publication state on 2026-08-05: the source branch, immutable
+[final-source tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05),
+refreshed site, and final
 [18-page PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
 are public; the PDF SHA256 is
 `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
@@ -504,6 +506,8 @@ competition repository; that final action remains behind owner approval.
 - [Recorded 30-second evidence reel](showcase/public/media/look-twice-replay-30s.mp4)
 - [Genesis upstream issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183)
 - [Genesis upstream PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184)
+- [Genesis PR #3184 bounded validation record](docs/V8_GENESIS_PR_3184_VALIDATION.md)
+- [Immutable final-source tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05)
 
 ## Repository map
 
