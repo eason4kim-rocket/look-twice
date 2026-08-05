@@ -518,16 +518,18 @@ and verify SHA256
 | Real-world application value - 20 | In 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. V2 retained a 20.8183% paired loaded-carrier path reduction across 30 independent scenes; the two solver-scale shards retained a weighted 20.8439% reduction across the same fixed decisions. None is presented as energy or throughput evidence. |
 | Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. A later [bounded serial-CPU validation](docs/V8_GENESIS_PR_3184_VALIDATION.md) at the exact PR head passed 3/3 selected regression nodes. It is not a full-suite claim. The PR is open and unmerged; no review, acceptance, or inclusion in an upstream release is claimed. |
 
-Publication state on 2026-08-05: the source branch, immutable
-[final-source tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05),
-refreshed site, and the previous report snapshot are public. The final local
-contract-progress-integrated report is **19 pages**, **1,104,864 bytes**, with
+Publication state on 2026-08-06: the additive review source snapshot
+`63f827e`, immutable
+[frozen-foundation tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05),
+GitHub Pages build `0e3e190`, and public mirror are live and verified without
+credentials. The stable candidate-release report is **19 pages**, **1,104,864
+bytes**, with
 SHA256
 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
 its canonical output, site copy, and official-package copy are byte-identical.
-Replacing the stable release asset remains a separate publication step.
 The reviewed [personal competition-fork package](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice)
-is public at `bcc7a07`. No PR has been opened against the official AMD
+is public at `4489022`; its 155 checksum entries all pass. No PR has been
+opened against the official AMD
 competition repository; that final action remains behind owner approval.
 
 ## Submission deliverables

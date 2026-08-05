@@ -816,6 +816,12 @@ def _build_handoff_manifest(
         "v8-contract-progress-nbv"
     )
     data["links"]["additive_refresh_publicly_verified"] = publication_verified
+    if publication_verified:
+        data["links"]["public_site_mirror"] = publication_receipts[
+            "sites_deployment_url"
+        ]
+    else:
+        data["links"].pop("public_site_mirror", None)
 
     staging_publication = (
         "contract-progress refresh published on the personal-fork review "
@@ -852,6 +858,24 @@ def _build_handoff_manifest(
                 f"checksum-index SHA256 {package_checksum_sha256}; "
                 f"{staging_publication}"
             ),
+            "github_pages_deployment": (
+                f"commit {publication_receipts['pages_commit_sha']}; four routes, "
+                "contract-progress JSON, PDF, and social preview verified without "
+                "credentials"
+                if publication_verified
+                else "contract-progress GitHub Pages deployment and anonymous "
+                "route/asset verification in progress"
+            ),
+            "public_site_mirror_deployment": (
+                f"Sites version {publication_receipts['sites_version_number']} from "
+                f"source commit {publication_receipts['sites_source_commit_sha']}; "
+                f"{publication_receipts['sites_deployment_url']}; routes, "
+                "contract-progress JSON, PDF, and social preview verified without "
+                "credentials"
+                if publication_verified
+                else "contract-progress public mirror deployment and anonymous "
+                "route/asset verification in progress"
+            ),
             "public_distribution": (
                 (
                     "contract-progress source, site, "
@@ -874,7 +898,13 @@ def _build_handoff_manifest(
         }
     )
     if publication_verified:
-        verification["publication_receipts"] = dict(publication_receipts)
+        verification["publication_receipts"] = {
+            **dict(publication_receipts),
+            "source_receipt_scope": (
+                "last non-self-referential evidence/package snapshot before the "
+                "receipt-seal documentation commit"
+            ),
+        }
     else:
         verification.pop("publication_receipts", None)
     data["verification"] = verification
@@ -929,6 +959,44 @@ def _positive_int(value: str) -> int:
     return parsed
 
 
+def _sealed_publication_receipts(path: Path) -> dict[str, Any] | None:
+    """Return validated receipts already sealed in a handoff manifest."""
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        receipts = data["verification"]["publication_receipts"]
+        if not isinstance(receipts, dict):
+            return None
+        return {
+            "verified_at_utc": _validate_timestamp(str(receipts["verified_at_utc"])),
+            "source_commit_sha": _validate_git_sha(
+                str(receipts["source_commit_sha"])
+            ),
+            "pages_commit_sha": _validate_git_sha(str(receipts["pages_commit_sha"])),
+            "official_fork_commit_sha": _validate_git_sha(
+                str(receipts["official_fork_commit_sha"])
+            ),
+            "sites_source_commit_sha": _validate_git_sha(
+                str(receipts["sites_source_commit_sha"])
+            ),
+            "sites_version_number": _positive_int(
+                str(receipts["sites_version_number"])
+            ),
+            "sites_deployment_url": _validate_https_url(
+                str(receipts["sites_deployment_url"])
+            ),
+        }
+    except (
+        argparse.ArgumentTypeError,
+        KeyError,
+        TypeError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package-dir", type=Path, default=DEFAULT_PACKAGE_DIR)
@@ -963,7 +1031,13 @@ def main() -> int:
     parser.add_argument("--sites-version-number", type=_positive_int)
     parser.add_argument("--sites-deployment-url", type=_validate_https_url)
     parser.add_argument(
-        "--check", action="store_true", help="verify canonical bytes without writing"
+        "--check",
+        action="store_true",
+        help=(
+            "verify canonical bytes without writing; when no publication flags "
+            "are supplied, reuse validated receipts already sealed in the handoff "
+            "manifest"
+        ),
     )
     args = parser.parse_args()
 
@@ -998,6 +1072,8 @@ def main() -> int:
 
     package_dir = args.package_dir.resolve()
     handoff_manifest = args.handoff_manifest.resolve()
+    if args.check and publication_receipts is None:
+        publication_receipts = _sealed_publication_receipts(handoff_manifest)
     package_data, package_manifest_bytes = _build_package_manifest(
         package_dir, args.generated_at_utc
     )

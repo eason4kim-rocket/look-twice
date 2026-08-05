@@ -160,9 +160,10 @@ official-package copy are byte-identical. Package inventory counts and the
 top-level `SHA256SUMS` identity are recorded after mechanical finalization.
 
 The original frozen source tag and baseline publication remain public. The
-authorized contract-progress source/release/Pages/personal-fork refresh is in
-progress and is not sealed as verified until external publication receipts are
-recorded; no competition PR has been opened. A focused Genesis URDF
+authorized contract-progress source, stable report, GitHub Pages, public
+mirror, and personal-fork refresh are public and anonymously verified; their
+exact receipts are sealed in `submission/V8_SUBMISSION_MANIFEST.json`. No
+competition PR has been opened. A focused Genesis URDF
 inertial-origin patch is public at
 `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
 non-draft PR #3184. It remains unmerged; no maintainer review, acceptance, or
@@ -200,7 +201,7 @@ official-CI claim.
   `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
 - official-repository package - 154 manifest entries, 155 checksum entries,
   156 total files; top-level `SHA256SUMS` SHA256
-  `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
+  `439e0bc71b82317cdf873a1741ff6da7c1e55e3f27bd3ee2585cae6373dc949d`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
@@ -219,10 +220,9 @@ These additive publication updates do not change the frozen model, one-shot
 locked result, calibration, thresholds, or final video. Recovery V2 remains a
 separately labeled historical addition, while the two-shard complement is the
 current solver-scale topology claim; neither changes the **29/30**
-preregistered endpoint. The contract-progress-integrated PDF is rebuilt and
-locally verified; authorized stable-URL replacement and anonymous hash
-verification are in progress. The video sidecar intentionally
-retains report SHA
+preregistered endpoint. The contract-progress-integrated PDF is rebuilt,
+published at the stable URL, and anonymously hash-verified. The video sidecar
+intentionally retains report SHA
 `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`
 as the exact earlier report bytes used when rendering its report-page frames.
 

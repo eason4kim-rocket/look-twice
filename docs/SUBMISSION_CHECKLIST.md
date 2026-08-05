@@ -236,8 +236,9 @@ Official sources:
 - [ ] Owner reviews the contract-progress-integrated technical-report source
       and staged 19-page PDF, including its identity and 19/19 visual-QA
       record.
-- [ ] Owner completes browser review of the two-shard Results/Reproduce site
-      additions before deploy; code/test/build/lint/audit checks are complete.
+- [ ] Owner completes final browser review of the published contract-progress
+      Results/Reproduce presentation; code/test/build/lint/audit checks are
+      complete.
 - [ ] Owner reviews the complete V2 and two-shard evidence payload in local
       official-package staging, the finalized top-level manifests, and the
       exact package diff.
@@ -253,7 +254,7 @@ Official sources:
 - [x] Record 154 manifest inventory entries, 155 checksum entries, and 156
       total regular files including `SHA256SUMS`; all 155 `shasum` checks pass.
       The top-level `SHA256SUMS` SHA256 is
-      `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
+      `439e0bc71b82317cdf873a1741ff6da7c1e55e3f27bd3ee2585cae6373dc949d`.
 - [ ] Owner reviews the two-shard Results/Reproduce presentation, rebuilt PDF,
       official-package diff, and exact `cumulative90/max60/never90` wording.
 
@@ -369,14 +370,14 @@ Stable targets:
       report and audit copies, while preserving the frozen shared-chassis
       boundary.
 - [x] Site links the stable report, source branch, checkpoint, and video
-      targets. The local contract-progress-integrated report is 19 pages with
-      SHA256
+      targets. The published contract-progress-integrated report is 19 pages
+      with SHA256
       `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
-      replacing the stable release asset remains a separate publication step.
+      the stable release asset was replaced and anonymously hash-verified.
 - [x] Results and the global footer expose the immutable final-source tag,
       exact Genesis issue/PR head, personal competition-fork head, final PDF
       identity, and an explicit no-merge/no-acceptance boundary.
-- [x] Rebuild, lint, run all 38 tests, and obtain a zero-vulnerability
+- [x] Rebuild, lint, run all 43 tests, and obtain a zero-vulnerability
       dependency audit for the two-shard-integrated site; publish the verified
       build to GitHub Pages and the public site mirror.
 - [ ] Owner reviews the separate 30/30 decision-bound V2 Results card and
@@ -389,7 +390,7 @@ Stable targets:
       site tree for the two sealed shards, and cover disjoint seeds, distinct
       scenes, 60/30 body counts, cumulative 90, maximum 60, and
       `all_90_co_resident=false` in the evidence tests.
-- [x] Run site lint, production build, all 38 tests, and dependency audit after
+- [x] Run site lint, production build, all 43 tests, and dependency audit after
       the two-shard integration.
 - [ ] Complete owner browser review of the published Results/Reproduce presentation.
 - [x] Publish the refreshed dynamics site after owner approval.
@@ -515,12 +516,12 @@ Stable targets:
       rerun the finalizer with `--check`,
       and pass both staged solver-scale dedicated verifiers. The final
       top-level checksum-index SHA256 is
-      `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
+      `439e0bc71b82317cdf873a1741ff6da7c1e55e3f27bd3ee2585cae6373dc949d`.
 - [x] Copy the final two-shard staging directory byte-for-byte to the local
       official-fork worktree and verify `diff -qr` plus every checksum before
       any push.
-- [x] After owner approval, push the reviewed two-shard-integrated refresh to
-      the dedicated official-fork branch at `bcc7a07` without opening a PR.
+- [x] After owner authorization, push the reviewed contract-progress package to
+      the dedicated official-fork branch at `4489022` without opening a PR.
 - [x] Use planned PR title `Track 3, Liu Liang, Look Twice`.
 - [x] Replace the owner-review preamble in
       `docs/SUBMISSION_DRAFT.md` with the actual publication state and rerun
@@ -541,8 +542,8 @@ Stable targets:
       package inventory has exact path coverage for that snapshot only.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
-- [x] The public official-fork branch is the reviewed two-shard package at
-      `bcc7a07`; no official competition PR has been opened.
+- [x] The public official-fork branch is the reviewed contract-progress package
+      at `4489022`; no official competition PR has been opened.
 - [x] Freeze the final judge-facing source in the new annotated tag
       `v8-competition-final-2026-08-05` without moving the historical
       `v8-competition-candidate` tag.
@@ -554,7 +555,7 @@ Stable targets:
       manifests and 154/155/156 counts. Its `--check`, all 155 checksum
       validations, and both staged dedicated verifiers pass; the top-level
       `SHA256SUMS` SHA256 is
-      `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
+      `439e0bc71b82317cdf873a1741ff6da7c1e55e3f27bd3ee2585cae6373dc949d`.
 - [ ] Owner reviews the complete V2 evidence package, local verifier output,
       rebuilt PDF, refreshed site, and exact official-package diff.
 - [ ] Owner reviews both solver-scale reports and verifier outputs, the rebuilt
