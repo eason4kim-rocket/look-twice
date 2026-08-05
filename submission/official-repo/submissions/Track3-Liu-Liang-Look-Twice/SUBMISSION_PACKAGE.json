@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-official-submission-package/v1",
   "package_id": "Track3-Liu-Liang-Look-Twice",
-  "generated_at_utc": "2026-08-05T09:43:08Z",
+  "generated_at_utc": "2026-08-05T17:26:02Z",
   "track": "Track 3 - Physical AI",
   "entry": {
     "project_name": "Look Twice V8",
@@ -9,7 +9,7 @@
     "solo_entrant": true,
     "github_handle": "eason4kim-rocket",
     "public_repository": "https://github.com/eason4kim-rocket/look-twice",
-    "source_branch": "v8-competition-release"
+    "source_branch": "v8-contract-progress-nbv"
   },
   "judge_entrypoint": "V8-Frozen-Challenge-Judge-Card.md",
   "evidence_index": "evidence/README.md",
@@ -98,6 +98,34 @@
         "audit_sha256": "6c3ddfa0ec2b482c1ab01a160572d01451f0bb1b495137e09a18a96018f23e6e"
       },
       "interpretation_limit": "Validates bounded sequential wheel motion by two non-fixed rigid bodies; not a frozen-policy rerun, simultaneous cooperative control, physical-robot result, sim-to-real result, safety certification, throughput, mission-energy, or control-loop-latency benchmark."
+    },
+    "compound_contract_progress_challenge": {
+      "evidence_class": "public-before-run same-generator non-locked complete-system supplement",
+      "formal_result_eligible": false,
+      "seed_range": [
+        102530,
+        102549
+      ],
+      "worlds": 20,
+      "paired_cells": 40,
+      "public_binding_commit_a": "6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e",
+      "public_binding_commit_b": "427f2f729ce653df91a20db56c9fdbd16911a014",
+      "baseline_candidate_direct": [
+        20,
+        20
+      ],
+      "scout_path_relative_reduction": 0.40256323121347726,
+      "team_path_relative_reduction": 0.15030573929480717,
+      "physical_capture_relative_reduction": 0.2753623188405797,
+      "mission_success": "40/40",
+      "unsafe_collision_fallback_false_clear": 0,
+      "candidate_native_delegated_decisions": [
+        30,
+        0
+      ],
+      "promotion_pass": true,
+      "raw_tree_duplicated_in_package": false,
+      "interpretation_limit": "Compound intervention attribution only; same-generator, non-locked, not OOD, Genesis/AMD ROCm kinematic simulation, not physical-robot or safety-certification evidence, and does not replace the frozen primary."
     },
     "simulation_scope": {
       "backend": "Frozen policy: Genesis 1.1.2 kinematic simulation on AMD ROCm; separate additive supplements: non-fixed rigid-body wheel dynamics",
@@ -260,20 +288,20 @@
     {
       "path": "Look-Twice-V8-Technical-Report.pdf",
       "role": "technical report",
-      "size_bytes": 1098120,
-      "sha256": "34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a"
+      "size_bytes": 1104864,
+      "sha256": "7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143"
     },
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 22844,
-      "sha256": "4575877b7005a2d5be1203d8bfb490fa0dad4f3d205e804c25c4e361a8e98485"
+      "size_bytes": 24837,
+      "sha256": "9605133193aa198c9730c977cb5aa1aec4347677042e2bf51884fbcd2570ce6d"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
       "role": "compact judge entrypoint",
-      "size_bytes": 12588,
-      "sha256": "d94f8a11f476e377988dedddbfdb55aea59da908e02c91f3d7f96328fac0613d"
+      "size_bytes": 13543,
+      "sha256": "cdc6c0b7483a834b90df61ba12ea446c90c7776b129cc9e700076926f26c4110"
     },
     {
       "path": "evidence/LOCKED_TEST_REPORT.public.json",
@@ -284,8 +312,8 @@
     {
       "path": "evidence/README.md",
       "role": "compact evidence index and boundary ledger",
-      "size_bytes": 22692,
-      "sha256": "8db3241c2f59952ab87dc625f17534b5e036495e48a07cbb386d47f1f7cf9151"
+      "size_bytes": 24412,
+      "sha256": "589f964e2b7b97dd8d600a52562c746bbe959966191a439d4bfef727220d912f"
     },
     {
       "path": "evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
@@ -352,6 +380,18 @@
       "role": "independent deterministic challenge verification",
       "size_bytes": 87720,
       "sha256": "942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940"
+    },
+    {
+      "path": "evidence/contract_progress_challenge_102530_102549/EVIDENCE_INDEX.json",
+      "role": "compact compound challenge source-artifact hash index",
+      "size_bytes": 1774,
+      "sha256": "123b1be02214fc8854c0fbd1ad842b0643a1bdb1491429df06102793e8d8605e"
+    },
+    {
+      "path": "evidence/contract_progress_challenge_102530_102549/RESULT_SUMMARY.md",
+      "role": "judge-facing compound contract-progress result summary",
+      "size_bytes": 2602,
+      "sha256": "6962dd88de49b313793588630c5bd32a343254c50f814fcdd48b100e6ec2543b"
     },
     {
       "path": "evidence/decision_dynamics_recovery_v2_102500_102529/ATTEMPTS.jsonl",
@@ -1173,9 +1213,9 @@
     "raw_archive_bound_file_count": 194,
     "raw_archive_sha256": "171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2",
     "raw_archive_internal_checksum_index_sha256": "90d70a11d4a6fd91727c3849536e7a41124196c1c0b4e0f51779419e99105b6d",
-    "manifest_file_entries": 152,
-    "package_checksum_entries": 153,
-    "total_regular_package_files_including_sha256sums": 154,
+    "manifest_file_entries": 154,
+    "package_checksum_entries": 155,
+    "total_regular_package_files_including_sha256sums": 156,
     "manifest_coverage_complete": true,
     "decision_dynamics_v2_regular_files": 80,
     "decision_dynamics_v2_formal_checksum_entries": 32,

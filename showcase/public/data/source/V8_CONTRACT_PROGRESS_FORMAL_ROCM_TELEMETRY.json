@@ -1,0 +1,63 @@
+{
+  "schema_version": "look-twice.v8-contract-progress-challenge-rocm-telemetry/v1",
+  "sample_interval_seconds": 2.0,
+  "max_allowed_gap_seconds": 5.5,
+  "challenge_started_monotonic_ns": 3228267581460222,
+  "challenge_ended_monotonic_ns": 3229445065931629,
+  "sample_count": 554,
+  "max_observed_gap_seconds": 2.232328714,
+  "sampler_errors": [],
+  "coverage_valid": true,
+  "summary": {
+    "sample_count": 554,
+    "gpu_use_percent": {
+      "mean": 21.388086642599276,
+      "minimum": 0.0,
+      "maximum": 100.0,
+      "median": 0.0,
+      "samples": 554
+    },
+    "vram_allocated_percent": {
+      "mean": 0.7454873646209387,
+      "minimum": 0.0,
+      "maximum": 2.0,
+      "median": 0.0,
+      "samples": 554
+    },
+    "memory_activity_percent": {
+      "mean": 0.05595667870036101,
+      "minimum": 0.0,
+      "maximum": 10.0,
+      "median": 0.0,
+      "samples": 554
+    },
+    "graphics_package_power_w": {
+      "mean": 37.24368231046932,
+      "minimum": 6.0,
+      "maximum": 83.0,
+      "median": 24.0,
+      "samples": 554
+    },
+    "temperature_edge_c": {
+      "mean": 29.82851985559567,
+      "minimum": 27.0,
+      "maximum": 33.0,
+      "median": 30.0,
+      "samples": 554
+    },
+    "temperature_junction_c": {
+      "mean": 36.11552346570397,
+      "minimum": 32.0,
+      "maximum": 40.0,
+      "median": 36.0,
+      "samples": 554
+    },
+    "temperature_memory_c": {
+      "mean": 31.95667870036101,
+      "minimum": 27.0,
+      "maximum": 36.0,
+      "median": 32.0,
+      "samples": 554
+    }
+  }
+}

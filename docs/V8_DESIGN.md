@@ -76,9 +76,12 @@ The line above records the original design-time reservation. Later, after the
 V8 model, calibration, thresholds, and runtime identities were frozen, seeds
 `102500-102529` were publicly preregistered and evaluated exactly once per
 policy as an additive **same-generator non-locked supplement**. Seeds
-`102530-102699` remain unevaluated. This is not OOD, population-generalization,
-rigid-body, or physical-robot evidence; see
-`V8_FROZEN_CHALLENGE_PROTOCOL.md`.
+`102530-102549` were separately evaluated once per policy cell under the
+public-before-run compound contract-progress protocol; seeds
+`102550-102699` remain unevaluated. Neither result is OOD,
+population-generalization, rigid-body, or physical-robot evidence; see
+`V8_FROZEN_CHALLENGE_PROTOCOL.md` and
+`V8_CONTRACT_PROGRESS_CHALLENGE_RESULT.md`.
 
 **Forbidden:** any V7 train/val/cal/locked/smoke/matrix seeds (96000–98300, 95000–95019, 99000–99003, 99200–99203, 99300–99319).
 

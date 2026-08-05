@@ -26,9 +26,9 @@ test("presents the locked archive as input-and-label evidence only", () => {
 });
 
 test("does not promote the reserved generator-family range as OOD evidence", () => {
-  assert.match(resultsSource, /were evaluated once after public preregistration/);
-  assert.match(resultsSource, /seeds 102530–102699 remain unevaluated/);
-  assert.match(resultsSource, /Neither is presented as OOD/);
+  assert.match(resultsSource, /evaluated in two separately preregistered runs/);
+  assert.match(resultsSource, /seeds 102550–102699 remain unevaluated/);
+  assert.match(resultsSource, /No segment is presented as OOD/);
   assert.doesNotMatch(resultsSource, /OOD test/i);
   assert.doesNotMatch(resultsSource, /out-of-domain (?:test|result|evaluation)/i);
 });

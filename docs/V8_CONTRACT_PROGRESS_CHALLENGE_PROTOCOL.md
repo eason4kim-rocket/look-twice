@@ -1,7 +1,12 @@
 # V8 Compound Contract-Progress System Challenge Protocol
 
-Status: **protocol draft only; no seed in 102530–102549 may be opened until
-Commit B is public and every placeholder in the preregistration is replaced.**
+Status: **completed after public preregistration; independent verification and
+all preregistered promotion gates passed.** Commit A
+`6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e` fixed the executable design and
+Commit B `427f2f729ce653df91a20db56c9fdbd16911a014` changed only the
+preregistration binding before any seed was opened. This status line is a
+post-run editorial annotation; the immutable run records the original
+protocol, source, runner, verifier, and preregistration identities.
 
 This is an additive, same-generator compound V8 system challenge. It does not replace,
 retune, or reopen the frozen V8 result. It is not a locked test, OOD evidence,

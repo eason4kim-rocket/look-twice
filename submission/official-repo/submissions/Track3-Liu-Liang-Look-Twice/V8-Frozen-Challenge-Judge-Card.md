@@ -16,11 +16,26 @@ the same fixed decisions in exactly two scene shards, with at most 60 robots
 co-resident. Neither changes the primary endpoint.
 
 > **Owner-review snapshot recorded on 2026-08-05:** at snapshot generation,
-> both solver-scale reports, complete evidence directories, and the rebuilt
-> 18-page PDF were packaged, and the manifest plus every checksum verified
+> both solver-scale reports, complete evidence directories, and the then-current
+> PDF were packaged, and the manifest plus every checksum verified
 > locally. At that timestamp, their protocol targets were not yet public and no
 > competition PR had been opened. This is immutable packaging-time context;
 > linked targets show current availability.
+
+The current contract-progress-integrated report supersedes that historical
+snapshot: **19 pages**, **1,104,864 bytes**, SHA256
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`,
+with 19/19 rendered-page QA and byte-identical output/site/official copies.
+
+> **Additive 2026-08-06 compound result:** a separate public-before-run,
+> same-generator, non-locked 20-world challenge preserved direct success at
+> 20/20 in both arms while reducing mean scout path 40.2563%, mean team path
+> 15.0306%, and physical captures 27.5362%. All 40/40 missions completed with
+> zero unsafe/collision/fallback/false-clear outcomes. This complete-system
+> result is kinematic, non-OOD, not physical-robot evidence, and retains
+> `formal_result_eligible=false`. See the packaged
+> [result summary](evidence/contract_progress_challenge_102530_102549/RESULT_SUMMARY.md)
+> and [hash index](evidence/contract_progress_challenge_102530_102549/EVIDENCE_INDEX.json).
 
 ## Seven judge checks
 

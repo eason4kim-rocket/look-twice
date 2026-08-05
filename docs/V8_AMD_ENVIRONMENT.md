@@ -214,6 +214,8 @@ observation is not a cryptographic proof over unsealed attempts.
 The historical `ood_test` label for seeds 102500-102699 refers only to a
 reserved challenge range from the same generator family. Seeds 102500-102529
 were evaluated exactly once per policy in the publicly preregistered,
-same-generator non-locked supplement. Seeds 102530-102699 remain unevaluated.
-Neither telemetry class changes that boundary. No OOD, out-of-distribution, or
+same-generator non-locked supplement. Seeds 102530-102549 were separately
+evaluated once per policy cell in the public-before-run compound
+contract-progress challenge; seeds 102550-102699 remain unevaluated. Neither
+telemetry class changes that boundary. No OOD, out-of-distribution, or
 population-generalization result is claimed.

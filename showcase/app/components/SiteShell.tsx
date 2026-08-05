@@ -116,7 +116,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ? "公开预注册挑战已验证 · 同生成器仿真 · 一台共享底盘"
           : "Publicly preregistered challenge verified · Same-generator simulation · One shared chassis"}</p>
         <nav className="footer-links" aria-label={zh ? "公开材料" : "Public materials"}>
-          <a href={publicationEvidence.finalSourceTagUrl}>{zh ? "最终源码" : "Final source"}</a>
+          <a href={publicationEvidence.sourceBranchUrl}>{zh ? "候选源码" : "Candidate source"}</a>
           <a href={publicationEvidence.technicalReportUrl}>{zh ? "报告" : "Report"}</a>
           <a href={publicationEvidence.genesisPullRequestUrl}>Genesis PR</a>
           <a href={publicationEvidence.competitionPackageUrl}>{zh ? "赛事包" : "Competition package"}</a>

@@ -12,6 +12,10 @@
 - **844 samples · 1,685.5 s** — complete Python + Genesis + checkpoint + Purify
   Go subprocess-wall telemetry on AMD ROCm, including idle; not control-loop
   latency or physical energy.
+- **40.2563% scout · 15.0306% team · 27.5362% captures** — separately
+  preregistered compound contract-progress reductions across 20 paired worlds;
+  both arms remained 20/20 full-chain direct, with 40/40 missions and zero
+  unsafe, collision, fallback, or false-clear outcomes.
 - **20 @ 60 bodies + 10 @ 30 bodies** — two independently verified
   archived-decision wheel-dynamics scenes: 90 cumulative distinct robots,
   maximum 60 co-resident, never all 90; not a live-policy rerun.
@@ -48,10 +52,10 @@ Public Evidence Console, no sign-in required:
 
 https://eason4kim-rocket.github.io/
 
-The deployed site replays recorded Genesis plus AMD GPU evidence. It does not
-create new benchmark samples and does not require a live GPU. The two-shard
-Results/Reproduce refresh is live and was verified without sign-in on the
-stable GitHub Pages URL and its public mirror.
+The deployed baseline site replays recorded Genesis plus AMD GPU evidence. It
+does not create new benchmark samples and does not require a live GPU. The
+authorized contract-progress Results/Reproduce refresh has passed local build
+and evidence tests; publication and no-sign-in verification are in progress.
 
 ## 90-second judge path
 
@@ -65,22 +69,24 @@ stable GitHub Pages URL and its public mirror.
 5. Switch to passive mode and compare its safe detour.
 6. Inspect the challenge's 844-sample full-wall ROCm telemetry and 30-world
    carrier/scout burden table.
-7. Open Results and inspect the separate 30/30 decision-bound rigid-dynamics
+7. Inspect the separate compound contract-progress result: 20/20 direct in
+   both arms, with every paired world reducing scout and team path.
+8. Open Results and inspect the separate 30/30 decision-bound rigid-dynamics
    card, then the earlier 20/20 dual-body acceptance card.
-8. Inspect its independently verified solver-scale complement: 20/20 in one
+9. Inspect its independently verified solver-scale complement: 20/20 in one
    60-body scene and 10/10 in a second 30-body scene--exactly two scenes, 90
    cumulative distinct robots, maximum co-resident 60, never all 90
    co-resident.
-9. Confirm that all dynamics results are archived-decision execution
+10. Confirm that all dynamics results are archived-decision execution
    supplements and that the preregistered primary endpoint remains active
    29/30 versus passive 0/30.
-10. Follow the permanent locked metrics separately.
+11. Follow the permanent locked metrics separately.
 
 ## Official Track 3 judging map
 
 | Criterion | Evidence in this submission |
 | --- | --- |
-| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered primary: active **29/30** full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate V2: 30/30 archived decisions in 30 independent three-body scenes. Solver-scale complement: **20/20 in one 60-body scene + 10/10 in a second 30-body scene**, 90/90 cumulative bodies reached, maximum co-resident 60, never all 90 co-resident, 29/29 direct pairs saved at least 0.50 m, one safe detour, and zero counted blocker/active-pair contact rows. None replaces the 29/30 endpoint. |
+| Robot capability performance - 30 | Permanent locked evidence: active 11/12 direct versus passive 0/12. Publicly preregistered primary: active **29/30** full-chain direct versus passive 0/30 (+96.7 pp, exact McNemar `p=3.73e-9`), 60/60 missions, 0/60 unsafe, 0/60 fallback. Separate compound challenge: both arms 20/20 direct while the candidate reduced scout path 40.2563%, team path 15.0306%, and captures 27.5362%, with 40/40 missions and zero unsafe/collision/fallback/false-clear. Separate V2: 30/30 archived decisions in 30 independent three-body scenes. Solver-scale complement: **20/20 in one 60-body scene + 10/10 in a second 30-body scene**, 90/90 cumulative bodies reached, maximum co-resident 60, never all 90 co-resident, 29/29 direct pairs saved at least 0.50 m, one safe detour, and zero counted blocker/active-pair contact rows. None replaces the 29/30 endpoint. |
 | AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate dual-body, V2, single-scene 60-body, and second-scene 30-body wheel-dynamics runs retain reports, source bindings, checksums, and local verifiers. Body counts and elapsed walls are acceptance facts, not throughput claims. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
 | Real-world application value - 20 | Across 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. The separate two-shard wheel replay retained a weighted 20.8439% loaded-carrier path reduction; neither result is energy or throughput evidence. |
@@ -175,6 +181,37 @@ differences were Python-admit/Go-deny and remained fail-closed with
 This is an additive **same-generator non-locked** challenge, not a second
 locked open, OOD result, rigid-body test, or physical-robot result. Full details
 and a clean-clone command are on the [Judge Card](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md).
+
+## Additive compound contract-progress efficiency challenge
+
+A separate public binding evaluated frozen V8 against the opt-in compound
+candidate on seeds `102530–102549`. Commit A
+[`6c7b46d`](https://github.com/eason4kim-rocket/look-twice/commit/6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e)
+fixed the executable candidate; Commit B
+[`427f2f7`](https://github.com/eason4kim-rocket/look-twice/commit/427f2f729ce653df91a20db56c9fdbd16911a014)
+changed only the preregistration binding before the 20-world, 40-cell run.
+
+| Preregistered endpoint | Baseline | Compound candidate | Reduction |
+| --- | ---: | ---: | ---: |
+| Full-chain direct | 20/20 | 20/20 | no regression |
+| Mean scout path | 2.9229 m | 1.7462 m | **40.2563%** |
+| Mean team path | 7.8326 m | 6.6553 m | **15.0306%** |
+| Physical captures | 69 | 50 | **27.5362%** |
+
+Paired-bootstrap 95% intervals were **36.05–45.03%**, **12.26–17.62%**,
+and **15.625–37.838%**, respectively. Scout and team deltas favored the
+candidate in 20/20 worlds. Mission success was 40/40; unsafe, collision,
+fallback, and false clear were zero. All 30 candidate decisions were native
+contract-progress choices; delegated decisions were zero. The independent
+verifier reported `promotion_pass=true` and validated exact path-set,
+checksum, public-remote, source, receipt, attempt, and telemetry bindings.
+
+This is a compound V8 intervention—shared frozen dual-ROI inference,
+physical-root unification, and contract-aware NBV together—not new weights or
+a single-component causal claim. It is additive same-generator, non-locked,
+kinematic simulation with `formal_result_eligible=false`; it is not OOD,
+physical-robot, sim-to-real, or safety-certification evidence and does not
+replace the frozen primary. [Result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_CONTRACT_PROGRESS_CHALLENGE_RESULT.md).
 
 ## Task-value cost ledger
 
@@ -341,16 +378,17 @@ control-loop latency, or mission-energy claims.
 | --- | --- |
 | Compact challenge Judge Card | [public preregistration, result, AMD telemetry, application burden, and verifier](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md) |
 | Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [post-hoc feasibility audit](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
+| Compound efficiency evidence | [result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_CONTRACT_PROGRESS_CHALLENGE_RESULT.md) · [evidence index](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/release/v8-derived/contract_progress_challenge_102530_102549/EVIDENCE_INDEX.json) · complete report, verification, telemetry, run manifest, checksum index, and raw records under the same release evidence root |
 | Dual-body dynamics evidence | [20-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md) · [machine report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json) · timeout/recovery audits and `SHA256SUMS` in the same directory |
 | Decision-bound dynamics V2 | [30-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [complete evidence directory](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-derived/decision_dynamics_recovery_v2_102500_102529) · formal and package checksum indexes, provenance review, and local verifier |
 | Solver-scale two-shard evidence | Published [20/20 60-body prefix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · published [10/10 30-body suffix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json). Both sealed directories include their protocols, source bindings, trial checkpoints, checksum indexes, and verifier results. |
-| Technical report | Final [18-page stable release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf), SHA256 `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`; 18/18 rendered pages passed visual QA. [Report source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md). |
-| Project source code | [immutable final-source tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05) · [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
-| Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |
+| Technical report | [Report source](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_TECHNICAL_REPORT.md) and [authorized stable publication target](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf): **19 pages, 1,104,864 bytes, SHA256 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`; output/site/official copies byte-identical; 19/19 rendered pages visually inspected.** |
+| Project source code | [additive contract-progress review branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv) · [original frozen V8 foundation tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05) |
+| Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_REPRODUCTION.md) |
 | Docker path | [Dockerfile](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/Dockerfile) · [Compose](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docker-compose.yml) |
-| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) · [public mirror](https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/). The refreshed routes and their two-shard boundaries were verified without sign-in. |
+| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results#contract-progress-efficiency) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) · [public mirror](https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/). The contract-progress build is locally verified; authorized publication and no-sign-in route/asset verification are in progress. |
 | Genesis upstream contribution | [Issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) · open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) · [bounded 3/3 validation record](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-final-2026-08-05/docs/V8_GENESIS_PR_3184_VALIDATION.md) · exact fork head `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`. Open and unmerged; no full-suite, review, or acceptance is claimed. |
-| Competition-fork package | [Published personal-fork review package](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice) at exact head `bcc7a07`; all 153 top-level checksum entries pass. |
+| Competition-fork package | [Authorized personal-fork review target](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice): the local contract-progress package has 154 manifest entries, 155 verified checksum entries, and 156 total files; publication is in progress. The official competition PR is not open. |
 | Frozen evidence | [V8 archive](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-frozen) · [import manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/V8_FROZEN_IMPORT_MANIFEST.json) |
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |
@@ -462,9 +500,10 @@ hashes are in the
   aggregate.
 - The locked-input supplement is input-only; original per-sample predictions
   and 24 raw full-chain episodes are unavailable and were not regenerated.
-- Seeds 102500-102529 were used once for the public preregistered same-generator
-  supplement; seeds 102530-102699 remain unevaluated. Neither is V8 OOD
-  evidence.
+- Seeds 102500-102529 were used once for the frozen challenge; seeds
+  102530-102549 were separately evaluated once per policy for the compound
+  challenge. Both are same-generator, non-locked supplements, not V8 OOD
+  evidence. Seeds 102550-102699 remain unevaluated.
 - The public evidence path uses a kinematic Genesis motion backend.
 - Carrier and scout in the frozen policy are logical-role poses on one shared
   Genesis chassis. A separate additive 20-seed supplement validates bounded

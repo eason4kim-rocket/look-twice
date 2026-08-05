@@ -371,8 +371,12 @@ def draw_cover(canvas, doc) -> None:  # type: ignore[no-untyped-def]
     canvas.circle(width - 16 * mm, height - 24 * mm, 2.4 * mm, stroke=0, fill=1)
     canvas.setFillColor(colors.HexColor("#91A0A1"))
     canvas.setFont("LTMono", 6.5)
-    canvas.drawString(20 * mm, 11 * mm, "LOOK TWICE · V8 FROZEN · TRACK 3 PHYSICAL AI")
-    canvas.drawRightString(width - 20 * mm, 11 * mm, "2026-08-05")
+    canvas.drawString(
+        20 * mm,
+        11 * mm,
+        "LOOK TWICE · V8 FROZEN CORE + CONTRACT-PROGRESS · TRACK 3",
+    )
+    canvas.drawRightString(width - 20 * mm, 11 * mm, "2026-08-06")
     canvas.restoreState()
 
 
@@ -415,10 +419,10 @@ def build_cover(
         textColor=colors.HexColor("#AAB6B7"),
     )
     metric_data = [[
-        Paragraph("3,200<br/><font size=\"5.8\" color=\"#91A0A1\">LOCKED SAMPLES</font>", metric_style),
-        Paragraph("29 / 29<br/><font size=\"5.8\" color=\"#91A0A1\">FEASIBLE-WORLD DIRECT*</font>", metric_style),
-        Paragraph("60 / 60<br/><font size=\"5.8\" color=\"#91A0A1\">MISSION SUCCESS</font>", metric_style),
-        Paragraph("0 / 60<br/><font size=\"5.8\" color=\"#91A0A1\">UNSAFE OR FALLBACK</font>", metric_style),
+        Paragraph("29 / 30<br/><font size=\"5.8\" color=\"#91A0A1\">PRIMARY ACTIVE DIRECT</font>", metric_style),
+        Paragraph("20 / 20<br/><font size=\"5.8\" color=\"#91A0A1\">COMPOUND DIRECT</font>", metric_style),
+        Paragraph("-40.26%<br/><font size=\"5.8\" color=\"#91A0A1\">SCOUT PATH</font>", metric_style),
+        Paragraph("-15.03%<br/><font size=\"5.8\" color=\"#91A0A1\">TEAM PATH</font>", metric_style),
     ]]
     metrics = Table(metric_data, colWidths=[available_width / 4] * 4)
     metrics.setStyle(
@@ -441,7 +445,7 @@ def build_cover(
         Paragraph("Look Twice V8", styles["cover_title"]),
         Paragraph(
             "Active Evidence Assurance for Physical AI<br/>"
-            "Technical Report · Frozen Competition Candidate",
+            "Technical Report · Frozen Learned Perception + Contract-Aware Active Sensing",
             styles["cover_subtitle"],
         ),
     ]
@@ -453,13 +457,18 @@ def build_cover(
             metrics,
             Spacer(1, 5),
             Paragraph(
-                "* Post-hoc descriptive oracle audit: 29/29 worlds with a clear corridor "
-                "went direct; the sole dual-blocked world safely detoured.<br/>"
-                "The preregistered primary remains active 29/30 versus passive 0/30.<br/>"
+                "Publicly preregistered additive compound challenge: baseline and candidate "
+                "both stayed direct in 20/20 worlds;<br/>"
+                "scout path -40.2563%, team path -15.0306%, physical captures -27.5362%; "
+                "40/40 mission success and zero unsafe, collision, fallback or false-clear.<br/>"
+                "The separate preregistered primary remains active 29/30 versus passive 0/30. "
+                "Post-hoc feasibility audit: 29/29 clear-corridor worlds direct and 1/1 "
+                "dual-blocked world detoured.<br/>"
                 "Additive simulation-only dynamics: 20/20 in one 60-body scene + "
                 "10/10 in one 30-body scene;<br/>"
                 "cumulative 90, maximum co-resident 60, never 90 co-resident. "
-                "Archived decisions only; not a frozen-policy rerun or physical-robot result.",
+                "No new model weights; same-generator, non-locked, not OOD, not a "
+                "physical-robot result.",
                 audit_note_style,
             ),
             Spacer(1, 6),
@@ -488,9 +497,9 @@ def main() -> int:
         leftMargin=18 * mm,
         topMargin=20 * mm,
         bottomMargin=18 * mm,
-        title="Look Twice V8: Active Evidence Assurance for Physical AI",
+        title="Look Twice V8: Contract-Aware Active Evidence Assurance for Physical AI",
         author="Liu Liang",
-        subject="AMD AI DevMaster Hackathon 2026, Track 3 technical report",
+        subject="AMD AI DevMaster Hackathon 2026, Track 3 technical report with preregistered contract-progress evidence",
         creator="Look Twice submission report builder",
     )
     available_width = A4[0] - document.leftMargin - document.rightMargin

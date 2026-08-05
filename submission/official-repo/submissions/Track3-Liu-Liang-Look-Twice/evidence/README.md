@@ -6,12 +6,13 @@ source branch remains authoritative for source code, validators, schemas,
 replay media, complete reproduction instructions, and the immutable raw
 archive.
 
-> **Owner-review snapshot recorded on 2026-08-05:** at snapshot generation,
-> the verified 60-body prefix and 30-body suffix evidence directories and the
-> rebuilt 18-page PDF were packaged, and the package manifest plus every
-> checksum verified locally. At that timestamp, the protocol targets were not
-> yet public. This paragraph records packaging-time state; linked targets show
-> current availability.
+> **Current owner-review state:** the verified compound contract-progress
+> result is integrated as a compact summary and cryptographic source index.
+> The final 19-page technical-report PDF passed 19/19 rendered-page QA, and
+> output/site/official copies are byte-identical at SHA256
+> `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+> The package has 154 manifest entries, 155 checksum entries, and 156 total
+> files. No competition PR has been opened.
 
 ## Files
 
@@ -52,6 +53,13 @@ archive.
   raw archive's internal checksum index. It binds all 194 other files inside
   that 195-file archive; its paths are archive-relative and are not a second
   checksum index for this compact package.
+- `contract_progress_challenge_102530_102549/RESULT_SUMMARY.md` gives the
+  independently verified 20-world compound efficiency result in judge-facing
+  form.
+- `contract_progress_challenge_102530_102549/EVIDENCE_INDEX.json` binds the
+  complete source-repository preregistration, formal report, verification,
+  telemetry, run manifest, and formal checksum index by path and SHA256. The
+  approximately 15 MB raw tree is not duplicated here.
 - `dual_body_dynamics_160820_160839/REPORT.json` is the source-bound 20-seed
   additive dual-body rigid-dynamics report. It is separate from the frozen
   active/passive policy endpoint.
@@ -142,6 +150,30 @@ Active repair reduced mean loaded-carrier logical path from 6.404 to 4.961
 6.404 to 7.941 (+24.0%). This is a burden-shifting result on one shared
 Genesis chassis, not a claim of lower total motion, energy, throughput,
 latency, or two simultaneously simulated physical robots.
+
+### Additive compound contract-progress efficiency
+
+A separate public two-commit binding preceded every seed in `102530–102549`:
+Commit A `6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e` fixed the executable
+candidate, and Commit B `427f2f729ce653df91a20db56c9fdbd16911a014`
+changed only the preregistration binding. Across 20 paired worlds:
+
+- baseline and compound candidate full-chain direct: 20/20 and 20/20;
+- scout path: −40.2563% (95% bootstrap 36.0505–45.0271%);
+- team path: −15.0306% (95% bootstrap 12.2563–17.6227%);
+- physical captures: 50 versus 69, −27.5362% (95% bootstrap
+  15.6250–37.8378%);
+- negative scout and team paired deltas: 20/20 and 20/20;
+- mission success: 40/40; unsafe, collision, fallback, false clear: zero;
+- native/delegated candidate decisions: 30/0.
+
+The independent verifier reported `promotion_pass=true` and validated the
+exact path set, checksums, pre/post and public-remote bindings, frozen-Go
+authentication, attempt reconstruction, and telemetry. This is additive
+same-generator, non-locked, kinematic compound-system evidence with
+`formal_result_eligible=false`; it uses no new weights, calibration, gate, or
+threshold and is not a single-component, OOD, physical-robot, sim-to-real, or
+replacement-primary claim.
 
 ### Separate additive dual-body rigid dynamics
 
@@ -276,7 +308,8 @@ can be compared with the immutable source report in the dedicated repository.
 ## Stable target anchors
 
 - Evidence Console: <https://eason4kim-rocket.github.io/>
-- Technical report (earlier public baseline; replacement pending owner approval):
+- Technical report stable target (the local 19-page replacement remains behind
+  owner publication approval):
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf>
 - Final 3:59 demo:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4>
@@ -299,14 +332,11 @@ can be compared with the immutable source report in the dedicated repository.
 - Owner-review 30-body suffix protocol target:
   <https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md>
 
-The 239-second replacement MP4 and sidecar were downloaded from their stable
-targets without credentials and matched the packaged SHA256 identities on
-2026-08-03. The packaged 18-page report includes the two-shard complement and
-hashes to
-`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
-The package manifest and `SHA256SUMS` bind and verify the owner-review snapshot.
-At snapshot generation on 2026-08-05, the release URL still served an earlier
-public baseline; the packaged copy is authoritative for this payload.
+The 239-second replacement MP4 and sidecar matched the published SHA256
+identities on 2026-08-03. The contract-progress-integrated 19-page report and
+its two copies are byte-identical at SHA256
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
+the final 155-entry top-level checksum index verifies the 156-file package.
 
 ## Scope
 
@@ -323,9 +353,11 @@ public baseline; the packaged copy is authoritative for this payload.
 - The 61/61 utilization result applies only to the disclosed synthetic,
   preloaded FP32 model-forward workload. No locked aggregate path-length,
   latency, mission-energy, or end-to-end utilization claim is made.
-- Seeds `102500-102529` were evaluated exactly once under the public
-  preregistration. They are a same-generator, non-locked supplement, not OOD
-  or a second locked open. Seeds `102530-102699` remain unevaluated.
+- Seeds `102500-102529` were evaluated exactly once under the frozen challenge
+  preregistration. Seeds `102530-102549` were separately evaluated once per
+  policy under the compound preregistration. Both are same-generator,
+  non-locked supplements, not OOD or a second locked open. Seeds
+  `102550-102699` remain unevaluated.
 - Carrier and scout in the supplement are distinct logical-role poses,
   viewpoints, and capture roots on one shared Genesis chassis; the result does
   not demonstrate two physical devices, dual-body rigid dynamics, real-robot

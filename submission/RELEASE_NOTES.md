@@ -1,16 +1,17 @@
 # Look Twice V8 Competition Candidate
 
-This release note describes the hash-pinned English Track 3 owner-review
-snapshot. The local refresh adds the verified two-shard decision-bound
-complement, 18-page report, and regenerated 154-file official package. At
-snapshot generation on 2026-08-05, no competition PR had been opened and the
-refresh had not been pushed, deployed, released, or copied into the public
-release assets. Owner approval was the publication gate at that timestamp.
+This release note describes the English Track 3 owner-review snapshot. The
+current local refresh adds the independently verified compound
+contract-progress efficiency result to the prior two-shard package. Its final
+technical-report PDF is rebuilt and visually verified; final package
+manifest/checksums are regenerated mechanically from this integrated tree. No
+competition PR has been opened.
 
 Post-snapshot, owner approval was given for publication except the final AMD
-competition PR. The source, final PDF, refreshed site, public mirror, Genesis
-issue/PR, and personal competition-fork branch are now public; the official
-competition PR remains unopened.
+competition PR. The original frozen publication and Genesis issue/PR are
+public; the contract-progress source/PDF/site/mirror/personal-fork refresh is
+in progress and is not labeled verified until external receipts are recorded.
+The official competition PR remains unopened.
 
 Look Twice is a pre-action evidence-assurance layer for embodied AI. A denied
 Action Contract becomes a machine-readable `BeliefGap`; a scout acquires the
@@ -60,6 +61,30 @@ This is not a reopened locked split, OOD evidence, or a physical-robot result.
 Carrier and scout are two logical roles on one shared Genesis chassis, not two
 physical devices or simultaneous dual-body dynamics. Loaded-carrier logical
 path fell 22.5%, while total logical-role team path rose 24.0%.
+
+## Compound contract-progress efficiency supplement
+
+A separate public two-commit preregistration bound Commit A
+`6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e` and Commit B
+`427f2f729ce653df91a20db56c9fdbd16911a014` before seeds
+`102530–102549` were opened. The 20-world, 40-cell paired run independently
+verified `promotion_pass=true`:
+
+- baseline and compound candidate full-chain direct: 20/20 and 20/20;
+- scout path reduction: 40.2563% (95% bootstrap 36.0505–45.0271%);
+- team path reduction: 15.0306% (95% bootstrap 12.2563–17.6227%);
+- physical-capture reduction: 27.5362% (95% bootstrap 15.6250–37.8378%);
+- captures: 50 candidate versus 69 baseline;
+- scout and team paired deltas negative in 20/20 worlds;
+- mission success 40/40; unsafe, collision, fallback, and false clear zero;
+- 30 native candidate decisions and zero delegated decisions.
+
+This is additive compound-system evidence for frozen shared dual-ROI
+inference, physical-root unification, and contract-aware NBV together. It uses
+no new weights, calibration, gate, or threshold. It is same-generator,
+non-locked, kinematic, and `formal_result_eligible=false`—not OOD,
+physical-robot, sim-to-real, single-component causal, or replacement-primary
+evidence.
 
 ## Separate additive dual-body dynamics
 
@@ -117,28 +142,27 @@ simulation-only, and `formal_result_eligible=false`; it is not a frozen-policy
 rerun, simultaneous cooperative-control result, physical-robot or sim-to-real
 result, throughput benchmark, energy claim, or safety certification.
 
-The refreshed Evidence Console passed **38/38** tests, lint, production build,
+The refreshed Evidence Console passed **43/43** tests, lint, production build,
 and a zero-vulnerability dependency audit. Owner browser review remains open:
 the local browser-plugin bridge failed, so the refreshed Results/Reproduce
-presentation has not received owner visual approval. The conceptual topology
-OG hashes to
-`326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`;
-it is explanatory artwork, not an experiment capture, simulator frame, or
-screenshot.
+presentation has not received owner visual approval. The contract-progress
+social card hashes to
+`68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`;
+it is disclosed simulation-only explanatory artwork, not an experiment
+capture, simulator frame, or screenshot.
 
-The 18-page PDF is 1,098,120 bytes and hashes to
-`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
-Its output, site, and official-package copies are byte-identical, and all
-**18/18** rendered pages passed visual QA. The official package contains
-**152** manifest entries, **153** checksum entries, and **154** total files.
-Finalizer `--check` and all 153 top-level checksum entries passed; the
-`SHA256SUMS` file hashes to
-`a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+The previous 18-page PDF and 154-file package identities are superseded. The
+final contract-progress-integrated PDF is **19 pages**, **1,104,864 bytes**,
+with SHA256
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+All 19/19 rendered pages passed visual QA; canonical output, site copy, and
+official-package copy are byte-identical. Package inventory counts and the
+top-level `SHA256SUMS` identity are recorded after mechanical finalization.
 
-The stable release, source branch, immutable final-source tag, and refreshed
-Pages targets are public and were verified without sign-in. The reviewed
-official-fork branch is public at
-`bcc7a07`, but no competition PR has been opened. A focused Genesis URDF
+The original frozen source tag and baseline publication remain public. The
+authorized contract-progress source/release/Pages/personal-fork refresh is in
+progress and is not sealed as verified until external publication receipts are
+recorded; no competition PR has been opened. A focused Genesis URDF
 inertial-origin patch is public at
 `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
 non-draft PR #3184. It remains unmerged; no maintainer review, acceptance, or
@@ -157,11 +181,11 @@ official-CI claim.
 - `Look-Twice-V8-Demo.manifest.json` - machine-readable video identity and
   chapter/evidence boundary; SHA256
   `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
-- `Look-Twice-V8-Technical-Report.pdf` - local 18-page two-shard-integrated
-  English technical report replacement, 1,098,120 bytes; SHA256
-  `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`;
-  output/site/official copies are byte-identical and 18/18 rendered pages
-  passed visual QA.
+- `Look-Twice-V8-Technical-Report.pdf` - final 19-page,
+  1,104,864-byte contract-progress-integrated English report; SHA256
+  `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
+  19/19 rendered pages visually inspected; output/site/official copies
+  byte-identical.
 - `decision_dynamics_recovery_v2_102500_102529/` - retained historical 80-file
   recovery V2 evidence directory; still packaged, not the current topology
   claim.
@@ -171,12 +195,12 @@ official-CI claim.
 - `decision_dynamics_single_scene_30_suffix_102520_102529/` - current 19-file
   owner-review suffix evidence directory; 10/10 report SHA256
   `69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e`.
-- `og-two-shard.png` - conceptual two-scene topology graphic, not an
-  experiment capture; SHA256
-  `326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`.
-- official-repository package - 152 manifest entries, 153 checksum entries,
-  154 total files; top-level `SHA256SUMS` SHA256
-  `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+- `og-contract-progress.png` - simulation-only contract-progress social card,
+  conceptual artwork rather than an experiment capture; SHA256
+  `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
+- official-repository package - 154 manifest entries, 155 checksum entries,
+  156 total files; top-level `SHA256SUMS` SHA256
+  `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
@@ -195,9 +219,9 @@ These additive publication updates do not change the frozen model, one-shot
 locked result, calibration, thresholds, or final video. Recovery V2 remains a
 separately labeled historical addition, while the two-shard complement is the
 current solver-scale topology claim; neither changes the **29/30**
-preregistered endpoint. The 18-page PDF is the published stable-release
-identity above. Stable release/source/Pages targets expose the refreshed
-candidate. The video sidecar intentionally
+preregistered endpoint. The contract-progress-integrated PDF is rebuilt and
+locally verified; authorized stable-URL replacement and anonymous hash
+verification are in progress. The video sidecar intentionally
 retains report SHA
 `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`
 as the exact earlier report bytes used when rendering its report-page frames.

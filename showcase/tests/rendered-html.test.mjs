@@ -24,7 +24,7 @@ test("server-renders the Look Twice product entry", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
-  assert.match(html, /<title>Look Twice — Active Evidence Assurance<\/title>/i);
+  assert.match(html, /<title>Look Twice — Contract-Aware Active Perception<\/title>/i);
   assert.match(html, /Before a robot acts/);
   assert.match(html, /Open Evidence Console/);
   assert.match(html, /RECORDED AMD GPU EVIDENCE/);

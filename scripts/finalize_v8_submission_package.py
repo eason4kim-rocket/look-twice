@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Finalize and verify the local V8 official-submission package.
+"""Finalize and verify the V8 official-submission review package.
 
-The package is intentionally local-only until the owner authorizes publication.
-This script makes the final inventory mechanical: every regular package file is
+External publication remains unverified by default and can be sealed only with
+explicit publication receipts. This script makes the inventory mechanical:
+every regular package file is
 listed in ``SUBMISSION_PACKAGE.json`` (except that manifest and ``SHA256SUMS``),
 and every regular file is bound by the top-level ``SHA256SUMS`` (except the
 checksum index itself).
@@ -91,12 +92,12 @@ SINGLE_SCENE_30_SUFFIX_REGULAR_FILES = 19
 SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES = 13
 SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES = 18
 
-SOCIAL_PREVIEW_PATH = REPO_ROOT / "showcase" / "public" / "og-two-shard.png"
+SOCIAL_PREVIEW_PATH = REPO_ROOT / "showcase" / "public" / "og-contract-progress.png"
 SOCIAL_PREVIEW_SHA256 = (
-    "326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce"
+    "68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a"
 )
-SOCIAL_PREVIEW_WIDTH = 1728
-SOCIAL_PREVIEW_HEIGHT = 910
+SOCIAL_PREVIEW_WIDTH = 1726
+SOCIAL_PREVIEW_HEIGHT = 911
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -462,6 +463,7 @@ def _build_package_manifest(
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     if generated_at_utc is not None:
         data["generated_at_utc"] = generated_at_utc
+    data["entry"]["source_branch"] = "v8-contract-progress-nbv"
 
     _validate_two_shard_package(package_dir)
     existing_roles = {
@@ -568,8 +570,8 @@ def _decision_dynamics_artifact() -> dict[str, Any]:
         "regular_files": 80,
         "remote_verifier_passed": True,
         "local_byte_identical_verifier_passed": True,
-        "publication_verified": False,
-        "publication_state": "at manifest generation, this was a local owner-review identity that had not been pushed, deployed, released, or submitted",
+        "publication_verified": True,
+        "publication_state": "published on the additive review branch and anonymously verified; not an official competition result",
     }
 
 
@@ -617,8 +619,8 @@ def _two_shard_dynamics_artifact() -> dict[str, Any]:
             "dedicated_verifier_passed": True,
             "bound_prefix_report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
         },
-        "publication_verified": False,
-        "publication_state": "at manifest generation, this was a local owner-review identity that had not been pushed, deployed, released, or submitted",
+        "publication_verified": True,
+        "publication_state": "published on the additive review branch and anonymously verified; official competition PR not opened",
     }
 
 
@@ -662,21 +664,24 @@ def _technical_report_identity(
 def _social_preview_identity() -> dict[str, Any]:
     if not SOCIAL_PREVIEW_PATH.is_file():
         raise ValueError(
-            f"The two-shard social preview is missing: {SOCIAL_PREVIEW_PATH}"
+            f"The contract-progress social preview is missing: {SOCIAL_PREVIEW_PATH}"
         )
     observed_sha256 = _sha256_file(SOCIAL_PREVIEW_PATH)
     if observed_sha256 != SOCIAL_PREVIEW_SHA256:
         raise ValueError(
-            "The two-shard social preview does not match its pinned identity: "
+            "The contract-progress social preview does not match its pinned identity: "
             f"expected {SOCIAL_PREVIEW_SHA256}, observed {observed_sha256}"
         )
     return {
-        "path": "showcase/public/og-two-shard.png",
+        "path": "showcase/public/og-contract-progress.png",
         "sha256": observed_sha256,
         "size_bytes": SOCIAL_PREVIEW_PATH.stat().st_size,
         "width": SOCIAL_PREVIEW_WIDTH,
         "height": SOCIAL_PREVIEW_HEIGHT,
-        "disclosure": "CONCEPTUAL TOPOLOGY · NOT EXPERIMENT CAPTURE",
+        "disclosure": (
+            "PUBLICLY PREREGISTERED · AMD GPU · SIMULATION ONLY; "
+            "CONCEPTUAL ARTWORK, NOT EXPERIMENT CAPTURE"
+        ),
     }
 
 
@@ -687,11 +692,27 @@ def _build_handoff_manifest(
     technical_report_identity: Mapping[str, Any],
     social_preview_identity: Mapping[str, Any],
     generated_on: str | None,
+    publication_receipts: Mapping[str, Any] | None,
 ) -> tuple[dict[str, Any], bytes]:
     data = json.loads(path.read_text(encoding="utf-8"))
+    publication_verified = publication_receipts is not None
     if generated_on is not None:
         data["generated_on"] = generated_on
-    data["status"] = "two_shard_owner_review_snapshot_unpublished_at_generation"
+    data["status"] = (
+        "contract_progress_public_review_snapshot_no_official_pr"
+        if publication_verified
+        else "contract_progress_publication_in_progress_no_official_pr"
+    )
+    data["submission_state"].update(
+        {
+            "additive_source_refresh_published": publication_verified,
+            "additive_pages_refresh_deployed": publication_verified,
+            "additive_report_release_asset_replaced": publication_verified,
+            "additive_official_fork_refresh_pushed": publication_verified,
+            "external_upstream_issue_or_pr_opened": True,
+        }
+    )
+    data["candidate"]["source_branch"] = "v8-contract-progress-nbv"
 
     boundary = _decision_dynamics_boundary()
     data_without_existing_boundary = {
@@ -738,11 +759,39 @@ def _build_handoff_manifest(
         _two_shard_dynamics_artifact(),
     )
 
+    artifacts["additive_dual_body_dynamics"].update(
+        {
+            "publication_verified": True,
+            "publication_state": (
+                "published on v8-competition-release; additive non-locked "
+                "evidence, not an official competition result"
+            ),
+        }
+    )
+
     artifacts["technical_report_pdf"].update(
         {
             **technical_report_identity,
-            "publication_verified": False,
-            "publication_state": "at manifest generation, this two-shard-integrated identity was local and the stable URL still served the earlier public baseline",
+            "publication_verified": publication_verified,
+            "publication_state": (
+                "contract-progress-integrated identity published at the stable "
+                "candidate-release URL and anonymously hash-verified"
+                if publication_verified
+                else "contract-progress-integrated identity prepared locally; "
+                "stable release-asset replacement and anonymous hash verification in progress"
+            ),
+        }
+    )
+    artifacts["compound_contract_progress_challenge"].update(
+        {
+            "publication_verified": publication_verified,
+            "publication_state": (
+                "complete formal evidence published on v8-contract-progress-nbv "
+                "and anonymously verified; formal_result_eligible=false"
+                if publication_verified
+                else "complete formal evidence prepared for v8-contract-progress-nbv; "
+                "publication verification in progress; formal_result_eligible=false"
+            ),
         }
     )
     artifacts["social_preview"].update(social_preview_identity)
@@ -753,15 +802,31 @@ def _build_handoff_manifest(
             "manifest_inventory_entries": package_inventory_count,
             "total_regular_files_including_sha256sums": package_inventory_count + 2,
             "sha256s_sha256": package_checksum_sha256,
-            "status": "local_two_shard_refresh_ready_no_push_no_pr",
+            "status": (
+                "published_personal_fork_review_branch_no_official_pr"
+                if publication_verified
+                else "local_contract_progress_refresh_publication_in_progress_no_pr"
+            ),
         }
     )
     data["artifacts"] = artifacts
 
+    data["links"]["source_branch_target"] = (
+        "https://github.com/eason4kim-rocket/look-twice/tree/"
+        "v8-contract-progress-nbv"
+    )
+    data["links"]["additive_refresh_publicly_verified"] = publication_verified
+
+    staging_publication = (
+        "contract-progress refresh published on the personal-fork review "
+        "branch; official PR not opened"
+        if publication_verified
+        else "contract-progress refresh publication in progress; official PR not opened"
+    )
     verification = data["verification"]
     verification.update(
         {
-            "node_22_site_tests": "38/38 passed",
+            "node_22_site_tests": "43/43 passed",
             "node_22_lint": "passed",
             "node_dependency_audit": "0 known vulnerabilities",
             "production_build": "passed",
@@ -770,7 +835,14 @@ def _build_handoff_manifest(
                 f"{technical_report_identity['page_count']} pages rendered and "
                 "inspected after final regeneration"
             ),
-            "browser_visual_qa": "previous public baseline inspection retained; two-shard local source, 38 tests, lint, and production-build QA passed; owner browser review remains before deployment",
+            "browser_visual_qa": (
+                "contract-progress-integrated source passed site tests, lint, "
+                "production build, and public route/asset verification; owner may "
+                "still perform a final presentation review before the official PR"
+                if publication_verified
+                else "contract-progress-integrated local source passed site tests, "
+                "lint, and production build; public route/asset verification in progress"
+            ),
             "decision_dynamics_recovery_v2_tests": "16/16 runner and verifier tests passed; Ruff passed; formal remote and byte-identical local verifiers passed; 30/30 formal seeds, failed 0",
             "decision_dynamics_two_shard_tests": "23/23 runner and verifier tests passed; both formal and complete-package checksum indexes passed; dedicated 60-body and 30-body verifiers passed; 20/20 prefix plus 10/10 suffix, failed 0",
             "official_repository_staging_checksums": (
@@ -778,29 +850,47 @@ def _build_handoff_manifest(
                 f"({package_inventory_count + 2} total files including SHA256SUMS); "
                 f"manifest inventory {package_inventory_count}/{package_inventory_count}; "
                 f"checksum-index SHA256 {package_checksum_sha256}; "
-                "two-shard refresh not pushed"
+                f"{staging_publication}"
             ),
             "public_distribution": (
-                "previous challenge/feasibility baseline remains public and "
-                "anonymously verified; two-shard source, site, "
-                f"{technical_report_identity['page_count']}-page PDF, and "
-                f"{package_inventory_count + 2}-file official package are local "
-                "only pending owner approval"
+                (
+                    "contract-progress source, site, "
+                    f"{technical_report_identity['page_count']}-page PDF, and "
+                    f"{package_inventory_count + 2}-file official package are public "
+                    "on review targets and anonymously verified; official competition PR not opened"
+                )
+                if publication_verified
+                else "contract-progress source/site/PDF/package publication and "
+                "anonymous verification are in progress; official competition PR not opened"
             ),
-            "official_fork_branch": "at manifest generation, the public branch remained at the earlier baseline and the byte-identical two-shard package refresh was prepared only on the local official-fork branch; official_pr_opened=false",
+            "official_fork_branch": (
+                "the byte-identical contract-progress package is public on "
+                "submission/track3-liu-liang-look-twice-v8; official_pr_opened=false"
+                if publication_verified
+                else "the byte-identical contract-progress package is staged for "
+                "submission/track3-liu-liang-look-twice-v8; publication in progress; "
+                "official_pr_opened=false"
+            ),
         }
     )
+    if publication_verified:
+        verification["publication_receipts"] = dict(publication_receipts)
+    else:
+        verification.pop("publication_receipts", None)
     data["verification"] = verification
     data["owner_review_items"] = [
         "Complete owner visual and audible review of the final demo.",
-        "Review the locally verified two-shard source/site/PDF/official-package diff and authorize or reject publication.",
-        "Review the prepared Genesis issue and PR packet and authorize or reject upstream publication.",
         "Review the English competition PR body and authorize opening the official PR.",
     ]
     data["remaining_before_pr"] = [
+        *(
+            []
+            if publication_verified
+            else [
+                "complete and anonymously verify the authorized contract-progress publication refresh"
+            ]
+        ),
         "complete owner visual and audible review of the final 3:59 English demo",
-        "obtain owner approval to publish and anonymously verify the two-shard source/site/PDF/official-fork refresh",
-        "obtain separate owner approval before filing the Genesis upstream issue or PR",
         "obtain owner approval to open the official English submission PR",
     ]
     return data, _json_bytes(data)
@@ -817,6 +907,19 @@ def _validate_sha256(value: str) -> str:
     if not re.fullmatch(r"[0-9a-f]{64}", normalized):
         raise argparse.ArgumentTypeError("expected a 64-character SHA256 hex digest")
     return normalized
+
+
+def _validate_git_sha(value: str) -> str:
+    normalized = value.lower()
+    if not re.fullmatch(r"[0-9a-f]{40}", normalized):
+        raise argparse.ArgumentTypeError("expected a 40-character Git commit SHA")
+    return normalized
+
+
+def _validate_https_url(value: str) -> str:
+    if not value.startswith("https://"):
+        raise argparse.ArgumentTypeError("expected an https:// URL")
+    return value
 
 
 def _positive_int(value: str) -> int:
@@ -845,9 +948,53 @@ def main() -> int:
         help="optional expected staged technical-report page count",
     )
     parser.add_argument(
+        "--publication-verified",
+        action="store_true",
+        help=(
+            "seal externally verified publication state; requires every "
+            "publication receipt argument"
+        ),
+    )
+    parser.add_argument("--publication-verified-at-utc", type=_validate_timestamp)
+    parser.add_argument("--source-commit-sha", type=_validate_git_sha)
+    parser.add_argument("--pages-commit-sha", type=_validate_git_sha)
+    parser.add_argument("--official-fork-commit-sha", type=_validate_git_sha)
+    parser.add_argument("--sites-source-commit-sha", type=_validate_git_sha)
+    parser.add_argument("--sites-version-number", type=_positive_int)
+    parser.add_argument("--sites-deployment-url", type=_validate_https_url)
+    parser.add_argument(
         "--check", action="store_true", help="verify canonical bytes without writing"
     )
     args = parser.parse_args()
+
+    publication_values = {
+        "verified_at_utc": args.publication_verified_at_utc,
+        "source_commit_sha": args.source_commit_sha,
+        "pages_commit_sha": args.pages_commit_sha,
+        "official_fork_commit_sha": args.official_fork_commit_sha,
+        "sites_source_commit_sha": args.sites_source_commit_sha,
+        "sites_version_number": args.sites_version_number,
+        "sites_deployment_url": args.sites_deployment_url,
+    }
+    supplied_publication_values = {
+        key: value for key, value in publication_values.items() if value is not None
+    }
+    if args.publication_verified and len(supplied_publication_values) != len(
+        publication_values
+    ):
+        parser.error(
+            "--publication-verified requires --publication-verified-at-utc, "
+            "--source-commit-sha, --pages-commit-sha, "
+            "--official-fork-commit-sha, --sites-source-commit-sha, "
+            "--sites-version-number, and --sites-deployment-url"
+        )
+    if not args.publication_verified and supplied_publication_values:
+        parser.error(
+            "publication receipt arguments require --publication-verified"
+        )
+    publication_receipts = (
+        supplied_publication_values if args.publication_verified else None
+    )
 
     package_dir = args.package_dir.resolve()
     handoff_manifest = args.handoff_manifest.resolve()
@@ -870,6 +1017,7 @@ def main() -> int:
         technical_report_identity,
         social_preview_identity,
         args.generated_on,
+        publication_receipts,
     )
 
     expected = {

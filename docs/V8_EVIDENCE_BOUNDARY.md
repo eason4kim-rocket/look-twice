@@ -382,8 +382,10 @@ direct **29/30 versus passive 0/30**.
 The historical `ood_test` label for seeds 102500-102699 denotes only a
 **reserved challenge range** from the **same generator family**. Seeds
 `102500-102529` were evaluated once in the publicly preregistered non-locked
-supplement above. Seeds `102530-102699` remain unevaluated. Neither subset is
-called OOD, and no out-of-distribution or population-generalization result is
+supplement above. Seeds `102530-102549` were separately evaluated once per
+policy cell in the public-before-run compound contract-progress challenge;
+seeds `102550-102699` remain unevaluated. Neither evaluated subset is called
+OOD, and no out-of-distribution or population-generalization result is
 claimed.
 
 ## Public replay status

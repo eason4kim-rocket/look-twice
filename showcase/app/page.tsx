@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SiteShell, useLanguage } from "./components/SiteShell";
 import { challengeEvidence } from "./lib/challengeEvidence";
+import { contractProgressEvidence } from "./lib/contractProgressEvidence";
 
 const flow = [
   ["01", "Observe", "RGB-D claims arrive with time, scope, calibration and capture lineage.", "观察", "RGB-D 证据声明（Claim）携带时间、范围、校准与采集谱系。"],
@@ -50,6 +51,31 @@ function HomeContent() {
               <a href={challengeEvidence.feasibilityAuditUrl} target="_blank" rel="noreferrer">{zh ? "可行性审计 ↗" : "FEASIBILITY AUDIT ↗"}</a>
               <a href={challengeEvidence.rawArchiveUrl}>{zh ? "原始归档 ↗" : "RAW ARCHIVE ↗"}</a>
               <a href={challengeEvidence.verificationUrl}>{zh ? "验证回执 ↗" : "VERIFICATION ↗"}</a>
+            </div>
+          </div>
+          <div className="challenge-proof" aria-label={zh ? "20 个成对世界的增量效率证据" : "Additive efficiency evidence across 20 paired worlds"}>
+            <div className="challenge-proof-head">
+              <span>{zh ? "增量效率层 · 20 个成对世界 / 40 个回合单元" : "ADDITIVE EFFICIENCY TIER · 20 PAIRED WORLDS / 40 CELLS"}</span>
+              <b>{zh ? "直行保持 20/20 对 20/20" : "DIRECT HELD AT 20/20 VS 20/20"}</b>
+            </div>
+            <div className="challenge-proof-grid">
+              <div><strong>−40.2563<small>%</small></strong><span>{zh ? "Scout 平均路径" : "mean scout path"}</span></div>
+              <div><strong>−15.0306<small>%</small></strong><span>{zh ? "团队平均路径" : "mean team path"}</span></div>
+              <div><strong>−27.5362<small>%</small></strong><span>{zh ? "平均物理采集数" : "mean physical captures"}</span></div>
+            </div>
+            <p className="challenge-proof-note">{zh
+              ? "20/20 个 seed 的 Scout 与团队 candidate−baseline 路径差都为负；40/40 结构有效且任务成功，0 unsafe、collision、fallback、false-clear。候选侧共 30 次原生 selector 决策，0 次 delegated。"
+              : "Scout and team candidate−baseline path deltas were negative on 20/20 seeds; 40/40 cells were structurally valid and mission-successful, with 0 unsafe, collision, fallback or false-clear outcomes. The candidate made 30 native selector decisions and 0 delegated decisions."}</p>
+            <p className="challenge-proof-note">{zh
+              ? "边界：同生成器、非锁定、非 OOD 的运动学仿真；formal_result_eligible=false，不是真机结果，也不替代上方 30-world 主证据。"
+              : "Boundary: same-generator, non-locked, not-OOD kinematic simulation; formal_result_eligible=false. This is not physical-robot evidence and does not replace the 30-world primary tier above."}</p>
+            <div className="challenge-proof-links">
+              <Link href={`${href("/results")}#contract-progress-efficiency`}>{zh ? "审计效率层 →" : "AUDIT EFFICIENCY TIER →"}</Link>
+              <a href={contractProgressEvidence.reportUrl} target="_blank">{zh ? "报告 JSON ↗" : "REPORT JSON ↗"}</a>
+              <a href={contractProgressEvidence.verificationUrl} target="_blank">{zh ? "验证 JSON ↗" : "VERIFICATION JSON ↗"}</a>
+              <a href={contractProgressEvidence.rocmTelemetryUrl} target="_blank">{zh ? "ROCm 遥测 ↗" : "ROCm TELEMETRY ↗"}</a>
+              <a href={contractProgressEvidence.preregistrationBranchUrl} target="_blank" rel="noreferrer">{zh ? "公开预注册分支 ↗" : "PUBLIC PREREG BRANCH ↗"}</a>
+              <a href={contractProgressEvidence.commitBUrl} target="_blank" rel="noreferrer">COMMIT B ↗</a>
             </div>
           </div>
           <div className="hero-actions">

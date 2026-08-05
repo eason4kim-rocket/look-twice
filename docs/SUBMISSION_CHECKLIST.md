@@ -73,8 +73,18 @@ Official sources:
       separate from the locked aggregate, replay, and synthetic model-forward
       telemetry.
 - [x] State that seeds 102500-102529 were evaluated once in the additive
-      same-generator non-locked challenge; seeds 102530-102699 remain
-      unevaluated; neither is V8 OOD evidence.
+      same-generator non-locked challenge; seeds 102530-102549 were separately
+      evaluated once per policy in the public-before-run compound challenge;
+      seeds 102550-102699 remain unevaluated. None is V8 OOD evidence.
+- [x] Present the compound challenge as a complete-system intervention only:
+      shared frozen seg-v3 dual ROI, physical-root unification, and
+      contract-progress NBV; do not attribute its result to one component.
+- [x] Carry the compound result exactly: direct 20/20 for both arms, scout path
+      -40.2563%, team path -15.0306%, physical captures -27.5362%, 40/40
+      missions, and zero unsafe/collision/fallback/false-clear outcomes.
+- [x] Carry all three deterministic paired-bootstrap 95% intervals and retain
+      `formal_result_eligible=false`, same-generator, non-locked, non-OOD,
+      kinematic, and non-physical-robot boundaries.
 - [x] Disclose receipt-level Python/Go agreement as 250/268 (93.3%) and all 18
       mismatches as Go vetoes with `effective_admit=false`.
 - [x] Label the mismatch localization as post-hoc descriptive: all 18 were
@@ -192,13 +202,14 @@ Official sources:
       the independently verified two-shard result and boundary.
 - [x] Retain the rendered 15-page V2-integrated report PDF as the previous
       pre-two-shard snapshot.
-- [x] Rebuild the two-shard-integrated technical report as an 18-page PDF;
-      record SHA256
-      `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`
-      and complete rendered page-by-page visual QA for all 18/18 pages.
-- [x] Verify that the canonical PDF output, site copy, official-package copy,
-      and anonymously downloaded stable release PDF are byte-identical at the
-      final 18-page SHA256.
+- [x] Preserve the prior two-shard 18-page report identity only as a
+      superseded historical snapshot; it is not the current submission PDF.
+- [x] Rebuild the contract-progress-integrated technical report as a 19-page
+      PDF; record 1,104,864 bytes and SHA256
+      `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
+      complete rendered page-by-page visual QA for all 19/19 pages.
+- [x] Verify the canonical output, site copy, and official-package copy are
+      byte-identical at the final 19-page SHA256.
 - [x] Detailed V8 reproduction guide, including independent checksum/verifier
       commands for both solver-scale shards.
 - [x] AMD environment and workload boundary.
@@ -222,8 +233,9 @@ Official sources:
       payload files in its scope.
 - [x] Integrate the V2 result note and complete 80-file locally indexed
       evidence directory.
-- [ ] Owner reviews the two-shard-integrated technical-report source and the
-      staged 18-page PDF, including its identity and 18/18 visual-QA record.
+- [ ] Owner reviews the contract-progress-integrated technical-report source
+      and staged 19-page PDF, including its identity and 19/19 visual-QA
+      record.
 - [ ] Owner completes browser review of the two-shard Results/Reproduce site
       additions before deploy; code/test/build/lint/audit checks are complete.
 - [ ] Owner reviews the complete V2 and two-shard evidence payload in local
@@ -235,13 +247,13 @@ Official sources:
 - [x] Integrate both sealed solver-scale evidence directories into the local
       site and official-package staging; preserve their internal checksum
       indexes and dedicated verifier passes.
-- [x] Run the official-package finalizer at `2026-08-05T09:43:08Z` and write
+- [x] Run the official-package finalizer at `2026-08-05T17:26:02Z` and write
       the final top-level machine manifests, checksum index, file counts, and
       package identity; its subsequent `--check` passes.
-- [x] Record 152 manifest inventory entries, 153 checksum entries, and 154
-      total regular files including `SHA256SUMS`; all 153 `shasum` checks pass.
+- [x] Record 154 manifest inventory entries, 155 checksum entries, and 156
+      total regular files including `SHA256SUMS`; all 155 `shasum` checks pass.
       The top-level `SHA256SUMS` SHA256 is
-      `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+      `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
 - [ ] Owner reviews the two-shard Results/Reproduce presentation, rebuilt PDF,
       official-package diff, and exact `cumulative90/max60/never90` wording.
 
@@ -338,8 +350,10 @@ Stable targets:
 - Evidence Console: https://eason4kim-rocket.github.io/
 - Results: https://eason4kim-rocket.github.io/results
 - Reproduction: https://eason4kim-rocket.github.io/reproduce
-- Source branch:
+- Frozen-primary source branch:
   https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release
+- Additive contract-progress source/evidence branch:
+  https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv
 - Immutable final source:
   https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05
 - Candidate release:
@@ -355,8 +369,10 @@ Stable targets:
       report and audit copies, while preserving the frozen shared-chassis
       boundary.
 - [x] Site links the stable report, source branch, checkpoint, and video
-      targets. The stable report URL serves the final 18-page PDF with SHA256
-      `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
+      targets. The local contract-progress-integrated report is 19 pages with
+      SHA256
+      `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
+      replacing the stable release asset remains a separate publication step.
 - [x] Results and the global footer expose the immutable final-source tag,
       exact Genesis issue/PR head, personal competition-fork head, final PDF
       identity, and an explicit no-merge/no-acceptance boundary.
@@ -488,17 +504,18 @@ Stable targets:
       checksums before any push.
 - [x] Stage the complete sealed 60-body prefix and 30-body suffix evidence
       directories plus refreshed README, Judge Card, and byte-identical
-      18-page PDF in the local official package; both directories pass their
+      19-page PDF in the local official package; both directories pass their
       internal formal/package checksum indexes and dedicated verifiers.
 - [x] Regenerate `SUBMISSION_PACKAGE.json`, top-level `SHA256SUMS`, handoff
       manifest, release notes, all file counts, and every affected SHA after
-      the two-shard payload is final. The finalized counts are 152 manifest
+      the two-shard payload is final. The superseded counts were 152 manifest
       entries, 153 checksum entries, and 154 total regular files; the prior
       103/104/105 counts and `e3fee903…` checksum identity remain archived only.
-- [x] Verify all 153 top-level checksums, rerun the finalizer with `--check`,
+- [x] Verify all 155 top-level checksums after the contract-progress refresh,
+      rerun the finalizer with `--check`,
       and pass both staged solver-scale dedicated verifiers. The final
       top-level checksum-index SHA256 is
-      `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+      `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
 - [x] Copy the final two-shard staging directory byte-for-byte to the local
       official-fork worktree and verify `diff -qr` plus every checksum before
       any push.
@@ -529,15 +546,15 @@ Stable targets:
 - [x] Freeze the final judge-facing source in the new annotated tag
       `v8-competition-final-2026-08-05` without moving the historical
       `v8-competition-candidate` tag.
-- [x] The current two-shard staging contains both sealed evidence
-      directories and the byte-identical 18-page PDF with SHA256
-      `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`;
-      these additions are public on the personal competition fork.
+- [x] The current staging contains both sealed solver-scale evidence
+      directories, the compact compound-result files, and the byte-identical
+      19-page PDF with SHA256
+      `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
 - [x] Run the final official-package finalizer and record its top-level
-      manifests and 152/153/154 counts. Its `--check`, all 153 checksum
+      manifests and 154/155/156 counts. Its `--check`, all 155 checksum
       validations, and both staged dedicated verifiers pass; the top-level
       `SHA256SUMS` SHA256 is
-      `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
+      `129de89bff9e93553033eeea86cfc665f6be46dc7d3935a2215db66979ab3e70`.
 - [ ] Owner reviews the complete V2 evidence package, local verifier output,
       rebuilt PDF, refreshed site, and exact official-package diff.
 - [ ] Owner reviews both solver-scale reports and verifier outputs, the rebuilt

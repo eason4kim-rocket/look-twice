@@ -9,7 +9,7 @@
 **Release candidate:** `v8-frozen`
 
 **License:** Apache-2.0
-**Report date:** 2026-08-05
+**Report date:** 2026-08-06
 
 ## Executive summary
 
@@ -56,6 +56,19 @@ only world with both corridors oracle-blocked and completed safely by detour.
 Consequently, 30/30 active route outcomes matched offline feasibility. Oracle
 labels were never available to the controller, and this is not a preregistered
 endpoint.
+
+A further additive compound-system challenge then held the V8 checkpoint,
+both conformal artifacts, Purify gate, world generator, and kinematic backend
+fixed. Public Commit A `6c7b46d` fixed the executable intervention and Commit B
+`427f2f7` changed only its preregistration binding before seeds `102530–102549`
+were opened. Across 20 paired worlds, both the frozen baseline and compound
+candidate remained full-chain direct in 20/20. The candidate reduced mean
+scout path by 40.2563%, mean team path by 15.0306%, and physical captures from
+69 to 50 (27.5362%); all three preregistered capability gates passed. Mission
+success was 40/40 with zero unsafe crossing, collision, fallback, or false
+clear. This is same-generator, non-locked, kinematic simulation evidence with
+`formal_result_eligible=false`, not new-weight, OOD, physical-robot, or
+single-component causal evidence, and it does not replace the frozen primary.
 
 The frozen policy result is simulation-only and uses a kinematic Genesis
 motion backend. A separate submission-time dual-body supplement instantiated
@@ -194,8 +207,9 @@ Each sample contains:
 | Validation | 101500-101799 | 300 | Checkpoint selection only |
 | Vision calibration | 101800-102099 | 300 | Split-conformal vision artifact |
 | Locked test | 102100-102499 | 400 | Opened once after the runtime freeze |
-| Preregistered challenge | 102500-102529 | 30 | Same generator family; evaluated once after public binding |
-| Remaining challenge reserve | 102530-102699 | 170 | Same generator family; not evaluated |
+| Frozen challenge supplement | 102500-102529 | 30 | Same generator family; evaluated once after public binding |
+| Compound contract-progress supplement | 102530-102549 | 20 | Same generator family; evaluated once per policy after a separate public binding |
+| Remaining challenge reserve | 102550-102699 | 150 | Same generator family; not evaluated |
 
 The selected checkpoint records 12,000 training pairs and 2,400 validation
 pairs. The locked report contains 3,200 corridor samples: 1,560 blocked and
@@ -206,10 +220,11 @@ contained 400 corridor rows with both classes represented. Development and
 confirmatory full-chain smokes used disjoint seeds 105300-105311 and
 105400-105411. The locked split was not used by these steps.
 
-The challenge subset changed seeds but not the generator family. Seeds
+The challenge supplements changed seeds but not the generator family. Seeds
 102500-102529 were evaluated once under the public frozen-challenge protocol;
-seeds 102530-102699 remain unevaluated. Neither subset is presented as OOD or
-domain-generalization evidence.
+seeds 102530-102549 were evaluated once per policy under the separate public
+compound contract-progress protocol. Seeds 102550-102699 remain unevaluated.
+Neither supplement is presented as OOD or domain-generalization evidence.
 
 ## 4. V8 perception model
 
@@ -466,6 +481,29 @@ validator read the 60 raw episode records, recomputed the report without
 loading the checkpoint or running an episode, and returned `passed=true` with
 zero errors.
 
+### 7.5 Publicly preregistered compound efficiency challenge
+
+After the frozen challenge result was permanent, a separate two-commit public
+binding fixed a compound V8 intervention before any seed in `102530–102549`
+was opened. Commit A
+`6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e` fixed the candidate source,
+runner, verifier, protocol, and preregistration placeholders. Commit B
+`427f2f729ce653df91a20db56c9fdbd16911a014` changed only the
+preregistration binding.
+
+The candidate reused the frozen seg-v3 weights and calibrations. One initial
+physical RGB-D capture fed one shared backbone forward and two corridor ROI
+proposals; geometry and vision retained the same physical root; a deterministic
+contract-debt → online Go `p_blocked` → scout-travel order selected later
+views. The attribution is to this complete compound intervention, not to the
+planner or shared inference alone.
+
+The runner executed 40 fixed cells—20 worlds paired across the frozen baseline
+and candidate—with no retry, resume, seed substitution, early stopping, or
+retuning. The independent verifier authenticated the exact output path set,
+checksums, public remote and pre/post source bindings, frozen-Go receipts,
+attempt commands, and 554-sample full-window ROCm telemetry.
+
 ## 8. Results
 
 ### 8.1 Locked offline population
@@ -544,7 +582,29 @@ from 6.404 to 7.941 (+24.0%). These are kinematic logical-role paths on one
 shared Genesis chassis, not energy, throughput, latency, physical duty cycle,
 or simultaneous two-robot dynamics.
 
-### 8.4 Guarded confirmatory cost ledger
+### 8.4 Compound contract-progress efficiency result
+
+| Preregistered metric | Baseline | Compound candidate | Relative reduction |
+| --- | ---: | ---: | ---: |
+| Full-chain direct | 20 / 20 | 20 / 20 | no regression |
+| Mean scout path | 2.9229 m | 1.7462 m | **40.2563%** |
+| Mean team path | 7.8326 m | 6.6553 m | **15.0306%** |
+| Physical captures | 69 total | 50 total | **27.5362%** |
+
+Deterministic paired-bootstrap 95% intervals were 36.0505–45.0271% for scout
+path, 12.2563–17.6227% for team path, and 15.6250–37.8378% for physical
+captures. Candidate-minus-baseline scout and team deltas were negative in all
+20 paired worlds. All 40 missions completed; unsafe crossing, false clear,
+fallback, and collision counts were zero. Candidate traces contained 30 native
+contract-progress decisions and zero delegated decisions.
+
+The independent verifier reported `promotion_pass=true`. The result is
+additive, same-generator, non-locked, and kinematic, with
+`formal_result_eligible=false`. It introduces no new weights, conformal
+artifact, gate, or threshold and does not overwrite the frozen 29/30 versus
+0/30 primary endpoint.
+
+### 8.5 Guarded confirmatory cost ledger
 
 The non-locked seed 105400 replay includes trajectory lengths and is guarded by
 the frozen import manifest. It is kinematic simulation and carries
@@ -566,7 +626,7 @@ The derivation is machine-readable at
 `release/v8-derived/V8_TASK_UTILITY_DERIVATION.json`, SHA256
 `f85f6d647ea49f9bc148cf9fad6c38a34050cd8e9f8f690522b965c5ff23730b`.
 
-### 8.5 Additive 20-seed dual-body rigid dynamics
+### 8.6 Additive 20-seed dual-body rigid dynamics
 
 | Fixed check | Result |
 | --- | ---: |
@@ -593,7 +653,7 @@ rigid bodies. It does not establish a full-policy conversion to simultaneous
 two-robot control, physical-robot transfer, dynamic-obstacle response, energy
 savings, or a new formal V8 endpoint.
 
-### 8.6 Additive 30-seed decision-bound rigid dynamics
+### 8.7 Additive 30-seed decision-bound rigid dynamics
 
 | Fixed check | Result |
 | --- | ---: |
@@ -624,7 +684,7 @@ not a live-policy rerun, simultaneous cooperative execution, or one
 simultaneous 90-body scene. It is additive, non-locked, and explicitly records
 `formal_result_eligible=false`.
 
-### 8.7 Solver-scale two-shard complement
+### 8.8 Solver-scale two-shard complement
 
 | Fixed check | 60-body prefix | 30-body suffix | Exact two-shard summary |
 | --- | ---: | ---: | ---: |
@@ -659,7 +719,7 @@ It is not a live policy rerun, simultaneous fleet-control test, dynamic
 obstacle test, physical-robot or sim-to-real result, throughput or energy
 result, or safety certification.
 
-### 8.8 Evidence identity
+### 8.9 Evidence identity
 
 The authoritative locked report file SHA256 is
 `5b88d5e7683f853380f1e23123f830c6966824e3afee055af5c4fb6604f672cb`.
@@ -682,6 +742,17 @@ Its internal `SHA256SUMS` covers every other regular file (194/194). The
 independent validation report has SHA256
 `942f1624e6903033335e5ffbcdbc12afed4a0e8eed4e0d33ffa657f5e147a940`
 and reproduces the compact challenge report exactly from raw episode records.
+
+The compound contract-progress evidence lives under
+`release/v8-derived/contract_progress_challenge_102530_102549`. Its formal
+report SHA256 is
+`8dc2d5026f697312bd39ddf6be7a65aa3ee08ac0e2799d0ca24cf4348c439a44`;
+independent verification SHA256 is
+`911495a29a51b0eb6d64c85e231e51a28713b570431b4f7dfffb60806dfb76be`;
+run-manifest SHA256 is
+`d5fc5402656739d95bd5845592499a3382734b27fc89ef0b886c0544461c948e`;
+and the formal checksum-index SHA256 is
+`ea42de26ef30abfefb5581eb5d558cfac2d51039ae0f1cde75b82ac2366f85e4`.
 
 The decision-bound V2 evidence directory is
 `release/v8-derived/decision_dynamics_recovery_v2_102500_102529`.
@@ -762,7 +833,7 @@ claim language.
     two scenes, 90 cumulative distinct robots, maximum co-resident 60, never
     all 90 co-resident--instead of presenting a failed all-90-body attempt as
     success.
-12. **Prepared Genesis parser robustness fix.** A two-file upstream patch
+12. **Published Genesis parser robustness fix.** A two-file upstream patch
     defaults an omitted URDF inertial origin to the link frame without changing
     geometry fallback for a fully absent `<inertial>` element. Against Genesis
     tested 2026-08-05 upstream-main snapshot
@@ -773,8 +844,12 @@ claim language.
     Complete
     `scene.build()` comparison also retained the authored principal moments only
     with the patch while preserving the absent-inertial fallback in both trees.
-    This contribution is prepared for owner review: no public issue, fork push,
-    pull request, maintainer review, or upstream acceptance is claimed yet.
+    At preparation time, this contribution was staged only for owner review and
+    no public issue or pull request was claimed. It was subsequently published
+    as Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183)
+    and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184).
+    The PR remains unmerged; no maintainer acceptance or inclusion in an
+    upstream release is claimed.
 
 ## 10. Real-world value
 
@@ -804,6 +879,9 @@ incident review, and future assurance tooling.
 - a publicly preregistered 30-world same-generator challenge with 60 raw
   episodes, full-wall ROCm telemetry, recursive checksums, and an independent
   validator;
+- a separate publicly preregistered 20-world compound efficiency challenge
+  with 40 fixed paired cells, 20/20 direct outcomes in both arms, three passed
+  burden-reduction gates, full-wall telemetry, and independent verification;
 - a separately verified 20-seed dual-body rigid-dynamics report with 40
   non-fixed entities, timeout/recovery audits, and sealed checksums;
 - a separately verified 30-seed decision-bound rigid-dynamics replay with 90
@@ -814,9 +892,11 @@ incident review, and future assurance tooling.
   across exactly two scene shards with 90 cumulative distinct robots, maximum
   co-resident 60, and never all 90 co-resident;
 - a compact English Frozen Challenge Judge Card;
-- an owner-review-ready two-file Genesis URDF inertial-origin fix with a
+- a subsequently published two-file Genesis URDF inertial-origin fix with a
   physically valid non-diagonal regression case, tested-snapshot fail / patch-pass
-  evidence, and complete scene-build comparison; it is not yet public upstream;
+  evidence, and complete scene-build comparison: public issue #3183 and open,
+  non-draft PR #3184; the PR remains unmerged, with no maintainer acceptance or
+  upstream-release inclusion claimed;
 - final 3:59 English workflow video with fixed-composition visuals and
   AI-generated OpenAI Cedar narration;
 - public 159,592,901-byte frozen checkpoint release asset.
@@ -824,8 +904,14 @@ incident review, and future assurance tooling.
 Public Evidence Console:
 https://eason4kim-rocket.github.io/
 
-Frozen source branch:
+Original frozen V8 source branch:
 https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release
+
+Original frozen V8 foundation tag:
+https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05
+
+Additive compound source and evidence review branch:
+https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv
 
 Final workflow video:
 https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4
@@ -936,6 +1022,12 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
   aggregate.
 - The 30-world challenge is an additive publicly preregistered same-generator
   supplement, not part of the permanent locked result and not an OOD claim.
+- The 20-world compound contract-progress challenge is a separate additive
+  same-generator, non-locked, kinematic supplement with
+  `formal_result_eligible=false`. It evaluates shared frozen inference,
+  physical-root unification, and contract-aware NBV together; it is not a new
+  model-weight, single-component causal, OOD, or physical-robot claim and does
+  not replace the frozen primary.
 - Carrier and scout in the frozen policy are separate logical-role poses,
   viewpoints, and capture roots on one shared Genesis chassis. A separate
   20-seed supplement demonstrates bounded sequential wheel motion by two
@@ -968,8 +1060,10 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
 - The locked-input supplement contains inputs and labels, not the original
   per-sample predictions or 24 raw full-chain episodes; it does not reconstruct
   the one-shot run.
-- Seeds 102500-102529 were evaluated once under the public challenge protocol;
-  seeds 102530-102699 remain unevaluated. Neither is claimed as OOD evidence.
+- Seeds 102500-102529 were evaluated once under the frozen challenge protocol;
+  seeds 102530-102549 were separately evaluated once per policy under the
+  compound challenge protocol. Seeds 102550-102699 remain unevaluated. None is
+  claimed as OOD evidence.
 - The frozen 159 MB checkpoint is distributed as a GitHub release asset because
   it exceeds GitHub's normal 100 MB blob limit; its SHA must be verified before
   use.
@@ -979,8 +1073,9 @@ The full procedure, artifact layout, GPU command, and expected outputs are in
   Purify product or a compatibility commitment.
 - Later Integrity Shield R1/R2 and V9 research is not promoted into V8 claims.
 - A focused Genesis URDF inertial-origin parser fix and required regression
-  test are prepared locally with baseline-fail/patch-pass evidence. No public
-  external upstream contribution is claimed until owner approval.
+  test were first prepared locally with baseline-fail/patch-pass evidence, then
+  published as issue #3183 and open, non-draft PR #3184. The PR remains
+  unmerged; no maintainer acceptance or upstream-release inclusion is claimed.
 
 ## 14. Team and contributions
 

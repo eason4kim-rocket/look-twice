@@ -819,16 +819,16 @@ class ContractProgressEvidenceTests(unittest.TestCase):
         self.assertEqual(schedule[-1]["seed"], 102549)
         self.assertEqual(len(schedule_sha256()), 64)
 
-    def test_draft_prereg_is_allowed_only_outside_formal_mode(self) -> None:
-        draft = json.loads(
+    def test_publicly_bound_prereg_is_valid_in_formal_mode(self) -> None:
+        preregistration = json.loads(
             (
                 ROOT
                 / "release/v8-derived/contract_progress_challenge_102530_102549/PREREGISTRATION.json"
             ).read_text(encoding="utf-8")
         )
-        validate_preregistration(draft, formal=False)
-        with self.assertRaises(VerificationError):
-            validate_preregistration(draft, formal=True)
+        validate_preregistration(preregistration, formal=False)
+        receipt = validate_preregistration(preregistration, formal=True)
+        self.assertTrue(receipt["contract_valid"])
 
     def test_capture_endpoint_uses_observation_count_not_proposals(self) -> None:
         spec = next(row for row in build_schedule() if row["arm"] == "candidate")

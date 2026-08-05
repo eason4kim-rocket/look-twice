@@ -25,19 +25,21 @@ a concrete next observation and robot action into an auditable decision.
 This entry is simulation-only. It does not claim real-robot validation,
 sim-to-real transfer, or safety certification.
 
-> **Owner-review snapshot recorded on 2026-08-05:** at snapshot generation,
-> the independently verified 60-body prefix and 30-body suffix were integrated
-> into these human-readable materials, their complete evidence directories and
-> rebuilt 18-page PDF were packaged: all 154 regular files were present and all
-> 153 checksum entries verified locally. At
-> that timestamp, protocol targets were not yet public and no competition PR
-> had been opened. This records packaging-time state; the links below expose
-> current publication availability.
+> **Current owner-review state:** the independently verified compound
+> contract-progress result is integrated into the human-readable source and a
+> compact evidence index. The final 19-page technical-report PDF passed 19/19
+> rendered-page QA, and its output/site/official copies are byte-identical at
+> SHA256 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+> Package manifests/checksums are mechanically finalized from this tree. No
+> competition PR has been opened.
 
 ## Judge-first links
 
 - Compact frozen challenge Judge Card:
   [packaged copy](V8-Frozen-Challenge-Judge-Card.md)
+- Compound contract-progress result:
+  [compact result](evidence/contract_progress_challenge_102530_102549/RESULT_SUMMARY.md) ·
+  [evidence index](evidence/contract_progress_challenge_102530_102549/EVIDENCE_INDEX.json)
 - Post-hoc descriptive offline route-feasibility audit:
   [packaged JSON](evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json)
 - Separate additive dual-body dynamics result:
@@ -64,10 +66,12 @@ sim-to-real transfer, or safety certification.
 - Evidence Console target: <https://eason4kim-rocket.github.io/>
 - Frozen-results target: <https://eason4kim-rocket.github.io/results>
 - Reproduction target: <https://eason4kim-rocket.github.io/reproduce>
-- Dedicated source branch:
+- Frozen-primary source branch:
   <https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release>
+- Additive contract-progress source and complete evidence branch:
+  <https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv>
 - Technical report:
-  [packaged two-shard-integrated PDF](Look-Twice-V8-Technical-Report.pdf) ·
+  [packaged contract-progress-integrated PDF](Look-Twice-V8-Technical-Report.pdf) ·
   [replacement publication target](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
 - Final 3:59 English demo target:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4>
@@ -77,15 +81,13 @@ sim-to-real transfer, or safety certification.
   [Look-Twice-V8-Evidence-Reel-30s.mp4](Look-Twice-V8-Evidence-Reel-30s.mp4)
 
 The 30-second file is a silent evidence preview. The 3:59 MP4 is the complete
-narrated workflow demonstration. The replacement MP4 and sidecar were
-downloaded from their stable release targets without credentials and matched
-the packaged SHA256 identities on 2026-08-03. The packaged 18-page report now
-includes the two-shard complement and hashes to
-`34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
-The package manifest and `SHA256SUMS` bind and verify this owner-review
-snapshot. At snapshot generation on 2026-08-05, the stable release URL still
-served an earlier public baseline; the packaged copy is authoritative for this
-payload.
+narrated workflow demonstration. The replacement MP4 and sidecar matched their
+published SHA256 identities on 2026-08-03. The contract-progress-integrated
+technical-report PDF is 19 pages and 1,104,864 bytes; all 19 rendered pages
+passed visual QA, and output/site/official copies are byte-identical at SHA256
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+The finalized package has 154 manifest entries, 155 checksum entries, and 156
+total files.
 
 ## Judge-first review path
 
@@ -98,17 +100,19 @@ payload.
 4. Confirm that direct travel requires Python **and** Purify Go admission.
 5. Inspect the 844-sample full-wall Radeon telemetry and 30-world
    carrier/scout burden table.
-6. Inspect the separately labeled 30/30 decision-bound wheel-dynamics replay:
+6. Inspect the separately preregistered compound result: both arms 20/20
+   direct, with lower scout and team path in every paired world.
+7. Inspect the separately labeled 30/30 decision-bound wheel-dynamics replay:
    90/90 bodies reached across 30 independent scenes; 29/29 direct pairs kept
    a simulated loaded-carrier path advantage; the one dual-blocked case safely
    detoured.
-7. Inspect the solver-scale complement separately: 20/20 fixed decisions in
+8. Inspect the solver-scale complement separately: 20/20 fixed decisions in
    one 60-body scene plus 10/10 in a second 30-body scene. This is exactly two
    scene shards, 90 cumulative distinct robots, and at most 60 co-resident--not
    one 90-body scene.
-8. Inspect the earlier 20/20 dual-body wheel-dynamics component bar and its
+9. Inspect the earlier 20/20 dual-body wheel-dynamics component bar and its
    retained timeout/recovery chain.
-9. Open Results and trace the permanent locked numbers separately.
+10. Open Results and trace the permanent locked numbers separately.
 
 ## Why the result matters
 
@@ -166,6 +170,36 @@ Genesis chassis, not two physical robots or simultaneous dual-body dynamics.
 
 This supplement is same-generator and non-locked. It is not a second locked
 open, OOD result, rigid-body test, or physical-robot result.
+
+## Additive compound contract-progress efficiency
+
+Commit A `6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e` fixed the compound
+candidate and Commit B `427f2f729ce653df91a20db56c9fdbd16911a014`
+changed only the preregistration binding before seeds `102530–102549` were
+opened. The fixed 20-world, 40-cell paired run passed every mandatory and
+capability gate:
+
+| Preregistered endpoint | Baseline | Compound candidate | Reduction |
+| --- | ---: | ---: | ---: |
+| Full-chain direct | 20/20 | 20/20 | no regression |
+| Mean scout path | 2.9229 m | 1.7462 m | **40.2563%** |
+| Mean team path | 7.8326 m | 6.6553 m | **15.0306%** |
+| Physical captures | 69 | 50 | **27.5362%** |
+
+The three paired-bootstrap 95% intervals were 36.0505–45.0271%,
+12.2563–17.6227%, and 15.6250–37.8378%. All 20 scout and team deltas were
+negative. Mission success was 40/40; unsafe, collision, fallback, and false
+clear were zero. Candidate decisions were 30 native and zero delegated. Exact
+path set, checksums, pre/post and public-remote bindings, frozen-Go receipts,
+attempt reconstruction, and 554-sample telemetry all validated;
+`promotion_pass=true`.
+
+This is a compound-system result for shared frozen dual-ROI inference,
+physical-root unification, and contract-aware NBV together. It does not use new
+weights, calibration, gates, or thresholds and is not a single-component
+causal claim. It remains same-generator, non-locked, kinematic simulation with
+`formal_result_eligible=false`—not OOD, physical-robot, sim-to-real, or
+safety-certification evidence—and does not replace the frozen primary.
 
 ## Separate additive dual-body rigid dynamics
 
@@ -424,6 +458,7 @@ separately labeled dual-body report and timeout/recovery audit chain, plus the
 complete 30-seed decision-bound checkpoint/report/provenance package, and the
 complete 60-body prefix and 30-body suffix solver-scale evidence directories.
 The machine-readable [package manifest](SUBMISSION_PACKAGE.json) states the
-included payload and evidence boundaries. Every packaged regular file except
-the checksum index itself is bound by [SHA256SUMS](SHA256SUMS); the finalizer
-and all 153 checksum entries pass locally for this owner-review snapshot.
+included payload and evidence boundaries. Its final inventory contains 154
+manifest entries and [SHA256SUMS](SHA256SUMS) binds all other 155 package
+files in the 156-file package. The checksum index's own identity is recorded
+outside the package to avoid a circular self-reference.

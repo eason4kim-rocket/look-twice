@@ -89,8 +89,10 @@ reconstruct those missing outputs.
 This is a separate **same-generator non-locked supplement**, not a rerun or
 replacement of the permanent 12-pair locked result. Seeds `102500-102529` were
 publicly preregistered and each policy was attempted once per seed. Seeds
-`102530-102699` remain unevaluated. The result is neither OOD nor physical
-robot evidence.
+`102530-102549` were separately attempted once per policy cell under the
+public-before-run compound contract-progress protocol; seeds
+`102550-102699` remain unevaluated. Neither result is OOD or physical-robot
+evidence.
 
 Download, authenticate, extract, and independently recompute it:
 
@@ -626,9 +628,10 @@ Expected Purify binary SHA:
   does not pin the cloud scheduler or all system packages.
 - Statistical claims apply only to the declared simulated split.
 - Seeds 102500-102529 were evaluated exactly once per preregistered policy in
-  the additive same-generator non-locked challenge. Seeds 102530-102699 remain
-  unevaluated. No OOD, out-of-distribution, or population-generalization result
-  is claimed.
+  the additive same-generator non-locked challenge. Seeds 102530-102549 were
+  separately evaluated once per policy cell in the public-before-run compound
+  contract-progress challenge; seeds 102550-102699 remain unevaluated. No OOD,
+  out-of-distribution, or population-generalization result is claimed.
 - Challenge carrier/scout measurements are logical-role kinematic burden on
   one shared chassis, not simultaneous dual-body dynamics or two physical
   devices. The separate 20-seed dynamics supplement uses two non-fixed rigid

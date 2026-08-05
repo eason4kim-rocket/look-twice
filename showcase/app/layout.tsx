@@ -8,30 +8,31 @@ const mono = IBM_Plex_Mono({ variable: "--font-mono", subsets: ["latin"], weight
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eason4kim-rocket.github.io"),
-  title: { default: "Look Twice — Active Evidence Assurance", template: "%s · Look Twice" },
-  description: "A Purify-powered active evidence assurance layer for Physical AI on AMD GPU.",
+  title: { default: "Look Twice — Contract-Aware Active Perception", template: "%s · Look Twice" },
+  description:
+    "Frozen RGB-D perception, conformal action qualification and contract-aware active sensing on AMD GPU, backed by publicly preregistered simulation evidence.",
   alternates: { canonical: "/" },
   openGraph: {
     url: "https://eason4kim-rocket.github.io/",
     type: "website",
-    title: "Look Twice — Active Evidence Assurance",
+    title: "Look Twice — Contract-Aware Active Perception",
     description:
-      "A robot should not act on evidence it cannot defend. See the verified repair loop and two completed rigid-body scene shards.",
+      "20/20 direct with zero unsafe events while reducing scout path 40.26%, team path 15.03% and physical captures 27.54% in a publicly preregistered same-generator simulation challenge.",
     images: [
       {
-        url: "https://eason4kim-rocket.github.io/og-two-shard.png",
-        width: 1728,
-        height: 910,
-        alt: "Look Twice two completed rigid-body scene shards for Track 3 Physical AI",
+        url: "https://eason4kim-rocket.github.io/og-contract-progress.png",
+        width: 1726,
+        height: 911,
+        alt: "Look Twice contract-aware active perception results on AMD GPU simulation",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Look Twice — Active Evidence Assurance",
+    title: "Look Twice — Contract-Aware Active Perception",
     description:
-      "Claim → Purify → active repair → qualified action, backed by two completed rigid-body scene shards.",
-    images: ["https://eason4kim-rocket.github.io/og-two-shard.png"],
+      "20/20 direct, zero unsafe, with lower scout path, team path and physical capture burden in a publicly preregistered AMD GPU simulation challenge.",
+    images: ["https://eason4kim-rocket.github.io/og-contract-progress.png"],
   },
 };
 
