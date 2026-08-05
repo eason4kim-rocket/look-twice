@@ -5,7 +5,12 @@ snapshot. The local refresh adds the verified two-shard decision-bound
 complement, 18-page report, and regenerated 154-file official package. At
 snapshot generation on 2026-08-05, no competition PR had been opened and the
 refresh had not been pushed, deployed, released, or copied into the public
-release assets. Owner approval remains the publication gate.
+release assets. Owner approval was the publication gate at that timestamp.
+
+Post-snapshot, owner approval was given for publication except the final AMD
+competition PR. The source, final PDF, refreshed site, public mirror, Genesis
+issue/PR, and personal competition-fork branch are now public; the official
+competition PR remains unopened.
 
 Look Twice is a pre-action evidence-assurance layer for embodied AI. A denied
 Action Contract becomes a machine-readable `BeliefGap`; a scout acquires the
@@ -130,12 +135,13 @@ Finalizer `--check` and all 153 top-level checksum entries passed; the
 `SHA256SUMS` file hashes to
 `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
 
-Stable release, source, and Pages targets still serve the earlier baseline or
-return 404. No source push, deployment, release replacement, official-fork
-push, or competition PR has occurred. A focused Genesis URDF inertial-origin
-patch is prepared locally at
-`8fbf352912f748f87ba4e8c94ef31c817017b641`, but no public issue, push, PR,
-review, or upstream acceptance is claimed.
+The stable release, source, and refreshed Pages targets are public and were
+verified without sign-in. The reviewed official-fork branch is public at
+`bcc7a07`, but no competition PR has been opened. A focused Genesis URDF
+inertial-origin patch is public at
+`0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
+non-draft PR #3184. It remains unmerged; no maintainer review, acceptance, or
+upstream-release inclusion is claimed.
 
 ## Release assets
 
@@ -185,10 +191,10 @@ supplements, plus the separately labeled dual-body dynamics acceptance result.
 These additive publication updates do not change the frozen model, one-shot
 locked result, calibration, thresholds, or final video. Recovery V2 remains a
 separately labeled historical addition, while the two-shard complement is the
-current local solver-scale topology claim; neither changes the **29/30**
-preregistered endpoint. The 18-page PDF is the local replacement identity
-above. Stable release/source/Pages targets still expose the older baseline or
-404 until owner approval and publication. The video sidecar intentionally
+current solver-scale topology claim; neither changes the **29/30**
+preregistered endpoint. The 18-page PDF is the published stable-release
+identity above. Stable release/source/Pages targets expose the refreshed
+candidate. The video sidecar intentionally
 retains report SHA
 `9977b336eb7b475efb2c30ca50d54d238348b9f3887833d3dcde7478f0f67cde`
 as the exact earlier report bytes used when rendering its report-page frames.

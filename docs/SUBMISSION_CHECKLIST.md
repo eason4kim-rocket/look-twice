@@ -3,7 +3,7 @@
 Verified against the official event page, governing Rules and Conditions, and
 official submission repository on 2026-08-05.
 
-**Owner-review state:** `two_shard_finalized_owner_review_pending_no_pr`
+**Owner-review state:** `public_surfaces_ready_competition_pr_held_for_owner`
 
 **Official PR opened:** `false`
 
@@ -130,8 +130,8 @@ Official sources:
       loaded-carrier logical path -22.5%, total logical-role team path +24.0%.
 - [x] State simulation-only, kinematic-motion, and no-safety-certification
       boundaries.
-- [x] Make no public external upstream PR claim before owner approval; describe
-      the Genesis fix only as locally prepared.
+- [x] Make no public external upstream PR claim before owner approval; after
+      approval, publish only the truthful open/unmerged issue and PR state.
 
 ## V8 evidence freeze
 
@@ -196,10 +196,9 @@ Official sources:
       record SHA256
       `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`
       and complete rendered page-by-page visual QA for all 18/18 pages.
-- [x] Verify that the canonical PDF output, local site copy, and 18-page local
-      official-package copy are byte-identical. The stable public
-      release PDF remains the older pre-two-shard baseline until an
-      owner-approved replacement is uploaded and verified.
+- [x] Verify that the canonical PDF output, site copy, official-package copy,
+      and anonymously downloaded stable release PDF are byte-identical at the
+      final 18-page SHA256.
 - [x] Detailed V8 reproduction guide, including independent checksum/verifier
       commands for both solver-scale shards.
 - [x] AMD environment and workload boundary.
@@ -354,11 +353,11 @@ Stable targets:
       report and audit copies, while preserving the frozen shared-chassis
       boundary.
 - [x] Site links the stable report, source branch, checkpoint, and video
-      targets. The stable report URL still serves the older pre-two-shard PDF;
-      it is not yet the current 18-page local artifact.
+      targets. The stable report URL serves the final 18-page PDF with SHA256
+      `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`.
 - [x] Rebuild, lint, run all 38 tests, and obtain a zero-vulnerability
-      dependency audit for the two-shard-integrated site locally; this work is
-      complete but not deployed.
+      dependency audit for the two-shard-integrated site; publish the verified
+      build to GitHub Pages and the public site mirror.
 - [ ] Owner reviews the separate 30/30 decision-bound V2 Results card and
       reproduction audit, including the 29/30 primary endpoint and the
       non-simultaneous 90-body boundary, after all site checks pass.
@@ -371,12 +370,11 @@ Stable targets:
       `all_90_co_resident=false` in the evidence tests.
 - [x] Run site lint, production build, all 38 tests, and dependency audit after
       the two-shard integration.
-- [ ] Complete owner browser review of the local Results/Reproduce presentation.
-- [ ] Publish the refreshed dynamics site only after owner approval.
-- [x] Keep the previously published public baseline on Pages with HTTPS
-      enforced; do not describe the local two-shard refresh as deployed.
-- [x] Verify the previous public baseline routes and referenced client/binary
-      assets without sign-in.
+- [ ] Complete owner browser review of the published Results/Reproduce presentation.
+- [x] Publish the refreshed dynamics site after owner approval.
+- [x] Keep HTTPS enforced on the refreshed GitHub Pages deployment.
+- [x] Verify `/`, `/console`, `/results`, `/reproduce`, the report PDF, and
+      referenced evidence assets without sign-in on the public deployments.
 - [x] Replace the MP4 and sidecar at the unchanged candidate-release URLs.
 - [x] Download the replacement assets without sign-in and verify both hashes.
 
@@ -442,19 +440,21 @@ Stable targets:
 - [x] Prepare exact English issue body, PR body, validation record, and
       publication sequence locally.
 - [x] Re-fetch upstream main on 2026-08-05, replay the identical patch without
-      conflict, and keep the current-main review at commit
-      `8fbf352912f748f87ba4e8c94ef31c817017b641` with a clean worktree; its
+      conflict, and publish the validated replay at commit
+      `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`; its
       stable patch-id matches the earlier `31b58c4` review commit.
 - [x] Identify merged PR #2499 as the related prior change and position this
       patch as a narrow follow-up to the current parser/finalizer regression,
       not an unacknowledged duplicate.
-- [x] Confirm GitHub authentication and that no personal Genesis fork, issue,
-      branch push, or PR exists yet.
-- [ ] Owner explicitly authorizes external upstream publication.
-- [ ] Re-fetch official main, repeat duplicate search, file the issue, push the
-      exact patch to a fork, and open the linked upstream PR.
-- [ ] After publication, update judging materials with the real open/unmerged
-      issue/PR URLs and CI state; do not claim merge or acceptance.
+- [x] Confirm GitHub authentication and the pre-publication absence of a
+      personal Genesis fork, issue, branch, or PR.
+- [x] Owner explicitly authorized external upstream publication.
+- [x] Re-fetch official main, repeat duplicate search, file public
+      [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183),
+      push the exact patch to the fork, and open non-draft
+      [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184).
+- [x] Update judging materials with the real open/unmerged issue/PR URLs and
+      observed CI state; do not claim merge or acceptance.
 
 ## Official submission repository
 
@@ -490,14 +490,13 @@ Stable targets:
       and pass both staged solver-scale dedicated verifiers. The final
       top-level checksum-index SHA256 is
       `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
-- [ ] Copy the final two-shard staging directory byte-for-byte to the local
+- [x] Copy the final two-shard staging directory byte-for-byte to the local
       official-fork worktree and verify `diff -qr` plus every checksum before
       any push.
-- [ ] After owner approval, push the reviewed two-shard-integrated refresh to the
-      dedicated official-fork branch; do not imply the current public baseline
-      contains the new dynamics files.
-- [ ] Use PR title `Track 3, Liu Liang, Look Twice`.
-- [ ] Immediately before pasting, replace the owner-review preamble in
+- [x] After owner approval, push the reviewed two-shard-integrated refresh to
+      the dedicated official-fork branch at `bcc7a07` without opening a PR.
+- [x] Use planned PR title `Track 3, Liu Liang, Look Twice`.
+- [x] Replace the owner-review preamble in
       `docs/SUBMISSION_DRAFT.md` with the actual publication state and rerun
       the no-stale-state scan; do not file a body that still says “not yet
       filed” or “PR pending.”
@@ -516,13 +515,12 @@ Stable targets:
       package inventory has exact path coverage for that snapshot only.
 - [x] Replacement public branch/release assets pass anonymous checks; the
       stable URLs remain unchanged.
-- [x] The public official-fork branch remains at its earlier baseline pending
-      owner approval; the prior V2-only local staging snapshot contains 105
-      regular files.
-- [x] The current local two-shard staging contains both sealed evidence
+- [x] The public official-fork branch is the reviewed two-shard package at
+      `bcc7a07`; no official competition PR has been opened.
+- [x] The current two-shard staging contains both sealed evidence
       directories and the byte-identical 18-page PDF with SHA256
       `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`;
-      these additions are not yet pushed or public.
+      these additions are public on the personal competition fork.
 - [x] Run the final official-package finalizer and record its top-level
       manifests and 152/153/154 counts. Its `--check`, all 153 checksum
       validations, and both staged dedicated verifiers pass; the top-level

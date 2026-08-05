@@ -1,22 +1,22 @@
 # Track 3, Liu Liang, Look Twice
 
-> **Owner-review preparation state - not yet filed:** the final 239-second
-> video and the older public V8 baseline are anonymously verified. Locally, the
-> two-shard Results/Reproduce refresh passes production build, lint, all 38
-> tests, and a zero-vulnerability audit; its six byte-identical public-data
-> copies are prepared but not deployed. The two sealed solver-scale directories
-> and a byte-identical 18-page technical PDF are staged locally. At
-> `2026-08-05T09:43:08Z`, the official-package finalizer produced 152 manifest
-> entries, 153 checksum entries, and 154 total regular files; its `--check`, all
-> 153 `shasum` validations, and both staged dedicated verifiers pass. The
-> top-level `SHA256SUMS` SHA256 is
+> **Publication state - official competition PR intentionally held:** the final
+> 239-second video, dedicated source branch, 18-page release PDF, refreshed
+> GitHub Pages site, public site mirror, and two solver-scale evidence shards
+> are published and anonymously verified. Production build, lint, all 38 site
+> tests, dependency audit, source CI, and the public PDF/evidence checksum
+> checks are green. The personal competition-fork branch is published at
+> `bcc7a07`; all 153 package checksums pass, but no AMD competition PR has been
+> created. The package contains 152 manifest entries and 154 regular files;
+> its `SHA256SUMS` hashes to
 > `a2a7dc1fd9c4efeb6fb1041a4d45ed1b2a48a1a502a689bfac42435d063d36e6`.
-> The canonical output, site, and official-package PDF copies are byte-identical
-> at `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`,
-> and the report passed rendered visual QA on 18/18 pages. The stable release
-> PDF URL still serves the older pre-two-shard baseline. Owner browser review,
-> stable release replacement, source push, Pages deployment, the upstream
-> issue/PR, and the competition PR remain pending.
+> The final PDF hashes to
+> `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`
+> and passed 18/18-page visual QA. Genesis issue #3183 and PR #3184 are public;
+> the PR is open and unmerged. The report and sealed competition package were
+> generated before that later upstream publication and do not claim it as part
+> of their timestamped contents. Only the final AMD competition PR remains
+> behind explicit owner approval.
 
 ## Project
 
@@ -46,10 +46,10 @@ Public Evidence Console, no sign-in required:
 
 https://eason4kim-rocket.github.io/
 
-The currently deployed site replays recorded Genesis plus AMD GPU evidence. It
-does not create new benchmark samples and does not require a live GPU. Its
-two-shard Results/Reproduce refresh has passed local checks but is not deployed;
-the public URL still serves the older baseline pending owner browser review.
+The deployed site replays recorded Genesis plus AMD GPU evidence. It does not
+create new benchmark samples and does not require a live GPU. The two-shard
+Results/Reproduce refresh is live and was verified without sign-in on the
+stable GitHub Pages URL and its public mirror.
 
 ## 90-second judge path
 
@@ -63,9 +63,8 @@ the public URL still serves the older baseline pending owner browser review.
 5. Switch to passive mode and compare its safe detour.
 6. Inspect the challenge's 844-sample full-wall ROCm telemetry and 30-world
    carrier/scout burden table.
-7. After the owner-approved site refresh is deployed, open Results and inspect
-   the separate 30/30 decision-bound rigid-dynamics card, then the earlier
-   20/20 dual-body acceptance card.
+7. Open Results and inspect the separate 30/30 decision-bound rigid-dynamics
+   card, then the earlier 20/20 dual-body acceptance card.
 8. Inspect its independently verified solver-scale complement: 20/20 in one
    60-body scene and 10/10 in a second 30-body scene--exactly two scenes, 90
    cumulative distinct robots, maximum co-resident 60, never all 90
@@ -83,7 +82,7 @@ the public URL still serves the older baseline pending owner browser review.
 | AMD Radeon GPU and ROCm adoption - 20 | Genesis 1.1.2 on `gs.amdgpu`, live RGB-D, tensor preprocessing, and the 39.8M-parameter model on PyTorch ROCm/HIP 7.2. The challenge retains 844 `rocm-smi` samples across its complete 1,685.5-second wall; the separate dual-body, V2, single-scene 60-body, and second-scene 30-body wheel-dynamics runs retain reports, source bindings, checksums, and local verifiers. Body counts and elapsed walls are acceptance facts, not throughput claims. |
 | Innovation and originality - 20 | Action-scoped spatial perception, physical-root lineage, split-conformal sets, dual Python/Go authorization, BeliefGap-driven repair, and canonical receipts. |
 | Real-world application value - 20 | Across 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. The separate two-shard wheel replay retained a weighted 20.8439% loaded-carrier path reduction; neither result is energy or throughput evidence. |
-| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. A focused two-file Genesis URDF inertial-origin fix is prepared locally at `8fbf352`: the identical required test failed on the tested 2026-08-05 upstream-main snapshot `207db28` and passed on the patch; its stable patch-id matches the earlier review commit. Complete `scene.build()` comparison preserves authored principal moments only with the patch and retains geometry fallback for an absent `<inertial>` in both trees. No public issue, fork push, PR, review, or acceptance is claimed until owner approval. |
+| Upstream open-source contribution - 10 | Project code, schemas, Purify Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. The PR is open and unmerged; no review, acceptance, or upstream-release inclusion is claimed. |
 
 ## Verified frozen result
 
@@ -342,12 +341,14 @@ control-loop latency, or mission-energy claims.
 | Challenge machine evidence | [report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/CHALLENGE_REPORT.json) · [post-hoc feasibility audit](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json) · [verification](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/challenge_102500_102529/VERIFICATION.json) · [3.19 MB raw archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz) |
 | Dual-body dynamics evidence | [20-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md) · [machine report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json) · timeout/recovery audits and `SHA256SUMS` in the same directory |
 | Decision-bound dynamics V2 | [30-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [complete evidence directory](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-derived/decision_dynamics_recovery_v2_102500_102529) · formal and package checksum indexes, provenance review, and local verifier |
-| Solver-scale two-shard evidence | Final target links: [20/20 60-body prefix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · [10/10 30-body suffix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json). Both sealed directories, their protocols, source bindings, trial checkpoints, checksum indexes, and verifier results are staged locally but not yet pushed. |
-| Technical report | Current owner-review artifact: 18 pages, SHA256 `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`, 18/18 rendered pages visually inspected and byte-identical in local staging. The [stable release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf) still serves the older pre-two-shard baseline; [source target](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md). |
+| Solver-scale two-shard evidence | Published [20/20 60-body prefix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · published [10/10 30-body suffix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json). Both sealed directories include their protocols, source bindings, trial checkpoints, checksum indexes, and verifier results. |
+| Technical report | Final [18-page stable release PDF](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf), SHA256 `34565fa65fa8b5c426e6b499360231e9f4c5d339b4304abf4b832ae79f37110a`; 18/18 rendered pages passed visual QA. [Report source](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_TECHNICAL_REPORT.md). |
 | Project source code | [dedicated V8 branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_REPRODUCTION.md) |
 | Docker path | [Dockerfile](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/Dockerfile) · [Compose](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docker-compose.yml) |
-| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results) · [Reproduce](https://eason4kim-rocket.github.io/reproduce). These URLs currently serve the older baseline; the locally tested two-shard refresh is pending owner browser review and deployment. |
+| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) · [public mirror](https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/). The refreshed routes and their two-shard boundaries were verified without sign-in. |
+| Genesis upstream contribution | [Issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) · open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) · exact fork head `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`. Open and unmerged; no acceptance is claimed. |
+| Competition-fork package | [Published personal-fork branch](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice) at `bcc7a07`; official AMD competition PR intentionally not created pending owner approval. |
 | Frozen evidence | [V8 archive](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-frozen) · [import manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/V8_FROZEN_IMPORT_MANIFEST.json) |
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |
@@ -485,8 +486,9 @@ hashes are in the
 - The 159 MB checkpoint is published as a release asset and must match SHA256
   `7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783`.
 - Later Integrity Shield R1/R2 and V9 research is not promoted into V8.
-- A focused Genesis parser fix and regression test are ready locally. No
-  public external upstream contribution is claimed until owner approval.
+- The focused Genesis parser fix is public as issue #3183 and open PR #3184.
+  It remains unmerged; no maintainer review, acceptance, or released upstream
+  behavior is claimed.
 
 ## Team
 

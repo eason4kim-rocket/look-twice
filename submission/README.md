@@ -8,6 +8,12 @@ two-shard payload was verified locally, owner review was pending, and
 `official_pr_opened=false`. Publication actions remain subject to explicit
 owner authorization; the machine manifest records this packaging-time state.
 
+**Post-snapshot publication update:** the source branch, final release PDF,
+refreshed evidence site, public mirror, Genesis issue/PR, and reviewed personal
+competition-fork branch are now public. The AMD competition PR remains
+unopened, so `official_pr_opened=false` is still the current state as well as
+the packaging-time state.
+
 Official PR title assumption:
 
 ```text
@@ -99,14 +105,15 @@ energy, or safety certification.
 | Challenge raw archive | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz> |
 | Challenge independent verification | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json> |
 | Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
+| Genesis issue | <https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183> |
+| Genesis PR | <https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184> |
+| Competition-fork package | <https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice> |
 
-These are publication targets, not proof that the two-shard refresh is live.
-At snapshot generation on 2026-08-05, the stable release, source, and Pages
-URLs either served the previously verified baseline or returned 404; the
-239-second demo was public and hash-verified. At that timestamp, the refreshed
-source/site/PDF/package had not been pushed, deployed, released, or submitted,
-and no competition or Genesis upstream issue/PR was open. Current availability
-must be checked at the target URLs.
+At snapshot generation on 2026-08-05, the source/site/PDF/package and upstream
+contribution had not yet been published. They were published afterward under
+owner authorization and verified at the URLs above without sign-in. Genesis
+PR #3184 is open and unmerged. The reviewed competition package is public only
+on the personal fork; no PR has been opened against the official AMD repository.
 
 ## Handoff map
 
@@ -133,10 +140,11 @@ must be checked at the target URLs.
     `release/v8-derived/decision_dynamics_single_scene_60_102500_102519/`,
     and
     `release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/`
-12. Prepared Genesis upstream review packet:
-    local sibling review directory; intentionally excluded from the public
-    competition package until owner approval. The local patch commit is
-    `8fbf352912f748f87ba4e8c94ef31c817017b641`; it has not been published.
+12. Published Genesis upstream contribution:
+    issue [#3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183)
+    and open, non-draft PR
+    [#3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) at
+    exact head `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`.
 
 ## Primary competition artifacts
 
@@ -205,10 +213,9 @@ and a zero-vulnerability dependency audit. Its conceptual two-shard topology
 OG hashes to
 `326e02253c31dfb46281bc991b732261cf4ce2fd6c9d43ef69837b1d394933ce`;
 the graphic is an explanatory topology, not an experiment capture, simulator
-frame, or screenshot. Local browser visual inspection of the refresh could not
-be completed because the browser-plugin bridge failed, so owner browser review
-remains an explicit deployment gate. The earlier public baseline's inspection
-does not satisfy that gate.
+frame, or screenshot. The refreshed build was deployed to GitHub Pages and a
+public mirror; its primary routes, solver-scale boundary text, report, and
+evidence hashes were verified without sign-in.
 
 The frozen verifier reported all 21 guarded files green, and the task-utility
 derivation matched the fixed locked and
@@ -295,11 +302,11 @@ The same archived decisions and preregistered active **29/30** endpoint remain
 unchanged. This complement is likewise non-locked, simulation-only, and
 `formal_result_eligible=false`.
 
-A focused Genesis URDF inertial-origin patch is prepared only in the local
-sibling checkout at commit
-`8fbf352912f748f87ba4e8c94ef31c817017b641`. It is not part of the competition
-evidence result, and no public issue, branch push, PR, review, or upstream
-acceptance is claimed.
+A focused Genesis URDF inertial-origin patch is public at commit
+`0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
+non-draft PR #3184. It is not part of the sealed competition evidence result,
+remains unmerged, and carries no claim of maintainer review, acceptance, or
+upstream-release inclusion.
 
 ## Final owner-review gate
 
@@ -309,7 +316,8 @@ acceptance is claimed.
       `V8_SUBMISSION_MANIFEST.json`.
 - [x] Regenerate and verify the official-directory `SHA256SUMS` after every
       final artifact is in place.
-- [x] Preserve and anonymously verify the existing public baseline assets.
+- [x] Publish and anonymously verify the refreshed source, final release PDF,
+      evidence site, and public mirror.
 - [ ] Review both complete two-shard evidence packages and their dedicated
       verifier/checksum records; automated verification is already green.
 - [x] Verify the 18-page technical report identity across output/site/official
@@ -321,9 +329,9 @@ acceptance is claimed.
       true 390 px mobile layouts with no horizontal overflow.
 - [x] Regenerate and verify the 152-entry official-package manifest and all 153
       top-level checksum entries; confirm 154 total files.
-- [ ] After owner approval, publish the additive source/site/PDF/package
+- [x] After owner approval, publish the additive source/site/PDF/package
       refresh and verify every stable target without sign-in.
 - [ ] Review the official-fork branch diff and the English PR body.
-- [ ] Review the prepared Genesis issue/PR packet and authorize or reject
-      upstream publication.
+- [x] Review the Genesis issue/PR packet and authorize upstream publication;
+      issue #3183 and PR #3184 are public.
 - [ ] Explicitly authorize opening the official competition PR.
