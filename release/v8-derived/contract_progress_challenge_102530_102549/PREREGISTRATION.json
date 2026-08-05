@@ -1,12 +1,12 @@
 {
   "schema_version": "look-twice.v8-contract-progress-challenge-preregistration/v1",
-  "status": "DRAFT_HASH_BINDING_REQUIRED_BEFORE_EXECUTION",
-  "created_utc": "TO_BE_SET_AT_PUBLIC_BINDING",
+  "status": "PREREGISTERED_BEFORE_ANY_CHALLENGE_EPISODE",
+  "created_utc": "2026-08-05T16:17:32Z",
   "protocol_path": "docs/V8_CONTRACT_PROGRESS_CHALLENGE_PROTOCOL.md",
   "public_binding": {
     "method": "two_commit_public_preregistration",
     "remote_name": "origin",
-    "commit_a": "TO_BE_BOUND_TO_PUBLIC_COMMIT_A",
+    "commit_a": "6c7b46dc3ac5044c7ed0c422fc30dee1d5b1ba1e",
     "commit_b": "SELF_NOT_EMBEDDED_CURRENT_CLEAN_HEAD_RECORDED_AT_PRESTART",
     "commit_b_diff_from_a_may_only_change": "release/v8-derived/contract_progress_challenge_102530_102549/PREREGISTRATION.json",
     "fresh_seed_opened_before_commit_b": false
@@ -185,40 +185,40 @@
     "baseline_runtime_source_manifest_file_sha256": "018f064f0361e59371e6694d7909da8639960f41f2ef158687c8e65e24d45c2f",
     "baseline_runtime_source_tree_fingerprint_sha256": "abc1b6810aed6dc19a127069b9b5d5f044def24f35c9a13602f7f5096742b1be",
     "candidate_tracked_src_tree_fingerprint_algorithm": "sha256 of lexicographically path-sorted lines formatted as '<file_sha256>  <relative_path>\\n' over the exact git-tracked src/** file set",
-    "candidate_tracked_src_file_count": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION",
-    "candidate_tracked_src_tree_fingerprint_sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION",
+    "candidate_tracked_src_file_count": 59,
+    "candidate_tracked_src_tree_fingerprint_sha256": "d5942eceee54914c0264b15784452d3d79225f0295975b1051ddb6457fd3d660",
     "runner_path": "scripts/run_v8_contract_progress_challenge.py",
-    "runner_sha256": "TO_BE_BOUND_AFTER_RUNNER_FINALIZATION",
+    "runner_sha256": "3e21129174d05b6a0e7594cb657cf7ab177a3910810ea5cd4383d4f4d0e1fb22",
     "verifier_path": "scripts/verify_v8_contract_progress_challenge.py",
-    "verifier_sha256": "TO_BE_BOUND_AFTER_VERIFIER_FINALIZATION",
+    "verifier_sha256": "c84e9794aeb342e96dc53cc49ffc3fe34ca918f73d3d6ab7504838bbf3e3009c",
     "candidate_source_files": [
       {
         "path": "src/v8_contract_progress_nbv.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "89b4f61bc80070458e6783bebd31c514d59721637dfd74e87c56037005d3b4b9"
       },
       {
         "path": "src/v8_spatial_runtime.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "ce3b1c08a3f04b6cdc3737066be9b2576caac0a5cbe22031a5026c62605fe990"
       },
       {
         "path": "src/v8_seg_v3_model.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "30892e644dcdffafc3bd0e928653b74d29a7724d0844ce0284b1448b9cbda649"
       },
       {
         "path": "src/v7_vision_claims.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "82b88e2a862494aac70347f767ec499d400f8a49b3229a87b09c2f508016cf0d"
       },
       {
         "path": "src/v6_episode.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "9412ecfa9d922611f2c25cb139dfcf852f782020044fd80eaeb6732c586791c4"
       },
       {
         "path": "src/v7_episode.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "9a83b0b15e1625159189b82f48f38b0f087957c2bc9f4f70a9376f2ef6b0ae3e"
       },
       {
         "path": "src/look_twice_v7.py",
-        "sha256": "TO_BE_BOUND_AFTER_CANDIDATE_FINALIZATION"
+        "sha256": "09013bcea0c200c87c6bf8c40d1d78a300cafbbdc26807ba8fb9137c6ebb8754"
       }
     ]
   },
