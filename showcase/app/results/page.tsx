@@ -577,7 +577,7 @@ function Results() {
     <section className="result-section publication-upstream">
       <div className="result-title">
         <span>{zh ? "发布与上游贡献" : "PUBLICATION & UPSTREAM"}</span>
-        <h2>{zh ? "公开证据链也延伸到了上游修复。" : "The public evidence chain now includes an upstream fix."}</h2>
+        <h2>{zh ? "公开证据链也延伸到了上游修复提案。" : "The public evidence chain now includes a proposed upstream contribution."}</h2>
         <p>{zh ? `这是技术报告封存后的发布更新。最终源码固定在 ${publicationEvidence.finalSourceTag}；GitHub 页面提供实时上游状态。此处不声称维护者评审、合并或接受。` : `This is a post-report publication update. Final source is pinned at ${publicationEvidence.finalSourceTag}; GitHub provides the live upstream state. No maintainer review, merge, or acceptance is claimed here.`}</p>
       </div>
       <div className="publication-panel">
@@ -588,7 +588,7 @@ function Results() {
           <article><span>{zh ? "赛事个人 FORK" : "COMPETITION FORK"}</span><strong title={publicationEvidence.competitionPackageCommit}>{publicationEvidence.competitionPackageCommit.slice(0, 8)}</strong><small>{zh ? "完整评审包" : "reviewed package"}</small></article>
           <article><span>{zh ? "最终报告 SHA" : "FINAL REPORT SHA"}</span><strong title={publicationEvidence.technicalReportSha256}>{publicationEvidence.technicalReportSha256.slice(0, 8)}</strong><code>…{publicationEvidence.technicalReportSha256.slice(-8)}</code></article>
         </div>
-        <p>{zh ? "Genesis 修复仅规范化已有 inertial 记录中省略的 origin；完全缺失 inertial 的几何回退保持不变。赛事包已在个人 fork 发布，AMD 官方 PR 仍由参赛者最终授权。" : "The Genesis fix only normalizes an omitted origin on an existing inertial record; geometry fallback for a fully absent inertial record remains unchanged. The reviewed competition package is public on the personal fork; the official AMD PR remains owner-gated."}</p>
+        <p>{zh ? "Genesis 提案仅规范化已有 inertial 记录中省略的 origin；完全缺失 inertial 的几何回退保持不变。赛事包已在个人 fork 发布；最终提交状态以 AMD 官方仓库为准。" : "The Genesis proposal only normalizes an omitted origin on an existing inertial record; geometry fallback for a fully absent inertial record remains unchanged. The reviewed competition package is public on the personal fork; final submission state is determined by the official AMD repository."}</p>
         <div className="publication-links">
           <a href={publicationEvidence.finalSourceTagUrl} target="_blank" rel="noreferrer">{zh ? "查看最终源码 ↗" : "INSPECT FINAL SOURCE ↗"}</a>
           <a href={publicationEvidence.genesisIssueUrl} target="_blank" rel="noreferrer">{zh ? "查看 ISSUE #3183 ↗" : "INSPECT ISSUE #3183 ↗"}</a>
