@@ -19,6 +19,66 @@ async function sha256(url) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function ascii(bytes, start = 0, end = bytes.length) {
+  return bytes.toString("ascii", start, end);
+}
+
+function uint24le(bytes, offset) {
+  return bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16);
+}
+
+function inspectAnimatedWebp(bytes) {
+  assert.equal(ascii(bytes, 0, 4), "RIFF");
+  assert.equal(ascii(bytes, 8, 12), "WEBP");
+  assert.equal(bytes.readUInt32LE(4) + 8, bytes.length);
+
+  let width;
+  let height;
+  let loopCount;
+  let frameCount = 0;
+  let durationMilliseconds = 0;
+  for (let offset = 12; offset + 8 <= bytes.length;) {
+    const type = ascii(bytes, offset, offset + 4);
+    const size = bytes.readUInt32LE(offset + 4);
+    const payload = offset + 8;
+    assert.ok(payload + size <= bytes.length, `${type} chunk exceeds the WebP container`);
+    if (type === "VP8X") {
+      assert.ok(bytes[payload] & 0x02, "VP8X must advertise animation");
+      width = uint24le(bytes, payload + 4) + 1;
+      height = uint24le(bytes, payload + 7) + 1;
+    } else if (type === "ANIM") {
+      loopCount = bytes.readUInt16LE(payload + 4);
+    } else if (type === "ANMF") {
+      frameCount += 1;
+      durationMilliseconds += uint24le(bytes, payload + 12);
+    }
+    offset = payload + size + (size % 2);
+  }
+  return { width, height, loopCount, frameCount, durationMilliseconds };
+}
+
+function inspectMp4(bytes) {
+  const text = ascii(bytes);
+  const moovOffset = text.indexOf("moov");
+  const mdatOffset = text.indexOf("mdat");
+  assert.equal(ascii(bytes, 4, 8), "ftyp");
+  assert.ok(moovOffset > 0, "MP4 must contain a moov box");
+  assert.ok(mdatOffset > 0, "MP4 must contain an mdat box");
+  assert.ok(moovOffset < mdatOffset, "MP4 must be faststart");
+
+  const moov = text.slice(moovOffset, mdatOffset);
+  assert.match(moov, /avc1/, "MP4 track must use H.264/AVC");
+  assert.match(moov, /vide/, "MP4 must contain a video track");
+  assert.doesNotMatch(moov, /soun/, "judge hook must not contain an audio track");
+
+  const mvhdOffset = text.indexOf("mvhd", moovOffset);
+  assert.ok(mvhdOffset > moovOffset && mvhdOffset < mdatOffset, "MP4 must contain mvhd");
+  assert.equal(bytes[mvhdOffset + 4], 0, "test expects a version-zero mvhd box");
+  const timescale = bytes.readUInt32BE(mvhdOffset + 16);
+  const duration = bytes.readUInt32BE(mvhdOffset + 20);
+  return { durationSeconds: duration / timescale };
+}
+
 test("server-renders the Look Twice product entry", async () => {
   const response = await render();
   assert.equal(response.status, 200);
@@ -30,6 +90,10 @@ test("server-renders the Look Twice product entry", async () => {
   assert.match(html, /RECORDED 3:59 AMD GPU WORKFLOW/);
   assert.match(html, /\/media\/Look-Twice-V8-Demo\.mp4/);
   assert.match(html, /not physical-robot footage/);
+  assert.match(html, /\/media\/look-twice-repair-to-action-10s\.mp4/);
+  assert.match(html, /(?:recorded replay|recorded simulation replay|simulation only)/i);
+  assert.match(html, /href=["']#full-demo["']/i);
+  assert.match(html, /id=["']full-demo["']/i);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/);
 });
 
@@ -83,8 +147,9 @@ test("publishes candidate-neutral, traceable replay data", async () => {
 
 test("publishes a reproducible 30-second media pack", async () => {
   const mediaRoot = new URL("../public/media/", import.meta.url);
+  const sourceManifestUrl = new URL("look-twice-replay-30s.manifest.json", mediaRoot);
   const mediaManifest = JSON.parse(
-    await readFile(new URL("look-twice-replay-30s.manifest.json", mediaRoot), "utf8"),
+    await readFile(sourceManifestUrl, "utf8"),
   );
   assert.equal(mediaManifest.candidate_id, "v8-frozen");
   assert.equal(mediaManifest.replay_id, "v8-active-repair-direct");
@@ -116,6 +181,63 @@ test("publishes a reproducible 30-second media pack", async () => {
     mediaManifest.poster.sha256,
     await sha256(new URL(mediaManifest.poster.path, mediaRoot)),
   );
+
+  const hookManifest = JSON.parse(
+    await readFile(new URL("look-twice-repair-to-action-10s.manifest.json", mediaRoot), "utf8"),
+  );
+  assert.equal(hookManifest.schema_version, "look-twice.judge-motion-hook/v1");
+  assert.equal(hookManifest.candidate_id, "v8-frozen");
+  assert.equal(hookManifest.hook_id, "repair-to-action-10s");
+  assert.equal(hookManifest.derived_from.sha256, mediaManifest.video.sha256);
+  assert.equal(hookManifest.derived_from.manifest_sha256, await sha256(sourceManifestUrl));
+  assert.equal(hookManifest.derived_from.recorded_at_utc, mediaManifest.recorded_at_utc);
+  assert.equal(
+    hookManifest.derived_from.sha256,
+    await sha256(new URL(mediaManifest.video.path, mediaRoot)),
+  );
+  assert.equal(
+    hookManifest.derived_from.source_end_seconds - hookManifest.derived_from.source_start_seconds,
+    hookManifest.video.duration_seconds,
+  );
+  assert.ok(hookManifest.video.duration_seconds >= 5);
+  assert.ok(hookManifest.video.duration_seconds <= 10);
+  assert.equal(hookManifest.video.codec, "h264");
+  assert.equal(hookManifest.video.pixel_format, "yuv420p");
+  assert.equal(hookManifest.video.width, 1280);
+  assert.equal(hookManifest.video.height, 720);
+  assert.equal(hookManifest.video.fps, 30);
+  assert.equal(hookManifest.video.audio, false);
+  assert.equal(hookManifest.video.faststart, true);
+  assert.ok(hookManifest.video.bytes < 1024 * 1024);
+  assert.equal(hookManifest.boundary.recorded_replay_excerpt, true);
+  assert.equal(hookManifest.boundary.new_experiment_or_result, false);
+  assert.equal(hookManifest.boundary.simulation_only, true);
+  assert.equal(hookManifest.boundary.real_robot_footage, false);
+  assert.equal(hookManifest.boundary.audio, false);
+
+  const hookVideoUrl = new URL(hookManifest.video.path, mediaRoot);
+  const hookVideo = await readFile(hookVideoUrl);
+  assert.equal(hookManifest.video.bytes, hookVideo.length);
+  assert.equal(hookManifest.video.sha256, await sha256(hookVideoUrl));
+  assert.equal(inspectMp4(hookVideo).durationSeconds, hookManifest.video.duration_seconds);
+
+  const previewUrl = new URL(hookManifest.readme_preview.path, mediaRoot);
+  const preview = await readFile(previewUrl);
+  const previewInspection = inspectAnimatedWebp(preview);
+  assert.equal(hookManifest.readme_preview.bytes, preview.length);
+  assert.equal(hookManifest.readme_preview.sha256, await sha256(previewUrl));
+  assert.equal(hookManifest.readme_preview.format, "animated_webp");
+  assert.equal(previewInspection.width, hookManifest.readme_preview.width);
+  assert.equal(previewInspection.height, hookManifest.readme_preview.height);
+  assert.equal(previewInspection.loopCount, 0);
+  assert.ok(previewInspection.frameCount > 1);
+  assert.equal(
+    previewInspection.durationMilliseconds / 1000,
+    hookManifest.readme_preview.duration_seconds,
+  );
+  assert.equal(hookManifest.readme_preview.loop, true);
+  assert.ok(hookManifest.readme_preview.duration_seconds >= 5);
+  assert.ok(hookManifest.readme_preview.duration_seconds <= 10);
 });
 
 test("publishes the complete browser-playable 3:59 demo", async () => {

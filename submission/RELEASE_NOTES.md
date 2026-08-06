@@ -215,6 +215,10 @@ official-CI claim.
 - `og-contract-progress.png` - simulation-only contract-progress social card,
   conceptual artwork rather than an experiment capture; SHA256
   `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
+- `look-twice-repair-to-action-10s.mp4` and `.webp` - judge-facing silent
+  motion hook derived from seconds 16.8-26.8 of the sealed 30-second replay;
+  simulation-only, no new experiment or physical-robot result; MP4 SHA256
+  `3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0`.
 - official-repository package (published personal-fork head
   `fefe16e482e2133e04dabd6c3b431168e6fe9b9f`) - 155 manifest entries, 156
   checksum entries, 157 total files; top-level `SHA256SUMS` SHA256

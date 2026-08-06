@@ -248,6 +248,9 @@ Official sources:
 - [x] Complete the final 239-second English demo MP4 render and local QA.
 - [ ] Complete owner visual and audible review of the final MP4.
 - [x] Recorded 30-second evidence reel.
+- [x] Derive a 10-second silent judge hook from the sealed replay, bind it to
+      the source SHA in a machine-readable manifest, and label it
+      simulation-only / not a new experiment / not physical-robot footage.
 - [x] English-default Evidence Console build.
 - [x] Owner-review artifact manifest and handoff index.
 - [x] Refresh the self-contained official-repository staging directory with

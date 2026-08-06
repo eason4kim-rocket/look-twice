@@ -1,18 +1,18 @@
 # Look Twice V8 Compact Evidence
 
-This directory is the compact, judge-facing evidence surface. The dedicated
-[`v8-competition-release`](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release)
+This directory is the compact, judge-facing evidence surface. The published
+[`v8-contract-progress-nbv`](https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv)
 source branch remains authoritative for source code, validators, schemas,
 replay media, complete reproduction instructions, and the immutable raw
 archive.
 
-> **Current owner-review state:** the verified compound contract-progress
+> **Evidence status:** the verified compound contract-progress
 > result is integrated as a compact summary and cryptographic source index.
 > The final 19-page technical-report PDF passed 19/19 rendered-page QA, and
 > output/site/official copies are byte-identical at SHA256
 > `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
-> The package has 155 manifest entries, 156 checksum entries, and 157 total
-> files. No competition PR has been opened.
+> The package has 158 manifest entries, 159 checksum entries, and 160 total
+> files.
 
 ## Files
 
@@ -308,8 +308,7 @@ can be compared with the immutable source report in the dedicated repository.
 ## Stable target anchors
 
 - Evidence Console: <https://eason4kim-rocket.github.io/>
-- Technical report stable target (the local 19-page replacement remains behind
-  owner publication approval):
+- Technical report stable target:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf>
 - Final 3:59 demo:
   <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4>
@@ -327,16 +326,16 @@ can be compared with the immutable source report in the dedicated repository.
   [REPORT.json](decision_dynamics_single_scene_60_102500_102519/REPORT.json)
 - Packaged 30-body suffix report:
   [REPORT.json](decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json)
-- Owner-review 60-body protocol target:
-  <https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md>
-- Owner-review 30-body suffix protocol target:
-  <https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md>
+- 60-body protocol:
+  <https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md>
+- 30-body suffix protocol:
+  <https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md>
 
 The 239-second replacement MP4 and sidecar matched the published SHA256
 identities on 2026-08-03. The contract-progress-integrated 19-page report and
 its two copies are byte-identical at SHA256
 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
-the final 156-entry top-level checksum index verifies the 157-file package.
+the final 159-entry top-level checksum index verifies the 160-file package.
 
 ## Scope
 

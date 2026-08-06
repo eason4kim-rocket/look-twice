@@ -20,6 +20,16 @@ with a [hash-verified Release mirror](https://github.com/eason4kim-rocket/look-t
 The player, results pages, data adapters, tests, and complete website source are
 all in [`showcase/`](showcase/).
 
+### Ten-second proof: repair → admit → move
+
+<a href="https://eason4kim-rocket.github.io/#full-demo">
+  <img src="showcase/public/media/look-twice-repair-to-action-10s.webp" width="760" alt="Ten-second silent replay: independent evidence repairs the contract, Python and Purify admit, and the carrier moves directly">
+</a>
+
+This is a silent excerpt of the recorded simulation replay—not a new
+experiment or physical-robot footage. **[Watch the complete 3:59 demo](https://eason4kim-rocket.github.io/#full-demo)**
+or [play the 10-second MP4 directly](https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-10s.mp4).
+
 ## The warehouse problem
 
 A loaded warehouse carrier is approaching a corridor. Its first RGB-D view is
@@ -151,6 +161,7 @@ Run the core evidence checks on CPU:
 
 ```bash
 python3 scripts/build_competition_replays.py
+python3 scripts/build_competition_hook.py
 python3 -m unittest tests.test_competition_replay -v
 
 cd purify_robotics

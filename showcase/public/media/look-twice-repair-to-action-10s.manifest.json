@@ -1,0 +1,47 @@
+{
+  "schema_version": "look-twice.judge-motion-hook/v1",
+  "candidate_id": "v8-frozen",
+  "hook_id": "repair-to-action-10s",
+  "description": "A silent excerpt of the recorded replay: an independent root repairs the Action Contract, Python and Purify Go admit, and the carrier moves.",
+  "builder": "scripts/build_competition_hook.py",
+  "derived_from": {
+    "path": "showcase/public/media/look-twice-replay-30s.mp4",
+    "sha256": "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2",
+    "manifest_path": "showcase/public/media/look-twice-replay-30s.manifest.json",
+    "manifest_sha256": "d8314119587108cbad0dff09f1414b88f9682bf2b1e2f1bfea87af82484c073a",
+    "recorded_at_utc": "2026-07-23T10:32:04Z",
+    "source_start_seconds": 16.8,
+    "source_end_seconds": 26.8
+  },
+  "video": {
+    "path": "look-twice-repair-to-action-10s.mp4",
+    "sha256": "3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0",
+    "bytes": 343596,
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "width": 1280,
+    "height": 720,
+    "fps": 30.0,
+    "duration_seconds": 10.0,
+    "audio": false,
+    "faststart": true
+  },
+  "readme_preview": {
+    "path": "look-twice-repair-to-action-10s.webp",
+    "sha256": "dc83c1518df532a63b257e48524e40238c9a0d8e6fec2dd0252211ba23093b9d",
+    "bytes": 61930,
+    "format": "animated_webp",
+    "width": 960,
+    "height": 540,
+    "fps": 10,
+    "duration_seconds": 10.0,
+    "loop": true
+  },
+  "boundary": {
+    "recorded_replay_excerpt": true,
+    "new_experiment_or_result": false,
+    "simulation_only": true,
+    "real_robot_footage": false,
+    "audio": false
+  }
+}

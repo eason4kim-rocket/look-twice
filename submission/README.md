@@ -209,6 +209,7 @@ opened against the official AMD competition repository.
 | Rendered technical report | `output/pdf/Look-Twice-V8-Technical-Report.pdf` | 19 pages; 1,104,864 bytes; SHA256 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`; 19/19 visual QA; output/site/official copies byte-identical |
 | Contract-progress social card | `showcase/public/og-contract-progress.png` | `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`; disclosed simulation-only conceptual artwork, not an experiment capture |
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
+| 10-second judge motion hook | `showcase/public/media/look-twice-repair-to-action-10s.mp4` | Recorded simulation excerpt; repair → dual admission → motion; `3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
 | Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | Published personal-fork package at `fefe16e482e2133e04dabd6c3b431168e6fe9b9f`: 155 manifest entries, 156/156 checksum entries, and 157 total files; top-level checksum-index SHA256 `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`; official PR not opened |

@@ -24,6 +24,21 @@ PUBLIC_ROUTES = (
     "/results",
     "/reproduce",
     "/media/look-twice-replay-30s.mp4",
+    "/media/look-twice-repair-to-action-10s.mp4",
+    "/media/look-twice-repair-to-action-10s.webp",
+    "/media/look-twice-repair-to-action-10s.manifest.json",
+)
+PUBLIC_ROUTE_MIME_TYPES = {
+    "/media/look-twice-replay-30s.mp4": "video/mp4",
+    "/media/look-twice-repair-to-action-10s.mp4": "video/mp4",
+    "/media/look-twice-repair-to-action-10s.webp": "image/webp",
+    "/media/look-twice-repair-to-action-10s.manifest.json": "application/json",
+}
+JUDGE_MOTION_HOOK_MANIFEST_NAME = (
+    "look-twice-repair-to-action-10s.manifest.json"
+)
+JUDGE_MOTION_HOOK_MANIFEST_SHA256 = (
+    "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
 )
 FORBIDDEN = (
     b"/workspace/",
@@ -94,6 +109,72 @@ def main() -> int:
     if sum(media_manifest["chapter_durations_seconds"]) != 30:
         errors.append("video chapters do not total 30 seconds")
 
+    hook_manifest_path = media_root / JUDGE_MOTION_HOOK_MANIFEST_NAME
+    hook_manifest = json.loads(hook_manifest_path.read_text(encoding="utf-8"))
+    if sha256(hook_manifest_path) != JUDGE_MOTION_HOOK_MANIFEST_SHA256:
+        errors.append("judge-motion hook manifest SHA mismatch")
+    if (
+        hook_manifest.get("schema_version")
+        != "look-twice.judge-motion-hook/v1"
+        or hook_manifest.get("candidate_id") != manifest["default_candidate_id"]
+        or hook_manifest.get("hook_id") != "repair-to-action-10s"
+    ):
+        errors.append("judge-motion hook manifest identity mismatch")
+
+    hook_source = hook_manifest["derived_from"]
+    for label, relative_path, expected_sha256 in (
+        (
+            "source video",
+            hook_source["path"],
+            hook_source["sha256"],
+        ),
+        (
+            "source manifest",
+            hook_source["manifest_path"],
+            hook_source["manifest_sha256"],
+        ),
+    ):
+        target = ROOT / relative_path
+        if not target.is_file() or sha256(target) != expected_sha256:
+            errors.append(f"judge-motion hook {label} SHA mismatch")
+
+    for key in ("video", "readme_preview"):
+        item = hook_manifest[key]
+        target = media_root / item["path"]
+        if (
+            not target.is_file()
+            or sha256(target) != item["sha256"]
+            or target.stat().st_size != item["bytes"]
+        ):
+            errors.append(f"judge-motion hook {key} SHA/size mismatch")
+
+    hook_boundary = hook_manifest["boundary"]
+    hook_video = hook_manifest["video"]
+    hook_preview = hook_manifest["readme_preview"]
+    hook_spec_valid = (
+        hook_source["source_start_seconds"] == 16.8
+        and hook_source["source_end_seconds"] == 26.8
+        and hook_video["duration_seconds"] == 10.0
+        and hook_video["width"] == 1280
+        and hook_video["height"] == 720
+        and hook_video["fps"] == 30.0
+        and hook_video["audio"] is False
+        and hook_preview["duration_seconds"] == 10.0
+        and hook_preview["width"] == 960
+        and hook_preview["height"] == 540
+        and hook_preview["loop"] is True
+        and hook_boundary
+        == {
+            "recorded_replay_excerpt": True,
+            "new_experiment_or_result": False,
+            "simulation_only": True,
+            "real_robot_footage": False,
+            "audio": False,
+        }
+    )
+    if not hook_spec_valid:
+        errors.append("judge-motion hook media specification or boundary mismatch")
+
     for path in (data_root, media_root):
         for candidate in path.rglob("*"):
             if not candidate.is_file() or candidate.suffix.lower() in {
@@ -123,6 +204,14 @@ def main() -> int:
     anonymous_results: list[dict[str, object]] = []
     if args.public_url:
         base = args.public_url.rstrip("/")
+        public_route_sha256s = {
+            "/media/look-twice-replay-30s.mp4": media_manifest["video"]["sha256"],
+            "/media/look-twice-repair-to-action-10s.mp4": hook_video["sha256"],
+            "/media/look-twice-repair-to-action-10s.webp": hook_preview["sha256"],
+            "/media/look-twice-repair-to-action-10s.manifest.json": sha256(
+                hook_manifest_path
+            ),
+        }
         for route in PUBLIC_ROUTES:
             url = base + route
             try:
@@ -131,14 +220,36 @@ def main() -> int:
                 )
                 with urllib.request.urlopen(request, timeout=20) as response:
                     body = response.read()
+                    content_type = response.headers.get("content-type")
                     result = {
                         "route": route,
                         "status": response.status,
-                        "content_type": response.headers.get("content-type"),
+                        "content_type": content_type,
                     }
                     if response.status != 200:
                         errors.append(f"anonymous route failed: {route}")
-                    if route != "/media/look-twice-replay-30s.mp4":
+                    if route in PUBLIC_ROUTE_MIME_TYPES:
+                        normalized_content_type = (content_type or "").split(";", 1)[
+                            0
+                        ].strip().lower()
+                        expected_content_type = PUBLIC_ROUTE_MIME_TYPES[route]
+                        observed_sha256 = hashlib.sha256(body).hexdigest()
+                        expected_sha256 = public_route_sha256s[route]
+                        result.update(
+                            {
+                                "sha256": observed_sha256,
+                                "expected_sha256": expected_sha256,
+                                "expected_content_type": expected_content_type,
+                            }
+                        )
+                        if normalized_content_type != expected_content_type:
+                            errors.append(
+                                f"anonymous MIME mismatch {route}: expected "
+                                f"{expected_content_type}, observed {content_type}"
+                            )
+                        if observed_sha256 != expected_sha256:
+                            errors.append(f"anonymous SHA mismatch: {route}")
+                    else:
                         lowered = body.lower()
                         if b"chatgpt login" in lowered or b"log in to chatgpt" in lowered:
                             errors.append(f"login gate detected: {route}")
@@ -154,6 +265,10 @@ def main() -> int:
         "active_and_passive_replays": len(bundles) == 2,
         "frozen_v8_guard": frozen.returncode == 0,
         "media_sha_recomputed": not any("SHA mismatch" in error for error in errors),
+        "judge_motion_hook_sha_recomputed": not any(
+            "judge-motion hook" in error and "SHA" in error for error in errors
+        ),
+        "judge_motion_hook_spec": hook_spec_valid,
         "video_spec": (
             media_manifest["video"]["width"] == 1920
             and media_manifest["video"]["height"] == 1080
@@ -172,6 +287,8 @@ def main() -> int:
             "active_and_passive_replays",
             "frozen_v8_guard",
             "media_sha_recomputed",
+            "judge_motion_hook_sha_recomputed",
+            "judge_motion_hook_spec",
             "video_spec",
             "docker_fresh_build",
             "browser_state_and_responsive",
@@ -195,6 +312,9 @@ def main() -> int:
         "active_bundle_sha256": sha256(active_path),
         "video_sha256": media_manifest["video"]["sha256"],
         "poster_sha256": media_manifest["poster"]["sha256"],
+        "judge_motion_hook_manifest_sha256": sha256(hook_manifest_path),
+        "judge_motion_hook_video_sha256": hook_video["sha256"],
+        "judge_motion_hook_preview_sha256": hook_preview["sha256"],
         "public_url": args.public_url,
         "checked_at_utc": utc_now(),
         "checks": checks,
@@ -219,6 +339,15 @@ def main() -> int:
             "active_bundle_sha256": payload["active_bundle_sha256"],
             "video_sha256": payload["video_sha256"],
             "poster_sha256": payload["poster_sha256"],
+            "judge_motion_hook_manifest_sha256": payload[
+                "judge_motion_hook_manifest_sha256"
+            ],
+            "judge_motion_hook_video_sha256": payload[
+                "judge_motion_hook_video_sha256"
+            ],
+            "judge_motion_hook_preview_sha256": payload[
+                "judge_motion_hook_preview_sha256"
+            ],
             "deployed_and_checked_at_utc": payload["checked_at_utc"],
             "anonymous_results": anonymous_results,
         }

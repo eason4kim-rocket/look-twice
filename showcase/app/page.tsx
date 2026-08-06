@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { SiteShell, useLanguage } from "./components/SiteShell";
 import { challengeEvidence } from "./lib/challengeEvidence";
 import { contractProgressEvidence } from "./lib/contractProgressEvidence";
@@ -71,13 +72,21 @@ function HomeContent() {
 
         <div className="hero-system" aria-label={zh ? "Look Twice 系统状态" : "Look Twice system status"}>
           <div className="system-head"><span>{zh ? "仓储 AMR / C-04 区" : "WAREHOUSE AMR / ZONE C-04"}</span><b>{zh ? "证据保障在线" : "ASSURANCE ONLINE"}</b></div>
-          <div className="warehouse-map">
-            <div className="rack rack-a">{zh ? "货架 A" : "RACK A"}</div><div className="rack rack-b">{zh ? "货架 B" : "RACK B"}</div>
-            <div className="corridor corridor-a"><span>{zh ? "走廊 A" : "CORRIDOR A"}</span></div>
-            <div className="corridor corridor-b"><span>{zh ? "走廊 B" : "CORRIDOR B"}</span><i /></div>
-            <div className="robot-marker"><b>LT</b><span>AMR-07</span></div>
-            <div className="scan-cone" />
-          </div>
+          <a
+            className="hero-proof"
+            href="#full-demo"
+            aria-label={zh ? "观看 10 秒补证到行动回放，然后进入完整演示" : "Watch the 10-second repair-to-action replay, then open the complete demo"}
+          >
+            <video autoPlay muted loop playsInline preload="metadata" poster="/media/look-twice-replay-30s.poster.webp" aria-hidden="true">
+              <source src="/media/look-twice-repair-to-action-10s.mp4" type="video/mp4" />
+            </video>
+            <Image className="hero-proof-poster" src="/media/look-twice-replay-30s.poster.webp" width={1920} height={1080} unoptimized alt="" aria-hidden="true" />
+            <span className="hero-proof-label">
+              <small>{zh ? "10 秒录制回放 · 仅限仿真" : "10-SECOND RECORDED REPLAY · SIMULATION ONLY"}</small>
+              <b>{zh ? "补证 → 准入 → 行动" : "Repair → admit → move"}</b>
+              <i>{zh ? "观看 3:59 完整演示 ↘" : "Watch the complete 3:59 demo ↘"}</i>
+            </span>
+          </a>
           <div className="contract-mini">
             <div><span>{zh ? "动作" : "ACTION"}</span><b>{zh ? "穿越区域" : "CROSS REGION"}</b></div>
             <div><span>{zh ? "初始门控" : "INITIAL GATE"}</span><b className="denied">{zh ? "拒绝" : "DENIED"}</b></div>

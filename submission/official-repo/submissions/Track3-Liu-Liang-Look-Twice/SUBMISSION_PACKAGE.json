@@ -300,8 +300,8 @@
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 12797,
-      "sha256": "7be294ac027e25952a32c9ce79a6318e1e9776af8f2e1883fcafcccdd8ef8aae"
+      "size_bytes": 13476,
+      "sha256": "0196ce62db2950d786282e3c9ad0a02a0b3aaa188d96c7afd618df08bfe30fee"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
@@ -318,8 +318,8 @@
     {
       "path": "evidence/README.md",
       "role": "compact evidence index and boundary ledger",
-      "size_bytes": 24412,
-      "sha256": "467035408d024e0d40e97319b12386a2433fff4368c187a1619b7b8549179c94"
+      "size_bytes": 24258,
+      "sha256": "d688373d88457f8fb0c4230a20d127d193a6557dae3877e423fbd8d9f3670518"
     },
     {
       "path": "evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
@@ -1190,6 +1190,24 @@
       "role": "dual-body report and attempt-chain checksum index",
       "size_bytes": 269,
       "sha256": "6470aaab8fa8ffc1132f7aea7fd0869a3e0a084bcae92d615d920730079204f2"
+    },
+    {
+      "path": "look-twice-repair-to-action-10s.manifest.json",
+      "role": "judge-motion hook provenance and simulation-boundary manifest",
+      "size_bytes": 1632,
+      "sha256": "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
+    },
+    {
+      "path": "look-twice-repair-to-action-10s.mp4",
+      "role": "silent 10-second judge-motion hook",
+      "size_bytes": 343596,
+      "sha256": "3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0"
+    },
+    {
+      "path": "look-twice-repair-to-action-10s.webp",
+      "role": "animated README preview of the judge-motion hook",
+      "size_bytes": 61930,
+      "sha256": "dc83c1518df532a63b257e48524e40238c9a0d8e6fec2dd0252211ba23093b9d"
     }
   ],
   "external_release_assets": [
@@ -1219,9 +1237,9 @@
     "raw_archive_bound_file_count": 194,
     "raw_archive_sha256": "171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2",
     "raw_archive_internal_checksum_index_sha256": "90d70a11d4a6fd91727c3849536e7a41124196c1c0b4e0f51779419e99105b6d",
-    "manifest_file_entries": 155,
-    "package_checksum_entries": 156,
-    "total_regular_package_files_including_sha256sums": 157,
+    "manifest_file_entries": 158,
+    "package_checksum_entries": 159,
+    "total_regular_package_files_including_sha256sums": 160,
     "manifest_coverage_complete": true,
     "decision_dynamics_v2_regular_files": 80,
     "decision_dynamics_v2_formal_checksum_entries": 32,

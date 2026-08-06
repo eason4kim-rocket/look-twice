@@ -18,6 +18,7 @@ the missing view, chooses a safe detour, or fails closed.
 ## Start here
 
 - [Open the live Evidence Console](https://eason4kim-rocket.github.io/console)
+- [Watch the 10-second repair → admit → move replay](https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-10s.mp4)
 - [Watch the 3:59 demo in the page](https://eason4kim-rocket.github.io/#full-demo)
 - [Open the demo video stored in the repository](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/showcase/public/media/Look-Twice-V8-Demo.mp4)
 - [Read the 19-page technical report](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf)
@@ -26,6 +27,8 @@ the missing view, chooses a safe detour, or fails closed.
 The website is a replay of recorded AMD GPU evidence, so it works without a
 GPU or sign-in. The complete site source is included under
 [`showcase/`](https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv/showcase).
+The 10-second link is a silent excerpt of that recorded simulation replay, not
+a new experiment or physical-robot result.
 
 ## The warehouse problem
 

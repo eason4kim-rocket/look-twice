@@ -100,6 +100,37 @@ SOCIAL_PREVIEW_SHA256 = (
 SOCIAL_PREVIEW_WIDTH = 1726
 SOCIAL_PREVIEW_HEIGHT = 911
 
+JUDGE_MOTION_HOOK_MEDIA_DIR = REPO_ROOT / "showcase" / "public" / "media"
+JUDGE_MOTION_HOOK_MANIFEST_NAME = (
+    "look-twice-repair-to-action-10s.manifest.json"
+)
+JUDGE_MOTION_HOOK_VIDEO_NAME = "look-twice-repair-to-action-10s.mp4"
+JUDGE_MOTION_HOOK_PREVIEW_NAME = "look-twice-repair-to-action-10s.webp"
+JUDGE_MOTION_HOOK_MANIFEST_SHA256 = (
+    "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
+)
+JUDGE_MOTION_HOOK_VIDEO_SHA256 = (
+    "3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0"
+)
+JUDGE_MOTION_HOOK_PREVIEW_SHA256 = (
+    "dc83c1518df532a63b257e48524e40238c9a0d8e6fec2dd0252211ba23093b9d"
+)
+JUDGE_MOTION_HOOK_SOURCE_VIDEO_SHA256 = (
+    "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2"
+)
+JUDGE_MOTION_HOOK_SOURCE_MANIFEST_SHA256 = (
+    "d8314119587108cbad0dff09f1414b88f9682bf2b1e2f1bfea87af82484c073a"
+)
+JUDGE_MOTION_HOOK_PACKAGE_ROLES = {
+    JUDGE_MOTION_HOOK_MANIFEST_NAME: (
+        "judge-motion hook provenance and simulation-boundary manifest"
+    ),
+    JUDGE_MOTION_HOOK_VIDEO_NAME: "silent 10-second judge-motion hook",
+    JUDGE_MOTION_HOOK_PREVIEW_NAME: (
+        "animated README preview of the judge-motion hook"
+    ),
+}
+
 
 def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -315,6 +346,8 @@ def _inventory(
             role = "compact judge entrypoint"
         if relative == SOCIAL_PREVIEW_STAGED_NAME:
             role = "judge-facing contract-progress social preview card"
+        if relative in JUDGE_MOTION_HOOK_PACKAGE_ROLES:
+            role = JUDGE_MOTION_HOOK_PACKAGE_ROLES[relative]
         if role is None and relative.startswith(V2_PREFIX):
             role = _v2_role(relative)
         if relative.startswith(SINGLE_SCENE_60_PREFIX):
@@ -701,12 +734,145 @@ def _social_preview_identity(package_dir: Path) -> dict[str, Any]:
     }
 
 
+def _judge_motion_hook_identity(package_dir: Path) -> dict[str, Any]:
+    """Verify the approved hook, its source binding, and staged byte identity."""
+
+    source_paths = {
+        JUDGE_MOTION_HOOK_MANIFEST_NAME: (
+            JUDGE_MOTION_HOOK_MANIFEST_SHA256,
+            JUDGE_MOTION_HOOK_MEDIA_DIR / JUDGE_MOTION_HOOK_MANIFEST_NAME,
+        ),
+        JUDGE_MOTION_HOOK_VIDEO_NAME: (
+            JUDGE_MOTION_HOOK_VIDEO_SHA256,
+            JUDGE_MOTION_HOOK_MEDIA_DIR / JUDGE_MOTION_HOOK_VIDEO_NAME,
+        ),
+        JUDGE_MOTION_HOOK_PREVIEW_NAME: (
+            JUDGE_MOTION_HOOK_PREVIEW_SHA256,
+            JUDGE_MOTION_HOOK_MEDIA_DIR / JUDGE_MOTION_HOOK_PREVIEW_NAME,
+        ),
+    }
+    for name, (expected_sha256, source_path) in source_paths.items():
+        if not source_path.is_file():
+            raise ValueError(f"The judge-motion hook source is missing: {source_path}")
+        source_sha256 = _sha256_file(source_path)
+        if source_sha256 != expected_sha256:
+            raise ValueError(
+                f"The judge-motion hook source identity changed for {name}: "
+                f"expected {expected_sha256}, observed {source_sha256}"
+            )
+
+        staged_path = package_dir / name
+        if not staged_path.is_file():
+            raise ValueError(f"The staged judge-motion hook file is missing: {staged_path}")
+        if staged_path.read_bytes() != source_path.read_bytes():
+            raise ValueError(
+                "The staged judge-motion hook is not byte-identical to the site "
+                f"asset: {name}"
+            )
+
+    manifest_path = source_paths[JUDGE_MOTION_HOOK_MANIFEST_NAME][1]
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    expected_manifest_values = {
+        "schema_version": "look-twice.judge-motion-hook/v1",
+        "candidate_id": "v8-frozen",
+        "hook_id": "repair-to-action-10s",
+    }
+    for key, expected in expected_manifest_values.items():
+        if manifest.get(key) != expected:
+            raise ValueError(
+                f"Unexpected judge-motion hook manifest {key}: "
+                f"expected {expected!r}, observed {manifest.get(key)!r}"
+            )
+
+    derived_from = manifest["derived_from"]
+    source_video_path = REPO_ROOT / derived_from["path"]
+    source_manifest_path = REPO_ROOT / derived_from["manifest_path"]
+    for label, path, declared_sha256, expected_sha256 in (
+        (
+            "source video",
+            source_video_path,
+            derived_from["sha256"],
+            JUDGE_MOTION_HOOK_SOURCE_VIDEO_SHA256,
+        ),
+        (
+            "source manifest",
+            source_manifest_path,
+            derived_from["manifest_sha256"],
+            JUDGE_MOTION_HOOK_SOURCE_MANIFEST_SHA256,
+        ),
+    ):
+        if declared_sha256 != expected_sha256:
+            raise ValueError(
+                f"The judge-motion hook declares an unexpected {label} SHA256: "
+                f"expected {expected_sha256}, observed {declared_sha256}"
+            )
+        if not path.is_file() or _sha256_file(path) != expected_sha256:
+            raise ValueError(f"The judge-motion hook {label} binding does not verify: {path}")
+
+    video = manifest["video"]
+    preview = manifest["readme_preview"]
+    if (
+        video["path"] != JUDGE_MOTION_HOOK_VIDEO_NAME
+        or video["sha256"] != JUDGE_MOTION_HOOK_VIDEO_SHA256
+        or video["duration_seconds"] != 10.0
+        or video["audio"] is not False
+    ):
+        raise ValueError("The judge-motion hook video declaration changed")
+    if (
+        preview["path"] != JUDGE_MOTION_HOOK_PREVIEW_NAME
+        or preview["sha256"] != JUDGE_MOTION_HOOK_PREVIEW_SHA256
+        or preview["duration_seconds"] != 10.0
+        or preview["loop"] is not True
+    ):
+        raise ValueError("The judge-motion hook README preview declaration changed")
+    if (
+        derived_from["source_start_seconds"] != 16.8
+        or derived_from["source_end_seconds"] != 26.8
+        or manifest["boundary"]
+        != {
+            "recorded_replay_excerpt": True,
+            "new_experiment_or_result": False,
+            "simulation_only": True,
+            "real_robot_footage": False,
+            "audio": False,
+        }
+    ):
+        raise ValueError("The judge-motion hook provenance boundary changed")
+
+    package_prefix = (
+        "submission/official-repo/submissions/"
+        "Track3-Liu-Liang-Look-Twice/"
+    )
+    return {
+        "manifest_path": (
+            "showcase/public/media/" + JUDGE_MOTION_HOOK_MANIFEST_NAME
+        ),
+        "staged_manifest_path": package_prefix + JUDGE_MOTION_HOOK_MANIFEST_NAME,
+        "manifest_sha256": JUDGE_MOTION_HOOK_MANIFEST_SHA256,
+        "hook_id": manifest["hook_id"],
+        "description": manifest["description"],
+        "derived_from": dict(derived_from),
+        "video": {
+            **dict(video),
+            "path": "showcase/public/media/" + JUDGE_MOTION_HOOK_VIDEO_NAME,
+            "staged_path": package_prefix + JUDGE_MOTION_HOOK_VIDEO_NAME,
+        },
+        "readme_preview": {
+            **dict(preview),
+            "path": "showcase/public/media/" + JUDGE_MOTION_HOOK_PREVIEW_NAME,
+            "staged_path": package_prefix + JUDGE_MOTION_HOOK_PREVIEW_NAME,
+        },
+        "boundary": dict(manifest["boundary"]),
+    }
+
+
 def _build_handoff_manifest(
     path: Path,
     package_inventory_count: int,
     package_checksum_bytes: bytes,
     technical_report_identity: Mapping[str, Any],
     social_preview_identity: Mapping[str, Any],
+    judge_motion_hook_identity: Mapping[str, Any],
     generated_on: str | None,
     publication_receipts: Mapping[str, Any] | None,
 ) -> tuple[dict[str, Any], bytes]:
@@ -776,6 +942,31 @@ def _build_handoff_manifest(
         "additive_decision_bound_dynamics_recovery_v2",
         TWO_SHARD_BOUNDARY_KEY,
         _two_shard_dynamics_artifact(),
+    )
+    artifacts = {
+        key: value for key, value in artifacts.items() if key != "judge_motion_hook"
+    }
+    artifacts = _insert_after(
+        artifacts,
+        "short_evidence_reel",
+        "judge_motion_hook",
+        {
+            **dict(judge_motion_hook_identity),
+            "public_video_url": (
+                "https://eason4kim-rocket.github.io/media/"
+                f"{JUDGE_MOTION_HOOK_VIDEO_NAME}"
+            ),
+            "public_preview_url": (
+                "https://eason4kim-rocket.github.io/media/"
+                f"{JUDGE_MOTION_HOOK_PREVIEW_NAME}"
+            ),
+            "publication_verified": publication_verified,
+            "publication_state": (
+                "published and anonymously verified by SHA256 and MIME type"
+                if publication_verified
+                else "prepared locally; publication and anonymous verification in progress"
+            ),
+        },
     )
 
     artifacts["additive_dual_body_dynamics"].update(
@@ -1139,12 +1330,14 @@ def main() -> int:
         expected_page_count=args.technical_report_page_count,
     )
     social_preview_identity = _social_preview_identity(package_dir)
+    judge_motion_hook_identity = _judge_motion_hook_identity(package_dir)
     handoff_data, handoff_bytes = _build_handoff_manifest(
         handoff_manifest,
         len(package_data["files"]),
         package_checksum_bytes,
         technical_report_identity,
         social_preview_identity,
+        judge_motion_hook_identity,
         args.generated_on,
         publication_receipts,
     )
@@ -1196,6 +1389,15 @@ def main() -> int:
                 "decision_dynamics_single_scene_60_report_sha256": SINGLE_SCENE_60_REPORT_SHA256,
                 "decision_dynamics_single_scene_30_suffix_report_sha256": SINGLE_SCENE_30_SUFFIX_REPORT_SHA256,
                 "social_preview_sha256": social_preview_identity["sha256"],
+                "judge_motion_hook_manifest_sha256": judge_motion_hook_identity[
+                    "manifest_sha256"
+                ],
+                "judge_motion_hook_video_sha256": judge_motion_hook_identity["video"][
+                    "sha256"
+                ],
+                "judge_motion_hook_preview_sha256": judge_motion_hook_identity[
+                    "readme_preview"
+                ]["sha256"],
                 "handoff_manifest": str(handoff_manifest),
             },
             indent=2,
