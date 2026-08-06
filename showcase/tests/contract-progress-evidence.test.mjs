@@ -138,21 +138,21 @@ test("site positions contract progress as additive efficiency evidence", async (
   ]);
   assert.ok(
     home.indexOf("PREREGISTERED PRIMARY · 30 PAIRED WORLDS") <
-      home.indexOf("ADDITIVE EFFICIENCY TIER · 20 PAIRED WORLDS / 40 CELLS"),
+      home.indexOf("ACTIVE-VIEW SELECTOR SUPPLEMENT · 20 PAIRED WORLDS"),
   );
   assert.ok(
-    results.indexOf("PRIMARY SCORING EVIDENCE · 30 PAIRED WORLDS") <
+    results.indexOf("PRIMARY EVIDENCE · 30 PAIRED WORLDS") <
       results.indexOf("contract-progress-efficiency"),
   );
-  for (const value of ["−40.2563", "−15.0306", "−27.5362"]) {
+  for (const value of ["−40.3", "−15.0", "−27.5"]) {
     assert.match(home, new RegExp(value));
   }
   assert.match(results, /This is not a second direct-rate win/);
   assert.match(results, /20 PAIRED WORLDS · 40 CELLS/);
-  assert.match(results, /formal_result_eligible=false/);
-  assert.match(results, /Same-generator, non-locked, not OOD, not a physical robot, and kinematic simulation/);
+  assert.match(results, /SCOPE OF THIS SUPPLEMENT/);
+  assert.match(results, /same-generator, non-locked kinematic simulation—not OOD or physical-robot evidence/);
   assert.match(results, /This is not a claim of new weights or learned NBV/);
-  assert.match(results, /not an official competition formal result/);
+  assert.match(results, /does not change or replace the frozen V8 primary result/);
   assert.match(helper, /v8-contract-progress-nbv/);
   assert.match(helper, /427f2f729ce653df91a20db56c9fdbd16911a014/);
   for (const [, published] of copies) assert.match(helper, new RegExp(published));

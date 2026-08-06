@@ -96,8 +96,8 @@ test("site keeps frozen shared-chassis and additive dual-body claims separate", 
     readFile(new URL("../app/results/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/lib/dynamicsEvidence.ts", import.meta.url), "utf8"),
   ]);
-  assert.match(home, /FROZEN POLICY: ONE SHARED GENESIS CHASSIS/);
-  assert.match(home, /SEPARATE DYNAMICS: 30\/30 · 90 BODIES \/ 30 SCENES/);
+  assert.match(home, /PREREGISTERED PRIMARY · 30 PAIRED WORLDS/);
+  assert.match(home, /WAREHOUSE AMR SIMULATION/);
   assert.match(results, /SEPARATE ADDITIVE · DUAL-BODY RIGID DYNAMICS/);
   assert.match(results, /not a frozen-policy rerun/);
   assert.match(results, /not a physical-robot result/);

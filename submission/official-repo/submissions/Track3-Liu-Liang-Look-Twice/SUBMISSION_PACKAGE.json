@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-official-submission-package/v1",
   "package_id": "Track3-Liu-Liang-Look-Twice",
-  "generated_at_utc": "2026-08-06T02:32:52Z",
+  "generated_at_utc": "2026-08-06T03:42:05Z",
   "track": "Track 3 - Physical AI",
   "entry": {
     "project_name": "Look Twice V8",
@@ -300,8 +300,8 @@
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 25507,
-      "sha256": "845e4622b3024bca39ceede05991d1c00d4207759d3d6fea91482c0bc864481e"
+      "size_bytes": 12797,
+      "sha256": "7be294ac027e25952a32c9ce79a6318e1e9776af8f2e1883fcafcccdd8ef8aae"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",

@@ -7,9 +7,9 @@ export const dynamicsEvidence = {
   checksumsUrl:
     "/data/source/V8_ADDITIVE_DUAL_BODY_DYNAMICS_SHA256SUMS",
   protocolUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_PROTOCOL.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_PROTOCOL.md",
   resultNoteUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md",
   reportSha256:
     "8a883163ff544bdf7aa9410b4b4d364e88dcee15dce15edcbd791a1d4b4fd110",
   timeoutAuditSha256:

@@ -12,9 +12,9 @@ export const twoShardDynamicsEvidence = {
   suffixPackageChecksumsUrl:
     "/data/source/V8_ADDITIVE_DECISION_DYNAMICS_SINGLE_SCENE_30_SUFFIX_PACKAGE_SHA256SUMS",
   prefixProtocolUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DECISION_DYNAMICS_60_PROTOCOL.md",
   suffixProtocolUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DECISION_DYNAMICS_30_SUFFIX_PROTOCOL.md",
   prefixReportSha256:
     "3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450",
   prefixPackageChecksumsSha256:

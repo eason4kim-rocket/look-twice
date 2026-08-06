@@ -113,8 +113,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <footer>
         <div className="brand compact"><span className="brand-symbol" aria-hidden="true"><i/><i/></span><span>Look Twice</span></div>
         <p>{zh
-          ? "公开预注册挑战已验证 · 同生成器仿真 · 一台共享底盘"
-          : "Publicly preregistered challenge verified · Same-generator simulation · One shared chassis"}</p>
+          ? "公开预注册挑战已验证 · 仓储 AMR 仿真 · 证据可复核"
+          : "Publicly preregistered challenge verified · Warehouse AMR simulation · Replayable evidence"}</p>
         <nav className="footer-links" aria-label={zh ? "公开材料" : "Public materials"}>
           <a href={publicationEvidence.sourceBranchUrl}>{zh ? "候选源码" : "Candidate source"}</a>
           <a href={publicationEvidence.technicalReportUrl}>{zh ? "报告" : "Report"}</a>

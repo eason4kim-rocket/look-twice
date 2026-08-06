@@ -1,6 +1,6 @@
 export const challengeEvidence = {
   judgeCardUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_FROZEN_CHALLENGE_JUDGE_CARD.md",
   reportUrl: "/data/source/V8_FROZEN_CHALLENGE_REPORT.json",
   feasibilityAuditUrl:
     "/data/source/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",

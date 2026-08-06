@@ -16,9 +16,9 @@ export const decisionDynamicsEvidence = {
   packageChecksumsUrl:
     "/data/source/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_PACKAGE_SHA256SUMS",
   protocolUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_PROTOCOL.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_PROTOCOL.md",
   resultNoteUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md",
   reportSha256:
     "1501e31bdc1bc353d56224f76f0a0f58de574e6c436980bc9c22a7c33104bd99",
   sourceBindingSha256:

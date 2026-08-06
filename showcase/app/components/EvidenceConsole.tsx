@@ -220,7 +220,7 @@ export function EvidenceConsole() {
             <div><strong>29<small>/30</small></strong><span>{tx("preregistered primary · passive 0/30", "预注册主端点 · 被动 0/30")}</span></div>
           </div>
           <div className="challenge-ribbon-links">
-            <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{tx("JUDGE CARD ↗", "评委卡 ↗")}</a>
+            <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{tx("COMPACT EVIDENCE CARD ↗", "简明证据卡 ↗")}</a>
             <a href={challengeEvidence.feasibilityAuditUrl} target="_blank" rel="noreferrer">{tx("FEASIBILITY AUDIT ↗", "可行性审计 ↗")}</a>
             <a href={challengeEvidence.rawArchiveUrl}>{tx("RAW ARCHIVE ↗", "原始归档 ↗")}</a>
             <a href={challengeEvidence.verificationUrl}>{tx("VERIFICATION ↗", "验证回执 ↗")}</a>

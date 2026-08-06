@@ -129,10 +129,10 @@ test("preregistered challenge telemetry, receipts and scope stay visible", async
   }
   assert.match(home, /PREREGISTERED PRIMARY · 30 PAIRED WORLDS/);
   assert.match(home, /ACTIVE 29\/30 · PASSIVE 0\/30/);
-  assert.match(home, /Secondary post-hoc oracle audit/);
+  assert.match(home, /Secondary post-hoc feasibility check/);
   assert.ok(
     home.indexOf("ACTIVE 29/30 · PASSIVE 0/30") <
-      home.indexOf("Secondary post-hoc oracle audit"),
+      home.indexOf("Secondary post-hoc feasibility check"),
   );
   assert.match(results, /Post-hoc descriptive oracle audit, not a preregistered endpoint/);
   assert.ok(

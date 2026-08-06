@@ -101,8 +101,8 @@ test("site discloses proof-scope and scene-layout limits", async () => {
     readFile(new URL("../app/reproduce/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("PROVENANCE_REVIEW.json", canonicalRoot), "utf8").then(JSON.parse),
   ]);
-  assert.match(home, /90 BODIES \/ 30 SCENES/);
-  assert.match(home, /not a live-policy rerun, one 90-body scene/);
+  assert.match(home, /WAREHOUSE AMR SIMULATION/);
+  assert.match(home, /PYTHON ∧ PURIFY GO/);
   assert.match(results, /ARCHIVED DECISIONS TO WHEEL DYNAMICS/);
   assert.match(results, /not a live perception-policy rerun or one simultaneous 90-body scene/);
   assert.match(results, /original formal SHA omitted attempts\/progress\/logs/);

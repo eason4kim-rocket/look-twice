@@ -77,8 +77,8 @@ test("judge-facing site states the two-shard topology and proof boundary", async
     readFile(new URL("../app/lib/publicationEvidence.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/components/SiteShell.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(home, /20\/20 @ 60-BODY \+ 10\/10 @ 30-BODY/);
-  assert.match(home, /CUMULATIVE 90 · MAX CO-RESIDENT 60/);
+  assert.match(home, /PREREGISTERED PRIMARY · 30 PAIRED WORLDS/);
+  assert.doesNotMatch(home, /CUMULATIVE 90 · MAX CO-RESIDENT 60/);
   assert.match(results, /EXACTLY 2 SCENE SHARDS/);
   assert.match(results, /The 90 robots were never co-resident in one scene/);
   assert.match(results, /fixed-order serial wheel replay of archived decisions/);
@@ -92,8 +92,8 @@ test("judge-facing site states the two-shard topology and proof boundary", async
   assert.match(reproduceCss, /\.challenge-repro > div \{ min-width: 0; \}/);
   assert.match(evidence, /3cfcf19e60ba102772d052862f44bae29eb47d84717db3d0fbe7ed3b62b24450/);
   assert.match(evidence, /69dfd142175ea3d9f719dd5cd0dbb3126f3f7b77b74f4ad753b5f92193ce1a4e/);
-  assert.match(results, /PUBLICATION & UPSTREAM/);
-  assert.match(results, /no upstream maintainer review, merge, or acceptance is claimed here/);
+  assert.match(results, /SOURCE & UPSTREAM/);
+  assert.match(results, /no maintainer acceptance or upstream-release inclusion is claimed/);
   assert.match(results, /publicationEvidence\.finalSourceTagUrl/);
   assert.match(publication, /v8-contract-progress-nbv/);
   assert.match(publication, /v8-competition-final-2026-08-05/);

@@ -192,13 +192,13 @@ const lockedInputEvidence = {
   archiveUrl:
     "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz",
   noteUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_LOCKED_INPUT_EVIDENCE.md",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_LOCKED_INPUT_EVIDENCE.md",
   manifestUrl:
-    "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json",
+    "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json",
 };
 
 const rocmTelemetryUrl =
-  "https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json";
+  "https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json";
 
 export default function ResultsPage() {
   return <SiteShell><Results /></SiteShell>;
@@ -366,10 +366,10 @@ function Results() {
       (pair) => pair.paired_deltas_candidate_minus_baseline.team_path_length < 0,
     ).length ?? 0;
   return <main>
-    <header className="page-header challenge-page-header"><div><span className="eyebrow">{zh ? "公开预注册挑战 / 独立验证通过" : "PUBLICLY PREREGISTERED CHALLENGE / INDEPENDENTLY VERIFIED"}</span><h1>{zh ? "结果，带着回执。" : "Results, with receipts."}</h1></div><p>{zh ? "首屏是 30 个同生成器世界、60 个预注册回合的挑战结果。原 12-pair permanent locked test 与旧 synthetic 60s 前向演示在下方分开保留。" : "The first evidence tier is the preregistered 30-world, 60-episode same-generator challenge. The original 12-pair permanent locked test and the older synthetic 60s forward demo remain explicitly separate below."}</p></header>
+    <header className="page-header challenge-page-header"><div><span className="eyebrow">{zh ? "公开预注册挑战 / 项目验证器通过" : "PUBLICLY PREREGISTERED CHALLENGE / PROJECT VERIFIER PASSED"}</span><h1>{zh ? "结果，带着回执。" : "Results, with receipts."}</h1></div><p>{zh ? "首屏是 30 个同生成器世界、60 个预注册回合的挑战结果。原 12-pair permanent locked test 与旧 synthetic 60s 前向演示在下方分开保留。" : "The first evidence tier is the preregistered 30-world, 60-episode same-generator challenge. The original 12-pair permanent locked test and the older synthetic 60s forward demo remain explicitly separate below."}</p></header>
     <section className="result-section challenge-primary-evidence">
       <div className="result-title">
-        <span>{zh ? "主计分证据 · 30 个成对世界" : "PRIMARY SCORING EVIDENCE · 30 PAIRED WORLDS"}</span>
+        <span>{zh ? "主要证据 · 30 个成对世界" : "PRIMARY EVIDENCE · 30 PAIRED WORLDS"}</span>
         <h2>{zh ? "主动修复恢复 29/30 全链直行；被动策略保持 0/30。" : "Active repair restored 29/30 full-chain direct; passive remained at 0/30."}</h2>
         <p>{zh ? `种子 ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} 在公开预注册之后仅评测一次。该挑战与原 12-pair locked test 分开，来自相同生成器家族，不是 OOD。` : `Seeds ${challenge.analysis.evidence_scope.seed_range[0]}–${challenge.analysis.evidence_scope.seed_range[1]} were evaluated once after public preregistration. This challenge is separate from the original 12-pair locked test, comes from the same generator family, and is not OOD.`}</p>
       </div>
@@ -416,11 +416,11 @@ function Results() {
           <span><b>VERIFICATION SHA256</b><code>{challengeEvidence.verificationSha256}</code></span>
         </div>
         <div className="evidence-links challenge-links">
-          <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开 90 秒评委卡 ↗" : "OPEN 90-SECOND JUDGE CARD ↗"}</a>
+          <a href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开简明证据卡 ↗" : "OPEN COMPACT EVIDENCE CARD ↗"}</a>
           <a href={challengeEvidence.reportUrl} target="_blank">{zh ? "机器可读报告 ↗" : "MACHINE-READABLE REPORT ↗"}</a>
           <a href={challengeEvidence.feasibilityAuditUrl} target="_blank">{zh ? "可行性审计 JSON ↗" : "FEASIBILITY AUDIT JSON ↗"}</a>
           <a href={challengeEvidence.rawArchiveUrl}>{zh ? "下载原始归档 ↗" : "DOWNLOAD RAW ARCHIVE ↗"}</a>
-          <a href={challengeEvidence.verificationUrl}>{zh ? "独立验证 JSON ↗" : "INDEPENDENT VERIFICATION JSON ↗"}</a>
+          <a href={challengeEvidence.verificationUrl}>{zh ? "验证器输出 JSON ↗" : "VERIFIER OUTPUT JSON ↗"}</a>
         </div>
       </div>
     </section>
@@ -444,7 +444,7 @@ function Results() {
           <article><b>{zh ? "原生 SELECTOR 来源" : "NATIVE SELECTOR PROVENANCE"}</b><strong>{contractProgressNativeDecisions}<small> native · {contractProgressDelegatedDecisions} delegated</small></strong><p>{zh ? "候选侧共记录 30 次原生 selector 决策；delegated decision count 为 0。这里不声称新权重或 learned NBV。" : "The candidate recorded 30 native selector decisions and zero delegated decisions. This is not a claim of new weights or learned NBV."}</p></article>
           <article><b>{zh ? "最终验证与 ROCm 覆盖" : "FINAL VERIFICATION + ROCm COVERAGE"}</b><strong>{contractProgressTelemetry.sample_count}<small> samples</small></strong><p>{zh ? `名义采样间隔 ${contractProgressTelemetry.sample_interval_seconds.toFixed(1)} 秒，最大观测间隔 ${contractProgressTelemetry.max_observed_gap_seconds.toFixed(3)} 秒；coverage、checksum、post-run binding 与结构验证均通过。遥测用于运行窗口覆盖，不是控制延迟声明。` : `${contractProgressTelemetry.sample_interval_seconds.toFixed(1)} s nominal sampling and ${contractProgressTelemetry.max_observed_gap_seconds.toFixed(3)} s maximum observed gap. Coverage, checksum, post-run binding and structural verification passed. Telemetry establishes run-window coverage, not control latency.`}</p></article>
           <article><b>{zh ? "提升的是效率，不是直行率" : "EFFICIENCY, NOT DIRECT-RATE LIFT"}</b><strong>20<small>/20 both direct</small></strong><p>{zh ? "baseline 与 candidate 的直行率完全相同；有效增量是更少的 Scout/团队运动与物理采集，同时保持 40/40 任务成功。" : "Baseline and candidate had identical direct rates. The additive result is lower scout/team motion and fewer physical captures while retaining 40/40 mission success."}</p></article>
-          <article className="boundary-warning"><b>{zh ? "必须保留的证据边界" : "REQUIRED EVIDENCE BOUNDARY"}</b><strong>formal_result_eligible=false</strong><p>{zh ? "同生成器、非锁定、非 OOD、非真机、运动学仿真。局部增量 challenge gates 通过，但它不是官方赛事 formal 结果，也不改变或替代冻结 V8 主端点。" : "Same-generator, non-locked, not OOD, not a physical robot, and kinematic simulation. The local additive challenge gates passed, but this is not an official competition formal result and does not change or replace the frozen V8 primary endpoint."}</p></article>
+          <article className="boundary-warning"><b>{zh ? "这项补充的边界" : "SCOPE OF THIS SUPPLEMENT"}</b><strong>{zh ? "独立研究" : "SEPARATE STUDY"}</strong><p>{zh ? "这是同生成器、非锁定的运动学仿真，不是 OOD 或真机结果。它说明主动视角选择的效率，不改变或替代冻结 V8 主结果。" : "This is a same-generator, non-locked kinematic simulation—not OOD or physical-robot evidence. It measures active-view selection efficiency and does not change or replace the frozen V8 primary result."}</p></article>
         </div>
         <div className="challenge-identities dynamics-identities">
           <span><b>REPORT SHA256</b><code>{contractProgressEvidence.reportSha256}</code></span>
@@ -464,7 +464,7 @@ function Results() {
       <div className="result-title">
         <span>{zh ? "SOLVER-SCALE 补充 · 两个完整场景分片" : "SOLVER-SCALE COMPLEMENT · TWO COMPLETED SCENE SHARDS"}</span>
         <h2>{zh ? "60体场景 20/20，加30体场景 10/10：固定30 seeds覆盖完成。" : "20/20 in one 60-body scene plus 10/10 in one 30-body scene: all 30 fixed seeds covered."}</h2>
-        <p>{zh ? "两份报告分别通过独立 verifier。它们合计实例化90个不同非固定机器人，最大同时驻留60个；90个机器人从未处于同一场景。主端点仍是主动29/30、被动0/30。" : "Each report passed its independent verifier. Together they instantiate 90 distinct non-fixed robots, with at most 60 co-resident. The 90 robots were never co-resident in one scene. The primary remains active 29/30 versus passive 0/30."}</p>
+        <p>{zh ? "两份报告分别通过各自的专用 verifier。它们合计实例化90个不同非固定机器人，最大同时驻留60个；90个机器人从未处于同一场景。主端点仍是主动29/30、被动0/30。" : "Each report passed its dedicated verifier. Together they instantiate 90 distinct non-fixed robots, with at most 60 co-resident. The 90 robots were never co-resident in one scene. The primary remains active 29/30 versus passive 0/30."}</p>
       </div>
       <div className="benchmark-panel dynamics-panel">
         <div className="benchmark-tags"><span>ADDITIVE NON-LOCKED</span><span>EXACTLY 2 SCENE SHARDS</span><span>CUMULATIVE 90 · MAX CO-RESIDENT 60</span><span>2× VERIFIER PASS</span></div>
@@ -663,39 +663,38 @@ function Results() {
     <section className="result-section limits"><div className="result-title"><span>{zh ? "诚实边界" : "HONEST BOUNDARY"}</span><h2>{zh ? "我们明确系统做到了什么，也明确没有声称什么。" : "The boundary is part of the result."}</h2></div><div>{profile.limitations.map((limitation, index) => <article key={limitation.en}><b>0{index + 1}</b><p>{zh ? limitation.zh : limitation.en}</p></article>)}</div></section>
     <section className="result-section publication-upstream">
       <div className="result-title">
-        <span>{zh ? "发布与上游贡献" : "PUBLICATION & UPSTREAM"}</span>
-        <h2>{zh ? "公开证据链也延伸到了上游修复提案。" : "The public evidence chain now includes a proposed upstream contribution."}</h2>
-        <p>{zh ? `新增合约进度能力的评审目标为分支 ${publicationEvidence.sourceBranch}；原冻结 V8 基础仍固定在 ${publicationEvidence.finalSourceTag}。赛事官方 PR 尚未打开，此处也不声称上游维护者评审、合并或接受。` : `The additive contract-progress review target is branch ${publicationEvidence.sourceBranch}; the original frozen V8 foundation remains pinned at ${publicationEvidence.finalSourceTag}. The official competition PR is not open, and no upstream maintainer review, merge, or acceptance is claimed here.`}</p>
+        <span>{zh ? "源码与上游贡献" : "SOURCE & UPSTREAM"}</span>
+        <h2>{zh ? "实现、冻结基础与 Genesis 修复提案都可公开检查。" : "The implementation, frozen foundation, and proposed Genesis fix are open to inspection."}</h2>
+        <p>{zh ? `当前候选源码位于 ${publicationEvidence.sourceBranch}，原冻结 V8 基础保留在不可变 tag ${publicationEvidence.finalSourceTag}。Genesis PR 仍处于开放、未合并状态；这里不声称维护者接受或进入上游版本。` : `The current candidate source is on ${publicationEvidence.sourceBranch}; the original frozen V8 foundation remains on immutable tag ${publicationEvidence.finalSourceTag}. The Genesis PR is open and unmerged; no maintainer acceptance or upstream-release inclusion is claimed.`}</p>
       </div>
       <div className="publication-panel">
-        <div className="benchmark-tags"><span>PUBLIC CONTRIBUTION</span><span>HEAD PINNED</span><span>POST-REPORT UPDATE</span></div>
+        <div className="benchmark-tags"><span>PUBLIC SOURCE</span><span>IMMUTABLE FOUNDATION TAG</span><span>OPEN UPSTREAM PR</span></div>
         <div className="publication-grid">
+          <article><span>{zh ? "候选源码" : "CANDIDATE SOURCE"}</span><strong>CODE</strong><small>{publicationEvidence.sourceBranch}</small></article>
+          <article><span>{zh ? "冻结基础" : "FROZEN FOUNDATION"}</span><strong>TAG</strong><small>{publicationEvidence.finalSourceTag}</small></article>
           <article><span>{zh ? "GENESIS 问题" : "GENESIS ISSUE"}</span><strong>#{publicationEvidence.genesisIssueNumber}</strong><small>{zh ? "公开错误报告" : "public bug report"}</small></article>
           <article><span>{zh ? "GENESIS PR" : "GENESIS PR"}</span><strong>#{publicationEvidence.genesisPullRequestNumber}</strong><code title={publicationEvidence.genesisPullRequestHead}>{publicationEvidence.genesisPullRequestHead.slice(0, 8)}</code></article>
-          <article><span>{zh ? "赛事个人 FORK" : "COMPETITION FORK"}</span><strong>REVIEW</strong><small>{zh ? "个人分支 · 未开官方 PR" : "personal branch · no official PR"}</small></article>
-          <article><span>{zh ? "技术报告 SHA" : "TECHNICAL REPORT SHA"}</span><strong title={publicationEvidence.technicalReportSha256}>{publicationEvidence.technicalReportSha256.slice(0, 8)}</strong><code>…{publicationEvidence.technicalReportSha256.slice(-8)}</code></article>
         </div>
-        <p>{zh ? "Genesis 提案仅规范化已有 inertial 记录中省略的 origin；完全缺失 inertial 的几何回退保持不变。赛事包目标为个人 fork 评审分支；最终提交状态以 AMD 官方仓库为准。" : "The Genesis proposal only normalizes an omitted origin on an existing inertial record; geometry fallback for a fully absent inertial record remains unchanged. The competition package target is the personal-fork review branch; final submission state is determined by the official AMD repository."}</p>
+        <p>{zh ? "Genesis 提案只修正已有 inertial 记录中省略的 origin；完全缺失 inertial 时，原有几何回退保持不变。" : "The Genesis proposal only fixes an omitted origin on an existing inertial record; geometry fallback remains unchanged when the inertial record is absent."}</p>
         <div className="publication-links">
-          <a href={publicationEvidence.sourceBranchUrl} target="_blank" rel="noreferrer">{zh ? "查看新增候选源码 ↗" : "INSPECT ADDITIVE CANDIDATE SOURCE ↗"}</a>
+          <a href={publicationEvidence.sourceBranchUrl} target="_blank" rel="noreferrer">{zh ? "查看候选源码 ↗" : "INSPECT CANDIDATE SOURCE ↗"}</a>
           <a href={publicationEvidence.finalSourceTagUrl} target="_blank" rel="noreferrer">{zh ? "查看原冻结 V8 基础 ↗" : "INSPECT ORIGINAL FROZEN V8 FOUNDATION ↗"}</a>
           <a href={publicationEvidence.genesisIssueUrl} target="_blank" rel="noreferrer">{zh ? "查看 ISSUE #3183 ↗" : "INSPECT ISSUE #3183 ↗"}</a>
           <a href={publicationEvidence.genesisPullRequestUrl} target="_blank" rel="noreferrer">{zh ? "查看 GENESIS PR #3184 ↗" : "INSPECT GENESIS PR #3184 ↗"}</a>
           <a href={publicationEvidence.genesisValidationUrl} target="_blank" rel="noreferrer">{zh ? "查看 3/3 回归记录 ↗" : "INSPECT 3/3 REGRESSION RECORD ↗"}</a>
-          <a href={publicationEvidence.competitionPackageUrl} target="_blank" rel="noreferrer">{zh ? "查看赛事包 ↗" : "INSPECT COMPETITION PACKAGE ↗"}</a>
           <a href={publicationEvidence.technicalReportUrl} target="_blank" rel="noreferrer">{zh ? "下载最终报告 ↗" : "DOWNLOAD FINAL REPORT ↗"}</a>
         </div>
       </div>
     </section>
     <section className="result-section report-download">
-      <div className="result-title"><span>{zh ? "提交资料" : "SUBMISSION MATERIALS"}</span><h2>{zh ? "评委卡、原始挑战数据、独立验证与复现说明均已归档。" : "The judge card, raw challenge evidence, independent verification and reproduction notes are packaged."}</h2></div>
+      <div className="result-title"><span>{zh ? "证据与复现" : "EVIDENCE AND REPRODUCTION"}</span><h2>{zh ? "简明证据卡、原始挑战数据、验证器输出与复现说明都可直接查看。" : "The compact evidence card, raw challenge data, verifier output, and reproduction notes are ready to inspect."}</h2></div>
       <div>
-        <a className="report-primary" href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开 90 秒英文评委卡 ↗" : "OPEN 90-SECOND ENGLISH JUDGE CARD ↗"}</a>
+        <a className="report-primary" href={challengeEvidence.judgeCardUrl} target="_blank" rel="noreferrer">{zh ? "打开英文简明证据卡 ↗" : "OPEN THE COMPACT EVIDENCE CARD ↗"}</a>
         <a href={challengeEvidence.rawArchiveUrl}>{zh ? "下载 30-world 原始挑战归档 ↗" : "DOWNLOAD 30-WORLD RAW CHALLENGE ARCHIVE ↗"}</a>
-        <a href={challengeEvidence.verificationUrl}>{zh ? "打开独立验证 JSON ↗" : "OPEN INDEPENDENT VERIFICATION JSON ↗"}</a>
+        <a href={challengeEvidence.verificationUrl}>{zh ? "打开验证器输出 JSON ↗" : "OPEN VERIFIER OUTPUT JSON ↗"}</a>
         <a href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a>
         <a href="/media/Look-Twice-V8-Demo.mp4" target="_blank" rel="noreferrer">{zh ? "直接观看 3:59 英文演示 ▶" : "WATCH 3:59 ENGLISH DEMO IN BROWSER ▶"}</a>
-        <a href={publicationEvidence.sourceBranchUrl} target="_blank" rel="noreferrer">{zh ? "打开新增候选源码 ↗" : "OPEN ADDITIVE CANDIDATE SOURCE ↗"}</a>
+        <a href={publicationEvidence.sourceBranchUrl} target="_blank" rel="noreferrer">{zh ? "打开候选源码 ↗" : "OPEN CANDIDATE SOURCE ↗"}</a>
         <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt" target="_blank">{zh ? "下载冻结模型 ↗" : "DOWNLOAD FROZEN CHECKPOINT ↗"}</a>
         <a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a>
         <a href="/media/look-twice-replay-30s.mp4">{zh ? "下载 30 秒证据短片 ↓" : "DOWNLOAD 30-SECOND EVIDENCE REEL ↓"}</a>

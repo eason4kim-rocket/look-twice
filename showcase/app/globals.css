@@ -458,6 +458,8 @@ h1 em { color: var(--cyan); font-style: normal; }
 .platform-row div { padding: 24px; border-radius: 14px; background: var(--paper); }
 .platform-row span { color: var(--cyan); font: 600 9px var(--font-mono); letter-spacing: .1em; }
 .platform-row p { margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.innovation-grid { margin-top: 64px; grid-template-columns: repeat(4, 1fr); }
+.secondary-proof { max-width: none; margin-top: 14px; }
 
 .reel-player {
   margin-top: 64px;
@@ -477,6 +479,7 @@ h1 em { color: var(--cyan); font-style: normal; }
 .cta-band { display: flex; align-items: center; justify-content: space-between; gap: 40px; background: var(--paper-raised); }
 .cta-band h2 { max-width: 850px; margin: 14px 0 0; font-size: clamp(28px, 3vw, 44px); letter-spacing: -0.04em; }
 .cta-band .button { flex: none; }
+.cta-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
 
 .page-header {
   padding: 100px clamp(24px, 5vw, 88px) 72px;
@@ -515,7 +518,7 @@ footer {
   .section-heading { grid-template-columns: 1fr; }
   .problem-grid { grid-template-columns: 1fr 1fr; }
   .flow-grid { grid-template-columns: 1fr 1fr; }
-  .platform-row { grid-template-columns: 1fr; }
+  .platform-row, .innovation-grid { grid-template-columns: 1fr 1fr; }
   .reel-player { grid-template-columns: 1fr; }
 }
 
@@ -533,10 +536,11 @@ footer {
   .warehouse-map { height: 330px; }
   .contract-mini { grid-template-columns: 1fr; }
   .section { padding: 72px 22px; }
-  .problem-grid, .flow-grid, .policy-comparison { grid-template-columns: 1fr; }
+  .problem-grid, .flow-grid, .policy-comparison, .platform-row, .innovation-grid { grid-template-columns: 1fr; }
   .reel-player { margin-top: 42px; padding: 8px; }
   .reel-player > div { padding: 24px 16px; }
   .cta-band { align-items: flex-start; flex-direction: column; }
+  .cta-actions { justify-content: flex-start; }
   .page-header { padding: 72px 22px 50px; align-items: flex-start; flex-direction: column; }
   footer { align-items: flex-start; flex-direction: column; padding: 28px 22px; }
 }

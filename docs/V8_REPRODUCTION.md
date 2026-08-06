@@ -19,7 +19,7 @@ reported as a reproduction or smoke, never as a second locked test.
 ## 1. Clone the competition branch
 
 ```bash
-git clone --branch v8-competition-release --single-branch \
+git clone --branch v8-contract-progress-nbv --single-branch \
   https://github.com/eason4kim-rocket/look-twice.git
 cd look-twice
 ```
@@ -37,8 +37,21 @@ Run:
 ```bash
 python3 scripts/build_competition_replays.py
 python3 -m unittest tests.test_competition_replay -v
-python3 scripts/verify_frozen_foundation.py
 python3 scripts/derive_v8_task_utility.py
+```
+
+The replay tests and utility derivation above apply to the current competition
+branch. The original source-SHA guard is intentionally bound to the immutable
+frozen-foundation tag because the later additive branch contains disclosed
+runtime extensions:
+
+```bash
+cd ..
+git clone --branch v8-competition-final-2026-08-05 --single-branch \
+  https://github.com/eason4kim-rocket/look-twice.git look-twice-frozen
+cd look-twice-frozen
+python3 scripts/verify_frozen_foundation.py
+cd ../look-twice
 ```
 
 Expected final verifier fields:
@@ -601,7 +614,7 @@ primary remains active 29/30 versus passive 0/30.
 ```bash
 shasum -a 256 "$V8_CHECKPOINT"
 shasum -a 256 release/v8-frozen/artifacts/purify-robotics-core-linux
-python3 scripts/verify_frozen_foundation.py
+(cd ../look-twice-frozen && python3 scripts/verify_frozen_foundation.py)
 ```
 
 Expected checkpoint SHA:
