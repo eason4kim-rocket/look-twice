@@ -124,6 +124,7 @@ Evidence:
 - [30-seed decision-bound dynamics result](docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md)
 - [60-body prefix report](release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json)
 - [30-body suffix report](release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json)
+- [Same-host CPU/GPU comparison result](docs/V8_ADDITIVE_CPU_GPU_COMPARISON_RESULT.md)
 - [Raw challenge archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz)
 
 ## AMD Radeon and ROCm
@@ -144,6 +145,15 @@ telemetry samples, including idle time. See the
 [telemetry](release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json), and
 [technical report](docs/V8_TECHNICAL_REPORT.md) for the exact configuration
 and measurement boundaries.
+
+In a fixed additive comparison on that same host, the frozen FP32 model ran
+**1.76–2.04× faster on Radeon** than the 64-thread CPU path across batch sizes
+1, 4, and 8. Each point used 20 warm-ups and 100 synchronized measurements;
+all output tensors matched at the declared tolerance. This is model-forward
+performance, not end-to-end robot latency. See the
+[result and boundary](docs/V8_ADDITIVE_CPU_GPU_COMPARISON_RESULT.md),
+[precommitted protocol](docs/V8_ADDITIVE_CPU_GPU_COMPARISON_PROTOCOL.md), and
+[formal JSON](release/v8-derived/frozen_cpu_gpu_comparison_a7dd117/REPORT.json).
 
 ## Try it
 

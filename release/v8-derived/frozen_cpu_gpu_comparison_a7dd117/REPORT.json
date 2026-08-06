@@ -1,0 +1,561 @@
+{
+  "checkpoint": {
+    "epoch": 22,
+    "expected_sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+    "model_id": "look-twice-v8-vision/spatial_rgbd_seg_v3/3",
+    "parameter_count": 39811941,
+    "path_at_execution": "/workspace/v8-runtime-frozen/results/v8-seg-v3-full-paired-v2-fast-promote/frozen_checkpoint/v8_seg_v3_selected_ep22_7b158726f9c0.pt",
+    "preprocessing_version": "v8-spatial-rgbd-seg-v3-roi-gated/v1",
+    "runtime_backend": "deeplabv3_resnet50",
+    "sha256": "7b158726f9c00e01eec7f995674001727be03b84ff684a0cb43cba8682cd5783",
+    "size_bytes": 159592901,
+    "state_dict_tensor_elements_including_buffers": 39868705,
+    "trainable_parameter_count": 39811941
+  },
+  "claim_scope": {
+    "excludes": [
+      "RGB-D preprocessing",
+      "Genesis simulation and rendering",
+      "Purify Go",
+      "network and storage I/O",
+      "closed-loop robot actuation"
+    ],
+    "includes": [
+      "frozen vision model forward pass",
+      "Python dispatch",
+      "synchronous CPU execution",
+      "synchronized ROCm execution"
+    ],
+    "locked_test_opened": false,
+    "model_weights_modified": false,
+    "no_minimum_speedup_acceptance_bar": true,
+    "not_an_accuracy_evaluation": true,
+    "not_end_to_end_robot_latency": true,
+    "workload": "same-host FP32 frozen-model forwards on preloaded synthetic tensors"
+  },
+  "comparison": [
+    {
+      "batch_size": 1,
+      "gpu_over_cpu_speedup_by_mean_latency": 2.0353734549912814,
+      "gpu_over_cpu_speedup_by_p50_latency": 2.070298750586062,
+      "gpu_over_cpu_throughput_ratio": 2.0353734549912814
+    },
+    {
+      "batch_size": 4,
+      "gpu_over_cpu_speedup_by_mean_latency": 1.7550066776553839,
+      "gpu_over_cpu_speedup_by_p50_latency": 1.7970469951156192,
+      "gpu_over_cpu_throughput_ratio": 1.755006677655384
+    },
+    {
+      "batch_size": 8,
+      "gpu_over_cpu_speedup_by_mean_latency": 1.9712077535659018,
+      "gpu_over_cpu_speedup_by_p50_latency": 1.9922148352696425,
+      "gpu_over_cpu_throughput_ratio": 1.9712077535659018
+    }
+  ],
+  "devices": {
+    "cpu": {
+      "identity": {
+        "affinity_cpu_count": 128,
+        "cpu_model": "AMD EPYC 9334 32-Core Processor",
+        "device": "cpu",
+        "logical_cpu_count": 128,
+        "torch_interop_threads": 64,
+        "torch_intraop_threads": 64
+      },
+      "results": [
+        {
+          "batch_size": 1,
+          "geometry_shape": [
+            1,
+            12
+          ],
+          "input_shape": [
+            1,
+            5,
+            256,
+            256
+          ],
+          "latency_ms": {
+            "maximum": 500.626393,
+            "mean": 393.90371221000004,
+            "median_p50": 398.54537949999997,
+            "minimum": 309.547391,
+            "p95": 405.817997
+          },
+          "measured_iterations": 100,
+          "memory_mib": null,
+          "precision": "float32",
+          "throughput_images_per_second": 2.538691484752687,
+          "warmup_iterations": 20
+        },
+        {
+          "batch_size": 4,
+          "geometry_shape": [
+            4,
+            12
+          ],
+          "input_shape": [
+            4,
+            5,
+            256,
+            256
+          ],
+          "latency_ms": {
+            "maximum": 1282.937844,
+            "mean": 1158.12215539,
+            "median_p50": 1184.3981235,
+            "minimum": 1096.886044,
+            "p95": 1200.9249
+          },
+          "measured_iterations": 100,
+          "memory_mib": null,
+          "precision": "float32",
+          "throughput_images_per_second": 3.453867091121309,
+          "warmup_iterations": 20
+        },
+        {
+          "batch_size": 8,
+          "geometry_shape": [
+            8,
+            12
+          ],
+          "input_shape": [
+            8,
+            5,
+            256,
+            256
+          ],
+          "latency_ms": {
+            "maximum": 2786.979886,
+            "mean": 2533.7352571700003,
+            "median_p50": 2552.381363,
+            "minimum": 2209.077399,
+            "p95": 2691.411632
+          },
+          "measured_iterations": 100,
+          "memory_mib": null,
+          "precision": "float32",
+          "throughput_images_per_second": 3.1573938032245024,
+          "warmup_iterations": 20
+        }
+      ]
+    },
+    "cuda:0": {
+      "identity": {
+        "device": "cuda:0",
+        "device_name": "AMD Radeon Graphics",
+        "device_total_memory_bytes": 51522830336,
+        "gcn_arch_name": "gfx1100",
+        "visible_devices": null
+      },
+      "results": [
+        {
+          "batch_size": 1,
+          "geometry_shape": [
+            1,
+            12
+          ],
+          "input_shape": [
+            1,
+            5,
+            256,
+            256
+          ],
+          "latency_ms": {
+            "maximum": 218.30059,
+            "mean": 193.52896209,
+            "median_p50": 192.5062165,
+            "minimum": 192.317302,
+            "p95": 197.99604
+          },
+          "measured_iterations": 100,
+          "memory_mib": {
+            "baseline_allocated": 156.130859375,
+            "incremental_peak_allocated": 158.00390625,
+            "peak_allocated": 314.134765625,
+            "peak_reserved": 342.0
+          },
+          "precision": "float32",
+          "throughput_images_per_second": 5.167185258478022,
+          "warmup_iterations": 20
+        },
+        {
+          "batch_size": 4,
+          "geometry_shape": [
+            4,
+            12
+          ],
+          "input_shape": [
+            4,
+            5,
+            256,
+            256
+          ],
+          "latency_ms": {
+            "maximum": 688.374636,
+            "mean": 659.8961531799999,
+            "median_p50": 659.080217,
+            "minimum": 658.573135,
+            "p95": 659.961595
+          },
+          "measured_iterations": 100,
+          "memory_mib": {
+            "baseline_allocated": 267.88427734375,
+            "incremental_peak_allocated": 199.5009765625,
+            "peak_allocated": 467.38525390625,
+            "peak_reserved": 568.0
+          },
+          "precision": "float32",
+          "throughput_images_per_second": 6.061559808652074,
+          "warmup_iterations": 20
+        },
+        {
+          "batch_size": 8,
+          "geometry_shape": [
+            8,
+            12
+          ],
+          "input_shape": [
+            8,
+            5,
+            256,
+            256
+          ],
+          "latency_ms": {
+            "maximum": 1445.889381,
+            "mean": 1285.37200231,
+            "median_p50": 1281.1777714999998,
+            "minimum": 1279.811075,
+            "p95": 1304.520939
+          },
+          "measured_iterations": 100,
+          "memory_mib": {
+            "baseline_allocated": 274.38427734375,
+            "incremental_peak_allocated": 398.001953125,
+            "peak_allocated": 672.38623046875,
+            "peak_reserved": 820.0
+          },
+          "precision": "float32",
+          "throughput_images_per_second": 6.223879145977071,
+          "warmup_iterations": 20
+        }
+      ]
+    }
+  },
+  "generated_at_utc": "2026-08-06T10:25:56.437967+00:00",
+  "method": {
+    "batch_sizes": [
+      1,
+      4,
+      8
+    ],
+    "cpu_intraop_threads": 64,
+    "cpu_operations_are_synchronous": true,
+    "device_order": [
+      "cpu",
+      "cuda:0"
+    ],
+    "gpu_synchronized_after_every_measured_forward": true,
+    "input_resolution": [
+      256,
+      256
+    ],
+    "inputs_preloaded_before_timing": true,
+    "measured_iterations_per_device_and_batch": 100,
+    "precision": "float32",
+    "seed": 20260803,
+    "warmup_iterations_per_device_and_batch": 20
+  },
+  "output_parity": {
+    "atol": 0.0001,
+    "batches": [
+      {
+        "all_tensors_close_at_declared_tolerance": true,
+        "batch_size": 1,
+        "tensors": {
+          "mask_frac": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0,
+            "mean_absolute_difference": 0.0,
+            "shape": [
+              1
+            ]
+          },
+          "p_blocked": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 5.364418029785156e-07,
+            "mean_absolute_difference": 5.364418029785156e-07,
+            "shape": [
+              1
+            ]
+          },
+          "p_blocked_logit": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.862645149230957e-06,
+            "mean_absolute_difference": 1.862645149230957e-06,
+            "shape": [
+              1
+            ]
+          },
+          "quality": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0,
+            "mean_absolute_difference": 0.0,
+            "shape": [
+              1
+            ]
+          },
+          "region_obst": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.401298464324817e-45,
+            "mean_absolute_difference": 1.401298464324817e-45,
+            "shape": [
+              1
+            ]
+          },
+          "seg_logits": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0001373291015625,
+            "mean_absolute_difference": 6.4605847001075745e-06,
+            "shape": [
+              1,
+              1,
+              256,
+              256
+            ]
+          },
+          "seg_logits_raw": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0001373291015625,
+            "mean_absolute_difference": 2.015805512201041e-05,
+            "shape": [
+              1,
+              1,
+              256,
+              256
+            ]
+          },
+          "uncertainty": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 5.960464477539063e-08,
+            "mean_absolute_difference": 5.960464477539063e-08,
+            "shape": [
+              1
+            ]
+          },
+          "visibility": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0,
+            "mean_absolute_difference": 0.0,
+            "shape": [
+              1
+            ]
+          }
+        }
+      },
+      {
+        "all_tensors_close_at_declared_tolerance": true,
+        "batch_size": 4,
+        "tensors": {
+          "mask_frac": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0,
+            "mean_absolute_difference": 0.0,
+            "shape": [
+              4
+            ]
+          },
+          "p_blocked": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.0132789611816406e-06,
+            "mean_absolute_difference": 5.066394805908203e-07,
+            "shape": [
+              4
+            ]
+          },
+          "p_blocked_logit": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 6.318092346191406e-06,
+            "mean_absolute_difference": 3.844499588012695e-06,
+            "shape": [
+              4
+            ]
+          },
+          "quality": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.1920928955078125e-07,
+            "mean_absolute_difference": 5.960464477539063e-08,
+            "shape": [
+              4
+            ]
+          },
+          "region_obst": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.9506074623401454e-41,
+            "mean_absolute_difference": 4.90174202820821e-42,
+            "shape": [
+              4
+            ]
+          },
+          "seg_logits": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0001220703125,
+            "mean_absolute_difference": 6.510934326797724e-06,
+            "shape": [
+              4,
+              1,
+              256,
+              256
+            ]
+          },
+          "seg_logits_raw": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.000152587890625,
+            "mean_absolute_difference": 2.116875839419663e-05,
+            "shape": [
+              4,
+              1,
+              256,
+              256
+            ]
+          },
+          "uncertainty": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 8.940696716308594e-08,
+            "mean_absolute_difference": 5.960464477539063e-08,
+            "shape": [
+              4
+            ]
+          },
+          "visibility": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.1920928955078125e-07,
+            "mean_absolute_difference": 2.9802322387695312e-08,
+            "shape": [
+              4
+            ]
+          }
+        }
+      },
+      {
+        "all_tensors_close_at_declared_tolerance": true,
+        "batch_size": 8,
+        "tensors": {
+          "mask_frac": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0,
+            "mean_absolute_difference": 0.0,
+            "shape": [
+              8
+            ]
+          },
+          "p_blocked": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.430511474609375e-06,
+            "mean_absolute_difference": 4.6566128730773926e-07,
+            "shape": [
+              8
+            ]
+          },
+          "p_blocked_logit": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 5.602836608886719e-06,
+            "mean_absolute_difference": 2.3152679204940796e-06,
+            "shape": [
+              8
+            ]
+          },
+          "quality": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.1920928955078125e-07,
+            "mean_absolute_difference": 4.470348358154297e-08,
+            "shape": [
+              8
+            ]
+          },
+          "region_obst": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 6.435831570752024e-37,
+            "mean_absolute_difference": 8.04480123434713e-38,
+            "shape": [
+              8
+            ]
+          },
+          "seg_logits": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.0001373291015625,
+            "mean_absolute_difference": 6.5406711655668914e-06,
+            "shape": [
+              8,
+              1,
+              256,
+              256
+            ]
+          },
+          "seg_logits_raw": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 0.000152587890625,
+            "mean_absolute_difference": 2.157118979084771e-05,
+            "shape": [
+              8,
+              1,
+              256,
+              256
+            ]
+          },
+          "uncertainty": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 5.960464477539063e-08,
+            "mean_absolute_difference": 2.9802322387695312e-08,
+            "shape": [
+              8
+            ]
+          },
+          "visibility": {
+            "allclose_rtol_1e-3_atol_1e-4": true,
+            "maximum_absolute_difference": 1.1920928955078125e-07,
+            "mean_absolute_difference": 2.9802322387695312e-08,
+            "shape": [
+              8
+            ]
+          }
+        }
+      }
+    ],
+    "informational_not_a_speed_acceptance_gate": true,
+    "rtol": 0.001
+  },
+  "run_class": "formal_additive",
+  "runtime": {
+    "hip": "7.2.53211-e1a6bc5663",
+    "platform": "Linux-6.8.0-79-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch": "2.9.1+gitff65f5b",
+    "torch_git_version": "ff65f5bc672795c5e5033900ea0a0c4f8566c8cf"
+  },
+  "schema_version": "look-twice.v8-frozen-cpu-gpu-comparison/v1",
+  "source_identity": {
+    "benchmark_script": {
+      "sha256": "3dc51951bd615088cf356ebc03e298c5e3a13b0e15169e00220fff86e3caad2a",
+      "size_bytes": 19515
+    },
+    "files": {
+      "v8_seg_v3_model.py": {
+        "sha256": "30892e644dcdffafc3bd0e928653b74d29a7724d0844ce0284b1448b9cbda649",
+        "size_bytes": 15999
+      },
+      "v8_spatial_model.py": {
+        "sha256": "dd883aa4ba97f739e55a285f2187c6267edb2766115c97f3cb20148fc6b210ff",
+        "size_bytes": 16941
+      },
+      "v8_spatial_runtime.py": {
+        "sha256": "ce3b1c08a3f04b6cdc3737066be9b2576caac0a5cbe22031a5026c62605fe990",
+        "size_bytes": 11492
+      }
+    },
+    "repository_head": "a7dd1178ea551cea346a734d3ffedd448d6b732d",
+    "tracked_worktree_clean": true
+  },
+  "status": "passed"
+}
