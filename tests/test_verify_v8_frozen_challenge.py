@@ -35,6 +35,20 @@ PRODUCTION_RUNTIME_SOURCE_MANIFEST = (
 )
 
 
+def _frozen_runtime_source_matches() -> bool:
+    manifest = json.loads(
+        PRODUCTION_RUNTIME_SOURCE_MANIFEST.read_text(encoding="utf-8")
+    )
+    return all(
+        (ROOT / row["path"]).is_file()
+        and file_sha256(ROOT / row["path"]) == row["sha256"]
+        for row in manifest["files"]
+    )
+
+
+FROZEN_RUNTIME_SOURCE_MATCH = _frozen_runtime_source_matches()
+
+
 def _write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
@@ -351,6 +365,10 @@ def _build_fixture(root: Path) -> tuple[Path, Path, Path]:
 
 
 class FrozenChallengeVerifierTests(unittest.TestCase):
+    @unittest.skipUnless(
+        FROZEN_RUNTIME_SOURCE_MATCH,
+        "valid fixture requires the immutable frozen-source worktree",
+    )
     def test_valid_complete_fixture_passes_and_recomputes_primary(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo, results, prereg = _build_fixture(Path(temporary))
@@ -385,6 +403,10 @@ class FrozenChallengeVerifierTests(unittest.TestCase):
             telemetry["episode_subprocess_wall_seconds"]["all"]["n"], 60
         )
 
+    @unittest.skipUnless(
+        FROZEN_RUNTIME_SOURCE_MATCH,
+        "valid fixture requires the immutable frozen-source worktree",
+    )
     def test_route_only_direct_without_full_gate_admit_is_not_primary(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo, results, prereg_path = _build_fixture(Path(temporary))
@@ -430,6 +452,10 @@ class FrozenChallengeVerifierTests(unittest.TestCase):
         self.assertTrue(row["active"]["route_only_direct"])
         self.assertFalse(row["active"]["full_chain_direct"])
 
+    @unittest.skipUnless(
+        FROZEN_RUNTIME_SOURCE_MATCH,
+        "valid fixture requires the immutable frozen-source worktree",
+    )
     def test_admit_for_different_corridor_is_not_full_chain_direct(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo, results, prereg_path = _build_fixture(Path(temporary))

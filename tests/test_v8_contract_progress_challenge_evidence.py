@@ -82,6 +82,8 @@ VISION_CALIBRATION_ID = f"look-twice-v8-spatial:{EXPECTED_VISION_ARTIFACT_SHA256
 ROOT = Path(__file__).resolve().parents[1]
 RUNNER = ROOT / "scripts" / "run_v8_contract_progress_challenge.py"
 VERIFIER = ROOT / "scripts" / "verify_v8_contract_progress_challenge.py"
+RUNNER_MODULE = clean_gpu_preflight.__module__
+RUNNER_VERIFICATION_ERROR = clean_gpu_preflight.__globals__["VerificationError"]
 
 
 def _write_json(path: Path, payload) -> None:
@@ -1526,19 +1528,19 @@ class ContractProgressEvidenceTests(unittest.TestCase):
         }
         with (
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge.subprocess.run",
+                f"{RUNNER_MODULE}.subprocess.run",
                 return_value=showpids,
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge._proc_pid_exists",
+                f"{RUNNER_MODULE}._proc_pid_exists",
                 return_value=False,
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge._scan_open_kfd_fds",
+                f"{RUNNER_MODULE}._scan_open_kfd_fds",
                 return_value=[],
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge.query_rocm",
+                f"{RUNNER_MODULE}.query_rocm",
                 return_value=idle,
             ),
         ):
@@ -1548,18 +1550,18 @@ class ContractProgressEvidenceTests(unittest.TestCase):
 
         with (
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge.subprocess.run",
+                f"{RUNNER_MODULE}.subprocess.run",
                 return_value=showpids,
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge._proc_pid_exists",
+                f"{RUNNER_MODULE}._proc_pid_exists",
                 side_effect=lambda pid: pid == 2268904,
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge._scan_open_kfd_fds",
+                f"{RUNNER_MODULE}._scan_open_kfd_fds",
                 return_value=[],
             ),
-            self.assertRaises(VerificationError),
+            self.assertRaises(RUNNER_VERIFICATION_ERROR),
         ):
             clean_gpu_preflight()
 
@@ -1579,7 +1581,7 @@ class ContractProgressEvidenceTests(unittest.TestCase):
             (output / "raw").mkdir()
             paths = {"output_root": output}
             with mock.patch(
-                "scripts.run_v8_contract_progress_challenge.verify_design",
+                f"{RUNNER_MODULE}.verify_design",
                 side_effect=VerificationError("remote head changed"),
             ):
                 payload = write_postrun_binding(
@@ -1623,7 +1625,7 @@ class ContractProgressEvidenceTests(unittest.TestCase):
             episode.write_text("{}\n", encoding="utf-8")
             missing = Path(temporary) / "missing.json"
             with mock.patch(
-                "scripts.run_v8_contract_progress_challenge._fsync_file_and_parent"
+                f"{RUNNER_MODULE}._fsync_file_and_parent"
             ) as fsync:
                 durably_persist_attempt_files([episode, missing])
             fsync.assert_called_once_with(episode)
@@ -1716,7 +1718,7 @@ class ContractProgressEvidenceTests(unittest.TestCase):
         )
         with (
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge._git",
+                f"{RUNNER_MODULE}._git",
                 side_effect=[
                     head,
                     "",
@@ -1727,7 +1729,7 @@ class ContractProgressEvidenceTests(unittest.TestCase):
                 ],
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge.subprocess.run",
+                f"{RUNNER_MODULE}.subprocess.run",
                 side_effect=[merge_base_ok, live_exact],
             ),
         ):
@@ -1746,7 +1748,7 @@ class ContractProgressEvidenceTests(unittest.TestCase):
         )
         with (
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge._git",
+                f"{RUNNER_MODULE}._git",
                 side_effect=[
                     head,
                     "",
@@ -1757,10 +1759,10 @@ class ContractProgressEvidenceTests(unittest.TestCase):
                 ],
             ),
             mock.patch(
-                "scripts.run_v8_contract_progress_challenge.subprocess.run",
+                f"{RUNNER_MODULE}.subprocess.run",
                 side_effect=[merge_base_ok, stale_remote],
             ),
-            self.assertRaises(VerificationError),
+            self.assertRaises(RUNNER_VERIFICATION_ERROR),
         ):
             verify_two_commit_binding(Path("/candidate"), prereg)
 

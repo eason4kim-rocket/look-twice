@@ -238,6 +238,10 @@ test("publishes a reproducible 30-second media pack", async () => {
   assert.equal(hookManifest.readme_preview.loop, true);
   assert.ok(hookManifest.readme_preview.duration_seconds >= 5);
   assert.ok(hookManifest.readme_preview.duration_seconds <= 10);
+
+  const workerSource = await readFile(new URL("../worker/index.ts", import.meta.url), "utf8");
+  assert.match(workerSource, /look-twice-repair-to-action-10s\.webp/);
+  assert.match(workerSource, /Content-Type", "image\/webp"/);
 });
 
 test("publishes the complete browser-playable 3:59 demo", async () => {

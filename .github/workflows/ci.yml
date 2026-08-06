@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -29,6 +31,12 @@ jobs:
           go build -trimpath -o bin/purify-robotics-core ./cmd/purify-robotics-core
       - name: Run Python test suite
         run: python -m unittest discover -s tests -v
+      - name: Verify immutable frozen foundation at its tagged source
+        run: |
+          git worktree add --detach ../look-twice-frozen v8-competition-final-2026-08-05
+          cd ../look-twice-frozen
+          python scripts/verify_frozen_foundation.py
+          python -m unittest tests.test_verify_v8_frozen_challenge -v
 
   purify-reference-core:
     runs-on: ubuntu-latest
@@ -67,6 +75,5 @@ jobs:
       - name: Verify replay data and production build
         run: |
           python3 scripts/build_competition_replays.py
-          python3 scripts/verify_frozen_foundation.py
           cd showcase
           npm test
