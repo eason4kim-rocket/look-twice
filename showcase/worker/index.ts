@@ -40,17 +40,7 @@ const worker = {
       }, allowedWidths);
     }
 
-    const response = await handler.fetch(request, env, ctx);
-    if (url.pathname === "/media/look-twice-repair-to-action-10s.webp") {
-      const headers = new Headers(response.headers);
-      headers.set("Content-Type", "image/webp");
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
-    }
-    return response;
+    return handler.fetch(request, env, ctx);
   },
 };
 

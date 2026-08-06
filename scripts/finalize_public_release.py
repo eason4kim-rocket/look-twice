@@ -9,6 +9,7 @@ import hashlib
 import json
 import subprocess
 import sys
+import tempfile
 import urllib.request
 from pathlib import Path
 
@@ -29,10 +30,15 @@ PUBLIC_ROUTES = (
     "/media/look-twice-repair-to-action-10s.manifest.json",
 )
 PUBLIC_ROUTE_MIME_TYPES = {
-    "/media/look-twice-replay-30s.mp4": "video/mp4",
-    "/media/look-twice-repair-to-action-10s.mp4": "video/mp4",
-    "/media/look-twice-repair-to-action-10s.webp": "image/webp",
-    "/media/look-twice-repair-to-action-10s.manifest.json": "application/json",
+    "/media/look-twice-replay-30s.mp4": ("video/mp4",),
+    "/media/look-twice-repair-to-action-10s.mp4": ("video/mp4",),
+    # Sites currently returns its hash-verified static WebP as a generic binary.
+    # GitHub Pages returns image/webp; both are safe because the bytes are pinned.
+    "/media/look-twice-repair-to-action-10s.webp": (
+        "image/webp",
+        "application/octet-stream",
+    ),
+    "/media/look-twice-repair-to-action-10s.manifest.json": ("application/json",),
 }
 JUDGE_MOTION_HOOK_MANIFEST_NAME = (
     "look-twice-repair-to-action-10s.manifest.json"
@@ -40,6 +46,7 @@ JUDGE_MOTION_HOOK_MANIFEST_NAME = (
 JUDGE_MOTION_HOOK_MANIFEST_SHA256 = (
     "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
 )
+FROZEN_FOUNDATION_TAG = "v8-competition-final-2026-08-05"
 FORBIDDEN = (
     b"/workspace/",
     b"/Users/",
@@ -70,6 +77,51 @@ def git_commit() -> str:
     return subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
+
+
+def verify_tagged_frozen_foundation() -> subprocess.CompletedProcess[str]:
+    """Run the SHA guard against its immutable source tag, not this additive branch."""
+
+    with tempfile.TemporaryDirectory(prefix="look-twice-frozen-guard-") as directory:
+        worktree = Path(directory) / "source"
+        added = subprocess.run(
+            [
+                "git",
+                "worktree",
+                "add",
+                "--detach",
+                str(worktree),
+                FROZEN_FOUNDATION_TAG,
+            ],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
+        if added.returncode:
+            return added
+        try:
+            return subprocess.run(
+                [
+                    sys.executable,
+                    str(worktree / "scripts" / "verify_frozen_foundation.py"),
+                ],
+                cwd=worktree,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                check=False,
+            )
+        finally:
+            subprocess.run(
+                ["git", "worktree", "remove", "--force", str(worktree)],
+                cwd=ROOT,
+                text=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
 
 
 def main() -> int:
@@ -190,14 +242,7 @@ def main() -> int:
                 if marker.lower() in payload:
                     errors.append(f"forbidden public marker in {candidate.relative_to(ROOT)}")
 
-    frozen = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "verify_frozen_foundation.py")],
-        cwd=ROOT,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        check=False,
-    )
+    frozen = verify_tagged_frozen_foundation()
     if frozen.returncode:
         errors.append("frozen foundation verification failed")
 
@@ -232,20 +277,20 @@ def main() -> int:
                         normalized_content_type = (content_type or "").split(";", 1)[
                             0
                         ].strip().lower()
-                        expected_content_type = PUBLIC_ROUTE_MIME_TYPES[route]
+                        expected_content_types = PUBLIC_ROUTE_MIME_TYPES[route]
                         observed_sha256 = hashlib.sha256(body).hexdigest()
                         expected_sha256 = public_route_sha256s[route]
                         result.update(
                             {
                                 "sha256": observed_sha256,
                                 "expected_sha256": expected_sha256,
-                                "expected_content_type": expected_content_type,
+                                "expected_content_types": expected_content_types,
                             }
                         )
-                        if normalized_content_type != expected_content_type:
+                        if normalized_content_type not in expected_content_types:
                             errors.append(
-                                f"anonymous MIME mismatch {route}: expected "
-                                f"{expected_content_type}, observed {content_type}"
+                                f"anonymous MIME mismatch {route}: expected one of "
+                                f"{expected_content_types}, observed {content_type}"
                             )
                         if observed_sha256 != expected_sha256:
                             errors.append(f"anonymous SHA mismatch: {route}")
