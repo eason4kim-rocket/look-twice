@@ -54,8 +54,9 @@ https://eason4kim-rocket.github.io/
 
 The deployed baseline site replays recorded Genesis plus AMD GPU evidence. It
 does not create new benchmark samples and does not require a live GPU. The
-authorized contract-progress Results/Reproduce refresh has passed local build
-and evidence tests; publication and no-sign-in verification are in progress.
+contract-progress Results/Reproduce/full-demo refresh passed local build and
+evidence tests, was published, and was anonymously verified at
+`2026-08-06T02:53:18Z`.
 
 ## 90-second judge path
 
@@ -382,30 +383,35 @@ control-loop latency, or mission-energy claims.
 | Dual-body dynamics evidence | [20-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DUAL_BODY_DYNAMICS_RESULT.md) · [machine report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json) · timeout/recovery audits and `SHA256SUMS` in the same directory |
 | Decision-bound dynamics V2 | [30-seed result note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_ADDITIVE_DECISION_DYNAMICS_RECOVERY_V2_RESULT.md) · [complete evidence directory](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-derived/decision_dynamics_recovery_v2_102500_102529) · formal and package checksum indexes, provenance review, and local verifier |
 | Solver-scale two-shard evidence | Published [20/20 60-body prefix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_60_102500_102519/REPORT.json) · published [10/10 30-body suffix report](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/decision_dynamics_single_scene_30_suffix_102520_102529/REPORT.json). Both sealed directories include their protocols, source bindings, trial checkpoints, checksum indexes, and verifier results. |
-| Technical report | [Report source](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_TECHNICAL_REPORT.md) and [authorized stable publication target](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf): **19 pages, 1,104,864 bytes, SHA256 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`; output/site/official copies byte-identical; 19/19 rendered pages visually inspected.** |
-| Project source code | [additive contract-progress review branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv) · [original frozen V8 foundation tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05) |
+| Technical report | [Report source](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_TECHNICAL_REPORT.md) and [stable publication](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf): **19 pages, 1,104,864 bytes, SHA256 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`; output/site/official copies byte-identical; 19/19 rendered pages visually inspected.** |
+| Project source code | [default `v8-contract-progress-nbv` branch](https://github.com/eason4kim-rocket/look-twice/tree/v8-contract-progress-nbv) with last non-self-referential content receipt `41bd99ee96faba599494fa2cbb1617798a8758b6`; the later seal-only commit records publication receipts · [original frozen V8 foundation tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05) |
 | Reproducibility README | [root judge path](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/README.md) · [detailed guide](https://github.com/eason4kim-rocket/look-twice/blob/v8-contract-progress-nbv/docs/V8_REPRODUCTION.md) |
 | Docker path | [Dockerfile](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/Dockerfile) · [Compose](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docker-compose.yml) |
-| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results#contract-progress-efficiency) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) · [public mirror](https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/). The refreshed build stages the homepage social card and native playback of the complete 3:59 MP4; publication and anonymous verification are in progress. |
+| Public evidence site | [Evidence Console](https://eason4kim-rocket.github.io/) · [Results](https://eason4kim-rocket.github.io/results#contract-progress-efficiency) · [Reproduce](https://eason4kim-rocket.github.io/reproduce) · [public mirror](https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/). The homepage social card and native 3:59 MP4 playback are published and anonymously verified. GitHub Pages commit `4fa444050edef8064a3d0085ac5a4acf0d2b56d9` deployed in successful Actions run `31066772336`; the mirror is Sites version 12 from source commit `f4ac3f102b1e544f68194db64a8f40b29fd673a0`. |
 | Genesis upstream contribution | [Issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) · open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) · [bounded 3/3 validation record](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-final-2026-08-05/docs/V8_GENESIS_PR_3184_VALIDATION.md) · exact fork head `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850`. Open and unmerged; no full-suite, review, or acceptance is claimed. |
-| Competition-fork package | [Authorized personal-fork review target](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice): current unsealed staging has 155 manifest entries, 156/156 verified checksum entries, and 157 total files; checksum-index SHA256 `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`. Personal-fork publication is in progress; the official competition PR is not open. |
+| Competition-fork package | [Published personal-fork review target](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice) at commit `fefe16e482e2133e04dabd6c3b431168e6fe9b9f`: 155 manifest entries, 156/156 verified checksum entries, and 157 total files; checksum-index SHA256 `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`. The official competition PR is not open. |
 | Frozen evidence | [V8 archive](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-release/release/v8-frozen) · [import manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/V8_FROZEN_IMPORT_MANIFEST.json) |
 | Task-utility derivation | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-derived/V8_TASK_UTILITY_DERIVATION.json) |
 | ROCm model-forward benchmark | [JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_INFERENCE_BENCHMARK.json) |
 | Sustained ROCm telemetry | [raw 60-second JSON](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_FROZEN_ROCM_TELEMETRY.json) |
 | Locked input evidence | [972 MiB archive](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz) · [manifest](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/release/v8-frozen/results/V8_LOCKED_INPUT_PACK_MANIFEST.json) · [boundary note](https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-release/docs/V8_LOCKED_INPUT_EVIDENCE.md) |
 | Frozen checkpoint | [159 MB release asset](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt) |
-| Demo video | [3:59 English MP4 - browser-playback publication target](https://eason4kim-rocket.github.io/media/Look-Twice-V8-Demo.mp4) · [stable Release download/hash mirror](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4). Native browser publication and anonymous verification are in progress. |
+| Demo video | [3:59 English MP4 - browser playback](https://eason4kim-rocket.github.io/media/Look-Twice-V8-Demo.mp4) · [stable Release download/hash mirror](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4). GitHub Pages and Sites both anonymously returned `video/mp4`; Pages supported byte-range playback, and both copies matched SHA256 `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`. |
 | Short evidence reel | [30-second preview](https://eason4kim-rocket.github.io/media/look-twice-replay-30s.mp4) |
 
-Locally verified final demo identity: 239.000 seconds,
+Locally and anonymously verified final demo identity: 239.000 seconds,
 9,032,035 bytes, MP4
 SHA256
 `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`;
 sidecar SHA256
 `639c0c5e076798c74c6ec115f2adeb88b45bcc6d14698adbd566e7eb9a3cf6bb`.
-The full MP4 is staged for native browser playback; publication is in progress,
-and the Release asset remains the download/hash mirror.
+The full MP4 is published for native browser playback on GitHub Pages and
+Sites; both public copies returned `video/mp4`, Pages accepted a byte-range
+request, and both matched the SHA256 above. The social card and 19-page report
+were also anonymously verified at SHA256
+`68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a` and
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+The Release asset remains the download/hash mirror.
 The narration is AI-generated with OpenAI `gpt-4o-mini-tts`, voice `cedar`.
 The closing card burns in
 `AI-GENERATED NARRATION · OPENAI TEXT-TO-SPEECH`, and the sidecar records the

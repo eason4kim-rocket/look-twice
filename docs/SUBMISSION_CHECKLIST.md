@@ -28,6 +28,34 @@ Official sources:
 - https://luma.com/amd-4dhi
 - https://github.com/AMD-DEV-CONTEST/Radeon-hackathon-2026-07
 
+## Publication receipts
+
+- [x] Anonymous verification completed at `2026-08-06T02:53:18Z`.
+- [x] The last non-self-referential source-content receipt
+      `41bd99ee96faba599494fa2cbb1617798a8758b6` is public on default branch
+      `v8-contract-progress-nbv`; the later seal-only commit records these
+      publication receipts.
+- [x] GitHub Pages commit `4fa444050edef8064a3d0085ac5a4acf0d2b56d9`
+      deployed in successful Actions run `31066772336`.
+- [x] The personal competition-fork package is public at commit
+      `fefe16e482e2133e04dabd6c3b431168e6fe9b9f` without an official AMD PR.
+- [x] The public mirror is Sites version 12 from source commit
+      `f4ac3f102b1e544f68194db64a8f40b29fd673a0` at
+      <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>.
+- [x] GitHub Pages and Sites both anonymously return the complete 3:59 MP4 as
+      `video/mp4`; Pages supports a byte-range request, and both public copies
+      match SHA256
+      `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`.
+- [x] Anonymous retrieval verified the social card and report at SHA256
+      `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`
+      and
+      `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+- [x] The published package has 155 manifest entries, 156/156 verified
+      checksum entries, and 157 total files; top-level `SHA256SUMS` SHA256 is
+      `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
+- [x] Keep `official_pr_opened=false`; opening the official competition PR
+      remains behind explicit owner approval.
+
 ## Eligibility and identity - owner confirmation
 
 - [ ] Confirm Luma registration approval.
@@ -236,9 +264,9 @@ Official sources:
 - [ ] Owner reviews the contract-progress-integrated technical-report source
       and staged 19-page PDF, including its identity and 19/19 visual-QA
       record.
-- [ ] Owner completes final browser review of the staged contract-progress
+- [ ] Owner completes final browser review of the published contract-progress
       Results/Reproduce presentation; code/test/build/lint/audit checks are
-      complete, and publication is in progress.
+      complete and publication was anonymously verified.
 - [ ] Owner reviews the complete V2 and two-shard evidence payload in local
       official-package staging, the finalized top-level manifests, and the
       exact package diff.
@@ -249,7 +277,7 @@ Official sources:
       site and official-package staging; preserve their internal checksum
       indexes and dedicated verifier passes.
 - [x] Run the official-package finalizer at `2026-08-06T02:32:52Z` and write
-      the current unsealed top-level machine manifests, checksum index, file
+      the finalized top-level machine manifests, checksum index, file
       counts, and package identity; its subsequent `--check` passes.
 - [x] Record 155 manifest inventory entries, 156 checksum entries, and 157
       total regular files including `SHA256SUMS`; all 156 `shasum` checks pass.
@@ -379,8 +407,8 @@ Stable targets:
       identity, and an explicit no-merge/no-acceptance boundary.
 - [x] Rebuild, lint, run all 44 tests, and obtain a zero-vulnerability
       dependency audit for the full-demo-integrated site.
-- [ ] Publish that verified build to GitHub Pages and the public site mirror;
-      publication is in progress.
+- [x] Publish that verified build to GitHub Pages and the public site mirror;
+      anonymously verify both deployments and record the receipts above.
 - [ ] Owner reviews the separate 30/30 decision-bound V2 Results card and
       reproduction audit, including the 29/30 primary endpoint and the
       non-simultaneous 90-body boundary, after all site checks pass.
@@ -393,8 +421,9 @@ Stable targets:
       `all_90_co_resident=false` in the evidence tests.
 - [x] Run site lint, production build, all 44 tests, and dependency audit after
       the full-demo integration.
-- [ ] Complete owner browser review of the staged Results/Reproduce/full-demo presentation.
-- [ ] Publish the refreshed homepage and full-demo site; publication is in progress.
+- [ ] Complete owner browser review of the published Results/Reproduce/full-demo presentation.
+- [x] Publish the refreshed homepage and full-demo site and verify both without
+      authentication.
 - [x] Keep HTTPS enforced on the refreshed GitHub Pages deployment.
 - [x] Verify `/`, `/console`, `/results`, `/reproduce`, the report PDF, and
       referenced evidence assets without sign-in on the public deployments.
@@ -521,9 +550,8 @@ Stable targets:
 - [x] Copy the final two-shard staging directory byte-for-byte to the local
       official-fork worktree and verify `diff -qr` plus every checksum before
       any push.
-- [ ] Push the reviewed full-demo package to the dedicated official-fork branch
-      without opening a PR; publication is in progress and no future commit is
-      claimed here.
+- [x] Push the reviewed full-demo package to the dedicated official-fork branch
+      at `fefe16e482e2133e04dabd6c3b431168e6fe9b9f` without opening a PR.
 - [x] Use planned PR title `Track 3, Liu Liang, Look Twice`.
 - [x] Replace the owner-review preamble in
       `docs/SUBMISSION_DRAFT.md` with the actual publication state and rerun
@@ -542,19 +570,19 @@ Stable targets:
 - [ ] Owner completes final visual and audible review.
 - [x] The prior V2-only 104-entry `SHA256SUMS` verifies cleanly; its 103-entry
       package inventory has exact path coverage for that snapshot only.
-- [ ] Publish and anonymously verify the refreshed public branch/site assets;
+- [x] Publish and anonymously verify the refreshed public branch/site assets;
       the stable Release download/hash mirror remains unchanged.
-- [ ] Publish and anonymously verify the current official-fork package; no
+- [x] Publish and anonymously verify the current official-fork package; no
       official competition PR has been opened.
 - [x] Freeze the final judge-facing source in the new annotated tag
       `v8-competition-final-2026-08-05` without moving the historical
       `v8-competition-candidate` tag.
-- [x] The current staging contains both sealed solver-scale evidence
+- [x] The current package contains both sealed solver-scale evidence
       directories, the compact compound-result files, and the byte-identical
       19-page PDF with SHA256
       `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
 - [x] Run the official-package finalizer at `2026-08-06T02:32:52Z` and record
-      the current unsealed top-level manifests and 155/156/157 counts. Its
+      the finalized top-level manifests and 155/156/157 counts. Its
       `--check`, all 156 checksum validations, and both staged dedicated
       verifiers pass; the top-level
       `SHA256SUMS` SHA256 is

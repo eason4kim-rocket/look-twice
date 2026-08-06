@@ -9,9 +9,9 @@ competition PR has been opened.
 
 Post-snapshot, owner approval was given for publication except the final AMD
 competition PR. The original frozen publication and Genesis issue/PR are
-public; the contract-progress source/PDF/site/mirror/personal-fork refresh is
-in progress and is not labeled verified until external receipts are recorded.
-The official competition PR remains unopened.
+public; the contract-progress source/PDF/site/mirror/personal-fork refresh was
+published and anonymously verified at `2026-08-06T02:53:18Z`. The official
+competition PR remains unopened.
 
 Look Twice is a pre-action evidence-assurance layer for embodied AI. A denied
 Action Contract becomes a machine-readable `BeliefGap`; a scout acquires the
@@ -148,11 +148,14 @@ the local browser-plugin bridge failed, so the refreshed Results/Reproduce
 presentation has not received owner visual approval. The contract-progress
 social card hashes to
 `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
-The refreshed build also stages native browser playback of the complete 3:59
-MP4; publication is in progress, while the stable Release asset remains the
-download/hash mirror. The social card is disclosed simulation-only explanatory
-artwork, not an experiment
-capture, simulator frame, or screenshot.
+The refreshed build publishes native browser playback of the complete 3:59
+MP4 on GitHub Pages and the Sites mirror. Both anonymously returned
+`video/mp4`, GitHub Pages supported a byte-range request, and both copies
+matched SHA256
+`70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`.
+The stable Release asset remains the download/hash mirror. The social card is
+disclosed simulation-only explanatory artwork, not an experiment capture,
+simulator frame, or screenshot.
 
 The previous 18-page PDF and 154-file package identities are superseded. The
 final contract-progress-integrated PDF is **19 pages**, **1,104,864 bytes**,
@@ -163,10 +166,20 @@ official-package copy are byte-identical. Package inventory counts and the
 top-level `SHA256SUMS` identity are recorded after mechanical finalization.
 
 The original frozen source tag and baseline publication remain public. The
-current homepage, browser-playable full-demo, source, GitHub Pages, public
-mirror, and personal-fork refresh is staged and publication is in progress;
-future commit/version receipts are intentionally not claimed or sealed yet. No
-competition PR has been opened. A focused Genesis URDF
+refreshed homepage, browser-playable full demo, source, GitHub Pages, public
+mirror, and personal-fork package are published and anonymously verified. The
+last non-self-referential source content receipt
+`41bd99ee96faba599494fa2cbb1617798a8758b6` is public on default branch
+`v8-contract-progress-nbv`; the later seal-only commit records these receipts.
+GitHub Pages commit
+`4fa444050edef8064a3d0085ac5a4acf0d2b56d9` was deployed by successful
+Actions run `31066772336`; the personal-fork head is
+`fefe16e482e2133e04dabd6c3b431168e6fe9b9f`; and the public mirror is Sites
+version 12 from source commit `f4ac3f102b1e544f68194db64a8f40b29fd673a0`
+at <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>. Anonymous
+retrieval also verified the social-card SHA above and report SHA
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
+No competition PR has been opened. A focused Genesis URDF
 inertial-origin patch is public at
 `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
 non-draft PR #3184. It remains unmerged; no maintainer review, acceptance, or
@@ -202,9 +215,9 @@ official-CI claim.
 - `og-contract-progress.png` - simulation-only contract-progress social card,
   conceptual artwork rather than an experiment capture; SHA256
   `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
-- official-repository package (current unsealed staging) - 155 manifest
-  entries, 156 checksum entries, 157 total files; top-level `SHA256SUMS`
-  SHA256
+- official-repository package (published personal-fork head
+  `fefe16e482e2133e04dabd6c3b431168e6fe9b9f`) - 155 manifest entries, 156
+  checksum entries, 157 total files; top-level `SHA256SUMS` SHA256
   `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256

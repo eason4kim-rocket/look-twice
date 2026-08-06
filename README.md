@@ -528,19 +528,32 @@ and verify SHA256
 | Real-world application value - 20 | In 30 simulated warehouse-AMR logical-role pairs, active scouting reduced loaded-carrier logical path 22.5% while increasing total logical-role path 24.0%; all simulated missions completed without an unsafe or fallback outcome. V2 retained a 20.8183% paired loaded-carrier path reduction across 30 independent scenes; the two solver-scale shards retained a weighted 20.8439% reduction across the same fixed decisions. None is presented as energy or throughput evidence. |
 | Upstream open-source contribution - 10 | The project, public schemas, Go reference core, validators, replay builder, and evidence site are open source. Public Genesis [issue #3183](https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183) and open, non-draft [PR #3184](https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184) carry a focused two-file URDF inertial-origin fix at `0fa0f4a`. On tested upstream `main` `207db28`, the identical required test failed and passed with the patch; complete `scene.build()` comparison preserved authored principal moments only with the patch while retaining geometry fallback for an absent `<inertial>` in both trees. A later [bounded serial-CPU validation](docs/V8_GENESIS_PR_3184_VALIDATION.md) at the exact PR head passed 3/3 selected regression nodes. It is not a full-suite claim. The PR is open and unmerged; no review, acceptance, or inclusion in an upstream release is claimed. |
 
-Publication state on 2026-08-06: the additive review source snapshot
-`63f827e`, immutable
-[frozen-foundation tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05),
-GitHub Pages build `0e3e190`, and public mirror are live and verified without
-credentials. The stable candidate-release report is **19 pages**, **1,104,864
-bytes**, with
-SHA256
-`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
-its canonical output, site copy, and official-package copy are byte-identical.
-The reviewed [personal competition-fork package](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice)
-is public at `4489022`; its 155 checksum entries all pass. No PR has been
-opened against the official AMD
-competition repository; that final action remains behind owner approval.
+Publication state, anonymously verified at `2026-08-06T02:53:18Z`: the last
+non-self-referential content snapshot
+`41bd99ee96faba599494fa2cbb1617798a8758b6` is public on default branch
+`v8-contract-progress-nbv` (the later seal-only commit records these receipts);
+GitHub Pages commit
+`4fa444050edef8064a3d0085ac5a4acf0d2b56d9` was deployed by successful
+Actions run `31066772336`; and the public mirror is Sites version 12 from
+source commit `f4ac3f102b1e544f68194db64a8f40b29fd673a0` at
+<https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>. Both public
+deployments return the complete 3:59 MP4 as `video/mp4`; GitHub Pages supports
+byte-range playback, and the anonymously fetched bytes match SHA256
+`70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`.
+The social card and the stable **19-page**, **1,104,864-byte** report were also
+anonymously hash-verified at SHA256
+`68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a` and
+`7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`,
+respectively. The reviewed
+[personal competition-fork package](https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice)
+is public at `fefe16e482e2133e04dabd6c3b431168e6fe9b9f`: 155 manifest
+entries, 156/156 verified checksum entries, and 157 total files; top-level
+`SHA256SUMS` SHA256
+`433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
+The immutable
+[frozen-foundation tag](https://github.com/eason4kim-rocket/look-twice/tree/v8-competition-final-2026-08-05)
+remains available. No PR has been opened against the official AMD competition
+repository; that final action remains behind owner approval.
 
 ## Submission deliverables
 
