@@ -25,26 +25,26 @@ PUBLIC_ROUTES = (
     "/results",
     "/reproduce",
     "/media/look-twice-replay-30s.mp4",
-    "/media/look-twice-repair-to-action-10s.mp4",
-    "/media/look-twice-repair-to-action-10s.webp",
-    "/media/look-twice-repair-to-action-10s.manifest.json",
+    "/media/look-twice-repair-to-action-proof.mp4",
+    "/media/look-twice-repair-to-action-proof.webp",
+    "/media/look-twice-repair-to-action-proof.manifest.json",
 )
 PUBLIC_ROUTE_MIME_TYPES = {
     "/media/look-twice-replay-30s.mp4": ("video/mp4",),
-    "/media/look-twice-repair-to-action-10s.mp4": ("video/mp4",),
+    "/media/look-twice-repair-to-action-proof.mp4": ("video/mp4",),
     # Sites currently returns its hash-verified static WebP as a generic binary.
     # GitHub Pages returns image/webp; both are safe because the bytes are pinned.
-    "/media/look-twice-repair-to-action-10s.webp": (
+    "/media/look-twice-repair-to-action-proof.webp": (
         "image/webp",
         "application/octet-stream",
     ),
-    "/media/look-twice-repair-to-action-10s.manifest.json": ("application/json",),
+    "/media/look-twice-repair-to-action-proof.manifest.json": ("application/json",),
 }
 JUDGE_MOTION_HOOK_MANIFEST_NAME = (
-    "look-twice-repair-to-action-10s.manifest.json"
+    "look-twice-repair-to-action-proof.manifest.json"
 )
 JUDGE_MOTION_HOOK_MANIFEST_SHA256 = (
-    "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
+    "06f4d276b28797459953e62727ad4180b3d6a66258daf228d67049ffc53d1c50"
 )
 FROZEN_FOUNDATION_TAG = "v8-competition-final-2026-08-05"
 FORBIDDEN = (
@@ -169,7 +169,7 @@ def main() -> int:
         hook_manifest.get("schema_version")
         != "look-twice.judge-motion-hook/v1"
         or hook_manifest.get("candidate_id") != manifest["default_candidate_id"]
-        or hook_manifest.get("hook_id") != "repair-to-action-10s"
+        or hook_manifest.get("hook_id") != "repair-to-action-proof"
     ):
         errors.append("judge-motion hook manifest identity mismatch")
 
@@ -205,15 +205,15 @@ def main() -> int:
     hook_preview = hook_manifest["readme_preview"]
     hook_spec_valid = (
         hook_source["source_start_seconds"] == 16.8
-        and hook_source["source_end_seconds"] == 26.8
-        and hook_video["duration_seconds"] == 10.0
-        and hook_video["width"] == 1280
-        and hook_video["height"] == 720
+        and hook_source["source_end_seconds"] == 30.0
+        and hook_video["duration_seconds"] == 13.2
+        and hook_video["width"] == 1920
+        and hook_video["height"] == 1080
         and hook_video["fps"] == 30.0
         and hook_video["audio"] is False
-        and hook_preview["duration_seconds"] == 10.0
-        and hook_preview["width"] == 960
-        and hook_preview["height"] == 540
+        and hook_preview["duration_seconds"] == 13.2
+        and hook_preview["width"] == 1280
+        and hook_preview["height"] == 720
         and hook_preview["loop"] is True
         and hook_boundary
         == {
@@ -251,9 +251,9 @@ def main() -> int:
         base = args.public_url.rstrip("/")
         public_route_sha256s = {
             "/media/look-twice-replay-30s.mp4": media_manifest["video"]["sha256"],
-            "/media/look-twice-repair-to-action-10s.mp4": hook_video["sha256"],
-            "/media/look-twice-repair-to-action-10s.webp": hook_preview["sha256"],
-            "/media/look-twice-repair-to-action-10s.manifest.json": sha256(
+            "/media/look-twice-repair-to-action-proof.mp4": hook_video["sha256"],
+            "/media/look-twice-repair-to-action-proof.webp": hook_preview["sha256"],
+            "/media/look-twice-repair-to-action-proof.manifest.json": sha256(
                 hook_manifest_path
             ),
         }

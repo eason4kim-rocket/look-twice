@@ -18,11 +18,16 @@ ROOT = Path(__file__).resolve().parents[1]
 MEDIA_ROOT = ROOT / "showcase" / "public" / "media"
 SOURCE_VIDEO = MEDIA_ROOT / "look-twice-replay-30s.mp4"
 SOURCE_MANIFEST = MEDIA_ROOT / "look-twice-replay-30s.manifest.json"
-VIDEO_NAME = "look-twice-repair-to-action-10s.mp4"
-PREVIEW_NAME = "look-twice-repair-to-action-10s.webp"
-MANIFEST_NAME = "look-twice-repair-to-action-10s.manifest.json"
+VIDEO_NAME = "look-twice-repair-to-action-proof.mp4"
+PREVIEW_NAME = "look-twice-repair-to-action-proof.webp"
+MANIFEST_NAME = "look-twice-repair-to-action-proof.manifest.json"
 SOURCE_START_SECONDS = 16.8
-DURATION_SECONDS = 10.0
+DURATION_SECONDS = 13.2
+VIDEO_WIDTH = 1920
+VIDEO_HEIGHT = 1080
+PREVIEW_WIDTH = 1280
+PREVIEW_HEIGHT = 720
+PREVIEW_FPS = 10
 EXPECTED_SOURCE_SHA256 = (
     "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2"
 )
@@ -134,15 +139,13 @@ def build(output_dir: Path) -> dict[str, Any]:
                 "-hide_banner",
                 "-loglevel",
                 "error",
+                "-i",
+                str(SOURCE_VIDEO),
                 "-ss",
                 str(SOURCE_START_SECONDS),
                 "-t",
                 str(DURATION_SECONDS),
-                "-i",
-                str(SOURCE_VIDEO),
                 "-an",
-                "-vf",
-                "scale=1280:-2:flags=lanczos",
                 "-r",
                 "30",
                 "-c:v",
@@ -150,7 +153,7 @@ def build(output_dir: Path) -> dict[str, Any]:
                 "-preset",
                 "slow",
                 "-crf",
-                "25",
+                "16",
                 "-pix_fmt",
                 "yuv420p",
                 "-g",
@@ -166,27 +169,30 @@ def build(output_dir: Path) -> dict[str, Any]:
                 "-hide_banner",
                 "-loglevel",
                 "error",
+                "-i",
+                str(SOURCE_VIDEO),
                 "-ss",
                 str(SOURCE_START_SECONDS),
                 "-t",
                 str(DURATION_SECONDS),
-                "-i",
-                str(SOURCE_VIDEO),
                 "-an",
                 "-vf",
-                "fps=10,scale=960:-2:flags=lanczos",
+                f"fps={PREVIEW_FPS},scale={PREVIEW_WIDTH}:-2:flags=lanczos",
                 str(frames_root / "frame-%03d.png"),
             ]
         )
         frames = sorted(frames_root.glob("frame-*.png"))
-        if len(frames) != 100:
-            raise SystemExit(f"expected 100 preview frames, observed {len(frames)}")
+        expected_frames = round(DURATION_SECONDS * PREVIEW_FPS)
+        if len(frames) != expected_frames:
+            raise SystemExit(
+                f"expected {expected_frames} preview frames, observed {len(frames)}"
+            )
         run(
             [
                 "img2webp",
                 "-lossy",
                 "-q",
-                "65",
+                "80",
                 "-m",
                 "6",
                 "-d",
@@ -202,6 +208,14 @@ def build(output_dir: Path) -> dict[str, Any]:
         video_probe = probe_video(video)
         if abs(video_probe["duration_seconds"] - DURATION_SECONDS) > 0.01:
             raise SystemExit(f"unexpected hook duration: {video_probe['duration_seconds']}")
+        if (video_probe["width"], video_probe["height"]) != (
+            VIDEO_WIDTH,
+            VIDEO_HEIGHT,
+        ):
+            raise SystemExit(
+                "unexpected hook dimensions: "
+                f"{video_probe['width']}x{video_probe['height']}"
+            )
         if not is_faststart(video):
             raise SystemExit("hook MP4 is not faststart")
 
@@ -213,7 +227,7 @@ def build(output_dir: Path) -> dict[str, Any]:
     manifest = {
         "schema_version": "look-twice.judge-motion-hook/v1",
         "candidate_id": "v8-frozen",
-        "hook_id": "repair-to-action-10s",
+        "hook_id": "repair-to-action-proof",
         "description": (
             "A silent excerpt of the recorded replay: an independent root repairs "
             "the Action Contract, Python and Purify Go admit, and the carrier moves."
@@ -241,9 +255,9 @@ def build(output_dir: Path) -> dict[str, Any]:
             "sha256": sha256(output_preview),
             "bytes": output_preview.stat().st_size,
             "format": "animated_webp",
-            "width": 960,
-            "height": 540,
-            "fps": 10,
+            "width": PREVIEW_WIDTH,
+            "height": PREVIEW_HEIGHT,
+            "fps": PREVIEW_FPS,
             "duration_seconds": DURATION_SECONDS,
             "loop": True,
         },

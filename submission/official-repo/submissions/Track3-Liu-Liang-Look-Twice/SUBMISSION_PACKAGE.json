@@ -300,8 +300,8 @@
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 13476,
-      "sha256": "0196ce62db2950d786282e3c9ad0a02a0b3aaa188d96c7afd618df08bfe30fee"
+      "size_bytes": 13703,
+      "sha256": "381457d32ef8c14dd3cbbfd6e31d14e95b4d7c41abb081ccf005dfbef1067758"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
@@ -1192,22 +1192,22 @@
       "sha256": "6470aaab8fa8ffc1132f7aea7fd0869a3e0a084bcae92d615d920730079204f2"
     },
     {
-      "path": "look-twice-repair-to-action-10s.manifest.json",
+      "path": "look-twice-repair-to-action-proof.manifest.json",
       "role": "judge-motion hook provenance and simulation-boundary manifest",
-      "size_bytes": 1632,
-      "sha256": "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
+      "size_bytes": 1642,
+      "sha256": "06f4d276b28797459953e62727ad4180b3d6a66258daf228d67049ffc53d1c50"
     },
     {
-      "path": "look-twice-repair-to-action-10s.mp4",
-      "role": "silent 10-second judge-motion hook",
-      "size_bytes": 343596,
-      "sha256": "3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0"
+      "path": "look-twice-repair-to-action-proof.mp4",
+      "role": "silent 13-second 1080p judge-motion hook",
+      "size_bytes": 1530726,
+      "sha256": "a2fd07abfc59187e170d1151981c0d9225ca08bb20410ebf26e26729d61aaeb0"
     },
     {
-      "path": "look-twice-repair-to-action-10s.webp",
+      "path": "look-twice-repair-to-action-proof.webp",
       "role": "animated README preview of the judge-motion hook",
-      "size_bytes": 61930,
-      "sha256": "dc83c1518df532a63b257e48524e40238c9a0d8e6fec2dd0252211ba23093b9d"
+      "size_bytes": 298542,
+      "sha256": "897ae324c65c55ff9159a80297b4ed46c3d3d57e83f6826d797fa63196f4a22b"
     }
   ],
   "external_release_assets": [

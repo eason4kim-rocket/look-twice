@@ -90,11 +90,20 @@ test("server-renders the Look Twice product entry", async () => {
   assert.match(html, /RECORDED 3:59 AMD GPU WORKFLOW/);
   assert.match(html, /\/media\/Look-Twice-V8-Demo\.mp4/);
   assert.match(html, /not physical-robot footage/);
-  assert.match(html, /\/media\/look-twice-repair-to-action-10s\.mp4/);
+  assert.match(html, /\/media\/look-twice-repair-to-action-proof\.mp4/);
+  assert.match(html, /13-SECOND NATIVE 1080P REPLAY/);
+  assert.match(html, /Repair → dual admit → direct move/);
   assert.match(html, /(?:recorded replay|recorded simulation replay|simulation only)/i);
   assert.match(html, /href=["']#full-demo["']/i);
   assert.match(html, /id=["']full-demo["']/i);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/);
+  const marketingCss = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(marketingCss, /\.hero-copy\s*\{[^}]*min-width:\s*0/s);
+  assert.match(marketingCss, /\.hero-system\s*\{[^}]*min-width:\s*0/s);
+  assert.match(marketingCss, /\.hero-system\s*\{[^}]*justify-content:\s*flex-start/s);
+  assert.match(marketingCss, /\.hero-proof\s*\{[^}]*max-width:\s*100%/s);
+  assert.match(marketingCss, /\.hero-proof-label\s*\{[^}]*position:\s*static/s);
+  assert.doesNotMatch(marketingCss, /\.hero-proof::after/);
 });
 
 test("publishes candidate-neutral, traceable replay data", async () => {
@@ -183,11 +192,11 @@ test("publishes a reproducible 30-second media pack", async () => {
   );
 
   const hookManifest = JSON.parse(
-    await readFile(new URL("look-twice-repair-to-action-10s.manifest.json", mediaRoot), "utf8"),
+    await readFile(new URL("look-twice-repair-to-action-proof.manifest.json", mediaRoot), "utf8"),
   );
   assert.equal(hookManifest.schema_version, "look-twice.judge-motion-hook/v1");
   assert.equal(hookManifest.candidate_id, "v8-frozen");
-  assert.equal(hookManifest.hook_id, "repair-to-action-10s");
+  assert.equal(hookManifest.hook_id, "repair-to-action-proof");
   assert.equal(hookManifest.derived_from.sha256, mediaManifest.video.sha256);
   assert.equal(hookManifest.derived_from.manifest_sha256, await sha256(sourceManifestUrl));
   assert.equal(hookManifest.derived_from.recorded_at_utc, mediaManifest.recorded_at_utc);
@@ -199,16 +208,15 @@ test("publishes a reproducible 30-second media pack", async () => {
     hookManifest.derived_from.source_end_seconds - hookManifest.derived_from.source_start_seconds,
     hookManifest.video.duration_seconds,
   );
-  assert.ok(hookManifest.video.duration_seconds >= 5);
-  assert.ok(hookManifest.video.duration_seconds <= 10);
+  assert.equal(hookManifest.video.duration_seconds, 13.2);
   assert.equal(hookManifest.video.codec, "h264");
   assert.equal(hookManifest.video.pixel_format, "yuv420p");
-  assert.equal(hookManifest.video.width, 1280);
-  assert.equal(hookManifest.video.height, 720);
+  assert.equal(hookManifest.video.width, 1920);
+  assert.equal(hookManifest.video.height, 1080);
   assert.equal(hookManifest.video.fps, 30);
   assert.equal(hookManifest.video.audio, false);
   assert.equal(hookManifest.video.faststart, true);
-  assert.ok(hookManifest.video.bytes < 1024 * 1024);
+  assert.ok(hookManifest.video.bytes < 4 * 1024 * 1024);
   assert.equal(hookManifest.boundary.recorded_replay_excerpt, true);
   assert.equal(hookManifest.boundary.new_experiment_or_result, false);
   assert.equal(hookManifest.boundary.simulation_only, true);
@@ -236,8 +244,7 @@ test("publishes a reproducible 30-second media pack", async () => {
     hookManifest.readme_preview.duration_seconds,
   );
   assert.equal(hookManifest.readme_preview.loop, true);
-  assert.ok(hookManifest.readme_preview.duration_seconds >= 5);
-  assert.ok(hookManifest.readme_preview.duration_seconds <= 10);
+  assert.equal(hookManifest.readme_preview.duration_seconds, 13.2);
 
 });
 

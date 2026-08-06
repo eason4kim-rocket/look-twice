@@ -53,7 +53,7 @@ Official sources:
       `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`
       and
       `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
-- [x] Both public sites return the 10-second MP4 and animated WebP at the
+- [x] Both public sites return the 13.2-second 1080p MP4 and animated WebP at the
       sealed SHA256 identities in the hook manifest.
 - [x] The published package has 158 manifest entries, 159/159 verified
       checksum entries, and 160 total files; top-level `SHA256SUMS` SHA256 is
@@ -253,7 +253,7 @@ Official sources:
 - [x] Complete the final 239-second English demo MP4 render and local QA.
 - [ ] Complete owner visual and audible review of the final MP4.
 - [x] Recorded 30-second evidence reel.
-- [x] Derive a 10-second silent judge hook from the sealed replay, bind it to
+- [x] Derive a 13.2-second native-resolution silent judge hook from the sealed replay, bind it to
       the source SHA in a machine-readable manifest, and label it
       simulation-only / not a new experiment / not physical-robot footage.
 - [x] English-default Evidence Console build.

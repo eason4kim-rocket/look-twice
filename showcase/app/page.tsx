@@ -74,17 +74,19 @@ function HomeContent() {
           <div className="system-head"><span>{zh ? "仓储 AMR / C-04 区" : "WAREHOUSE AMR / ZONE C-04"}</span><b>{zh ? "证据保障在线" : "ASSURANCE ONLINE"}</b></div>
           <a
             className="hero-proof"
-            href="#full-demo"
-            aria-label={zh ? "观看 10 秒补证到行动回放，然后进入完整演示" : "Watch the 10-second repair-to-action replay, then open the complete demo"}
+            href="/media/look-twice-repair-to-action-proof.mp4"
+            target="_blank"
+            rel="noreferrer"
+            aria-label={zh ? "以原始 1080P 清晰度打开 13 秒补证到直行动作回放" : "Open the 13-second repair-to-direct-motion replay at native 1080p resolution"}
           >
             <video autoPlay muted loop playsInline preload="metadata" poster="/media/look-twice-replay-30s.poster.webp" aria-hidden="true">
-              <source src="/media/look-twice-repair-to-action-10s.mp4" type="video/mp4" />
+              <source src="/media/look-twice-repair-to-action-proof.mp4" type="video/mp4" />
             </video>
             <Image className="hero-proof-poster" src="/media/look-twice-replay-30s.poster.webp" width={1920} height={1080} unoptimized alt="" aria-hidden="true" />
             <span className="hero-proof-label">
-              <small>{zh ? "10 秒录制回放 · 仅限仿真" : "10-SECOND RECORDED REPLAY · SIMULATION ONLY"}</small>
-              <b>{zh ? "补证 → 准入 → 行动" : "Repair → admit → move"}</b>
-              <i>{zh ? "观看 3:59 完整演示 ↘" : "Watch the complete 3:59 demo ↘"}</i>
+              <small>{zh ? "13 秒原生 1080P 录制回放 · 仅限仿真" : "13-SECOND NATIVE 1080P REPLAY · SIMULATION ONLY"}</small>
+              <b>{zh ? "补证 → 双重准入 → 直行" : "Repair → dual admit → direct move"}</b>
+              <i>{zh ? "以完整分辨率打开 ↗" : "Open at full resolution ↗"}</i>
             </span>
           </a>
           <div className="contract-mini">

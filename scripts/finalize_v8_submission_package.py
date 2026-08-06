@@ -102,18 +102,18 @@ SOCIAL_PREVIEW_HEIGHT = 911
 
 JUDGE_MOTION_HOOK_MEDIA_DIR = REPO_ROOT / "showcase" / "public" / "media"
 JUDGE_MOTION_HOOK_MANIFEST_NAME = (
-    "look-twice-repair-to-action-10s.manifest.json"
+    "look-twice-repair-to-action-proof.manifest.json"
 )
-JUDGE_MOTION_HOOK_VIDEO_NAME = "look-twice-repair-to-action-10s.mp4"
-JUDGE_MOTION_HOOK_PREVIEW_NAME = "look-twice-repair-to-action-10s.webp"
+JUDGE_MOTION_HOOK_VIDEO_NAME = "look-twice-repair-to-action-proof.mp4"
+JUDGE_MOTION_HOOK_PREVIEW_NAME = "look-twice-repair-to-action-proof.webp"
 JUDGE_MOTION_HOOK_MANIFEST_SHA256 = (
-    "98ea58ffa994768990ec0021e87c52f0c0157047a4ac646008d192e632a7e038"
+    "06f4d276b28797459953e62727ad4180b3d6a66258daf228d67049ffc53d1c50"
 )
 JUDGE_MOTION_HOOK_VIDEO_SHA256 = (
-    "3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0"
+    "a2fd07abfc59187e170d1151981c0d9225ca08bb20410ebf26e26729d61aaeb0"
 )
 JUDGE_MOTION_HOOK_PREVIEW_SHA256 = (
-    "dc83c1518df532a63b257e48524e40238c9a0d8e6fec2dd0252211ba23093b9d"
+    "897ae324c65c55ff9159a80297b4ed46c3d3d57e83f6826d797fa63196f4a22b"
 )
 JUDGE_MOTION_HOOK_SOURCE_VIDEO_SHA256 = (
     "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2"
@@ -125,7 +125,7 @@ JUDGE_MOTION_HOOK_PACKAGE_ROLES = {
     JUDGE_MOTION_HOOK_MANIFEST_NAME: (
         "judge-motion hook provenance and simulation-boundary manifest"
     ),
-    JUDGE_MOTION_HOOK_VIDEO_NAME: "silent 10-second judge-motion hook",
+    JUDGE_MOTION_HOOK_VIDEO_NAME: "silent 13-second 1080p judge-motion hook",
     JUDGE_MOTION_HOOK_PREVIEW_NAME: (
         "animated README preview of the judge-motion hook"
     ),
@@ -775,7 +775,7 @@ def _judge_motion_hook_identity(package_dir: Path) -> dict[str, Any]:
     expected_manifest_values = {
         "schema_version": "look-twice.judge-motion-hook/v1",
         "candidate_id": "v8-frozen",
-        "hook_id": "repair-to-action-10s",
+        "hook_id": "repair-to-action-proof",
     }
     for key, expected in expected_manifest_values.items():
         if manifest.get(key) != expected:
@@ -814,20 +814,24 @@ def _judge_motion_hook_identity(package_dir: Path) -> dict[str, Any]:
     if (
         video["path"] != JUDGE_MOTION_HOOK_VIDEO_NAME
         or video["sha256"] != JUDGE_MOTION_HOOK_VIDEO_SHA256
-        or video["duration_seconds"] != 10.0
+        or video["duration_seconds"] != 13.2
+        or video["width"] != 1920
+        or video["height"] != 1080
         or video["audio"] is not False
     ):
         raise ValueError("The judge-motion hook video declaration changed")
     if (
         preview["path"] != JUDGE_MOTION_HOOK_PREVIEW_NAME
         or preview["sha256"] != JUDGE_MOTION_HOOK_PREVIEW_SHA256
-        or preview["duration_seconds"] != 10.0
+        or preview["duration_seconds"] != 13.2
+        or preview["width"] != 1280
+        or preview["height"] != 720
         or preview["loop"] is not True
     ):
         raise ValueError("The judge-motion hook README preview declaration changed")
     if (
         derived_from["source_start_seconds"] != 16.8
-        or derived_from["source_end_seconds"] != 26.8
+        or derived_from["source_end_seconds"] != 30.0
         or manifest["boundary"]
         != {
             "recorded_replay_excerpt": True,
