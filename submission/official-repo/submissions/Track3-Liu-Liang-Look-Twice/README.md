@@ -16,14 +16,15 @@
 | **[Technical Report](Look-Twice-V8-Technical-Report.pdf)** | The 19-page architecture, protocol, results, and evidence-boundary report |
 | **[Reproduce](https://eason4kim-rocket.github.io/reproduce)** | The shortest path from a clean clone to the CPU audit, site, and Radeon replay |
 
-<a href="https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-proof.mp4">
+<a href="https://eason4kim-rocket.github.io/#full-demo">
   <img src="look-twice-repair-to-action-proof.webp" width="960" alt="Thirteen-second native-resolution silent replay: independent evidence repairs the contract, Python and Purify admit, the carrier moves directly, and the final result appears">
 </a>
 
-The moving preview above is a 13.2-second native-resolution excerpt of the recorded simulation
-replay—not a new experiment or physical-robot result. Click it for the 1080p
-replay, open the [local MP4](look-twice-repair-to-action-proof.mp4), or watch
-the complete [3:59 demo](https://eason4kim-rocket.github.io/#full-demo).
+The moving preview above is a 13.2-second native-resolution excerpt of the
+recorded simulation replay—not a new experiment or physical-robot result.
+Click it to jump straight to the complete
+[3:59 demo](https://eason4kim-rocket.github.io/#full-demo) on the project site;
+the excerpt also remains available as a [local 1080p MP4](look-twice-repair-to-action-proof.mp4).
 
 The complete demo is also committed here as [Look-Twice-V8-Demo.mp4](Look-Twice-V8-Demo.mp4).
 The [GitHub Release copy](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4) is a stable hash mirror. Both are the same 239-second, 1920×1080 H.264/AAC file:

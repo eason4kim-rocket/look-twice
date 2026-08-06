@@ -300,8 +300,8 @@
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 13703,
-      "sha256": "381457d32ef8c14dd3cbbfd6e31d14e95b4d7c41abb081ccf005dfbef1067758"
+      "size_bytes": 13716,
+      "sha256": "1e04ca67a66b070f82faaa99539bc396e37928c6fb881bba191150069ca06c15"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",

@@ -22,13 +22,14 @@ all in [`showcase/`](showcase/).
 
 ### Thirteen-second proof: repair → dual admit → direct move
 
-<a href="https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-proof.mp4">
+<a href="https://eason4kim-rocket.github.io/#full-demo">
   <img src="showcase/public/media/look-twice-repair-to-action-proof.webp" width="960" alt="Thirteen-second native-resolution silent replay: independent evidence repairs the contract, Python and Purify admit, the carrier moves directly, and the final result appears">
 </a>
 
 This is a silent excerpt of the recorded simulation replay—not a new
-experiment or physical-robot footage. **[Watch the complete 3:59 demo](https://eason4kim-rocket.github.io/#full-demo)**
-or [play the 13-second 1080p MP4 directly](https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-proof.mp4).
+experiment or physical-robot footage. **Click the moving preview to jump to the
+complete 3:59 demo on the project site**, or
+[play the 13-second 1080p MP4 directly](https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-proof.mp4).
 
 ## The warehouse problem
 
