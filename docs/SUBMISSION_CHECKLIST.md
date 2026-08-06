@@ -30,17 +30,20 @@ Official sources:
 
 ## Publication receipts
 
-- [x] Anonymous verification completed at `2026-08-06T02:53:18Z`.
+- [x] Motion-hook publication verification completed at `2026-08-06T04:54:20Z`.
 - [x] The last non-self-referential source-content receipt
-      `41bd99ee96faba599494fa2cbb1617798a8758b6` is public on default branch
+      `9164d13b66a4e699dc183be3c6238485e509d1e9` is public on default branch
       `v8-contract-progress-nbv`; the later seal-only commit records these
       publication receipts.
-- [x] GitHub Pages commit `4fa444050edef8064a3d0085ac5a4acf0d2b56d9`
-      deployed in successful Actions run `31066772336`.
+- [x] GitHub Pages commit `ab1d8df2a5b173ff57258f197ec38886561d98cb`
+      deployed in successful Actions run `31071921133`.
+- [x] Source CI run `31072462200` passed at content receipt
+      `9164d13b66a4e699dc183be3c6238485e509d1e9`; Python, Purify Go, and
+      showcase jobs are green.
 - [x] The personal competition-fork package is public at commit
-      `fefe16e482e2133e04dabd6c3b431168e6fe9b9f` without an official AMD PR.
-- [x] The public mirror is Sites version 12 from source commit
-      `f4ac3f102b1e544f68194db64a8f40b29fd673a0` at
+      `70797708f562d10f5b170ce938f4b085fdd98bcb` without an official AMD PR.
+- [x] The public mirror is Sites version 16 from source commit
+      `1c9bab9ffc97e6b5f4c6928e4445737108f9c7b6` at
       <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>.
 - [x] GitHub Pages and Sites both anonymously return the complete 3:59 MP4 as
       `video/mp4`; Pages supports a byte-range request, and both public copies
@@ -50,9 +53,11 @@ Official sources:
       `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`
       and
       `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
-- [x] The published package has 155 manifest entries, 156/156 verified
-      checksum entries, and 157 total files; top-level `SHA256SUMS` SHA256 is
-      `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
+- [x] Both public sites return the 10-second MP4 and animated WebP at the
+      sealed SHA256 identities in the hook manifest.
+- [x] The published package has 158 manifest entries, 159/159 verified
+      checksum entries, and 160 total files; top-level `SHA256SUMS` SHA256 is
+      `daaaab06a5a82b805b85581519a354f7206224a5891b6687e124f14d7cf6d4a8`.
 - [x] Keep `official_pr_opened=false`; opening the official competition PR
       remains behind explicit owner approval.
 
@@ -279,13 +284,13 @@ Official sources:
 - [x] Integrate both sealed solver-scale evidence directories into the local
       site and official-package staging; preserve their internal checksum
       indexes and dedicated verifier passes.
-- [x] Run the official-package finalizer at `2026-08-06T02:32:52Z` and write
+- [x] Run the official-package finalizer and publication seal on 2026-08-06 and write
       the finalized top-level machine manifests, checksum index, file
       counts, and package identity; its subsequent `--check` passes.
-- [x] Record 155 manifest inventory entries, 156 checksum entries, and 157
-      total regular files including `SHA256SUMS`; all 156 `shasum` checks pass.
+- [x] Record 158 manifest inventory entries, 159 checksum entries, and 160
+      total regular files including `SHA256SUMS`; all 159 `shasum` checks pass.
       The top-level `SHA256SUMS` SHA256 is
-      `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
+      `daaaab06a5a82b805b85581519a354f7206224a5891b6687e124f14d7cf6d4a8`.
 - [ ] Owner reviews the two-shard Results/Reproduce presentation, rebuilt PDF,
       official-package diff, and exact `cumulative90/max60/never90` wording.
 
@@ -545,16 +550,16 @@ Stable targets:
       the two-shard payload is final. The superseded counts were 152 manifest
       entries, 153 checksum entries, and 154 total regular files; the prior
       103/104/105 counts and `e3fee903…` checksum identity remain archived only.
-- [x] Verify all 156 top-level checksums after the full-demo refresh,
+- [x] Verify all 159 top-level checksums after the judge-motion refresh,
       rerun the finalizer with `--check`,
       and pass both staged solver-scale dedicated verifiers. The current
       top-level checksum-index SHA256 is
-      `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
+      `daaaab06a5a82b805b85581519a354f7206224a5891b6687e124f14d7cf6d4a8`.
 - [x] Copy the final two-shard staging directory byte-for-byte to the local
       official-fork worktree and verify `diff -qr` plus every checksum before
       any push.
-- [x] Push the reviewed full-demo package to the dedicated official-fork branch
-      at `fefe16e482e2133e04dabd6c3b431168e6fe9b9f` without opening a PR.
+- [x] Push the reviewed motion-hook package to the dedicated official-fork branch
+      at `70797708f562d10f5b170ce938f4b085fdd98bcb` without opening a PR.
 - [x] Use planned PR title `Track 3, Liu Liang, Look Twice`.
 - [x] Replace the owner-review preamble in
       `docs/SUBMISSION_DRAFT.md` with the actual publication state and rerun
@@ -584,12 +589,12 @@ Stable targets:
       directories, the compact compound-result files, and the byte-identical
       19-page PDF with SHA256
       `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
-- [x] Run the official-package finalizer at `2026-08-06T02:32:52Z` and record
-      the finalized top-level manifests and 155/156/157 counts. Its
-      `--check`, all 156 checksum validations, and both staged dedicated
+- [x] Run the official-package finalizer and publication seal on 2026-08-06 and
+      record the finalized top-level manifests and 158/159/160 counts. Its
+      `--check`, all 159 checksum validations, and both staged dedicated
       verifiers pass; the top-level
       `SHA256SUMS` SHA256 is
-      `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
+      `daaaab06a5a82b805b85581519a354f7206224a5891b6687e124f14d7cf6d4a8`.
 - [ ] Owner reviews the complete V2 evidence package, local verifier output,
       rebuilt PDF, refreshed site, and exact official-package diff.
 - [ ] Owner reviews both solver-scale reports and verifier outputs, the rebuilt

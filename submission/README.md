@@ -125,13 +125,13 @@ energy, or safety certification.
 
 The homepage social card and native browser playback of the complete 3:59 demo
 are published and anonymously verified. The last non-self-referential source
-content receipt `41bd99ee96faba599494fa2cbb1617798a8758b6` is public on default
+content receipt `9164d13b66a4e699dc183be3c6238485e509d1e9` is public on default
 branch `v8-contract-progress-nbv`; the later seal-only commit records these
 publication receipts. GitHub Pages commit
-`4fa444050edef8064a3d0085ac5a4acf0d2b56d9` was deployed by successful
-Actions run `31066772336`; the personal-fork package is public at
-`fefe16e482e2133e04dabd6c3b431168e6fe9b9f`; and the mirror is Sites version
-12 from source commit `f4ac3f102b1e544f68194db64a8f40b29fd673a0` at
+`ab1d8df2a5b173ff57258f197ec38886561d98cb` was deployed by successful
+Actions run `31071921133`; the personal-fork package is public at
+`70797708f562d10f5b170ce938f4b085fdd98bcb`; and the mirror is Sites version
+16 from source commit `1c9bab9ffc97e6b5f4c6928e4445737108f9c7b6` at
 <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>. Both public
 sites return the full MP4 as `video/mp4`; GitHub Pages supports byte ranges,
 and anonymous downloads match SHA256
@@ -212,7 +212,7 @@ opened against the official AMD competition repository.
 | 10-second judge motion hook | `showcase/public/media/look-twice-repair-to-action-10s.mp4` | Recorded simulation excerpt; repair → dual admission → motion; `3aaf96e5c998f556bd53d28c408a3475c3e701fb7f892a39d67a274844fe5ed0` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | Published personal-fork package at `fefe16e482e2133e04dabd6c3b431168e6fe9b9f`: 155 manifest entries, 156/156 checksum entries, and 157 total files; top-level checksum-index SHA256 `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`; official PR not opened |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | Published personal-fork package at `70797708f562d10f5b170ce938f4b085fdd98bcb`: 158 manifest entries, 159/159 checksum entries, and 160 total files; top-level checksum-index SHA256 `daaaab06a5a82b805b85581519a354f7206224a5891b6687e124f14d7cf6d4a8`; official PR not opened |
 
 ## Frozen checkpoint
 
@@ -267,7 +267,7 @@ The retained recovery V2 verifier accepted its byte-identical 30/30 report
 remotely and locally. The two-shard prefix and suffix dedicated verifiers
 accepted **20/20** and **10/10**, and both shards' formal and complete package
 indexes passed. The final official-directory finalizer `--check` passed, as did
-all **156** entries in its top-level `SHA256SUMS`:
+all **159** entries in its top-level `SHA256SUMS`:
 
 ```bash
 python3 scripts/verify_v8_additive_decision_dynamics_60.py \
