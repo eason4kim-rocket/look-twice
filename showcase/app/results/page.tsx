@@ -694,7 +694,7 @@ function Results() {
         <a href={challengeEvidence.rawArchiveUrl}>{zh ? "下载 30-world 原始挑战归档 ↗" : "DOWNLOAD 30-WORLD RAW CHALLENGE ARCHIVE ↗"}</a>
         <a href={challengeEvidence.verificationUrl}>{zh ? "打开独立验证 JSON ↗" : "OPEN INDEPENDENT VERIFICATION JSON ↗"}</a>
         <a href="/docs/Look-Twice-V8-Technical-Report.pdf" target="_blank">{zh ? "下载技术报告 PDF ↗" : "DOWNLOAD TECHNICAL REPORT PDF ↗"}</a>
-        <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4" target="_blank">{zh ? "观看 3:59 英文演示 ↗" : "WATCH 3:59 ENGLISH DEMO ↗"}</a>
+        <a href="/media/Look-Twice-V8-Demo.mp4" target="_blank" rel="noreferrer">{zh ? "直接观看 3:59 英文演示 ▶" : "WATCH 3:59 ENGLISH DEMO IN BROWSER ▶"}</a>
         <a href={publicationEvidence.sourceBranchUrl} target="_blank" rel="noreferrer">{zh ? "打开新增候选源码 ↗" : "OPEN ADDITIVE CANDIDATE SOURCE ↗"}</a>
         <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt" target="_blank">{zh ? "下载冻结模型 ↗" : "DOWNLOAD FROZEN CHECKPOINT ↗"}</a>
         <a href="/reproduce?locale=en">{zh ? "打开复现路径 →" : "OPEN REPRODUCTION PATH →"}</a>

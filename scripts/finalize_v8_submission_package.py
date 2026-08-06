@@ -93,6 +93,7 @@ SINGLE_SCENE_30_SUFFIX_FORMAL_ENTRIES = 13
 SINGLE_SCENE_30_SUFFIX_PACKAGE_ENTRIES = 18
 
 SOCIAL_PREVIEW_PATH = REPO_ROOT / "showcase" / "public" / "og-contract-progress.png"
+SOCIAL_PREVIEW_STAGED_NAME = "Look-Twice-V8-Social-Card.png"
 SOCIAL_PREVIEW_SHA256 = (
     "68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a"
 )
@@ -312,6 +313,8 @@ def _inventory(
             role = "submission-local binary diff attributes"
         if relative == "V8-Frozen-Challenge-Judge-Card.md":
             role = "compact judge entrypoint"
+        if relative == SOCIAL_PREVIEW_STAGED_NAME:
+            role = "judge-facing contract-progress social preview card"
         if role is None and relative.startswith(V2_PREFIX):
             role = _v2_role(relative)
         if relative.startswith(SINGLE_SCENE_60_PREFIX):
@@ -661,7 +664,7 @@ def _technical_report_identity(
     }
 
 
-def _social_preview_identity() -> dict[str, Any]:
+def _social_preview_identity(package_dir: Path) -> dict[str, Any]:
     if not SOCIAL_PREVIEW_PATH.is_file():
         raise ValueError(
             f"The contract-progress social preview is missing: {SOCIAL_PREVIEW_PATH}"
@@ -672,8 +675,21 @@ def _social_preview_identity() -> dict[str, Any]:
             "The contract-progress social preview does not match its pinned identity: "
             f"expected {SOCIAL_PREVIEW_SHA256}, observed {observed_sha256}"
         )
+    staged_path = package_dir / SOCIAL_PREVIEW_STAGED_NAME
+    if not staged_path.is_file():
+        raise ValueError(f"The staged social preview is missing: {staged_path}")
+    staged_sha256 = _sha256_file(staged_path)
+    if staged_sha256 != observed_sha256:
+        raise ValueError(
+            "The staged social preview does not match the site identity: "
+            f"expected {observed_sha256}, observed {staged_sha256}"
+        )
     return {
         "path": "showcase/public/og-contract-progress.png",
+        "staged_path": (
+            "submission/official-repo/submissions/"
+            f"Track3-Liu-Liang-Look-Twice/{SOCIAL_PREVIEW_STAGED_NAME}"
+        ),
         "sha256": observed_sha256,
         "size_bytes": SOCIAL_PREVIEW_PATH.stat().st_size,
         "width": SOCIAL_PREVIEW_WIDTH,
@@ -709,6 +725,9 @@ def _build_handoff_manifest(
             "additive_pages_refresh_deployed": publication_verified,
             "additive_report_release_asset_replaced": publication_verified,
             "additive_official_fork_refresh_pushed": publication_verified,
+            "source_repository_homepage_refreshed": publication_verified,
+            "social_card_repository_homepage_published": publication_verified,
+            "full_demo_browser_playback_published": publication_verified,
             "external_upstream_issue_or_pr_opened": True,
         }
     )
@@ -782,6 +801,21 @@ def _build_handoff_manifest(
             ),
         }
     )
+    artifacts["final_demo_video"].update(
+        {
+            "browser_playback_url": (
+                "https://eason4kim-rocket.github.io/media/"
+                "Look-Twice-V8-Demo.mp4"
+            ),
+            "browser_playback_verified": publication_verified,
+            "browser_playback_state": (
+                "published as video/mp4 on the primary evidence site and public "
+                "mirror; byte-identical to the release download"
+                if publication_verified
+                else "browser-playback publication and anonymous verification in progress"
+            ),
+        }
+    )
     artifacts["compound_contract_progress_challenge"].update(
         {
             "publication_verified": publication_verified,
@@ -832,7 +866,7 @@ def _build_handoff_manifest(
     verification = data["verification"]
     verification.update(
         {
-            "node_22_site_tests": "43/43 passed",
+            "node_22_site_tests": "44/44 passed",
             "node_22_lint": "passed",
             "node_dependency_audit": "0 known vulnerabilities",
             "production_build": "passed",
@@ -860,8 +894,8 @@ def _build_handoff_manifest(
             ),
             "github_pages_deployment": (
                 f"commit {publication_receipts['pages_commit_sha']}; four routes, "
-                "contract-progress JSON, PDF, and social preview verified without "
-                "credentials"
+                "contract-progress JSON, PDF, social preview, and browser-playable "
+                "3:59 MP4 verified without credentials"
                 if publication_verified
                 else "contract-progress GitHub Pages deployment and anonymous "
                 "route/asset verification in progress"
@@ -870,8 +904,8 @@ def _build_handoff_manifest(
                 f"Sites version {publication_receipts['sites_version_number']} from "
                 f"source commit {publication_receipts['sites_source_commit_sha']}; "
                 f"{publication_receipts['sites_deployment_url']}; routes, "
-                "contract-progress JSON, PDF, and social preview verified without "
-                "credentials"
+                "contract-progress JSON, PDF, social preview, and browser-playable "
+                "3:59 MP4 verified without credentials"
                 if publication_verified
                 else "contract-progress public mirror deployment and anonymous "
                 "route/asset verification in progress"
@@ -886,6 +920,14 @@ def _build_handoff_manifest(
                 if publication_verified
                 else "contract-progress source/site/PDF/package publication and "
                 "anonymous verification are in progress; official competition PR not opened"
+            ),
+            "source_repository_homepage": (
+                f"default branch {publication_receipts['source_default_branch']}; "
+                "root README social card and direct browser-demo link verified "
+                "without credentials"
+                if publication_verified
+                else "source repository homepage refresh and anonymous verification "
+                "in progress"
             ),
             "official_fork_branch": (
                 "the byte-identical contract-progress package is public on "
@@ -952,6 +994,12 @@ def _validate_https_url(value: str) -> str:
     return value
 
 
+def _validate_branch(value: str) -> str:
+    if not re.fullmatch(r"[A-Za-z0-9._/-]+", value) or value.startswith("/"):
+        raise argparse.ArgumentTypeError("expected a Git branch name")
+    return value
+
+
 def _positive_int(value: str) -> int:
     parsed = int(value)
     if parsed <= 0:
@@ -972,6 +1020,9 @@ def _sealed_publication_receipts(path: Path) -> dict[str, Any] | None:
             "verified_at_utc": _validate_timestamp(str(receipts["verified_at_utc"])),
             "source_commit_sha": _validate_git_sha(
                 str(receipts["source_commit_sha"])
+            ),
+            "source_default_branch": _validate_branch(
+                str(receipts["source_default_branch"])
             ),
             "pages_commit_sha": _validate_git_sha(str(receipts["pages_commit_sha"])),
             "official_fork_commit_sha": _validate_git_sha(
@@ -1025,6 +1076,7 @@ def main() -> int:
     )
     parser.add_argument("--publication-verified-at-utc", type=_validate_timestamp)
     parser.add_argument("--source-commit-sha", type=_validate_git_sha)
+    parser.add_argument("--source-default-branch", type=_validate_branch)
     parser.add_argument("--pages-commit-sha", type=_validate_git_sha)
     parser.add_argument("--official-fork-commit-sha", type=_validate_git_sha)
     parser.add_argument("--sites-source-commit-sha", type=_validate_git_sha)
@@ -1044,6 +1096,7 @@ def main() -> int:
     publication_values = {
         "verified_at_utc": args.publication_verified_at_utc,
         "source_commit_sha": args.source_commit_sha,
+        "source_default_branch": args.source_default_branch,
         "pages_commit_sha": args.pages_commit_sha,
         "official_fork_commit_sha": args.official_fork_commit_sha,
         "sites_source_commit_sha": args.sites_source_commit_sha,
@@ -1058,7 +1111,7 @@ def main() -> int:
     ):
         parser.error(
             "--publication-verified requires --publication-verified-at-utc, "
-            "--source-commit-sha, --pages-commit-sha, "
+            "--source-commit-sha, --source-default-branch, --pages-commit-sha, "
             "--official-fork-commit-sha, --sites-source-commit-sha, "
             "--sites-version-number, and --sites-deployment-url"
         )
@@ -1085,7 +1138,7 @@ def main() -> int:
         expected_sha256=args.technical_report_sha256,
         expected_page_count=args.technical_report_page_count,
     )
-    social_preview_identity = _social_preview_identity()
+    social_preview_identity = _social_preview_identity(package_dir)
     handoff_data, handoff_bytes = _build_handoff_manifest(
         handoff_manifest,
         len(package_data["files"]),

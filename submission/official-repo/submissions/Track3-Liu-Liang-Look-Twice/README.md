@@ -8,6 +8,16 @@
 
 **Project:** Active Evidence Assurance for Physical AI on AMD Radeon GPU
 
+[![Look Twice V8 — contract-aware active perception on AMD GPU](Look-Twice-V8-Social-Card.png)](https://eason4kim-rocket.github.io/#full-demo)
+
+**[▶ Watch the complete 3:59 Demo in your browser](https://eason4kim-rocket.github.io/media/Look-Twice-V8-Demo.mp4)** ·
+[open the 30-second evidence replay](https://eason4kim-rocket.github.io/#full-demo) ·
+[download the hash-verified MP4](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4)
+
+The browser copy and Release download are the same 239-second, 1920×1080
+simulation-only AMD Radeon/ROCm workflow video at SHA256
+`70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`.
+
 Look Twice is the evidence-assurance layer immediately before robot motion. It
 does not ask only what a perception model predicts; it asks whether the
 evidence is independent, fresh, calibrated, conflict-free, and sufficient for
@@ -86,7 +96,7 @@ published SHA256 identities on 2026-08-03. The contract-progress-integrated
 technical-report PDF is 19 pages and 1,104,864 bytes; all 19 rendered pages
 passed visual QA, and output/site/official copies are byte-identical at SHA256
 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
-The finalized package has 154 manifest entries, 155 checksum entries, and 156
+The finalized package has 155 manifest entries, 156 checksum entries, and 157
 total files.
 
 ## Judge-first review path
@@ -457,7 +467,7 @@ separately labeled dual-body report and timeout/recovery audit chain, plus the
 complete 30-seed decision-bound checkpoint/report/provenance package, and the
 complete 60-body prefix and 30-body suffix solver-scale evidence directories.
 The machine-readable [package manifest](SUBMISSION_PACKAGE.json) states the
-included payload and evidence boundaries. Its final inventory contains 154
-manifest entries and [SHA256SUMS](SHA256SUMS) binds all other 155 package
-files in the 156-file package. The checksum index's own identity is recorded
+included payload and evidence boundaries. Its final inventory contains 155
+manifest entries and [SHA256SUMS](SHA256SUMS) binds all other 156 package
+files in the 157-file package. The checksum index's own identity is recorded
 outside the package to avoid a circular self-reference.

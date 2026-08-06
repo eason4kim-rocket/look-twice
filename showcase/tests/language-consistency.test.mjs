@@ -30,12 +30,14 @@ test("localizes all judge-facing route headings and controls", async () => {
   ]);
   for (const expected of [
     "AMD GPU · 物理 AI · 证据保障",
-    "录制的 AMD GPU 证据",
+    "录制的 3:59 AMD GPU 工作流",
     "证据保障在线",
     "获取新证据根",
   ]) {
     assert.match(home, new RegExp(expected));
   }
+  assert.match(home, /\/media\/Look-Twice-V8-Demo\.mp4/);
+  assert.match(home, /它不是真机录像/);
   for (const expected of [
     "锁定输入证据包",
     "它不能建立什么",

@@ -142,13 +142,16 @@ simulation-only, and `formal_result_eligible=false`; it is not a frozen-policy
 rerun, simultaneous cooperative-control result, physical-robot or sim-to-real
 result, throughput benchmark, energy claim, or safety certification.
 
-The refreshed Evidence Console passed **43/43** tests, lint, production build,
+The refreshed Evidence Console passed **44/44** tests, lint, production build,
 and a zero-vulnerability dependency audit. Owner browser review remains open:
 the local browser-plugin bridge failed, so the refreshed Results/Reproduce
 presentation has not received owner visual approval. The contract-progress
 social card hashes to
-`68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`;
-it is disclosed simulation-only explanatory artwork, not an experiment
+`68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
+The refreshed build also stages native browser playback of the complete 3:59
+MP4; publication is in progress, while the stable Release asset remains the
+download/hash mirror. The social card is disclosed simulation-only explanatory
+artwork, not an experiment
 capture, simulator frame, or screenshot.
 
 The previous 18-page PDF and 154-file package identities are superseded. The
@@ -160,9 +163,9 @@ official-package copy are byte-identical. Package inventory counts and the
 top-level `SHA256SUMS` identity are recorded after mechanical finalization.
 
 The original frozen source tag and baseline publication remain public. The
-authorized contract-progress source, stable report, GitHub Pages, public
-mirror, and personal-fork refresh are public and anonymously verified; their
-exact receipts are sealed in `submission/V8_SUBMISSION_MANIFEST.json`. No
+current homepage, browser-playable full-demo, source, GitHub Pages, public
+mirror, and personal-fork refresh is staged and publication is in progress;
+future commit/version receipts are intentionally not claimed or sealed yet. No
 competition PR has been opened. A focused Genesis URDF
 inertial-origin patch is public at
 `0fa0f4ae5c83e964282fea1d6ad44aa333ee1850` through issue #3183 and open,
@@ -199,9 +202,10 @@ official-CI claim.
 - `og-contract-progress.png` - simulation-only contract-progress social card,
   conceptual artwork rather than an experiment capture; SHA256
   `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`.
-- official-repository package - 154 manifest entries, 155 checksum entries,
-  156 total files; top-level `SHA256SUMS` SHA256
-  `439e0bc71b82317cdf873a1741ff6da7c1e55e3f27bd3ee2585cae6373dc949d`.
+- official-repository package (current unsealed staging) - 155 manifest
+  entries, 156 checksum entries, 157 total files; top-level `SHA256SUMS`
+  SHA256
+  `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.

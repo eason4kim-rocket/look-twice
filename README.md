@@ -2,6 +2,16 @@
 
 [![CPU contract tests](https://github.com/eason4kim-rocket/look-twice/actions/workflows/ci.yml/badge.svg?branch=v8-competition-release)](https://github.com/eason4kim-rocket/look-twice/actions/workflows/ci.yml?query=branch%3Av8-competition-release)
 
+[![Look Twice V8 — contract-aware active perception on AMD GPU](showcase/public/og-contract-progress.png)](https://eason4kim-rocket.github.io/#full-demo)
+
+**[▶ Watch the complete 3:59 Demo in your browser](https://eason4kim-rocket.github.io/media/Look-Twice-V8-Demo.mp4)** ·
+[30-second evidence replay](https://eason4kim-rocket.github.io/#full-demo) ·
+[download the hash-verified MP4](https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4)
+
+Recorded AMD Radeon/ROCm workflow evidence · 1920×1080 · English · simulation
+only. The browser copy and Release download are byte-identical at SHA256
+`70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05`.
+
 Look Twice is a pre-action evidence-assurance layer for embodied AI, not
 another perception leaderboard. It asks not only what the model predicts, but
 whether the evidence is independent, fresh, calibrated, and sufficient for the

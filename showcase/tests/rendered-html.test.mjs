@@ -27,7 +27,9 @@ test("server-renders the Look Twice product entry", async () => {
   assert.match(html, /<title>Look Twice — Contract-Aware Active Perception<\/title>/i);
   assert.match(html, /Before a robot acts/);
   assert.match(html, /Open Evidence Console/);
-  assert.match(html, /RECORDED AMD GPU EVIDENCE/);
+  assert.match(html, /RECORDED 3:59 AMD GPU WORKFLOW/);
+  assert.match(html, /\/media\/Look-Twice-V8-Demo\.mp4/);
+  assert.match(html, /not physical-robot footage/);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/);
 });
 
@@ -113,5 +115,28 @@ test("publishes a reproducible 30-second media pack", async () => {
   assert.equal(
     mediaManifest.poster.sha256,
     await sha256(new URL(mediaManifest.poster.path, mediaRoot)),
+  );
+});
+
+test("publishes the complete browser-playable 3:59 demo", async () => {
+  const mediaRoot = new URL("../public/media/", import.meta.url);
+  const demoManifest = JSON.parse(
+    await readFile(new URL("Look-Twice-V8-Demo.manifest.json", mediaRoot), "utf8"),
+  );
+  assert.equal(demoManifest.candidate_id, "v8-frozen");
+  assert.equal(demoManifest.language, "English");
+  assert.equal(demoManifest.video.filename, "Look-Twice-V8-Demo.mp4");
+  assert.equal(demoManifest.video.duration_seconds, 239);
+  assert.equal(demoManifest.video.width, 1920);
+  assert.equal(demoManifest.video.height, 1080);
+  assert.equal(demoManifest.video.fps, 30);
+  assert.equal(demoManifest.video.codec, "h264");
+  assert.equal(demoManifest.video.audio_codec, "aac");
+  assert.equal(demoManifest.video.faststart, true);
+  assert.equal(demoManifest.narration.ai_generated, true);
+  assert.equal(demoManifest.narration.disclosure_burned_in, true);
+  assert.equal(
+    demoManifest.video.sha256,
+    await sha256(new URL(demoManifest.video.filename, mediaRoot)),
   );
 });

@@ -147,25 +147,27 @@ function HomeContent() {
         </div>
       </section>
 
-      <section className="section reel-section">
+      <section id="full-demo" className="section reel-section">
         <div className="section-heading">
-          <span>{zh ? "04 / 30 秒演示" : "04 / 30-SECOND REEL"}</span>
-          <h2>{zh ? "不需要解释：看机器人为什么停、如何修证、何时获准行动。" : "No explanation required: see why the robot stops, repairs evidence, and earns permission to act."}</h2>
+          <span>{zh ? "04 / 完整演示视频" : "04 / COMPLETE DEMO VIDEO"}</span>
+          <h2>{zh ? "直接观看完整 3:59 工作流：从 AMD GPU 执行到证据修复与最终动作。" : "Watch the complete 3:59 workflow—from AMD GPU execution to evidence repair and final action."}</h2>
         </div>
         <div className="reel-player">
           <video
             controls
             playsInline
             preload="metadata"
-            poster="/media/look-twice-replay-30s.poster.webp"
+            poster="/og-contract-progress.png"
+            aria-label={zh ? "Look Twice 3 分 59 秒完整英文演示" : "Look Twice complete 3 minute 59 second English demo"}
           >
-            <source src="/media/look-twice-replay-30s.mp4" type="video/mp4" />
+            <source src="/media/Look-Twice-V8-Demo.mp4" type="video/mp4" />
           </video>
           <div>
-            <b>{zh ? "录制的 AMD GPU 证据回放" : "RECORDED AMD GPU EVIDENCE REPLAY"}</b>
-            <p>{zh ? "1920×1080 · 30 FPS · 无旁白 · 英文画面字幕（比赛默认）· 仅限仿真。它回放独立的非锁定 seed 105400 confirmatory 回合；上方 30-world 聚合挑战与原 12-pair locked test 都是分开的证据。" : "1920×1080 · 30 FPS · no narration · Simulation only. This replays the separate non-locked seed 105400 confirmatory episode; both the 30-world aggregate above and the original 12-pair locked test are separate evidence."}</p>
-            <a href="/media/look-twice-replay-30s.mp4" download>{zh ? "下载 MP4 ↓" : "DOWNLOAD MP4 ↓"}</a>
-            <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4">{zh ? "观看 3:59 英文完整演示 ↗" : "WATCH THE 3:59 ENGLISH WORKFLOW DEMO ↗"}</a>
+            <b>{zh ? "录制的 3:59 AMD GPU 工作流" : "RECORDED 3:59 AMD GPU WORKFLOW"}</b>
+            <p>{zh ? "1920×1080 · 30 FPS · 英文旁白与字幕 · 仅限仿真。视频展示命令行审计、Genesis/ROCm 执行、主动修证、双重准入和结果边界；它不是真机录像。" : "1920×1080 · 30 FPS · English narration and captions · Simulation only. The video shows command-line audit, Genesis/ROCm execution, active evidence repair, dual admission and result boundaries; it is not physical-robot footage."}</p>
+            <a href="/media/Look-Twice-V8-Demo.mp4" target="_blank" rel="noreferrer">{zh ? "在浏览器中打开完整视频 ▶" : "OPEN THE FULL VIDEO IN BROWSER ▶"}</a>
+            <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4">{zh ? "下载哈希校验版 MP4 ↓" : "DOWNLOAD THE HASH-VERIFIED MP4 ↓"}</a>
+            <a href="/media/look-twice-replay-30s.mp4" target="_blank" rel="noreferrer">{zh ? "观看 30 秒无旁白证据回放 ↗" : "WATCH THE 30-SECOND SILENT EVIDENCE REPLAY ↗"}</a>
             <a href="https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8_seg_v3_selected_ep22_7b158726f9c0.pt">{zh ? "下载冻结模型（SHA 固定）↗" : "DOWNLOAD THE SHA-PINNED CHECKPOINT ↗"}</a>
           </div>
         </div>

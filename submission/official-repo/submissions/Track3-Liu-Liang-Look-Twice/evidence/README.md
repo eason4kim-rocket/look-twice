@@ -11,7 +11,7 @@ archive.
 > The final 19-page technical-report PDF passed 19/19 rendered-page QA, and
 > output/site/official copies are byte-identical at SHA256
 > `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
-> The package has 154 manifest entries, 155 checksum entries, and 156 total
+> The package has 155 manifest entries, 156 checksum entries, and 157 total
 > files. No competition PR has been opened.
 
 ## Files
@@ -336,7 +336,7 @@ The 239-second replacement MP4 and sidecar matched the published SHA256
 identities on 2026-08-03. The contract-progress-integrated 19-page report and
 its two copies are byte-identical at SHA256
 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`;
-the final 155-entry top-level checksum index verifies the 156-file package.
+the final 156-entry top-level checksum index verifies the 157-file package.
 
 ## Scope
 

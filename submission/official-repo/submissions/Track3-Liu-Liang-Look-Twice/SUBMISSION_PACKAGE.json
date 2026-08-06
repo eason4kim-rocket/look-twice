@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-official-submission-package/v1",
   "package_id": "Track3-Liu-Liang-Look-Twice",
-  "generated_at_utc": "2026-08-05T17:26:02Z",
+  "generated_at_utc": "2026-08-06T02:32:52Z",
   "track": "Track 3 - Physical AI",
   "entry": {
     "project_name": "Look Twice V8",
@@ -286,6 +286,12 @@
       "sha256": "46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2"
     },
     {
+      "path": "Look-Twice-V8-Social-Card.png",
+      "role": "judge-facing contract-progress social preview card",
+      "size_bytes": 2253567,
+      "sha256": "68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a"
+    },
+    {
       "path": "Look-Twice-V8-Technical-Report.pdf",
       "role": "technical report",
       "size_bytes": 1104864,
@@ -294,8 +300,8 @@
     {
       "path": "README.md",
       "role": "official submission overview",
-      "size_bytes": 24803,
-      "sha256": "1531e6e622a357778b5172eff8ca082906b3270fb214993004ca460f0971e4a8"
+      "size_bytes": 25507,
+      "sha256": "845e4622b3024bca39ceede05991d1c00d4207759d3d6fea91482c0bc864481e"
     },
     {
       "path": "V8-Frozen-Challenge-Judge-Card.md",
@@ -313,7 +319,7 @@
       "path": "evidence/README.md",
       "role": "compact evidence index and boundary ledger",
       "size_bytes": 24412,
-      "sha256": "589f964e2b7b97dd8d600a52562c746bbe959966191a439d4bfef727220d912f"
+      "sha256": "467035408d024e0d40e97319b12386a2433fff4368c187a1619b7b8549179c94"
     },
     {
       "path": "evidence/V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json",
@@ -1213,9 +1219,9 @@
     "raw_archive_bound_file_count": 194,
     "raw_archive_sha256": "171c9bab73554e1a3654c24872ade011b8423d3aca0df8eca38625a90b0854d2",
     "raw_archive_internal_checksum_index_sha256": "90d70a11d4a6fd91727c3849536e7a41124196c1c0b4e0f51779419e99105b6d",
-    "manifest_file_entries": 154,
-    "package_checksum_entries": 155,
-    "total_regular_package_files_including_sha256sums": 156,
+    "manifest_file_entries": 155,
+    "package_checksum_entries": 156,
+    "total_regular_package_files_including_sha256sums": 157,
     "manifest_coverage_complete": true,
     "decision_dynamics_v2_regular_files": 80,
     "decision_dynamics_v2_formal_checksum_entries": 32,

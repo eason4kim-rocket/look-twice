@@ -116,17 +116,19 @@ energy, or safety certification.
 | Locked input-and-label archive | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-spatial-dataset-v1__locked_test__400seeds__20260720T120737Z.tar.gz> |
 | Challenge raw archive | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.raw.tar.gz> |
 | Challenge independent verification | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/v8-frozen-challenge-102500-102529.VERIFICATION.json> |
-| Final 3:59 English demo | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
+| Browser-playable 3:59 English demo (publication target) | <https://eason4kim-rocket.github.io/media/Look-Twice-V8-Demo.mp4> |
+| 3:59 demo download/hash mirror | <https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Demo.mp4> |
 | Genesis issue | <https://github.com/Genesis-Embodied-AI/genesis-world/issues/3183> |
 | Genesis PR | <https://github.com/Genesis-Embodied-AI/genesis-world/pull/3184> |
 | Genesis bounded validation | <https://github.com/eason4kim-rocket/look-twice/blob/v8-competition-final-2026-08-05/docs/V8_GENESIS_PR_3184_VALIDATION.md> |
 | Competition-fork package | <https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8/submissions/Track3-Liu-Liang-Look-Twice> |
 
-The contract-progress source, GitHub Pages build, stable PDF, public mirror,
-and personal-fork package are published on review targets and verified without
-credentials. Their receipt commits are source `63f827e`, Pages `0e3e190`,
-personal fork `4489022`, and mirror source `03da5fd` (Sites version 11). Genesis
-issue #3183 and PR #3184 are public; the PR is open and unmerged. A
+The homepage social card and native browser playback of the complete 3:59 demo
+are staged in the refreshed source and site build. Publication of that refresh
+to the source default branch, GitHub Pages, public mirror, and personal fork is
+in progress; exact receipts will be sealed only after anonymous verification.
+The stable Release asset remains the download/hash mirror. Genesis issue #3183
+and PR #3184 are public; the PR is open and unmerged. A
 post-publication bounded serial-CPU run passed 3/3 named regression nodes at
 its exact head; it is not a full-suite or maintainer-CI claim. No PR has been
 opened against the official AMD competition repository.
@@ -199,7 +201,7 @@ opened against the official AMD competition repository.
 | 30-second evidence reel | `showcase/public/media/look-twice-replay-30s.mp4` | `46d1d70298a991a6ad9ec7996a587f441ea15a55f2d09374b4102a417016f0e2` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | 156-file package is public at personal-fork commit `4489022`; 155/155 checks pass; top-level checksum-index SHA256 `439e0bc71b82317cdf873a1741ff6da7c1e55e3f27bd3ee2585cae6373dc949d`; official PR not opened |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | Current unsealed staging has 155 manifest entries, 156/156 checksum entries, and 157 total files; top-level checksum-index SHA256 `433b00485399a8794a55c294cf662d5273784e3e65f54b7b93af48d2c87297f6`; personal-fork publication is in progress; official PR not opened |
 
 ## Frozen checkpoint
 
@@ -231,10 +233,11 @@ cd showcase && npm run lint && npm test && npm audit
 docker compose build
 ```
 
-The refreshed Evidence Console passed **43/43** tests, lint, production build,
-and a zero-vulnerability dependency audit. The same build is live on GitHub
-Pages and the public mirror; routes, contract-progress JSON, PDF, and social
-preview were verified without sign-in. Its contract-progress social card
+The refreshed Evidence Console passed **44/44** tests, lint, production build,
+and a zero-vulnerability dependency audit. The build stages the homepage social
+card and native playback of the complete 3:59 MP4; publication to GitHub Pages
+and the public mirror is in progress and is not yet receipt-sealed. Its
+contract-progress social card
 hashes to
 `68f2f3e4f4b769edceb08c28d73440c5a1a80008bec267ea3a524d69d3213b1a`;
 the card is disclosed simulation-only explanatory artwork, not an experiment
@@ -253,7 +256,7 @@ The retained recovery V2 verifier accepted its byte-identical 30/30 report
 remotely and locally. The two-shard prefix and suffix dedicated verifiers
 accepted **20/20** and **10/10**, and both shards' formal and complete package
 indexes passed. The final official-directory finalizer `--check` passed, as did
-all **155** entries in its top-level `SHA256SUMS`:
+all **156** entries in its top-level `SHA256SUMS`:
 
 ```bash
 python3 scripts/verify_v8_additive_decision_dynamics_60.py \
@@ -278,6 +281,10 @@ the builder sidecar SHA256 is
 Narration is an AI-generated `cedar` voice from OpenAI
 `gpt-4o-mini-tts`; that disclosure is burned into the video. Chapter visuals
 use fixed composition with no `zoompan` motion.
+
+The complete MP4 is staged for native browser playback at the Evidence Console;
+that publication is in progress. The stable GitHub Release URL remains the
+download/hash mirror.
 
 ## Evidence boundary
 
@@ -342,23 +349,24 @@ upstream-release inclusion.
       `V8_SUBMISSION_MANIFEST.json`.
 - [x] Regenerate and verify the official-directory `SHA256SUMS` after every
       final artifact is in place.
-- [x] Publish and anonymously verify the refreshed source, final release PDF,
-      evidence site, and public mirror.
+- [ ] Publish and anonymously verify the refreshed source, browser-playable
+      full demo, evidence site, public mirror, and personal-fork package;
+      publication is in progress.
 - [ ] Review both complete two-shard evidence packages and their dedicated
       verifier/checksum records; automated verification is already green.
 - [x] Rebuild the contract-progress-integrated technical report, verify its
       final identity across output/site/official copies, and inspect all 19/19
       rendered pages.
 - [x] Run the contract-progress-integrated site tests, lint, production build,
-      and dependency audit: 43/43, pass, pass, and zero known vulnerabilities.
-- [ ] Complete owner visual review of the published Results/Reproduce refresh;
+      and dependency audit: 44/44, pass, pass, and zero known vulnerabilities.
+- [ ] Complete owner visual review of the staged Results/Reproduce refresh;
       automated local Chrome QA has already passed desktop English/Chinese and
       true 390 px mobile layouts with no horizontal overflow.
 - [x] Regenerate and verify the contract-progress-integrated official-package
       manifest and every top-level checksum entry; record the final counts and
       checksum-index identity mechanically.
-- [x] After owner authorization, publish the additive source/site/PDF/package
-      refresh and verify every stable target without sign-in.
+- [ ] Publish the current homepage/demo/source/site/package refresh and verify
+      every stable target without sign-in; publication is in progress.
 - [ ] Review the official-fork branch diff and the English PR body.
 - [x] Review the Genesis issue/PR packet and authorize upstream publication;
       issue #3183 and PR #3184 are public.
