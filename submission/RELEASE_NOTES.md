@@ -169,12 +169,12 @@ The original frozen source tag and baseline publication remain public. The
 refreshed homepage, browser-playable full demo, source, GitHub Pages, public
 mirror, and personal-fork package are published and anonymously verified. The
 last non-self-referential source content receipt
-`c9842a929b0bde286e367b6895230fca275c66d8` is public on default branch
+`b9ea8033f92289254a4d2c842e03977207236650` is public on default branch
 `v8-contract-progress-nbv`; the later seal-only commit records these receipts.
 GitHub Pages commit
 `d330750bd727241d24cba890e4cdf6939bfb54f9` was deployed by successful
 Actions run `31075048579`; the personal-fork head is
-`77a9d272d7eea0f77fd7cfebfba4eee66d6258a1`; and the public mirror is Sites
+`5a94f826fdfde26d19e0655bd52d8a744aac1346`; and the public mirror is Sites
 version 17 from source commit `6cb9dfa44b572a2b02856e40c6595eeae96fa591`
 at <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>. Anonymous
 retrieval also verified the social-card SHA above and report SHA
@@ -221,9 +221,9 @@ official-CI claim.
   simulation-only, no new experiment or physical-robot result; MP4 SHA256
   `a2fd07abfc59187e170d1151981c0d9225ca08bb20410ebf26e26729d61aaeb0`.
 - official-repository package (published personal-fork head
-  `77a9d272d7eea0f77fd7cfebfba4eee66d6258a1`) - 158 manifest entries, 159
+  `5a94f826fdfde26d19e0655bd52d8a744aac1346`) - 158 manifest entries, 159
   checksum entries, 160 total files; top-level `SHA256SUMS` SHA256
-  `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`.
+  `ed7c7ea4cab200fec6e8656504b9b2e82f3320a6226123e42b7e31ef627adb41`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.

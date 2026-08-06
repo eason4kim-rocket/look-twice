@@ -125,12 +125,12 @@ energy, or safety certification.
 
 The homepage social card and native browser playback of the complete 3:59 demo
 are published and anonymously verified. The last non-self-referential source
-content receipt `c9842a929b0bde286e367b6895230fca275c66d8` is public on default
+content receipt `b9ea8033f92289254a4d2c842e03977207236650` is public on default
 branch `v8-contract-progress-nbv`; the later seal-only commit records these
 publication receipts. GitHub Pages commit
 `d330750bd727241d24cba890e4cdf6939bfb54f9` was deployed by successful
 Actions run `31075048579`; the personal-fork package is public at
-`77a9d272d7eea0f77fd7cfebfba4eee66d6258a1`; and the mirror is Sites version
+`5a94f826fdfde26d19e0655bd52d8a744aac1346`; and the mirror is Sites version
 17 from source commit `6cb9dfa44b572a2b02856e40c6595eeae96fa591` at
 <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>. Both public
 sites return the full MP4 as `video/mp4`; GitHub Pages supports byte ranges,
@@ -212,7 +212,7 @@ opened against the official AMD competition repository.
 | 13-second 1080p judge motion hook | `showcase/public/media/look-twice-repair-to-action-proof.mp4` | Recorded simulation excerpt; repair → dual admission → direct motion → final result; `a2fd07abfc59187e170d1151981c0d9225ca08bb20410ebf26e26729d61aaeb0` |
 | Final 3:59 demo | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/Look-Twice-V8-Demo.mp4` | `70f0cb035498ed617421163b192a4c42856d0d8ede474582e550c1e3f9d81d05` |
 | Official PR body | `docs/SUBMISSION_DRAFT.md` | English, target URLs complete |
-| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | Published personal-fork package at `77a9d272d7eea0f77fd7cfebfba4eee66d6258a1`: 158 manifest entries, 159/159 checksum entries, and 160 total files; top-level checksum-index SHA256 `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`; official PR not opened |
+| Official-repo package | `submission/official-repo/submissions/Track3-Liu-Liang-Look-Twice/` | Published personal-fork package at `5a94f826fdfde26d19e0655bd52d8a744aac1346`: 158 manifest entries, 159/159 checksum entries, and 160 total files; top-level checksum-index SHA256 `ed7c7ea4cab200fec6e8656504b9b2e82f3320a6226123e42b7e31ef627adb41`; official PR not opened |
 
 ## Frozen checkpoint
 

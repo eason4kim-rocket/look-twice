@@ -30,18 +30,18 @@ Official sources:
 
 ## Publication receipts
 
-- [x] Repair-to-action proof publication verification completed at `2026-08-06T05:51:25Z`.
+- [x] Repair-to-action proof publication verification completed at `2026-08-06T06:05:41Z`.
 - [x] The last non-self-referential source-content receipt
-      `c9842a929b0bde286e367b6895230fca275c66d8` is public on default branch
+      `b9ea8033f92289254a4d2c842e03977207236650` is public on default branch
       `v8-contract-progress-nbv`; the later seal-only commit records these
       publication receipts.
 - [x] GitHub Pages commit `d330750bd727241d24cba890e4cdf6939bfb54f9`
       deployed in successful Actions run `31075048579`.
-- [x] Source CI run `31074912742` passed at content receipt
-      `c9842a929b0bde286e367b6895230fca275c66d8`; Python, Purify Go, and
+- [x] Source CI run `31076081970` passed at content receipt
+      `b9ea8033f92289254a4d2c842e03977207236650`; Python, Purify Go, and
       showcase jobs are green.
 - [x] The personal competition-fork package is public at commit
-      `77a9d272d7eea0f77fd7cfebfba4eee66d6258a1` without an official AMD PR.
+      `5a94f826fdfde26d19e0655bd52d8a744aac1346` without an official AMD PR.
 - [x] The public mirror is Sites version 17 from source commit
       `6cb9dfa44b572a2b02856e40c6595eeae96fa591` at
       <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>.
@@ -57,7 +57,7 @@ Official sources:
       sealed SHA256 identities in the hook manifest.
 - [x] The published package has 158 manifest entries, 159/159 verified
       checksum entries, and 160 total files; top-level `SHA256SUMS` SHA256 is
-      `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`.
+      `ed7c7ea4cab200fec6e8656504b9b2e82f3320a6226123e42b7e31ef627adb41`.
 - [x] Keep `official_pr_opened=false`; opening the official competition PR
       remains behind explicit owner approval.
 
@@ -290,7 +290,7 @@ Official sources:
 - [x] Record 158 manifest inventory entries, 159 checksum entries, and 160
       total regular files including `SHA256SUMS`; all 159 `shasum` checks pass.
       The top-level `SHA256SUMS` SHA256 is
-      `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`.
+      `ed7c7ea4cab200fec6e8656504b9b2e82f3320a6226123e42b7e31ef627adb41`.
 - [ ] Owner reviews the two-shard Results/Reproduce presentation, rebuilt PDF,
       official-package diff, and exact `cumulative90/max60/never90` wording.
 
@@ -554,12 +554,12 @@ Stable targets:
       rerun the finalizer with `--check`,
       and pass both staged solver-scale dedicated verifiers. The current
       top-level checksum-index SHA256 is
-      `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`.
+      `ed7c7ea4cab200fec6e8656504b9b2e82f3320a6226123e42b7e31ef627adb41`.
 - [x] Copy the final two-shard staging directory byte-for-byte to the local
       official-fork worktree and verify `diff -qr` plus every checksum before
       any push.
 - [x] Push the reviewed motion-hook package to the dedicated official-fork branch
-      at `77a9d272d7eea0f77fd7cfebfba4eee66d6258a1` without opening a PR.
+      at `5a94f826fdfde26d19e0655bd52d8a744aac1346` without opening a PR.
 - [x] Use planned PR title `Track 3, Liu Liang, Look Twice`.
 - [x] Replace the owner-review preamble in
       `docs/SUBMISSION_DRAFT.md` with the actual publication state and rerun
@@ -594,7 +594,7 @@ Stable targets:
       `--check`, all 159 checksum validations, and both staged dedicated
       verifiers pass; the top-level
       `SHA256SUMS` SHA256 is
-      `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`.
+      `ed7c7ea4cab200fec6e8656504b9b2e82f3320a6226123e42b7e31ef627adb41`.
 - [ ] Owner reviews the complete V2 evidence package, local verifier output,
       rebuilt PDF, refreshed site, and exact official-package diff.
 - [ ] Owner reviews both solver-scale reports and verifier outputs, the rebuilt
