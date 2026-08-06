@@ -8,30 +8,30 @@ const mono = IBM_Plex_Mono({ variable: "--font-mono", subsets: ["latin"], weight
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eason4kim-rocket.github.io"),
-  title: { default: "Look Twice — Contract-Aware Active Perception", template: "%s · Look Twice" },
+  title: { default: "Look Twice — Action-Ready Evidence for Warehouse Robots", template: "%s · Look Twice" },
   description:
-    "Frozen RGB-D perception, conformal action qualification and contract-aware active sensing on AMD GPU, backed by publicly preregistered simulation evidence.",
+    "Look Twice checks whether warehouse evidence is independent, calibrated, and sufficient for the next action, then actively repairs what is missing on AMD Radeon and ROCm.",
   alternates: { canonical: "/" },
   openGraph: {
     url: "https://eason4kim-rocket.github.io/",
     type: "website",
-    title: "Look Twice — Contract-Aware Active Perception",
+    title: "Look Twice — Action-Ready Evidence for Warehouse Robots",
     description:
-      "20/20 direct with zero unsafe events while reducing scout path 40.26%, team path 15.03% and physical captures 27.54% in a publicly preregistered same-generator simulation challenge.",
+      "Physical-root lineage, Action Contracts, and BeliefGap-driven repair. In a preregistered 30-world simulation, active went direct in 29/30 worlds versus passive 0/30.",
     images: [
       {
         url: "https://eason4kim-rocket.github.io/og-contract-progress.png",
         width: 1726,
         height: 911,
-        alt: "Look Twice contract-aware active perception results on AMD GPU simulation",
+        alt: "Look Twice warehouse action assurance on AMD Radeon and ROCm simulation",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Look Twice — Contract-Aware Active Perception",
+    title: "Look Twice — Action-Ready Evidence for Warehouse Robots",
     description:
-      "20/20 direct, zero unsafe, with lower scout path, team path and physical capture burden in a publicly preregistered AMD GPU simulation challenge.",
+      "Physical-root lineage, Action Contracts, and active evidence repair: 29/30 active direct versus 0/30 passive in a preregistered warehouse simulation.",
     images: ["https://eason4kim-rocket.github.io/og-contract-progress.png"],
   },
 };
