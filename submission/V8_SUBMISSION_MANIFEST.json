@@ -1,7 +1,7 @@
 {
   "schema_version": "look-twice.v8-submission-package/v1",
   "generated_on": "2026-08-06",
-  "status": "contract_progress_publication_in_progress_no_official_pr",
+  "status": "contract_progress_public_review_snapshot_no_official_pr",
   "competition": {
     "name": "AMD AI DevMaster Hackathon 2026",
     "track": "Track 3 - Physical AI",
@@ -15,19 +15,19 @@
     "owner_review_required_before_pr": true,
     "final_demo_replacement_published": true,
     "public_targets_anonymously_verified": true,
-    "additive_source_refresh_published": false,
-    "additive_pages_refresh_deployed": false,
-    "additive_report_release_asset_replaced": false,
-    "additive_official_fork_refresh_pushed": false,
+    "additive_source_refresh_published": true,
+    "additive_pages_refresh_deployed": true,
+    "additive_report_release_asset_replaced": true,
+    "additive_official_fork_refresh_pushed": true,
     "external_upstream_issue_or_pr_opened": true,
     "entrant_team_name": "Liu Liang",
     "entrant_role": "solo entrant",
     "entrant_github": "eason4kim-rocket",
     "registration_email_public": false,
     "entrant_identity_review_required": false,
-    "source_repository_homepage_refreshed": false,
-    "social_card_repository_homepage_published": false,
-    "full_demo_browser_playback_published": false
+    "source_repository_homepage_refreshed": true,
+    "social_card_repository_homepage_published": true,
+    "full_demo_browser_playback_published": true
   },
   "candidate": {
     "candidate_id": "v8-frozen",
@@ -392,9 +392,9 @@
       "run_manifest_sha256": "d5fc5402656739d95bd5845592499a3382734b27fc89ef0b886c0544461c948e",
       "formal_sha256sums_sha256": "ea42de26ef30abfefb5581eb5d558cfac2d51039ae0f1cde75b82ac2366f85e4",
       "promotion_pass": true,
-      "publication_verified": false,
+      "publication_verified": true,
       "raw_tree_duplicated_in_submission_package": false,
-      "publication_state": "complete formal evidence prepared for v8-contract-progress-nbv; publication verification in progress; formal_result_eligible=false"
+      "publication_state": "complete formal evidence published on v8-contract-progress-nbv and anonymously verified; formal_result_eligible=false"
     },
     "additive_dual_body_dynamics": {
       "report_path": "release/v8-derived/dual_body_dynamics_160820_160839/REPORT.json",
@@ -506,8 +506,8 @@
       "size_bytes": 1104864,
       "page_count": 19,
       "public_target_url": "https://github.com/eason4kim-rocket/look-twice/releases/download/v8-competition-candidate/Look-Twice-V8-Technical-Report.pdf",
-      "publication_verified": false,
-      "publication_state": "contract-progress-integrated identity prepared locally; stable release-asset replacement and anonymous hash verification in progress"
+      "publication_verified": true,
+      "publication_state": "contract-progress-integrated identity published at the stable candidate-release URL and anonymously hash-verified"
     },
     "short_evidence_reel": {
       "path": "showcase/public/media/look-twice-replay-30s.mp4",
@@ -565,8 +565,8 @@
       },
       "public_video_url": "https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-proof.mp4",
       "public_preview_url": "https://eason4kim-rocket.github.io/media/look-twice-repair-to-action-proof.webp",
-      "publication_verified": false,
-      "publication_state": "prepared locally; publication and anonymous verification in progress"
+      "publication_verified": true,
+      "publication_state": "published and anonymously verified by SHA256 and MIME type"
     },
     "final_demo_video": {
       "builder": "scripts/build_v8_demo_video.py",
@@ -591,8 +591,8 @@
       "publication_verified": true,
       "status": "published_and_hash_verified_pending_owner_review",
       "browser_playback_url": "https://eason4kim-rocket.github.io/media/Look-Twice-V8-Demo.mp4",
-      "browser_playback_verified": false,
-      "browser_playback_state": "browser-playback publication and anonymous verification in progress"
+      "browser_playback_verified": true,
+      "browser_playback_state": "published as video/mp4 on the primary evidence site and public mirror; byte-identical to the release download"
     },
     "social_preview": {
       "path": "showcase/public/og-contract-progress.png",
@@ -609,7 +609,7 @@
       "checksummed_artifacts": 159,
       "total_regular_files_including_sha256sums": 160,
       "sha256s_sha256": "64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32",
-      "status": "local_contract_progress_refresh_publication_in_progress_no_pr",
+      "status": "published_personal_fork_review_branch_no_official_pr",
       "manifest_inventory_entries": 158
     }
   },
@@ -624,7 +624,8 @@
     "official_fork": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07",
     "official_fork_branch": "https://github.com/eason4kim-rocket/Radeon-hackathon-2026-07/tree/submission/track3-liu-liang-look-twice-v8",
     "public_targets_anonymously_verified": true,
-    "additive_refresh_publicly_verified": false
+    "additive_refresh_publicly_verified": true,
+    "public_site_mirror": "https://look-twice-evidence.jason-tuantuan1319.chatgpt.site"
   },
   "verification": {
     "frozen_foundation": "passed",
@@ -637,7 +638,7 @@
     "docker_build_and_route_smoke": "passed",
     "clean_detached_worktree": "CPU verifier, Go tests, Node tests, Docker build, and eight route checks passed",
     "pdf_visual_qa": "19/19 pages rendered and inspected after final regeneration",
-    "browser_visual_qa": "contract-progress-integrated local source passed site tests, lint, and production build; public route/asset verification in progress",
+    "browser_visual_qa": "contract-progress-integrated source passed site tests, lint, production build, and public route/asset verification; owner may still perform a final presentation review before the official PR",
     "submission_surface_credential_scan": "passed",
     "final_demo_media_qa": "full decode, stream, frame, loudness, faststart, fixed-motion, provenance, privacy, and nine-chapter frame QA passed; owner full visual and audible review pending",
     "locked_input_pack_verifier_tests": "5/5 passed; 400 worlds and 3,200 metadata records verified without extraction or inference",
@@ -645,22 +646,32 @@
     "frozen_challenge_tests": "31/31 runner and validator tests passed; together with the 3 ROCm telemetry helper tests, 34/34 passed",
     "feasibility_audit_tests": "10/10 passed; derived artifact matched the 30 archived active episodes and preserved the 29/30 formal primary",
     "additive_dynamics_tests": "7/7 unit and verifier tests passed; remote and local report verification passed; 20/20 formal seeds, failed 0",
-    "official_repository_staging_checksums": "159 checksummed artifacts passed locally (160 total files including SHA256SUMS); manifest inventory 158/158; checksum-index SHA256 64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32; contract-progress refresh publication in progress; official PR not opened",
+    "official_repository_staging_checksums": "159 checksummed artifacts passed locally (160 total files including SHA256SUMS); manifest inventory 158/158; checksum-index SHA256 64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32; contract-progress refresh published on the personal-fork review branch; official PR not opened",
     "github_actions_ci": "functional feasibility-audit commit 5d929f8f223a184b3670c4be51f8256e127ebd6c; run 30811281217 passed; Python, Purify Go, and showcase jobs all green",
-    "github_pages_deployment": "contract-progress GitHub Pages deployment and anonymous route/asset verification in progress",
-    "public_distribution": "contract-progress source/site/PDF/package publication and anonymous verification are in progress; official competition PR not opened",
-    "official_fork_branch": "the byte-identical contract-progress package is staged for submission/track3-liu-liang-look-twice-v8; publication in progress; official_pr_opened=false",
+    "github_pages_deployment": "commit d330750bd727241d24cba890e4cdf6939bfb54f9; four routes, contract-progress JSON, PDF, social preview, and browser-playable 3:59 MP4 verified without credentials",
+    "public_distribution": "contract-progress source, site, 19-page PDF, and 160-file official package are public on review targets and anonymously verified; official competition PR not opened",
+    "official_fork_branch": "the byte-identical contract-progress package is public on submission/track3-liu-liang-look-twice-v8; official_pr_opened=false",
     "decision_dynamics_recovery_v2_tests": "16/16 runner and verifier tests passed; Ruff passed; formal remote and byte-identical local verifiers passed; 30/30 formal seeds, failed 0",
     "decision_dynamics_two_shard_tests": "23/23 runner and verifier tests passed; both formal and complete-package checksum indexes passed; dedicated 60-body and 30-body verifiers passed; 20/20 prefix plus 10/10 suffix, failed 0",
-    "public_site_mirror_deployment": "contract-progress public mirror deployment and anonymous route/asset verification in progress",
-    "source_repository_homepage": "source repository homepage refresh and anonymous verification in progress"
+    "public_site_mirror_deployment": "Sites version 17 from source commit 6cb9dfa44b572a2b02856e40c6595eeae96fa591; https://look-twice-evidence.jason-tuantuan1319.chatgpt.site; routes, contract-progress JSON, PDF, social preview, and browser-playable 3:59 MP4 verified without credentials",
+    "source_repository_homepage": "default branch v8-contract-progress-nbv; root README social card and direct browser-demo link verified without credentials",
+    "publication_receipts": {
+      "verified_at_utc": "2026-08-06T05:51:25Z",
+      "source_commit_sha": "c9842a929b0bde286e367b6895230fca275c66d8",
+      "source_default_branch": "v8-contract-progress-nbv",
+      "pages_commit_sha": "d330750bd727241d24cba890e4cdf6939bfb54f9",
+      "official_fork_commit_sha": "77a9d272d7eea0f77fd7cfebfba4eee66d6258a1",
+      "sites_source_commit_sha": "6cb9dfa44b572a2b02856e40c6595eeae96fa591",
+      "sites_version_number": 17,
+      "sites_deployment_url": "https://look-twice-evidence.jason-tuantuan1319.chatgpt.site",
+      "source_receipt_scope": "last non-self-referential evidence/package snapshot before the receipt-seal documentation commit"
+    }
   },
   "owner_review_items": [
     "Complete owner visual and audible review of the final demo.",
     "Review the English competition PR body and authorize opening the official PR."
   ],
   "remaining_before_pr": [
-    "complete and anonymously verify the authorized contract-progress publication refresh",
     "complete owner visual and audible review of the final 3:59 English demo",
     "obtain owner approval to open the official English submission PR"
   ]

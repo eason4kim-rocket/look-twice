@@ -169,13 +169,13 @@ The original frozen source tag and baseline publication remain public. The
 refreshed homepage, browser-playable full demo, source, GitHub Pages, public
 mirror, and personal-fork package are published and anonymously verified. The
 last non-self-referential source content receipt
-`9164d13b66a4e699dc183be3c6238485e509d1e9` is public on default branch
+`c9842a929b0bde286e367b6895230fca275c66d8` is public on default branch
 `v8-contract-progress-nbv`; the later seal-only commit records these receipts.
 GitHub Pages commit
-`ab1d8df2a5b173ff57258f197ec38886561d98cb` was deployed by successful
-Actions run `31071921133`; the personal-fork head is
-`70797708f562d10f5b170ce938f4b085fdd98bcb`; and the public mirror is Sites
-version 16 from source commit `1c9bab9ffc97e6b5f4c6928e4445737108f9c7b6`
+`d330750bd727241d24cba890e4cdf6939bfb54f9` was deployed by successful
+Actions run `31075048579`; the personal-fork head is
+`77a9d272d7eea0f77fd7cfebfba4eee66d6258a1`; and the public mirror is Sites
+version 17 from source commit `6cb9dfa44b572a2b02856e40c6595eeae96fa591`
 at <https://look-twice-evidence.jason-tuantuan1319.chatgpt.site/>. Anonymous
 retrieval also verified the social-card SHA above and report SHA
 `7dc0b453191a4ea215e432f22de6b374319c8df72580026f3adc8fa064291143`.
@@ -221,9 +221,9 @@ official-CI claim.
   simulation-only, no new experiment or physical-robot result; MP4 SHA256
   `a2fd07abfc59187e170d1151981c0d9225ca08bb20410ebf26e26729d61aaeb0`.
 - official-repository package (published personal-fork head
-  `70797708f562d10f5b170ce938f4b085fdd98bcb`) - 158 manifest entries, 159
+  `77a9d272d7eea0f77fd7cfebfba4eee66d6258a1`) - 158 manifest entries, 159
   checksum entries, 160 total files; top-level `SHA256SUMS` SHA256
-  `daaaab06a5a82b805b85581519a354f7206224a5891b6687e124f14d7cf6d4a8`.
+  `64a5eb9efb9f0175ebe41169c216929d11c688d80b441dc5925ae74294a12a32`.
 - `V8_FROZEN_CHALLENGE_FEASIBILITY_AUDIT.json` - post-hoc descriptive
   offline feasibility audit; SHA256
   `dc1dc979c58e1a2c1155b144c8e826ffab5ffee4e2113e954351e92bb635c434`.
